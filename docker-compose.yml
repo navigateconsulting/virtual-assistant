@@ -67,7 +67,7 @@ services:
   ## Skype master container , it connects to Azure and starts skype channel
 
   skype:
-    build: './skype_master'
+    build: './con-skype-master'
     volumes:
       - skype_keys_vol:/data
     environment:
@@ -76,7 +76,7 @@ services:
   ## Skype Events processor Processes any incomming events
 
   skype_events:
-    build: './skype_events_processor'
+    build: './con-skype-events'
     depends_on:
       - skype
       - kafka
@@ -89,7 +89,7 @@ services:
   ## Skype send message this one sends outbound messages
 
   skype_send_msg:
-    build: './skype_message_processor'
+    build: './con-skype-message'
     depends_on:
       - skype
       - kafka

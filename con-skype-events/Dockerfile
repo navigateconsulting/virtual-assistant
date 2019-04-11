@@ -1,6 +1,6 @@
 FROM python:3.6-slim
 
-ADD skype_events_processor_v1.py /
+ADD skype_events_processor.py /
 
 RUN pip install adal
 RUN pip install requests 
