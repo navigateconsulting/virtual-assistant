@@ -114,8 +114,10 @@ class skype_message_processor:
              try:
                res=rasa_response.json()[0]['text']
                message_text= rasa_response.json()[0]['text']
+               print("Got message from Rasa ")
              except (IndexError, KeyError, TypeError):
                message_text = 'No response'
+               print("No message from Rasa  ")
 
              #setting operating context 
              #generate a random GUIID
