@@ -1,0 +1,11 @@
+version: '3.0'
+
+## Docker compose test file for UI Appdcmer
+
+services:
+
+
+  ui_trainer:
+    build: ./ui-trainer/.
+    ports:
+      - "5056:80"

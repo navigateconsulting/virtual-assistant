@@ -1,6 +1,11 @@
 version: '3.0'
 
+## Docker compose main file
+
 services:
+
+  ##  Rasa Core main Container for PROD , This is an image downloaded from dockerhub , local files are mapped.
+
   rasa_core:
     image: rasa/rasa_core:latest
     ports:
@@ -18,6 +23,9 @@ services:
       - config/endpoints.yml
       - -u
       - current/
+
+  ## Rasa NLU image from Dockerhub , linked with the volume via bind mount
+
   rasa_nlu:
     image: rasa/rasa_nlu:latest-tensorflow
     ports:
@@ -32,6 +40,9 @@ services:
       - -c
       - config/nlu_config.yml
 
+
+  ##  Rasa core actions server from dockerhub linked to local bind mount
+
   action_server:
     image: rasa/rasa_core_sdk:latest
     ports:
@@ -39,6 +50,16 @@ services:
     volumes:
       - ./vol_chatbot_data/rasa/100/actions:/app/actions
 
+  ## Redis conatiner for session manaegement for chatbot
+
   redis:
     image: redis:latest
 
+  ## starting container for Angular Rasa Trainer
+
+## Issue with launching this container hence committed 
+#  ui_trainer:
+#    build: ./ui-trainer/.
+#    ports:
+#      - "5056:80"
+##
