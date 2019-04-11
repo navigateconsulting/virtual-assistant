@@ -63,3 +63,65 @@ services:
 #    ports:
 #      - "5056:80"
 ##
+
+  ## Skype master container , it connects to Azure and starts skype channel
+
+  skype:
+    build: './skype_master'
+    volumes:
+      - skype_keys_vol:/data
+    environment:
+      PYTHONUNBUFFERED: 1
+
+  ## Skype Events processor Processes any incomming events
+
+  skype_events:
+    build: './skype_events_processor'
+    depends_on:
+      - skype
+      - kafka
+      - zookeeper
+    volumes:
+      - skype_keys_vol:/data
+    environment:
+      PYTHONUNBUFFERED: 1
+
+  ## Skype send message this one sends outbound messages
+
+  skype_send_msg:
+    build: './skype_message_processor'
+    depends_on:
+      - skype
+      - kafka
+      - zookeeper
+    volumes:
+      - skype_keys_vol:/data
+    environment:
+      PYTHONUNBUFFERED: 1
+
+  ## Zookeper instance
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  ## Kafka instance
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+volumes:
+  skype_keys_vol:
