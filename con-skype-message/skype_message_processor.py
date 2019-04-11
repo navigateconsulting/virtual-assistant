@@ -33,7 +33,7 @@ class skype_message_processor:
       self.c.subscribe(["skype_events_stream"], on_assign=self.print_assignment)
       
       ## Config for Rasa Core instance 
-      self.rasa_url='http://10.1.10.50:5005/webhooks/rest/webhook'
+      self.rasa_url='http://rasa_core:5005/webhooks/rest/webhook'
 
       self.rasa_heads =  {'Content-type': 'application/json'}
 
