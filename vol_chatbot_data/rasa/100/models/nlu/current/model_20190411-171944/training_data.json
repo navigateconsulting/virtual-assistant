@@ -1,0 +1,958 @@
+{
+  "rasa_nlu_data": {
+    "common_examples": [
+      {
+        "intent": "00_greet",
+        "text": "hi"
+      },
+      {
+        "intent": "00_greet",
+        "text": "Hi"
+      },
+      {
+        "intent": "00_greet",
+        "text": "Hello"
+      },
+      {
+        "intent": "00_greet",
+        "text": "Hi there"
+      },
+      {
+        "intent": "00_greet",
+        "text": "hia"
+      },
+      {
+        "intent": "00_greet",
+        "text": "hi eva"
+      },
+      {
+        "intent": "00_greet",
+        "text": "hi eva"
+      },
+      {
+        "intent": "00_greet",
+        "text": "h"
+      },
+      {
+        "intent": "00_greet",
+        "text": "hi?"
+      },
+      {
+        "intent": "00_greet",
+        "text": "good morning"
+      },
+      {
+        "intent": "00_greet",
+        "text": "good evening"
+      },
+      {
+        "intent": "00_greet",
+        "text": "Good Morning"
+      },
+      {
+        "intent": "00_greet",
+        "text": "Good afternoon"
+      },
+      {
+        "intent": "00_greet",
+        "text": "heya"
+      },
+      {
+        "intent": "00_greet",
+        "text": "howdy"
+      },
+      {
+        "intent": "00_greet",
+        "text": "hei"
+      },
+      {
+        "intent": "00_greet",
+        "text": "hiii"
+      },
+      {
+        "intent": "00_greet",
+        "text": "hey eva"
+      },
+      {
+        "intent": "00_greet",
+        "text": "eva"
+      },
+      {
+        "intent": "00_greet",
+        "text": "hey there"
+      },
+      {
+        "intent": "00_thanks",
+        "text": "thanks !"
+      },
+      {
+        "intent": "00_thanks",
+        "text": "thnks"
+      },
+      {
+        "intent": "00_thanks",
+        "text": "10x"
+      },
+      {
+        "intent": "00_thanks",
+        "text": "thank"
+      },
+      {
+        "intent": "00_thanks",
+        "text": "thankyou"
+      },
+      {
+        "intent": "00_thanks",
+        "text": "thank you"
+      },
+      {
+        "intent": "00_thanks",
+        "text": "thanks"
+      },
+      {
+        "intent": "00_thanks",
+        "text": "allright thanks"
+      },
+      {
+        "intent": "00_thanks",
+        "text": "right thanks"
+      },
+      {
+        "intent": "00_thanks",
+        "text": "oh thanks"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "Sure"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "sure thanks"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "yes"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "yes sure"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "yep"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "ya"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "oh yes"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "allright"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "sure thing"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "all right"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "okay"
+      },
+      {
+        "intent": "00_affirm",
+        "text": "ok"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 18,
+            "end": 29,
+            "value": "salesorder",
+            "entity": "howto"
+          }
+        ],
+        "text": "how do i create a sales order"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 18,
+            "end": 29,
+            "value": "salesorder",
+            "entity": "howto"
+          }
+        ],
+        "text": "how can i enter a sales order"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 19,
+            "end": 33,
+            "value": "salesorder",
+            "entity": "howto"
+          }
+        ],
+        "text": "how can i create a customer order"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 14,
+            "end": 25,
+            "value": "salesorder",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to create sales order"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 16,
+            "end": 18,
+            "value": "salesorder",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to create a SO"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 15,
+            "end": 17,
+            "value": "salesorder",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to enter a so"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 17,
+            "end": 28,
+            "value": "salesorder",
+            "entity": "howto"
+          }
+        ],
+        "text": "i need to create sales order"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 23,
+            "end": 34,
+            "value": "salesorder",
+            "entity": "howto"
+          }
+        ],
+        "text": "tell me how to enter a sales order"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 16,
+            "end": 23,
+            "value": "wipjob",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to create a wip job"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 15,
+            "end": 22,
+            "value": "wipjob",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to build a wip job"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 19,
+            "end": 27,
+            "value": "shipconfirm",
+            "entity": "howto"
+          }
+        ],
+        "text": "how do i confirm a delivery"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 9,
+            "end": 32,
+            "value": "shipconfirm",
+            "entity": "howto"
+          }
+        ],
+        "text": "how do i ship confirm a delivery"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 10,
+            "end": 33,
+            "value": "shipconfirm",
+            "entity": "howto"
+          }
+        ],
+        "text": "i need to ship confirm a delivery"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 10,
+            "end": 22,
+            "value": "shipconfirm",
+            "entity": "howto"
+          }
+        ],
+        "text": "how can i ship a order"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 10,
+            "end": 28,
+            "value": "shipconfirm",
+            "entity": "howto"
+          }
+        ],
+        "text": "how can i ship a sales order"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 7,
+            "end": 19,
+            "value": "shipconfirm",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to ship confirm a order"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 20,
+            "end": 28,
+            "value": "shipconfirm",
+            "entity": "howto"
+          }
+        ],
+        "text": "how do i complete a shipment"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 23,
+            "end": 38,
+            "value": "shipconfirm",
+            "entity": "howto"
+          }
+        ],
+        "text": "can you tell me how to make a shipment"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 32,
+            "end": 39,
+            "value": "wipjob",
+            "entity": "howto"
+          }
+        ],
+        "text": "can you tell me how to create a wip job"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 16,
+            "end": 35,
+            "value": "wipjob",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to create a work in process job"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 22,
+            "end": 30,
+            "value": "subxfer",
+            "entity": "howto"
+          }
+        ],
+        "text": "i need to know how to sub xfer"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 17,
+            "end": 39,
+            "value": "subxfer",
+            "entity": "howto"
+          }
+        ],
+        "text": "how do i perform sub inventory transfer"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 7,
+            "end": 15,
+            "value": "subxfer",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to sub xfer"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 10,
+            "end": 28,
+            "value": "subxfer",
+            "entity": "howto"
+          }
+        ],
+        "text": "how can i sub inventory xfer material"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 7,
+            "end": 24,
+            "value": "subxfer",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to transfer material from one location to another"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 15,
+            "end": 29,
+            "value": "subxfer",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to perform stock transfer"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 18,
+            "end": 25,
+            "value": "wipjob",
+            "entity": "howto"
+          }
+        ],
+        "text": "how can i enter a wip job"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 16,
+            "end": 33,
+            "value": "wipjob",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to create a manufacturing job"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 25,
+            "end": 44,
+            "value": "wipjob",
+            "entity": "howto"
+          }
+        ],
+        "text": "tell me how to release a work in process job"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 15,
+            "end": 33,
+            "value": "subxfer",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to perform inventory transfer"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 30,
+            "end": 37,
+            "value": "wipjob",
+            "entity": "howto"
+          }
+        ],
+        "text": "can you tell me how to make a wip job"
+      },
+      {
+        "intent": "01_01_how_to",
+        "entities": [
+          {
+            "start": 15,
+            "end": 29,
+            "value": "salesorder",
+            "entity": "howto"
+          }
+        ],
+        "text": "how to enter a customer order"
+      },
+      {
+        "intent": "01_unable_SO",
+        "entities": [
+          {
+            "start": 23,
+            "end": 34,
+            "value": "sales order",
+            "entity": "problem"
+          }
+        ],
+        "text": "i am unable to enter a sales order in oracle"
+      },
+      {
+        "intent": "01_unable_SO",
+        "entities": [
+          {
+            "start": 16,
+            "end": 27,
+            "value": "sales order",
+            "entity": "problem"
+          }
+        ],
+        "text": "not able to add sales order line in oracle "
+      },
+      {
+        "intent": "01_unable_SO",
+        "entities": [
+          {
+            "start": 14,
+            "end": 26,
+            "value": "invalid item",
+            "entity": "actual_problem"
+          },
+          {
+            "start": 42,
+            "end": 53,
+            "value": "sales order",
+            "entity": "problem"
+          }
+        ],
+        "text": "getting error invalid item while entering sales order in oracle "
+      },
+      {
+        "intent": "01_unable_SO",
+        "entities": [
+          {
+            "start": 16,
+            "end": 28,
+            "value": "invalid item",
+            "entity": "actual_problem"
+          },
+          {
+            "start": 39,
+            "end": 50,
+            "value": "sales order",
+            "entity": "problem"
+          }
+        ],
+        "text": "getting message invalid item on oracle sales order screen "
+      },
+      {
+        "intent": "01_unable_SO",
+        "entities": [
+          {
+            "start": 56,
+            "end": 68,
+            "value": "invalid item",
+            "entity": "actual_problem"
+          },
+          {
+            "start": 21,
+            "end": 32,
+            "value": "sales order",
+            "entity": "problem"
+          }
+        ],
+        "text": "facing some issue in sales order form , getting message invalid item"
+      },
+      {
+        "intent": "01_unable_SO",
+        "entities": [
+          {
+            "start": 19,
+            "end": 30,
+            "value": "sales order",
+            "entity": "problem"
+          }
+        ],
+        "text": "facing issues with sales order "
+      },
+      {
+        "intent": "01_unable_SO",
+        "entities": [
+          {
+            "start": 26,
+            "end": 37,
+            "value": "sales order",
+            "entity": "problem"
+          }
+        ],
+        "text": "some issue while entering sales order"
+      },
+      {
+        "intent": "01_error_msg",
+        "entities": [
+          {
+            "start": 19,
+            "end": 31,
+            "value": "invalid item",
+            "entity": "actual_problem"
+          }
+        ],
+        "text": "i am getting error invalid item "
+      },
+      {
+        "intent": "01_error_msg",
+        "entities": [
+          {
+            "start": 16,
+            "end": 28,
+            "value": "invalid item",
+            "entity": "actual_problem"
+          }
+        ],
+        "text": "getting message invalid item "
+      },
+      {
+        "intent": "01_error_msg",
+        "entities": [
+          {
+            "start": 15,
+            "end": 27,
+            "value": "invalid item",
+            "entity": "actual_problem"
+          }
+        ],
+        "text": "i see a pop up invalid item"
+      },
+      {
+        "intent": "01_error_msg",
+        "entities": [
+          {
+            "start": 19,
+            "end": 33,
+            "value": "container item",
+            "entity": "actual_problem"
+          }
+        ],
+        "text": "getting message no container item assigined"
+      },
+      {
+        "intent": "01_error_msg",
+        "entities": [
+          {
+            "start": 16,
+            "end": 30,
+            "value": "container item",
+            "entity": "actual_problem"
+          }
+        ],
+        "text": "i see a message container item not assigined"
+      },
+      {
+        "intent": "01_error_msg",
+        "entities": [
+          {
+            "start": 0,
+            "end": 14,
+            "value": "container item",
+            "entity": "actual_problem"
+          }
+        ],
+        "text": "container item not assigined to delivery "
+      },
+      {
+        "intent": "01_error_msg",
+        "entities": [
+          {
+            "start": 14,
+            "end": 28,
+            "value": "container item",
+            "entity": "actual_problem"
+          }
+        ],
+        "text": "error message container item not assigined "
+      },
+      {
+        "intent": "01_unable_wsh",
+        "entities": [
+          {
+            "start": 15,
+            "end": 27,
+            "value": "ship confirm",
+            "entity": "problem"
+          }
+        ],
+        "text": "i am unable to ship confirm a delivery"
+      },
+      {
+        "intent": "01_unable_wsh",
+        "entities": [
+          {
+            "start": 17,
+            "end": 29,
+            "value": "ship confirm",
+            "entity": "problem"
+          }
+        ],
+        "text": "i am not able to ship confirm "
+      },
+      {
+        "intent": "01_unable_wsh",
+        "entities": [
+          {
+            "start": 20,
+            "end": 32,
+            "value": "ship confirm",
+            "entity": "problem"
+          }
+        ],
+        "text": "getting error while ship confirm a delivery"
+      },
+      {
+        "intent": "01_unable_wsh",
+        "entities": [
+          {
+            "start": 10,
+            "end": 22,
+            "value": "ship confirm",
+            "entity": "problem"
+          },
+          {
+            "start": 42,
+            "end": 56,
+            "value": "container item",
+            "entity": "actual_problem"
+          }
+        ],
+        "text": "unable to ship confirm , getting error no container item assigined "
+      },
+      {
+        "intent": "01_unable_wsh",
+        "entities": [
+          {
+            "start": 48,
+            "end": 60,
+            "value": "ship confirm",
+            "entity": "problem"
+          },
+          {
+            "start": 17,
+            "end": 31,
+            "value": "container item",
+            "entity": "actual_problem"
+          }
+        ],
+        "text": "getting error no container item assigined while ship confirm "
+      },
+      {
+        "intent": "01_unable_wsh",
+        "entities": [
+          {
+            "start": 51,
+            "end": 63,
+            "value": "ship confirm",
+            "entity": "problem"
+          },
+          {
+            "start": 11,
+            "end": 25,
+            "value": "container item",
+            "entity": "actual_problem"
+          }
+        ],
+        "text": "message no container item assigined appears when i ship confirm"
+      },
+      {
+        "intent": "01_unable_invoice",
+        "entities": [
+          {
+            "start": 27,
+            "end": 34,
+            "value": "invoice",
+            "entity": "problem"
+          }
+        ],
+        "text": "we are unable to print off invoice "
+      },
+      {
+        "intent": "01_unable_invoice",
+        "entities": [
+          {
+            "start": 21,
+            "end": 28,
+            "value": "invoice",
+            "entity": "problem"
+          }
+        ],
+        "text": "not able to generate invoice"
+      },
+      {
+        "intent": "01_unable_invoice",
+        "entities": [
+          {
+            "start": 16,
+            "end": 23,
+            "value": "invoice",
+            "entity": "problem"
+          }
+        ],
+        "text": "cannot take out invoice from the system "
+      },
+      {
+        "intent": "01_unable_invoice",
+        "entities": [
+          {
+            "start": 28,
+            "end": 37,
+            "value": "invoice",
+            "entity": "problem"
+          }
+        ],
+        "text": "we are not able to complete invoicing process "
+      },
+      {
+        "intent": "01_unable_invoice",
+        "entities": [
+          {
+            "start": 16,
+            "end": 23,
+            "value": "invoice",
+            "entity": "problem"
+          }
+        ],
+        "text": "cannot generate invoice"
+      },
+      {
+        "intent": "00_negative",
+        "text": "no"
+      },
+      {
+        "intent": "00_negative",
+        "text": "nope"
+      },
+      {
+        "intent": "00_negative",
+        "text": "no cannot see it"
+      },
+      {
+        "intent": "00_negative",
+        "text": "not at this point"
+      },
+      {
+        "intent": "00_negative",
+        "text": "not yet"
+      }
+    ],
+    "regex_features": [],
+    "lookup_tables": [],
+    "entity_synonyms": [
+      {
+        "value": "salesorder",
+        "synonyms": [
+          "sales order",
+          "customer order",
+          "SO",
+          "so"
+        ]
+      },
+      {
+        "value": "wipjob",
+        "synonyms": [
+          "wip job",
+          "work in process job",
+          "manufacturing job"
+        ]
+      },
+      {
+        "value": "shipconfirm",
+        "synonyms": [
+          "delivery",
+          "ship confirm a delivery",
+          "ship a order",
+          "ship a sales order",
+          "ship confirm",
+          "shipment",
+          "make a shipment"
+        ]
+      },
+      {
+        "value": "subxfer",
+        "synonyms": [
+          "sub xfer",
+          "sub inventory transfer",
+          "sub inventory xfer",
+          "transfer material",
+          "stock transfer",
+          "inventory transfer"
+        ]
+      }
+    ]
+  }
+}

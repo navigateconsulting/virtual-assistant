@@ -1,0 +1,22 @@
+{
+  "sales order": "salesorder",
+  "customer order": "salesorder",
+  "so": "salesorder",
+  "wip job": "wipjob",
+  "work in process job": "wipjob",
+  "manufacturing job": "wipjob",
+  "delivery": "shipconfirm",
+  "ship confirm a delivery": "shipconfirm",
+  "ship a order": "shipconfirm",
+  "ship a sales order": "shipconfirm",
+  "ship confirm": "shipconfirm",
+  "shipment": "shipconfirm",
+  "make a shipment": "shipconfirm",
+  "sub xfer": "subxfer",
+  "sub inventory transfer": "subxfer",
+  "sub inventory xfer": "subxfer",
+  "transfer material": "subxfer",
+  "stock transfer": "subxfer",
+  "inventory transfer": "subxfer",
+  "invoicing": "invoice"
+}
