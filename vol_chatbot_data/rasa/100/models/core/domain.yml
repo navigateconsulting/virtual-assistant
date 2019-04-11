@@ -1,0 +1,133 @@
+%YAML 1.1
+---
+actions:
+- utter_greet
+- utter_goodbye
+- utter_default
+- utter_anything_else
+- utter_sales_order
+- utter_how_to_ship_confirm
+- utter_how_to_wip_job
+- utter_how_to_sub_xfer
+- utter_ask_error
+- utter_so_invalid_item
+- utter_wsh_container_item
+- utter_invoice_org_items
+- utter_invoice_val_items
+- utter_invoice_enabled
+- utter_contact_support
+- utter_invoice_correct
+- utter_welcome
+config:
+  store_entities_as_slots: true
+entities:
+- how_to
+- problem
+- actual_problem
+forms: []
+intents:
+- 00_greet:
+    use_entities: true
+- 00_thanks:
+    use_entities: true
+- 00_affirm:
+    use_entities: true
+- 01_01_how_to:
+    use_entities: true
+- 01_unable_SO:
+    use_entities: true
+- 01_error_msg:
+    use_entities: true
+- 01_unable_wsh:
+    use_entities: true
+- 01_unable_invoice:
+    use_entities: true
+- 00_negative:
+    use_entities: true
+slots:
+  actual_problem:
+    auto_fill: true
+    initial_value: null
+    type: rasa_core.slots.CategoricalSlot
+    values:
+    - invalid item
+    - container item
+  howto:
+    auto_fill: true
+    initial_value: null
+    type: rasa_core.slots.CategoricalSlot
+    values:
+    - salesorder
+    - wipjob
+    - shipconfirm
+    - subxfer
+  problem:
+    auto_fill: true
+    initial_value: null
+    type: rasa_core.slots.CategoricalSlot
+    values:
+    - sales order
+    - ship confirm
+    - invoice
+templates:
+  utter_anything_else:
+  - text: Is there anything else i can help you with ?
+  utter_ask_error:
+  - text: 'Sure ! Could you please tell me the exact error message which you see ? '
+  utter_contact_support:
+  - text: to further debug the issue, can you please raise a support ticket. Application
+      support team will get back to you and help you with this issue
+  utter_default:
+  - text: Sorry i could not understand that
+  utter_goodbye:
+  - text: Thank you !
+  - text: Thank you Bye !
+  utter_greet:
+  - text: Hi! , Welcome i am an enterprise virtual assistant. How can i help you today
+      ?
+  utter_how_to_ship_confirm:
+  - text: Navigate to Shipping Responsibility. Open shipping transactions from. In
+      the Query window , type in the delivery number and select find. once the delivery
+      header page opens. Select ship confirm button. after clicking a confirmation
+      page will pop up. select the delivery detail options , and ITS options and press
+      confirm . This will ship confirm the delivery.
+  utter_how_to_sub_xfer:
+  - text: Navigate to Inventory responsibility. In transactions , select subinventory
+      transactions. Once the form opens , select the part number , from subinventory
+      and locator , to sub inventory and locator and the quantity. if the item is
+      serial controlled enter the serial numbers. and save the record. This will complete
+      the sub inventory transfer process.
+  utter_how_to_wip_job:
+  - text: Navigate to Work in process responsibility. Select Discrete jobs function.
+      Once the search window pops up. select create new jobs. once the discrete jobs
+      window opens up. Select the assembly item from the list of values. If you desire
+      so , change the wip job number , enter the quantity and change the schedule
+      start date and end date as per requirements. and save. This will create the
+      wip job.
+  utter_invoice_correct:
+  - text: 'please correct the above setup and give it a try again '
+  utter_invoice_enabled:
+  - text: can you please check if the item is invoiceable at the inventory organization
+      and validation organization level
+  utter_invoice_org_items:
+  - text: 'can you please check if the item has shippable flag enabled at inventory
+      item parameters at organization level '
+  utter_invoice_val_items:
+  - text: 'can you please check if the item has shippable flag enabled at inventory
+      item parameters at validation organization level '
+  utter_sales_order:
+  - text: To enter a sales order , please navigate to Order Management Responsibility.
+      Navigate to Order Organizer form. Click on New Order button. Enter the Customer
+      number addresses and other mandatory fields. Save the record and go to line
+      details and enter part numbers which needs to be ordered.
+  utter_so_invalid_item:
+  - text: Okay there are few possible causes of this issue , either the item is inactive
+      / not enabled for shipping. or Customer Item cross reference is not set for
+      this item.Please check both of these setups. If the issue is still not resolved
+      , an incident can be raised to the application support team.
+  utter_welcome:
+  - text: you are welcome !
+  utter_wsh_container_item:
+  - text: Okay , it seems few of the shipment lines have not been assigined to container
+      item. Please ensure all delivery lines are packed against some LPN and none
+      of the delivery lines are in loose status.
