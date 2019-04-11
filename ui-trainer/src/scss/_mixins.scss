@@ -1,0 +1,15 @@
+@mixin transform($property) {
+    -webkit-transform: $property;
+    -ms-transform: $property;
+    transform: $property;
+            
+}
+@mixin border-radius($radius) {
+    border-radius: $radius;
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+}
+@mixin rectangle {
+    background: $white;
+    @include border-radius(5px);
+}

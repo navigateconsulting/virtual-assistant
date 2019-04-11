@@ -1,0 +1,237 @@
+<div class="create-user-popup">
+    <div class="row">
+      <div class="col-md-10">
+        <h2 class="mat-title">Personal Details</h2>
+      </div>
+      <div class="col-md-2 text-right">
+        <button class="mat-button close-dialog" (click)="closeDialog()"><h2 class="mat-title">X</h2></button>
+      </div>
+    </div>
+    <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-md-6 form-group">
+          <mat-form-field class="example-full-width" appearance=outline>
+            <input matInput formControlName="firstname" [(ngModel)]="first_name" placeholder="First Name">
+          </mat-form-field>
+          <div *ngIf="createUserForm.controls['firstname'].invalid && (createUserForm.controls['firstname'].dirty || createUserForm.controls['firstname'].touched)" class="error-msg">
+            <div *ngIf="createUserForm.controls['firstname'].errors.required">
+              First Name is required.
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 form-group">
+          <mat-form-field class="example-full-width" appearance=outline>
+            <input matInput formControlName="lastname" [(ngModel)]="last_name" placeholder="Last Name">
+          </mat-form-field>
+          <div *ngIf="createUserForm.controls['lastname'].invalid && (createUserForm.controls['lastname'].dirty || createUserForm.controls['lastname'].touched)" class="error-msg">
+            <div *ngIf="createUserForm.controls['lastname'].errors.required">
+              Last Name is required.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 form-group">
+          <mat-form-field class="example-full-width" appearance=outline>
+            <input matInput formControlName="lastname" [(ngModel)]="display_name" placeholder="Display Name">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 form-group">
+          <mat-form-field class="example-full-width" appearance=outline>
+            <input matInput formControlName="email" [(ngModel)]="email_id" placeholder="Email Id">
+          </mat-form-field>
+          <div *ngIf="createUserForm.controls['email'].invalid && (createUserForm.controls['email'].dirty || createUserForm.controls['email'].touched)" class="error-msg">
+            <div *ngIf="createUserForm.controls['email'].errors.required">Email Id is required.</div>
+            <div *ngIf="createUserForm.controls['email'].errors.email">Email Id must be a valid email address</div>
+          </div>
+        </div>
+        <div class="col-md-6 form-group">
+          <mat-form-field class="example-full-width" appearance=outline>
+            <input matInput formControlName="username" [(ngModel)]="user_name" placeholder="Username">
+          </mat-form-field>
+          <div *ngIf="createUserForm.controls['username'].invalid && (createUserForm.controls['username'].dirty || createUserForm.controls['username'].touched)" class="error-msg">
+            <div *ngIf="createUserForm.controls['username'].errors.required">Username is required.</div>
+            <div *ngIf="createUserForm.controls['username'].errors.minlength">Username must be at least 6 characters</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-6">
+          <mat-checkbox (change)="setSameAsEmail($event)"><span class="mat-caption">Same As Email</span></mat-checkbox>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <!-- <div class="row">
+        <div class="col-md-10">
+          <h2 class="mat-title">Generate Password</h2>
+        </div>
+        <div class="col-md-2">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+          <mat-radio-group [(ngModel)]="password_setup_var" (change)="setPassVar()">
+              <mat-radio-button name="password_setup" value="generate_automatic">Generate Automatic</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="col-md-3">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+          <mat-radio-group [(ngModel)]="password_setup_var" (change)="setPassVar()">
+              <mat-radio-button name="password_setup" value="create_password_manually">Create Password Manually</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="col-md-3">
+        </div>
+      </div>
+      <div *ngIf="show_manual_pass_create === true">
+        <div class="row">
+          <div class="col-md-3">
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="example-full-width" appearance=outline>
+              <input matInput placeholder="New Password">
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+          </div>
+          <div class="col-md-6">
+            <mat-form-field class="example-full-width" appearance=outline>
+              <input matInput placeholder="Confirm New Password">
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+          <mat-checkbox><span class="mat-caption">Prompt user to change password on first LOGIN</span></mat-checkbox>
+        </div>
+        <div class="col-md-3">
+        </div>
+      </div>
+      <mat-divider></mat-divider> -->
+      <div class="row">
+        <div class="col-md-10">
+          <h2 class="mat-title">Roles</h2>
+        </div>
+        <div class="col-md-2">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+          <mat-checkbox class="custom_checkboxes" id="role_3" (change)="addRoleToArr($event)">
+            <span class="mat-body-2">
+              User (No Trainer Access)
+            </span>
+            <br>
+            <span class="mat-caption">
+              This user will not have permissions to train the agent. 'User' role enables Security.
+            </span>
+          </mat-checkbox>
+        </div>
+        <div class="col-md-3">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+          <mat-checkbox class="custom_checkboxes" id="role_2" (change)="addRoleToArr($event)">
+            <span class="mat-body-2">
+              Trainer
+            </span>
+            <br>
+            <span class="mat-caption">
+              This user will not have access to train the agent.
+            </span>
+          </mat-checkbox>
+        </div>
+        <div class="col-md-3">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+          <mat-checkbox class="custom_checkboxes" id="role_1" (change)="addRoleToArr($event)">
+            <span class="mat-body-2">
+              Administrator
+            </span>
+            <br>
+            <span class="mat-caption">
+              This user will not have admin rights to manage user, agents.
+            </span>
+          </mat-checkbox>
+        </div>
+        <div class="col-md-3">
+        </div>
+      </div>
+      <div *ngIf="validate_checkbox" class="text-center error-msg">
+        Kindly select atleast one role.
+      </div>
+      <mat-divider></mat-divider>
+      <div class="row">
+        <div class="col-md-10">
+          <h2 class="mat-title">Agents</h2>
+        </div>
+        <div class="col-md-2">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6 text-center">
+          <mat-form-field appearance=outline>
+            <mat-select multiple placeholder="Agents">
+              <mat-option *ngFor="let agent of allAgents" (onSelectionChange)="addAgentsToArr($event)" id="agent_{{agent.agent_id}}" [value]="agent.agent_id">
+                {{agent.agent_name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+        </div>
+      </div>
+      <div *ngIf="validate_selectbox" class="text-center error-msg">
+        Kindly select atleast one agent.
+      </div>
+      <mat-divider></mat-divider>
+      <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+          <div mat-dialog-actions>
+            <div class="col-md-6">
+                <button mat-raised-button color="warn" (click)="closeDialog()">Cancel</button>
+            </div>
+            <div class="col-md-6 text-right">
+                <button mat-raised-button type="submit" color="primary">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  

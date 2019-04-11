@@ -1,0 +1,110 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="place_div_center">
+      <span class="mat-title">Story Description:</span> {{currentStory.story}}
+      <br /><br />
+      <form class="ui-form" [formGroup]="storyForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-12">
+            <div cdkDropList class="example-list" formArrayName="intents_responses" (cdkDropListDropped)="drop_intent($event)">
+              <div class="intents-box" *ngFor="let intent of storyForm.controls['intents_responses'].controls; let ind = index" cdkDrag>
+                <mat-expansion-panel class='mat-exp-panel-element' formGroupName="{{ind}}">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <input type="hidden" id="intent_id_{{ind}}" formControlName="intent_id">
+                      <input type="hidden" id="intent_{{ind}}" formControlName="intent">
+                      <mat-form-field class="example-full-width">
+                        <input matInput id="intent_text_{{ind}}" (keydown)="handleSpacebar($event)" formControlName="intent_text" [matAutocomplete]="intent_auto">
+                        <mat-autocomplete #intent_auto="matAutocomplete" id="intent_auto_complete">
+                          <mat-option *ngFor="let option of intentsfilteredOptions" (onSelectionChange)="onIntentChange($event, ind, option.intent_id, option.intent)" [value]="option.intent_text">
+                            <span>{{option.intent_text}}</span> |
+                            <small>Intent: {{option.intent}}</small> |
+                            <small>Intent Id: {{option.intent_id}}</small>
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                      <div class="col-md-10"></div>
+                      <div class="col-md-2 text-right" style="margin-top: 3%;">
+                        <button mat-button matTooltip="Remove Intent" (click)="removeIntentFromStory(ind)">
+                          <mat-icon>remove_circle_outline</mat-icon>
+                        </button>
+                      </div>
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <div class="row" id="intent_entity_{{ind}}">
+                    <div class="col-md-5">
+                      <mat-form-field class="example-full-width">
+                        <input type="text" placeholder="Add Entity" matInput [formControl]="entityControl" name="intent_entity_{{ind}}" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                          <mat-option *ngFor="let option of entitiesfilteredOptions | async" (onSelectionChange)="onEntityChange($event, ind)" [value]="option.entity_name">
+                            {{option.entity_name}}:{{option.entity_value}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-7 entities-box">
+                      <mat-chip-list>
+                        <mat-chip color="warn" selected *ngFor="let entity of intent_entity_arr[ind]; let ind_ent = index" [selectable]="selectable" [removable]="removable" (removed)="removeEntityFromIntent(ind, ind_ent)">
+                          {{entity.entity_name}}:{{entity.entity_value}}
+                          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                        </mat-chip>
+                      </mat-chip-list>
+                    </div>
+                  </div>
+                  <br />
+                  <div cdkDropList class="example-list" formArrayName="responses" (cdkDropListDropped)="drop_response($event, ind)">
+                    <div class="col-md-12 responses-box" *ngFor="let response of intent.controls['responses'].controls; let ind_resp = index" cdkDrag>
+                      <div class="col-md-6 text-left" style="padding: 0;" formGroupName="{{ind_resp}}">
+                          <input type="hidden" id="response_id_{{ind_resp}}" formControlName="response_id">
+                          <input type="hidden" id="response_{{ind_resp}}" formControlName="response">
+                          <mat-form-field class="example-full-width">
+                            <input matInput id="response_text_{{ind_resp}}" (keydown)="handleSpacebar($event)" formControlName="response_text" [matAutocomplete]="response_auto">
+                            <mat-autocomplete #response_auto="matAutocomplete" id="response_auto_complete">
+                                <mat-option *ngFor="let option of responsesfilteredOptions" (onSelectionChange)="onResponseChange($event, ind, ind_resp, option.response_id, option.response)" [value]="option.response_text">
+                                <span>{{option.response_text}}</span> |
+                                <small>Response: {{option.response}}</small> |
+                                <small>Response Id: {{option.response_id}}</small>
+                                </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-6 text-right" style="padding: 0;">
+                          <button mat-button matTooltip="Remove Response" (click)="removeResponseFromIntent(ind, ind_resp)">
+                          <mat-icon>remove_circle_outline</mat-icon>
+                          </button>
+                      </div>
+                    </div>
+                </div>
+
+                <div class='add-responses-div'>
+                    <button mat-mini-fab color="accent" matTooltip="Add Response" (click)="addResponseToIntent(ind)"> 
+                    <span class="mat-small"><mat-icon>add</mat-icon></span>
+                    </button>
+                </div>
+                </mat-expansion-panel>
+              </div>
+              <div class='add-intents-div'>
+                <button mat-mini-fab color="primary" matTooltip="Add Intent" (click)="addIntentToStory()"> 
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br /><br />
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <button type="submit" mat-raised-button color="primary" [disabled]="!storyForm.valid">Save Story</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- <div class="column result">
+  <span>Form Validity and Values</span><br />
+  <span>Form Validity: {{storyForm.valid}}</span><br />
+  <span>Form Value: {{storyForm.value | json}}</span>
+</div> -->

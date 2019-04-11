@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Create a new file</h1>
+
+<mat-dialog-content>
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="File Name" [(ngModel)]="fileName">
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [mat-dialog-close]="fileName" color="primary">OK</button>
+</mat-dialog-actions>
