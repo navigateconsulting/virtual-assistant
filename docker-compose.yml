@@ -57,7 +57,7 @@ services:
 
   ## starting container for Angular Rasa Trainer
 
-## Issue with launching this container hence committed 
+## Issue with launching this container hence committed
 #  ui_trainer:
 #    build: ./ui-trainer/.
 #    ports:
