@@ -1,0 +1,44 @@
+version: '3.0'
+
+services:
+  rasa_core:
+    image: rasa/rasa_core:latest
+    ports:
+      - 5005:5005
+    volumes:
+      - ./vol_chatbot_data/rasa/100/models/core:/app/models
+      - ./vol_chatbot_data/rasa/100/config:/app/config
+    command:
+      - start
+      - --core
+      - models
+      - -c
+      - rest
+      - --endpoints
+      - config/endpoints.yml
+      - -u
+      - current/
+  rasa_nlu:
+    image: rasa/rasa_nlu:latest-tensorflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./vol_chatbot_data/rasa/100/models/nlu:/app/models
+      - ./vol_chatbot_data/rasa/100/config:/app/config
+    command:
+      - start
+      - --path
+      - models
+      - -c
+      - config/nlu_config.yml
+
+  action_server:
+    image: rasa/rasa_core_sdk:latest
+    ports:
+      - "5055:5055"
+    volumes:
+      - ./vol_chatbot_data/rasa/100/actions:/app/actions
+
+  redis:
+    image: redis:latest
+
