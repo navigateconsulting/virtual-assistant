@@ -1,0 +1,36 @@
+<br/><br/><br/><br/><br/>
+<div class="content">
+    <mat-card class="login-card">
+        <mat-card-header>
+            <div mat-card-avatar class="login-header-image"></div>
+            <mat-card-title>Nobleia</mat-card-title>
+            <mat-card-subtitle>Navigate Consulting Platform</mat-card-subtitle>
+        </mat-card-header>
+        <hr/>
+        <mat-card-title>Sign In</mat-card-title>
+        <mat-card-content class="login-card-content">
+            <div class="row">
+                <mat-form-field>
+                    <input matInput placeholder="E-mail" [(ngModel)]="email" type="email" name="email">
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <mat-form-field>
+                    <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" required>
+                </mat-form-field>
+            </div>
+            <div *ngIf="checkCredentials === 0" class="error">Invalid Email Id Or Password.</div>
+        </mat-card-content>
+        <hr/>
+        <mat-card-footer>
+            <div class="row text-center footer-row">
+                <div class="col-md-6">
+                    <button class="login-button" (click)="login()" mat-raised-button color="primary">Sign In</button>
+                </div>
+                <div class="col-md-6">
+                    <a href="">Forgot Password?</a>
+                </div>
+            </div>
+        </mat-card-footer>
+    </mat-card>
+</div>

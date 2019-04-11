@@ -1,0 +1,20 @@
+.mat-radio-button {
+    padding: 1%;
+}
+.mat-dialog-content {
+    margin-left: -2% !important;
+    margin-right: -2% !important;
+}
+mat-form-field {
+    font-size: 14px;
+}
+.entity-values {
+    display: flex;
+    flex-direction: column;
+}
+.entity-values > * {
+    width: 100%;
+}
+.example-full-width {
+    width: 100%;
+}

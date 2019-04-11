@@ -1,0 +1,27 @@
+@import '../../scss/styles';
+
+.manage-response-row {
+    margin-top: 2%;
+}
+.mat-form-field {
+    font-size: 14px;
+    width: 93%;
+}
+.accordion {
+    width: 100%;
+    height: 400px;
+    overflow-y: auto;
+    margin-top: 2%;
+}
+.relative {
+    width: 93%;
+    background-color: white;
+    position: relative;
+    margin-top: -22px;
+    height: auto;
+    overflow-y: auto;
+}
+.entities-button {
+    text-align: left;
+    width: 100%;
+}

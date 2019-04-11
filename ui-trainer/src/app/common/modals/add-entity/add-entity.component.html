@@ -1,0 +1,59 @@
+<h1 mat-dialog-title>Add Entity Details</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <div class="row entity-values">
+    <mat-form-field appearance="outline">
+      <mat-label>Entity Description</mat-label>
+      <textarea matInput [(ngModel)]="entity_desc"></textarea>
+    </mat-form-field>
+  </div>
+  <div class="row">
+    <span class="mat-body-strong">Select Entity Slot Type</span>
+  </div>
+  <div class="row">
+    <mat-radio-group (click)="setEntitySlotType($event)">
+      <mat-radio-button value="text">text</mat-radio-button>
+      <mat-radio-button value="bool">bool</mat-radio-button>
+      <mat-radio-button value="categorical">categorical</mat-radio-button>
+      <mat-radio-button value="float">float</mat-radio-button>
+      <mat-radio-button value="list">list</mat-radio-button>
+      <mat-radio-button value="unfeaturized">unfeaturized</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div *ngIf="entitySlotType==='categorical'" class="row entity-values">
+    <mat-form-field appearance="outline">
+      <mat-label>Entity Slot Value</mat-label>
+      <textarea matInput [(ngModel)]="categorical_values"></textarea>
+    </mat-form-field>
+    <span class="mat-caption">Values separated by a comma, ie: New York,NYC,NY</span>
+  </div>
+  <div *ngIf="entitySlotType==='float'" class="row">
+    <div class="col-md-6">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>min_value</mat-label>
+        <input matInput [(ngModel)]="min_value">
+      </mat-form-field>
+    </div>
+    <div class="col-md-6">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>max_value</mat-label>
+        <input matInput [(ngModel)]="max_value">
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+<mat-divider></mat-divider>
+<div class="row">
+  <div class="col-md-7">
+  </div>
+  <div class="col-md-5">
+    <div mat-dialog-actions>
+      <div class="col-md-6">
+        <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
+      </div>
+      <div class="col-md-6 text-right">
+        <button mat-raised-button color="primary" (click)="saveEntitySlotDetails()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
