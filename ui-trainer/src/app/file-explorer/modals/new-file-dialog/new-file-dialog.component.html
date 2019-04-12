@@ -2,7 +2,7 @@
 
 <mat-dialog-content>
   <mat-form-field class="example-full-width">
-    <input matInput placeholder="File Name" [(ngModel)]="fileName">
+    <input matInput placeholder="File Name" [(ngModel)]="fileName" (keydown.enter)="closeDialog()">
   </mat-form-field>
 </mat-dialog-content>
 

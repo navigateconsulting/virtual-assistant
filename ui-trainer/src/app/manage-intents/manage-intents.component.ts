@@ -78,9 +78,11 @@ export class ManageIntentsComponent implements OnInit {
   }
 
   addIntentTextElement() {
-    this.text_entities.push({text: this.new_intent_text, entities: []});
-    this.new_intent_text = '';
-    this.saveIntentJSONMethod();
+    if (this.new_intent_text.trim() !== '') {
+      this.text_entities.push({text: this.new_intent_text, entities: []});
+      this.new_intent_text = '';
+      this.saveIntentJSONMethod();
+    }
   }
 
   removeIntentTextElement(index: number) {
