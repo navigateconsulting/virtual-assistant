@@ -15,4 +15,8 @@ export class NewFolderDialogComponent implements OnInit {
   ngOnInit() {
   }
 
+  closeDialog() {
+    this.dialogRef.close(this.folderName);
+  }
+
 }
