@@ -15,4 +15,8 @@ export class RenameDialogComponent implements OnInit {
   ngOnInit() {
   }
 
+  closeDialog() {
+    this.dialogRef.close(this.folderName);
+  }
+
 }

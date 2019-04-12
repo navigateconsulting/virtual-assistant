@@ -31,17 +31,19 @@ export class ManageResponsesComponent implements OnInit {
   }
 
   addResponseTextElement() {
-    const new_response_text_arr = this.new_response_text.split(' ');
-    for (let i = 0; i < new_response_text_arr.length; i++) {
-      if (new_response_text_arr[i].includes('@')) {
-        new_response_text_arr[i] = new_response_text_arr[i].replace('@', '{');
-        new_response_text_arr[i] += '}';
+    if (this.new_response_text.trim() !== '') {
+      const new_response_text_arr = this.new_response_text.split(' ');
+      for (let i = 0; i < new_response_text_arr.length; i++) {
+        if (new_response_text_arr[i].includes('@')) {
+          new_response_text_arr[i] = new_response_text_arr[i].replace('@', '{');
+          new_response_text_arr[i] += '}';
+        }
       }
+      this.new_response_text = new_response_text_arr.join(' ');
+      this.text_entities.push(this.new_response_text);
+      this.new_response_text = '';
+      this.saveResponseJSONMethod();
     }
-    this.new_response_text = new_response_text_arr.join(' ');
-    this.text_entities.push(this.new_response_text);
-    this.new_response_text = '';
-    this.saveResponseJSONMethod();
   }
 
   removeResponseTextElement(index: number) {
@@ -69,7 +71,7 @@ export class ManageResponsesComponent implements OnInit {
   }
 
   populateEntities(event: any) {
-    if (event.which === 50) {
+    if (event.which === 50 && event.key !== '2') {
       this.showEntityDropdown = true;
       this.readonly = true;
     }

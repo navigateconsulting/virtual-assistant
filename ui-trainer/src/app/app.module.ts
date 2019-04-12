@@ -34,6 +34,7 @@ import { ChooseEntityComponent } from './common/modals/choose-entity/choose-enti
 import { EntitiesDataService } from './common/services/entities-data.service';
 import { ManageResponsesComponent } from './manage-responses/manage-responses.component';
 import { ManageStoriesComponent } from './manage-stories/manage-stories.component';
+import { AddEntityValueComponent } from './common/modals/add-entity-value/add-entity-value.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ManageStoriesComponent } from './manage-stories/manage-stories.componen
     ChooseEntityComponent,
     ManageResponsesComponent,
     ManageStoriesComponent,
+    AddEntityValueComponent,
   ],
   entryComponents: [
     CreateUserComponent,
@@ -63,7 +65,8 @@ import { ManageStoriesComponent } from './manage-stories/manage-stories.componen
     UpdateUserComponent,
     AddEntityComponent,
     EditEntityComponent,
-    ChooseEntityComponent
+    ChooseEntityComponent,
+    AddEntityValueComponent
   ],
   imports: [
     BrowserModule,

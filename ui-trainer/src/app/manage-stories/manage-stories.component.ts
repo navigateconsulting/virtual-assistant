@@ -5,13 +5,17 @@ import { IntentsDataService } from '../common/services/intents-data.service';
 import { ResponsesDataService } from '../common/services/responses-data.service';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete } from '@angular/material';
+import { MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete, MatInput } from '@angular/material';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Story } from '../common/models/story';
 import { Intent } from '../common/models/intent';
 import { Response } from '../common/models/response';
 import { Entity } from '../common/models/entity';
+import { MatDialog } from '@angular/material/dialog';
+import { AddEntityValueComponent } from '../common/modals/add-entity-value/add-entity-value.component';
+import { MatSnackBar } from '@angular/material';
+
 
 @Component({
   selector: 'app-manage-stories',
@@ -53,6 +57,8 @@ export class ManageStoriesComponent implements OnInit {
   @Output() saveStoryJSON = new EventEmitter<{ story_index: number, intents_responses: [{}] }>();
 
   constructor(private fb: FormBuilder,
+              public dialog: MatDialog,
+              private snackBar: MatSnackBar,
               private intents_data: IntentsDataService,
               private responses_data: ResponsesDataService,
               private entities_data: EntitiesDataService) { }
@@ -62,13 +68,6 @@ export class ManageStoriesComponent implements OnInit {
     this.convertToIntentTextArray();
 
     this.getEntities();
-    this.convertToEntityTextArray();
-
-    this.entitiesfilteredOptions = this.entityControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this._filter_entities(value))
-      );
 
     this.getResponse();
     this.convertToResponseTextArray();
@@ -94,6 +93,9 @@ export class ManageStoriesComponent implements OnInit {
         this.intents_entities_responses[intentIndex]['entities'] = this.intent_entity_arr[intentIndex];
       });
       this.saveStoryJSON.emit({ story_index: this.currentStory.story_id, intents_responses: this.intents_entities_responses });
+      this.snackBar.open('Story Save Successfully', 'Close', {
+        duration: 2000,
+      });
     }
   }
 
@@ -149,6 +151,12 @@ export class ManageStoriesComponent implements OnInit {
   getEntities() {
     this.entities_data.newEntity.subscribe((entities: any) => {
       this.entities = (entities !== '' && entities !== null) ? entities : [];
+      this.convertToEntityTextArray();
+      this.entitiesfilteredOptions = this.entityControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter_entities(value))
+      );
     });
   }
 
@@ -309,8 +317,18 @@ export class ManageStoriesComponent implements OnInit {
     if (this.intent_entity_arr[intent_index] === undefined) {
       this.intent_entity_arr[intent_index] = new Array<object>();
     }
-    this.intent_entity_arr[intent_index].push({'entity_name': entity_name_value[0], 'entity_value': entity_name_value[1]});
-    event.source.value = event.source._element.nativeElement.innerText;
+    if (entity_name_value[1] === '') {
+      const dialogRef = this.dialog.open(AddEntityValueComponent);
+      dialogRef.afterClosed().subscribe(res => {
+        if (res) {
+          entity_name_value[1] = res;
+          this.intent_entity_arr[intent_index].push({'entity_name': entity_name_value[0], 'entity_value': entity_name_value[1]});
+        }
+      });
+    } else {
+      this.intent_entity_arr[intent_index].push({'entity_name': entity_name_value[0], 'entity_value': entity_name_value[1]});
+    }
+    event.source.value = '';
   }
 
   handleSpacebar(event: any) {
