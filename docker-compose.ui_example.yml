@@ -6,6 +6,7 @@ services:
 
 
   ui_trainer:
-    build: ./ui-trainer/.
+    container_name: ui-trainer
+    build: './ui-trainer'
     ports:
-      - "5056:80"
+      - "8080:80"
