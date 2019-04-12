@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-rename-file-dialog',
@@ -9,9 +10,13 @@ export class RenameFileDialogComponent implements OnInit {
 
   fileName: string;
 
-  constructor() { }
+  constructor(public dialogRef: MatDialogRef<RenameFileDialogComponent>) { }
 
   ngOnInit() {
+  }
+
+  closeDialog() {
+    this.dialogRef.close(this.fileName);
   }
 
 }

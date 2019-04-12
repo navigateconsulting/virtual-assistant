@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Add Entity Value</h1>
+
+<mat-dialog-content>
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Entity Value" [(ngModel)]="entity_value" (keydown.enter)="closeDialog()">
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="closeDialog()" color="primary">OK</button>
+</mat-dialog-actions>
