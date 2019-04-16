@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_restful import Api
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 api = Api(app)
@@ -8,6 +9,10 @@ api = Api(app)
 
 
 import views, models, resources
+
+
+app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
+jwt = JWTManager(app)
 
 api.add_resource(resources.UserRegistration, '/registration')
 api.add_resource(resources.UserLogin, '/login')
