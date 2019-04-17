@@ -1,11 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { IntentsDataService } from '../common/services/intents-data.service';
 import { ResponsesDataService } from '../common/services/responses-data.service';
 import { EntitiesDataService } from '../common/services/entities-data.service';
-import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete, MatInput } from '@angular/material';
+import { FormGroup, FormBuilder, FormArray, Validators, FormControl, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Story } from '../common/models/story';
@@ -15,7 +13,6 @@ import { Entity } from '../common/models/entity';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEntityValueComponent } from '../common/modals/add-entity-value/add-entity-value.component';
 import { MatSnackBar } from '@angular/material';
-
 
 @Component({
   selector: 'app-manage-stories',
@@ -93,8 +90,8 @@ export class ManageStoriesComponent implements OnInit {
         this.intents_entities_responses[intentIndex]['entities'] = this.intent_entity_arr[intentIndex];
       });
       this.saveStoryJSON.emit({ story_index: this.currentStory.story_id, intents_responses: this.intents_entities_responses });
-      this.snackBar.open('Story Save Successfully', 'Close', {
-        duration: 2000,
+      this.snackBar.open('Story Saved Successfully', 'Close', {
+        duration: 5000,
       });
     }
   }
@@ -152,6 +149,7 @@ export class ManageStoriesComponent implements OnInit {
     this.entities_data.newEntity.subscribe((entities: any) => {
       this.entities = (entities !== '' && entities !== null) ? entities : [];
       this.convertToEntityTextArray();
+      this.entityControl = new FormControl('', requireEntityMatch(this.entities_text_arr));
       this.entitiesfilteredOptions = this.entityControl.valueChanges
       .pipe(
         startWith(''),
@@ -192,6 +190,18 @@ export class ManageStoriesComponent implements OnInit {
       }
     });
     this.responses_text_arr = responses_text_arr;
+  }
+
+  displayIntentWith(intent?: Intent): string | undefined {
+    return intent ? intent.intent_text : undefined;
+  }
+
+  displayResponseWith(response?: Response): string | undefined {
+    return response ? response.response_text : undefined;
+  }
+
+  displayEntityWith(entity?: Entity): string | undefined {
+    return entity ? entity.entity_name : undefined;
   }
 
   private _filter_intents(intent: string): string[] {
@@ -237,7 +247,7 @@ export class ManageStoriesComponent implements OnInit {
       new FormGroup({
         intent_id: new FormControl(intent_id, Validators.required),
         intent: new FormControl(intent_intent, Validators.required),
-        intent_text: new FormControl(intent_text, Validators.required),
+        intent_text: new FormControl(intent_text, [Validators.required, requireIntentMatch(this.intents_text_arr)]),
         responses: responses
       })
     );
@@ -271,7 +281,7 @@ export class ManageStoriesComponent implements OnInit {
         new FormGroup({
           response_id: new FormControl(response_id, Validators.required),
           response: new FormControl(response_response, Validators.required),
-          response_text: new FormControl(response_text, Validators.required),
+          response_text: new FormControl(response_text, [Validators.required, requireResponseMatch(this.responses_text_arr)]),
         })
     );
 
@@ -297,6 +307,7 @@ export class ManageStoriesComponent implements OnInit {
 
   onIntentChange(event: any, intent_index: number, intent_id: number, intent: string) {
     if (event.source.selected) {
+      console.log(event);
       const storyControl = (<FormArray>this.storyForm.controls['intents_responses']).at(intent_index);
       storyControl['controls'].intent_id.setValue(intent_id);
       storyControl['controls'].intent.setValue(intent);
@@ -313,22 +324,24 @@ export class ManageStoriesComponent implements OnInit {
   }
 
   onEntityChange(event: any, intent_index: number) {
-    const entity_name_value = event.source._element.nativeElement.innerText.split(':');
-    if (this.intent_entity_arr[intent_index] === undefined) {
-      this.intent_entity_arr[intent_index] = new Array<object>();
+    if (event.source.selected) {
+      const entity_name_value = event.source._element.nativeElement.innerText.split(':');
+      if (this.intent_entity_arr[intent_index] === undefined) {
+        this.intent_entity_arr[intent_index] = new Array<object>();
+      }
+      if (entity_name_value[1] === '') {
+        const dialogRef = this.dialog.open(AddEntityValueComponent);
+        dialogRef.afterClosed().subscribe(res => {
+          if (res) {
+            entity_name_value[1] = res;
+            this.intent_entity_arr[intent_index].push({'entity_name': entity_name_value[0], 'entity_value': entity_name_value[1]});
+          }
+        });
+      } else {
+        this.intent_entity_arr[intent_index].push({'entity_name': entity_name_value[0], 'entity_value': entity_name_value[1]});
+      }
+      event.source.value = '';
     }
-    if (entity_name_value[1] === '') {
-      const dialogRef = this.dialog.open(AddEntityValueComponent);
-      dialogRef.afterClosed().subscribe(res => {
-        if (res) {
-          entity_name_value[1] = res;
-          this.intent_entity_arr[intent_index].push({'entity_name': entity_name_value[0], 'entity_value': entity_name_value[1]});
-        }
-      });
-    } else {
-      this.intent_entity_arr[intent_index].push({'entity_name': entity_name_value[0], 'entity_value': entity_name_value[1]});
-    }
-    event.source.value = '';
   }
 
   handleSpacebar(event: any) {
@@ -336,5 +349,31 @@ export class ManageStoriesComponent implements OnInit {
       event.stopPropagation();
     }
   }
+}
 
+function requireIntentMatch(intents: any): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: boolean } | null => {
+    if (intents.find(value => value.intent_text.includes(control.value)) === undefined) {
+        return { 'invalid': true };
+    }
+    return null;
+  };
+}
+
+function requireResponseMatch(responses: any): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: boolean } | null => {
+    if (responses.find(value => value.response_text.includes(control.value)) === undefined) {
+        return { 'invalid': true };
+    }
+    return null;
+  };
+}
+
+function requireEntityMatch(entities: any): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: boolean } | null => {
+    if (entities.find(value => value.entity_name.includes(control.value)) === undefined) {
+        return { 'invalid': true };
+    }
+    return null;
+  };
 }

@@ -1,9 +1,16 @@
 <div class="row">
   <div class="col-md-12">
     <div class="place_div_center">
-      <span class="mat-title">Story Description:</span> {{currentStory.story}}
-      <br /><br />
       <form [formGroup]="storyForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-10">
+            <span class="mat-subheading-2"><b>Story Description:</b></span> {{currentStory.story_desc}}
+          </div>
+          <div class="col-md-2 text-right">
+            <button type="submit" mat-raised-button color="primary" [disabled]="!storyForm.valid">Save Story</button>
+          </div>
+        </div>
+        <br />
         <div class="row ui-form">
           <div class="col-md-12">
             <div cdkDropList class="example-list" formArrayName="intents_responses" (cdkDropListDropped)="drop_intent($event)">
@@ -22,6 +29,9 @@
                             <small>Intent Id: {{option.intent_id}}</small>
                           </mat-option>
                         </mat-autocomplete>
+                        <mat-error *ngIf="intent.get('intent_text').hasError('invalid')">
+                          Invalid Intent
+                        </mat-error>
                       </mat-form-field>
                     </mat-panel-title>
                     <mat-panel-description>
@@ -36,12 +46,15 @@
                   <div class="row" id="intent_entity_{{ind}}">
                     <div class="col-md-5">
                       <mat-form-field class="example-full-width">
-                        <input type="text" placeholder="Add Entity" #matInput matInput [formControl]="entityControl" name="intent_entity_{{ind}}" [matAutocomplete]="auto">
-                        <mat-autocomplete #auto="matAutocomplete">
-                          <mat-option *ngFor="let option of entitiesfilteredOptions | async" (onSelectionChange)="onEntityChange($event, ind)" [value]="option.entity_name">
+                        <input type="text" placeholder="Add Entity" (keydown)="handleSpacebar($event)" matInput [formControl]="entityControl" name="intent_entity_{{ind}}" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayEntityWith">
+                          <mat-option *ngFor="let option of entitiesfilteredOptions | async" (onSelectionChange)="onEntityChange($event, ind)" [value]="option">
                             {{option.entity_name}}:{{option.entity_value}}
                           </mat-option>
                         </mat-autocomplete>
+                        <mat-error *ngIf="entityControl.hasError('invalid')">
+                          Invalid Entity
+                        </mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-md-7 entities-box">
@@ -68,6 +81,9 @@
                                 <small>Response Id: {{option.response_id}}</small>
                                 </mat-option>
                             </mat-autocomplete>
+                            <mat-error *ngIf="response.get('response_text').hasError('invalid')">
+                              Invalid Response
+                            </mat-error>
                           </mat-form-field>
                       </div>
                       <div class="col-md-6 text-right" style="padding: 0;">
@@ -91,12 +107,6 @@
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-        <br /><br />
-        <div class="row">
-          <div class="col-md-12 text-center">
-            <button type="submit" mat-raised-button color="primary" [disabled]="!storyForm.valid">Save Story</button>
           </div>
         </div>
       </form>

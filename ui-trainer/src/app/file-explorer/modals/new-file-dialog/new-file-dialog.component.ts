@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-new-file-dialog',
@@ -8,15 +9,20 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class NewFileDialogComponent implements OnInit {
 
-  fileName: string;
+  newFileForm: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<NewFileDialogComponent>) { }
 
   ngOnInit() {
+    this.newFileForm = new FormGroup({
+      fileName: new FormControl('', Validators.required),
+      fileDescription: new FormControl('', Validators.required)
+    });
   }
 
   closeDialog() {
-    this.dialogRef.close(this.fileName);
+    if (this.newFileForm.valid) {
+      this.dialogRef.close({fileName: this.newFileForm.value.fileName, fileDescription: this.newFileForm.value.fileDescription});
+    }
   }
-
 }
