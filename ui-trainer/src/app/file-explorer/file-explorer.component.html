@@ -2,7 +2,7 @@
 <!-- <mat-icon *ngIf="canNavigateUp" class="pointer" (click)="navigateUp()">arrow_back</mat-icon> -->
 <span class="breadcrumb_path" style="margin-left: 8px" [innerHtml]="path" (click)="changePath($event)"></span>
 <span class="spacer"></span>
-<mat-icon class="pointer" (click)="openNewFolderDialog()" *ngIf="showAddFolderFile">add_circle</mat-icon>
+<mat-icon class="pointer" color="primary" (click)="openNewFolderDialog()" *ngIf="showAddFolderFile">add_circle</mat-icon>
 </mat-toolbar>
 
 <div class="container" fxFlex fxLayout="row" fxLayoutAlign="space-between stretch">
