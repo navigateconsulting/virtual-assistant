@@ -39,10 +39,12 @@ export class ManageEntitiesComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(entity_details => {
-        // tslint:disable-next-line:max-line-length
-        this.entities.push({entity: value.trim(), entity_desc: entity_details.entity_desc, entity_slot: entity_details.entity_slot_details});
-        this.entities_data.saveEntitiesJson(this.entities.slice(0));
-        this.updateEntitiesObject(this.entities);
+        if (Object.keys(entity_details).length !== 0) {
+          // tslint:disable-next-line:max-line-length
+          this.entities.push({entity: value.trim(), entity_desc: entity_details.entity_desc, entity_slot: entity_details.entity_slot_details});
+          this.entities_data.saveEntitiesJson(this.entities.slice(0));
+          this.updateEntitiesObject(this.entities);
+        }
       });
     }
 

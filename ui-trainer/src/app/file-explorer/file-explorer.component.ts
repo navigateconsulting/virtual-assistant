@@ -24,7 +24,7 @@ export class FileExplorerComponent {
   @Input() allJsonData: any;
 
   @Output() folderAdded = new EventEmitter<{ name: string }>();
-  @Output() fileAdded = new EventEmitter<{ name: string }>();
+  @Output() fileAdded = new EventEmitter<{ name: string, description: string }>();
   @Output() elementRemoved = new EventEmitter<FileElement>();
   @Output() elementRenamed = new EventEmitter<FileElement>();
   @Output() elementMoved = new EventEmitter<{ element: FileElement; moveTo: FileElement }>();
@@ -68,18 +68,22 @@ export class FileExplorerComponent {
             }
           });
         } else {
-          const dialogRef = this.dialog.open(NewFileDialogComponent);
+          const dialogRef = this.dialog.open(NewFileDialogComponent, {
+            width: '400px',
+          });
           dialogRef.afterClosed().subscribe(res => {
             if (res) {
-              this.fileAdded.emit({ name: res });
+              this.fileAdded.emit({ name: res.fileName, description: res.fileDescription });
             }
           });
         }
       } else {
-        const dialogRef = this.dialog.open(NewFileDialogComponent);
+        const dialogRef = this.dialog.open(NewFileDialogComponent, {
+          width: '400px',
+        });
         dialogRef.afterClosed().subscribe(res => {
           if (res) {
-            this.fileAdded.emit({ name: res });
+            this.fileAdded.emit({ name: res.fileName, description: res.fileDescription });
           }
         });
       }
@@ -88,7 +92,9 @@ export class FileExplorerComponent {
 
   openRenameDialog(element: FileElement) {
     if (this.fileElements[0].parent === 'root') {
-      const dialogRef = this.dialog.open(RenameDialogComponent);
+      const dialogRef = this.dialog.open(RenameDialogComponent, {
+        data: { folderName: element.name }
+      });
       dialogRef.afterClosed().subscribe(res => {
         if (res) {
           element.name = res;
@@ -96,10 +102,15 @@ export class FileExplorerComponent {
         }
       });
     } else {
-      const dialogRef = this.dialog.open(RenameFileDialogComponent);
+      const dialogRef = this.dialog.open(RenameFileDialogComponent, {
+        width: '400px',
+        data: { fileName: element.name, fileDescription: element.description }
+      });
       dialogRef.afterClosed().subscribe(res => {
         if (res) {
-          element.name = res;
+          console.log(res);
+          element.name = res.fileName;
+          element.description = res.fileDescription;
           this.elementRenamed.emit(element);
         }
       });
