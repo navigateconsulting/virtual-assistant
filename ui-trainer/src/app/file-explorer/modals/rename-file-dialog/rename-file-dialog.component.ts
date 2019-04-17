@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-rename-file-dialog',
@@ -8,15 +9,21 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class RenameFileDialogComponent implements OnInit {
 
-  fileName: string;
+  renameFileForm: FormGroup;
 
-  constructor(public dialogRef: MatDialogRef<RenameFileDialogComponent>) { }
+  constructor(public dialogRef: MatDialogRef<RenameFileDialogComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
+    this.renameFileForm = new FormGroup({
+      fileName: new FormControl(this.data.fileName, Validators.required),
+      fileDescription: new FormControl(this.data.fileDescription, Validators.required)
+    });
   }
 
   closeDialog() {
-    this.dialogRef.close(this.fileName);
+    if (this.renameFileForm.valid) {
+      this.dialogRef.close({fileName: this.renameFileForm.value.fileName, fileDescription: this.renameFileForm.value.fileDescription});
+    }
   }
-
 }
