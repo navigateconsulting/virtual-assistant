@@ -132,14 +132,16 @@ export class ManageIntentsComponent implements OnInit {
         data: {selected_entity: '', entities: this.entities}
       });
       dialogRef.afterClosed().subscribe(entity_value => {
-        if (entity_value.chosen_entity_value !== '') {
-          this.entityValue['value'] = entity_value.chosen_entity_value;
+        if (entity_value !== '') {
+          if (entity_value.chosen_entity_value !== '') {
+            this.entityValue['value'] = entity_value.chosen_entity_value;
+          }
+          delete this.entityValue['text_id'];
+          this.entityValue['entity'] = entity_value.chosen_entity;
+          this.text_entities[+event.target.id.split('_')[2]]['entities'].push(this.entityValue);
+          this.saveIntentJSONMethod();
+          toggleIntentEntity(event);
         }
-        delete this.entityValue['text_id'];
-        this.entityValue['entity'] = entity_value.chosen_entity;
-        this.text_entities[+event.target.id.split('_')[2]]['entities'].push(this.entityValue);
-        this.saveIntentJSONMethod();
-        toggleIntentEntity(event);
       });
     }
   }

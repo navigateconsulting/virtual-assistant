@@ -6,6 +6,7 @@ export class FileElement {
     response_id?: number;
     isFolder: boolean;
     name: string;
+    description?: string;
     parent: string;
     type: string;
 }

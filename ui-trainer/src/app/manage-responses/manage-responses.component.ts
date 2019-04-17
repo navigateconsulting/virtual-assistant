@@ -54,7 +54,7 @@ export class ManageResponsesComponent implements OnInit {
   applyMapFilter(filterValue: string) {
     this.text_entities = this.text_entities_backup;
     this.text_entities = this.text_entities.filter((value) => {
-      if (value.text.includes(filterValue.trim())) {
+      if (value.includes(filterValue.trim())) {
         return value;
       }
     });
@@ -71,7 +71,7 @@ export class ManageResponsesComponent implements OnInit {
   }
 
   populateEntities(event: any) {
-    if (event.which === 50 && event.key !== '2') {
+    if (event.which === 50) {
       this.showEntityDropdown = true;
       this.readonly = true;
     }
