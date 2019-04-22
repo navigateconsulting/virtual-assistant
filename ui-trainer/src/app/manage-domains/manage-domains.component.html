@@ -2,7 +2,7 @@
   <div class="col-md-9">
     <div class="col-padding">
       <mat-card style="height: 100%; box-sizing: border-box; padding:0">
-        <app-file-explorer [fileElements]="fileElements | async" [path]="currentPath" [showAddFolderFile]="showAddFolderFile" [canNavigateUp]="canNavigateUp" [allJsonData]="all_json_data" (folderAdded)="addFolder($event)"
+        <app-file-explorer [fileElements]="fileElements | async" [path]="currentPath" [showAddFolderFile]="showAddFolderFile" [canNavigateUp]="canNavigateUp" (folderAdded)="addFolder($event)"
           (fileAdded)="addFile($event)" (elementRemoved)="removeElement($event)" (navigatedDown)="navigateToFolder($event)" (navigatedUp)="navigateUp($event)" (elementRenamed)="renameElement($event)"
           (elementMoved)="moveElement($event)">
         </app-file-explorer>

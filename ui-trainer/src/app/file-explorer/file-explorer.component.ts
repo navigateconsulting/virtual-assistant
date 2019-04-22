@@ -21,7 +21,6 @@ export class FileExplorerComponent {
   @Input() canNavigateUp: string;
   @Input() path: string;
   @Input() showAddFolderFile: boolean;
-  @Input() allJsonData: any;
 
   @Output() folderAdded = new EventEmitter<{ name: string }>();
   @Output() fileAdded = new EventEmitter<{ name: string, description: string }>();
