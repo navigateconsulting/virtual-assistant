@@ -7,7 +7,7 @@ from flask_pymongo import PyMongo
 app = Flask(__name__)
 api = Api(app)
 
-app.config["MONGO_URI"] = "mongodb://localhost:27017/eva_platform"
+app.config["MONGO_URI"] = "mongodb://mongodb:27017/eva_platform"
 mongo = PyMongo(app)
 
 
@@ -31,3 +31,6 @@ api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
 api.add_resource(resources.TokenRefresh, '/token/refresh')
 api.add_resource(resources.SecretResource, '/secret')
 api.add_resource(resources.RefreshData, '/refreshdb')
+
+if __name__ == '__main__':
+    app.run(debug=True,host='0.0.0.0', port=8081)

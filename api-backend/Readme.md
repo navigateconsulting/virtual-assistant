@@ -13,7 +13,7 @@ in future it would be replaced with custom authentication schemes eg Microsoft A
 
 - Refresh Database 
 
-Endpoint - http://localhost:8000/refreshdb
+Endpoint - http://localhost:8081/refreshdb
 Method POST
 
 This endpoint will refresh the seed data in the Mongo DB. It will remove existing collections in eva_platform database 
@@ -21,7 +21,7 @@ and create the collections again with new seed data. All existing data in the DB
 
 - Register 
 
-Endpoint - http://localhost:8000/registration
+Endpoint - http://localhost:8081/registration
 Method - POST 
 Body 
 
@@ -33,7 +33,7 @@ This endpoint will create a new user
 
 - Login 
 
-Endpoint - http://localhost:8000/login
+Endpoint - http://localhost:8081/login
 Method - POST 
 Body 
 
@@ -53,7 +53,7 @@ This response body contains access_token and refresh token, Both of these tokens
 from here on. access_token has an expiry of 15 mins. after which refresh_token would need to be used to get a fresh access_token. Endpoint for it is described below 
 
 - Test Endpoint with Access token 
-End point - http://localhost:8000/secret
+End point - http://localhost:8081/secret
 Method - Get
 Headers 
 Authorization "Bearer <access_token>"
@@ -65,7 +65,7 @@ This is an test endpoint which will help you check if the token is valid. Use th
 
     /logout/access 
     
-    Endpoint - http://localhost:8000/logout/access
+    Endpoint - http://localhost:8081/logout/access
     Method - Post
     Headers - Authorization "Bearer <access_token>"
     
@@ -73,7 +73,7 @@ This is an test endpoint which will help you check if the token is valid. Use th
     
     
    /logout/refresh
-   Endpoint - http://localhost:8000/logout/refresh
+   Endpoint - http://localhost:8081/logout/refresh
    Method - POST
    Headers Authorization "Bearer <refresh_token>"
    

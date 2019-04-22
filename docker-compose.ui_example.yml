@@ -10,3 +10,28 @@ services:
     build: './ui-trainer'
     ports:
       - "8080:80"
+
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+      - MONGODB_USER="eva"
+      - MONGODB_PASS="evapass"
+    volumes:
+      - ./vol_chatbot_data/database/db:/data/db
+    ports:
+      - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
+
+
+  api_backend:
+    container_name: api_backend
+    build: './api-backend'
+    ports:
+      - "8081:8081"
+
+
+volumes:
+  skype_keys_vol:
