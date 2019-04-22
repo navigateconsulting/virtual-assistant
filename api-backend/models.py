@@ -69,7 +69,7 @@ class RefreshSeedData():
         with open('revokedtokens.json') as json_file:
             revoked_tokens = json.load(json_file)
 
-        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        myclient = pymongo.MongoClient("mongodb://mongodb:27017/")
         dblist = myclient.list_database_names()
 
         if 'eva_platform' in dblist:
