@@ -1,0 +1,2 @@
+{"_id":{"$oid":"5cb5cba67ef7df387b5f8b17"},"project_id":{"$numberInt":"1"},"domain_id":{"$numberInt":"1"},"domain_name":"Base Domain Greet","domain_description":"Base Domain containing Greet instructions","domain":{"Intents":[{}],"Stories":[{}],"Responses":[{}]}}
+{"_id":{"$oid":"5cb5cba67ef7df387b5f8b18"},"project_id":{"$numberInt":"1"},"domain_id":{"$numberInt":"2"},"domain_name":"Small Talk Domain","domain_description":"Domain Description","domain":{"Intents":[{}],"Stories":[{}],"Responses":[{}]}}
