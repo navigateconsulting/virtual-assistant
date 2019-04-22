@@ -35,6 +35,7 @@ import { EntitiesDataService } from './common/services/entities-data.service';
 import { ManageResponsesComponent } from './manage-responses/manage-responses.component';
 import { ManageStoriesComponent } from './manage-stories/manage-stories.component';
 import { AddEntityValueComponent } from './common/modals/add-entity-value/add-entity-value.component';
+import { ApplicationsComponent } from './applications/applications.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { AddEntityValueComponent } from './common/modals/add-entity-value/add-en
     ManageResponsesComponent,
     ManageStoriesComponent,
     AddEntityValueComponent,
+    ApplicationsComponent,
   ],
   entryComponents: [
     CreateUserComponent,
