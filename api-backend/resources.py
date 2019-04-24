@@ -1,7 +1,8 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
-from models import UserModel, RevokedTokensModel, RefreshSeedData
-
+from models import UserModel, RevokedTokensModel, RefreshSeedData, RasaModel
+from bson.json_util import dumps
+import json
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
@@ -91,3 +92,10 @@ class SecretResource(Resource):
         return {
             'answer': 42
         }
+
+
+class GetProjects(Resource):
+    @jwt_required
+    def get(self):
+        result = RasaModel.getProjects()
+        return json.loads(dumps(result))
