@@ -1,4 +1,5 @@
 export const constant = {
+    URL_LOGIN: '/login',
     URL_CHECK_USER: '/check_user',
     URL_FETCH_ALL_USERS: '/fetch_all_users',
     URL_ADD_NEW_USER: '/add_new_user',
