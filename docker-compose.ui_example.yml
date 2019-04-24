@@ -26,11 +26,11 @@ services:
     command: mongod --smallfiles --logpath=/dev/null # --quiet
 
 
-  api_backend:
-    container_name: api_backend
-    build: './api-backend'
-    ports:
-      - "8081:8081"
+#  api_backend:
+#    container_name: api_backend
+#    build: './api-backend'
+#    ports:
+#      - "8081:8081"
 
 
 volumes:
