@@ -69,20 +69,20 @@ class RefreshSeedData():
         with open('revokedtokens.json') as json_file:
             revoked_tokens = json.load(json_file)
 
-        myclient = pymongo.MongoClient("mongodb://mongodb:27017/")
+        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
         dblist = myclient.list_database_names()
 
         if 'eva_platform' in dblist:
 
-            mongo.db.projects.col_projects.delete_many({})
+            mongo.db.projects.delete_many({})
             mongo.db.domains.delete_many({})
             mongo.db.intents.delete_many({})
             mongo.db.entities.delete_many({})
             mongo.db.responses.delete_many({})
             mongo.db.stories.delete_many({})
             mongo.db.users.delete_many({})
-
             mongo.db.revoked_tokens.delete_many({})
+
             mongo.db.revoked_tokens.insert_many(revoked_tokens)
             mongo.db.projects.insert_many(projects_data)
             mongo.db.domains.insert_many(domain_data)
@@ -103,3 +103,9 @@ class RefreshSeedData():
             mongo.db.revoked_tokens.insert_many(revoked_tokens)
 
         return {"message": "Application Data base refreshed with seed Data"}
+
+class RasaModel():
+
+    def getProjects():
+        result = list(mongo.db.projects.find())
+        return result
