@@ -37,6 +37,7 @@ api.add_resource(resources.RefreshData, '/refreshdb')
 # Load Rasa platform data end points
 
 api.add_resource(resources.GetProjects, '/getprojects')
+api.add_resource(resources.UpdateProjects, '/updateprojects')
 
 
 if __name__ == '__main__':

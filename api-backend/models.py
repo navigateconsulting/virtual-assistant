@@ -109,3 +109,7 @@ class RasaModel():
     def getProjects():
         result = list(mongo.db.projects.find())
         return result
+
+    def updateprojects(query, update_field):
+        result= mongo.db.projects.update_one(query, update_field)
+        return result.modified_count

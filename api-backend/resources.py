@@ -3,11 +3,20 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 from models import UserModel, RevokedTokensModel, RefreshSeedData, RasaModel
 from bson.json_util import dumps
 import json
+from bson.objectid import ObjectId
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
 parser.add_argument('email', help = 'This field cannot be blank', required = True)
 parser.add_argument('password', help = 'This field cannot be blank', required = True)
+
+
+update_projects_parser = reqparse.RequestParser()
+update_projects_parser.add_argument('objectid', help=" This field cannot be left blank ", required = True)
+update_projects_parser.add_argument('project_id', help=" This field cannot be left blank ", required = True)
+update_projects_parser.add_argument('project_name', help=" This field cannot be left blank ", required = True)
+update_projects_parser.add_argument('project_description', help=" This field cannot be left blank ", required = True)
+
 
 
 class RefreshData(Resource):
@@ -95,7 +104,20 @@ class SecretResource(Resource):
 
 
 class GetProjects(Resource):
-    @jwt_required
     def get(self):
         result = RasaModel.getProjects()
         return json.loads(dumps(result))
+
+
+class UpdateProjects(Resource):
+    def get(self):
+
+        data = update_projects_parser.parse_args()
+
+        query= {"_id":ObjectId("{}".format(data['objectid']))}
+
+        update_field = { "$set": {"project_id": data['project_id'], "project_name": data['project_name'], "project_description" : data['project_description']}}
+
+        result = RasaModel.updateprojects(query, update_field)
+
+        return {"Message ": "Record Updated {} ".format(result)}
