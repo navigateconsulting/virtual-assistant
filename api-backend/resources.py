@@ -28,6 +28,16 @@ create_project.add_argument('project_name', help="This field is required ", requ
 create_project.add_argument('project_description', help="This field is required ", required= True)
 
 
+get_domains_parser = reqparse.RequestParser()
+get_domains_parser.add_argument('project_id', help="this field is required ", required= True)
+
+update_domain_parser = reqparse.RequestParser()
+update_projects_parser.add_argument('objectid', help="this field is required ", required=True)
+update_projects_parser.add_argument('domain_id', help="this field is required ", required=True)
+update_projects_parser.add_argument('domain_name', help="this field is required ", required=True)
+update_projects_parser.add_argument('domain_description', help="this field is required ", required=True)
+
+
 class RefreshData(Resource):
     def post(self):
 
@@ -140,3 +150,32 @@ class CreateProject(Resource):
         record = {"project_id": data['project_id'], "project_name": data['project_name'], "project_description": data['project_description']}
         result= RasaModel.createproject(record)
         return {"message": "Created project {}".format(result)}
+
+
+class GetDomains(Resource):
+    def get(self):
+        data=get_domains_parser.parse_args()
+        query= {"project_id": data['project_id']}
+        result=RasaModel.getdomain(query)
+        return json.loads(dumps(result))
+
+class UpdateDomain(Resource):
+    def get(self):
+        data=update_domain_parser.parse_args()
+        query = {"_id": ObjectId("{}".format(data['objectid']))}
+        update_field = {"$set": {"domain_id": data['domain_id'], "domain_name": data['domain_name'],
+                                 "domain_description": data['domain_description']}}
+        result = RasaModel.updatedomain(query, update_field)
+        return {"message": "Domain Updated {}".format(result)}
+
+
+class DeleteDomain(Resource):
+    def get(self):
+
+        return "Test"
+
+
+class CreateDomain(Resource):
+    def get(self):
+
+        return "test"
