@@ -18,6 +18,15 @@ update_projects_parser.add_argument('project_name', help=" This field cannot be 
 update_projects_parser.add_argument('project_description', help=" This field cannot be left blank ", required = True)
 
 
+delete_project_parser = reqparse.RequestParser()
+delete_project_parser.add_argument('objectid', help="This field cannot be left blank ", required=True)
+
+
+create_project = reqparse.RequestParser()
+create_project.add_argument('project_id', help="This field is required ", required= True)
+create_project.add_argument('project_name', help="This field is required ", required= True)
+create_project.add_argument('project_description', help="This field is required ", required= True)
+
 
 class RefreshData(Resource):
     def post(self):
@@ -111,13 +120,23 @@ class GetProjects(Resource):
 
 class UpdateProjects(Resource):
     def get(self):
-
         data = update_projects_parser.parse_args()
-
         query= {"_id":ObjectId("{}".format(data['objectid']))}
-
         update_field = { "$set": {"project_id": data['project_id'], "project_name": data['project_name'], "project_description" : data['project_description']}}
-
         result = RasaModel.updateprojects(query, update_field)
-
         return {"Message ": "Record Updated {} ".format(result)}
+
+class DeleteProject(Resource):
+    def get(self):
+
+        data=delete_project_parser.parse_args()
+        query = {"_id":ObjectId("{}".format(data['objectid']))}
+        result = RasaModel.deleteprojects(query)
+        return {"message": " Records Deleted {}".format(result)}
+
+class CreateProject(Resource):
+    def get(self):
+        data = create_project.parse_args()
+        record = {"project_id": data['project_id'], "project_name": data['project_name'], "project_description": data['project_description']}
+        result= RasaModel.createproject(record)
+        return {"message": "Created project {}".format(result)}

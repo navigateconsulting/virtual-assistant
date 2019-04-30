@@ -113,3 +113,11 @@ class RasaModel():
     def updateprojects(query, update_field):
         result= mongo.db.projects.update_one(query, update_field)
         return result.modified_count
+
+    def deleteprojects(query):
+        result=mongo.db.projects.delete_one(query)
+        return result.deleted_count
+
+    def createproject(record):
+        result=mongo.db.projects.insert_one(record)
+        return result.inserted_id

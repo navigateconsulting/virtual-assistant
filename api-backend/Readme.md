@@ -80,3 +80,111 @@ This is an test endpoint which will help you check if the token is valid. Use th
    Revokes the refresh token issued during the login process 
    
    ** Always invoke both the endpoints to complete the logout process
+   
+   
+# New endpoints 
+
+## Projects 
+
+### Create project  
+
+Method - GET 
+
+URL - http://localhost:8081/createproject
+
+Headers 
+
+    Content-Type:application/json
+    
+Body 
+
+    {	"project_id": "<project id>",
+	    "project_name" : "<project name>",
+	    "project_description":"<project description>"
+    }
+
+Response 
+
+    {
+    "message": "Created project 5cc7f51a4e098845f2b86103"
+    }
+
+### Update Project    
+
+Method - GET 
+
+URL - http://localhost:8081/updateprojects
+
+Headers 
+
+    Content-Type:application/json
+    
+Body 
+
+    {   "objectid":" Object ID of record to be updated ",
+        "project_id": "New Project ID ",
+        "project_name" : "New Project Name",
+        "project_description":"New Project Description "
+    }
+    
+Response 
+
+    {
+    "Message ": "Record Updated 1 "
+    }
+    
+### Delete Project 
+
+Method - GET 
+
+URL - http://localhost:8081/deleteproject
+
+Headers 
+
+    Content-Type:application/json
+    
+Body 
+
+    {   "objectid":" Object ID of record to be Deleted"        
+    }
+
+Response 
+
+    {
+    "message": " Records Deleted 1"
+    }
+
+### Find Project 
+
+Method - GET 
+
+URL - http://localhost:8081/getprojects
+
+Headers 
+
+    Content-Type:application/json
+    
+Body 
+    
+    NA
+
+Response 
+
+    [
+    {
+        "_id": {
+            "$oid": "5cbdfbd4fb4bf31dd1b9dad1"
+        },
+        "project_id": 2,
+        "project_name": "Project 2",
+        "project_description": "Clone of Project 1"
+    },
+    {
+        "_id": {
+            "$oid": "5cc7f51a4e098845f2b86103"
+        },
+        "project_id": "123456",
+        "project_name": "Test",
+        "project_description": "Test 123"
+    }
+]

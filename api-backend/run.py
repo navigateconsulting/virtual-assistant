@@ -38,6 +38,8 @@ api.add_resource(resources.RefreshData, '/refreshdb')
 
 api.add_resource(resources.GetProjects, '/getprojects')
 api.add_resource(resources.UpdateProjects, '/updateprojects')
+api.add_resource(resources.DeleteProject, '/deleteproject')
+api.add_resource(resources.CreateProject, '/createproject')
 
 
 if __name__ == '__main__':
