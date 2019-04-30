@@ -41,6 +41,12 @@ api.add_resource(resources.UpdateProjects, '/updateprojects')
 api.add_resource(resources.DeleteProject, '/deleteproject')
 api.add_resource(resources.CreateProject, '/createproject')
 
+## Domains Endpoints
+
+api.add_resource(resources.GetDomains, '/getdomains')
+api.add_resource(resources.UpdateDomain, '/updatedomain')
+api.add_resource(resources.DeleteDomain, '/deletedomain')
+api.add_resource(resources.CreateDomain, '/createdomain')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081)

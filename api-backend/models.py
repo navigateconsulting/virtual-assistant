@@ -121,3 +121,19 @@ class RasaModel():
     def createproject(record):
         result=mongo.db.projects.insert_one(record)
         return result.inserted_id
+
+    def getdomain(query):
+        print(query)
+        result= list(mongo.db.domains.find(query))
+        return result
+
+    def createdomain():
+        return "test"
+
+    def updatedomain(query, update_field):
+        result = mongo.db.domains.update_one(query, update_field)
+        return result.modified_count
+
+    def deletedomain():
+        return "test"
+
