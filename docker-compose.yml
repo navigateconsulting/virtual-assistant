@@ -141,7 +141,7 @@ services:
 
   api_backend:
     container_name: api_backend
-    build: './api-backend'
+    build: './old-api-backend'
     ports:
       - "8081:8081"
 
