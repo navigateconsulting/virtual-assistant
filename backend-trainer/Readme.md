@@ -8,7 +8,6 @@
 
 ### Get projects 
 
-1. To get All projects 
 
 Emit on 
 
@@ -31,7 +30,7 @@ Listen On
 
     Broadcast - Yes 
 
-2. Create Project 
+### Create Project 
 
 Emit on 
 
@@ -72,7 +71,7 @@ New projects status
     Broadcast - Yes 
 
 
-3. Delete Project
+### Delete Project
 
 Emit On 
 
@@ -110,7 +109,7 @@ New projects status
 
     Broadcast - Yes 
     
-4. Update Project
+### Update Project
 
 Emit On 
 
@@ -136,6 +135,32 @@ Record update status
     Broadcast - No  (Sent to the emitter only)
 
 New projects status
+
+    Name space - /project
+    
+    Method - allProjects
+    
+    Response - 
+    [{_id: {…}, project_id: 2, project_name: "Project 2", project_description: "Clone of Project 1"}
+    {_id: {…}, project_id: "123456", project_name: "Test", project_description: "Test 123"}
+    {_id: {…}, project_id: "7", project_name: "Test7", project_description: "Test7 Desc"}]
+
+    Broadcast - Yes 
+
+
+## Domains
+
+### Get Domains
+
+Emit on 
+
+    Name space - /domain
+    
+    Method - getDomains
+    
+    Arguments - None 
+
+Listen On  
 
     Name space - /project
     
