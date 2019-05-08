@@ -1,5 +1,3 @@
 motor
-bson
-json
 aiohttp
 python-socketio
