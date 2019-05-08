@@ -139,11 +139,11 @@ services:
       - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
 
-  api_backend:
-    container_name: api_backend
-    build: './old-api-backend'
+  backend-trainer:
+    container_name: backend-trainer
+    build: './backend-trainer'
     ports:
-      - "8081:8081"
+      - "8089:8089"
 
 volumes:
   skype_keys_vol:
