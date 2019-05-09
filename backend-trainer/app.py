@@ -1,12 +1,12 @@
 from aiohttp import web
 import socketio
-from models import dbname, projectsModel, domainsModel, intentsModel, responsesModel
+from models import dbname, projectsModel, domainsModel, intentsModel, responsesModel, storyModel
 
 # creates a new Async Socket IO Server
 
 sio = socketio.AsyncServer()
 
-# Creates a new Aiohttp Web Application
+''' Creates a new Aiohttp Web Application '''
 
 app = web.Application()
 
@@ -255,6 +255,61 @@ async def updateResponse(sid, data, room_name):
 
     await sio.emit('intentResponse', {'message': 'Response has been updated with ID {}'.format(update_result)},namespace='/response', room=sid)
     await sio.emit('allResponses', responses_list, namespace='/response', room=room_name)
+
+
+# Endpoints for Stories
+
+
+@sio.on('getStories', namespace='/story')
+async def getStories(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    data = {"project_id": "123", "domain_id": "1"}
+
+    stories_list = storyModel.getStories(data)
+
+    await sio.emit('allStories', stories_list, namespace='/story', room=room_name)
+
+
+@sio.on('createStory', namespace='/story')
+async def createStory(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    data = {"project_id": "1", "domain_id": "1", "story_id":"1", "story_name": "ABC Intent", "story_description": "DHKJSNDAN"}
+
+    insert_result, stories_list = await storyModel.createStory(data)
+
+    await sio.emit('storyResponse', {'message': 'Story has been inserted with ID {}'.format(insert_result)},namespace='/story', room=sid)
+    await sio.emit('allStories', stories_list, namespace='/story', room=room_name)
+
+
+@sio.on('deleteStory', namespace='/story')
+async def deleteStory(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    data = {"project_id": "1", "domain_id": "1", "object_id": "kasjdhkjansd"}
+
+    delete_result, stories_list = await storyModel.deleteStory(data)
+
+    await sio.emit('intentResponse', {'message': 'Story has been deleted with ID {}'.format(delete_result)},namespace='/story', room=sid)
+    await sio.emit('allResponses', stories_list, namespace='/story', room=room_name)
+
+
+@sio.on('updateStory', namespace='/story')
+async def updateStory(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    data = {"project_id": "12", "domain_id": "123", "object_id":"abbdkkdnsd", "story_id":"1", "story_name": "abc", "story_description": "Abbskkskndkjn"}
+
+    update_result , stories_list = await storyModel.updateStory(data)
+
+    await sio.emit('intentResponse', {'message': 'Story has been updated with ID {}'.format(update_result)},namespace='/story', room=sid)
+    await sio.emit('allResponses', stories_list, namespace='/story', room=room_name)
+
 
 
 
