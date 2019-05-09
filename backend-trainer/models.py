@@ -216,3 +216,62 @@ class responsesModel():
         responses_list = await getResponses(get_responses)
 
         return update_record, responses_list
+
+
+class storyModel():
+
+    async def getStories(record):
+
+        json_record = json.load(record)
+
+        cursor = db.stories.find(json_record)
+        result = await cursor.to_list(length=1000)
+
+        print("Stories sent {}".format(json.loads(dumps(result))))
+        return json.loads(dumps(result))
+
+    async def createStory(record):
+
+        json_record = json.load(record)
+
+        insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
+                         "story_id": json_record['story_id'], "story_name": json_record['story_name'],
+                         "story_description": json_record['story_description'], "intents_responses": [""]}
+
+        result = await db.stories.insert_one(json.loads(insert_record))
+        print("Story created with ID {}".format(result.inserted_id))
+
+        get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+        stories_list = await getStories(get_stories)
+
+        return result, stories_list
+
+    async def deleteStory(record):
+
+        json_record = json.loads(record)
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        result = await db.stories.delete_one(query)
+        print("Story Deleted count {}".format(result))
+
+        get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+        stories_list = await getStories(get_stories)
+
+        return result, stories_list
+
+    async def updateStory(self):
+
+        json_record = json.load(record)
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"story_id": json_record['story_id'], "story_name": json_record['story_name'],
+                                 "story_description": json_record['story_description']}}
+        update_record = await db.stories.update_one(query, update_field)
+
+        print("Story Updated , rows modified {}".format(update_record))
+
+        get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+        stories_list = await getStories(get_stories)
+
+        return update_record, stories_list
