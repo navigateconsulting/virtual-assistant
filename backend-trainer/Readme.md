@@ -158,17 +158,123 @@ Emit on
     
     Method - getDomains
     
-    Arguments - None 
+    Arguments - String (project_id) , room_name
 
 Listen On  
 
-    Name space - /project
+    Name space - /domain
     
-    Method - allProjects
+    Method - allDomains
     
-    Response - 
-    [{_id: {…}, project_id: 2, project_name: "Project 2", project_description: "Clone of Project 1"}
-    {_id: {…}, project_id: "123456", project_name: "Test", project_description: "Test 123"}
-    {_id: {…}, project_id: "7", project_name: "Test7", project_description: "Test7 Desc"}]
+    Response - {}
+    
+    Broadcast - Yes  
+    
+    Room - room_name
+    
 
-    Broadcast - Yes 
+### Create Domain
+
+Emit on 
+
+    Name space - /domain
+    
+    Method - createDomain
+    
+    Arguments - 
+    {"project_id": "1", "domain_id":"1", "domain_name":"New domain", "domain_description":"Test domain"}, room_name
+
+Record update status  
+
+    Name space - /domain
+    
+    Method - domainResponse
+    
+    Response - {'message': 'Domain created with ID inserted_id'} 
+    
+    Broadcast - No  
+    
+    Room - Session ID 
+
+Domains Update status 
+
+    Name space - /domain
+    
+    Method - allDomains
+    
+    Response - {}
+    
+    Broadcast - Yes  
+    
+    Room - room_name
+
+### Delete Domain 
+
+Emit on 
+
+    Name space - /domain
+    
+    Method - deleteDomain
+    
+    Arguments - 
+    {"project_id": "123", "object_id": "abbsdskdlkscnksnc"}, room_name
+
+Record update status  
+
+    Name space - /domain
+    
+    Method - domainResponse
+    
+    Response - {'message': 'Domain deleted with ID {}'.format(delete_result)} 
+    
+    Broadcast - No  
+    
+    Room - Session ID 
+
+Domains Update status 
+
+    Name space - /domain
+    
+    Method - allDomains
+    
+    Response - {}
+    
+    Broadcast - Yes  
+    
+    Room - room_name
+    
+    
+### Update Domain 
+
+Emit on 
+
+    Name space - /domain
+    
+    Method - updateDomain
+    
+    Arguments - 
+    {"project_id": "123", "object_id": "1233", "domain_id": "1", "domain_name":"name ", "domain_description": "Domain Description"}, room_name
+
+Record update status  
+
+    Name space - /domain
+    
+    Method - domainResponse
+    
+    Response - {'message': 'Domain updated with ID {}'.format(update_result)} 
+    
+    Broadcast - No  
+    
+    Room - Session ID 
+
+Domains Update status 
+
+    Name space - /domain
+    
+    Method - allDomains
+    
+    Response - {}
+    
+    Broadcast - Yes  
+    
+    Room - room_name
