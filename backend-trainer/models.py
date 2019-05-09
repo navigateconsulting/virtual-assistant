@@ -56,10 +56,163 @@ class domainsModel():
         print("Domains sent {}".format(json.loads(dumps(result))))
         return json.loads(dumps(result))
 
-    async def createDomain(data):
+    async def createDomain(record):
 
-        record = {"project_id":data['project_id'],"domain_id":data['domain_id'],"domain_name":data['domain_name'],"domain_description":data['domain_description'],
+        json_record = json.loads(record)
+
+        insert_record = {"project_id":json_record['project_id'],"domain_id":json_record['domain_id'],"domain_name":json_record['domain_name'],"domain_description":json_record['domain_description'],
                   "domain":{"Intents":[{}],"Stories":[{}],"Responses":[{}]}}
-        result = db.domains.insert_one(json.loads(record))
+
+        insert_result = await db.domains.insert_one(json.loads(insert_record))
         print("Domain created with ID {}".format(result.inserted_id))
-        return result.inserted_id
+
+        domains_list = await getDomains(json_record['project_id'])
+
+        return insert_result.inserted_id, domains_list
+
+    async def deleteDomain(record):
+
+        json_record = json.loads(record)
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        delete_record = await db.domains.delete_one(query)
+        print("Domain Deleted count {}".format(result))
+
+        domains_list = await getDomains(json_record['project_id'])
+
+        return delete_record, domains_list
+
+    async def updateDomain(record):
+
+        json_record = json.loads(record)
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"domain_id": json_record['domain_id'], "domain_name": json_record['domain_name'],
+                                 "domain_description": json_record['domain_description']}}
+        update_record = await db.domains.update_one(query, update_field)
+
+        print("Domain Updated , rows modified {}".format(update_record))
+
+        domains_list = await getDomains(json_record['project_id'])
+
+        return update_record, domains_list
+
+
+class intentsModel():
+
+    async def getIntents(record):
+
+        json_record = json.loads(record)
+
+        cursor = db.intents.find(json_record)
+        result = await cursor.to_list(length=1000)
+
+        print("Intents sent {}".format(json.loads(dumps(result))))
+        return json.loads(dumps(result))
+
+    async def createIntent(record):
+
+        json_record = json.loads(record)
+
+        insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
+                         "intent_id": json_record['intent_id'], "intent_name": json_record['intent_name'],
+                         "intent_description": json_record['intent_description'], "text_entities": [""]}
+
+        result = await db.intents.insert_one(json.loads(insert_record))
+        print("Intent created with ID {}".format(result.inserted_id))
+
+        get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+        intents_list = await getIntents(get_intents)
+
+        return result.inserted_id, intents_list
+
+    async def deleteIntent(record):
+
+        json_record = json.loads(record)
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        result = await db.intents.delete_one(query)
+        print("Intent Deleted count {}".format(result))
+
+        get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+        intents_list = await getIntents(get_intents)
+
+        return result, intents_list
+
+    async def updateIntent(record):
+
+        json_record = json.load(record)
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"intent_id": json_record['intent_id'], "intent_name": json_record['intent_name'],
+                                 "intent_description": json_record['intent_description']}}
+        update_record = await db.intents.update_one(query, update_field)
+
+        print("Intent Updated , rows modified {}".format(update_record))
+
+        get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+        intents_list = await getIntents(get_intents)
+
+        return update_record, intents_list
+
+
+class responsesModel():
+
+    async def getResponses(record):
+
+        json_record = json.load(record)
+
+        cursor = db.responses.find(json_record)
+        result = await cursor.to_list(length=1000)
+
+        print("Responses sent {}".format(json.loads(dumps(result))))
+        return json.loads(dumps(result))
+
+
+    async def createResponse(record):
+
+        json_record = json.load(record)
+
+        insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
+                         "response_id": json_record['response_id'], "response_name": json_record['response_name'],
+                         "response_description": json_record['response_description'], "text_entities": [""]}
+
+        result = await db.responses.insert_one(json.loads(insert_record))
+        print("Response created with ID {}".format(result.inserted_id))
+
+        get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+        responses_list = await getResponses(get_responses)
+
+        return result, responses_list
+
+    async def deleteResponse(record):
+
+        json_record = json.loads(record)
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        result = await db.responses.delete_one(query)
+        print("Response Deleted count {}".format(result))
+
+        get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+        responses_list = await getResponses(get_responses)
+
+        return result, responses_list
+
+    async def updateResponse(record):
+
+        json_record = json.load(record)
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"response_id": json_record['response_id'], "response_name": json_record['response_name'],
+                                 "response_description": json_record['response_description']}}
+        update_record = await db.responses.update_one(query, update_field)
+
+        print("Intent Updated , rows modified {}".format(update_record))
+
+        get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+        responses_list = await getResponses(get_responses)
+
+        return update_record, responses_list
