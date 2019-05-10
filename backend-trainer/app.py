@@ -1,10 +1,11 @@
 from aiohttp import web
 import socketio
+
 from models import dbname, projectsModel, domainsModel, intentsModel, responsesModel, storyModel
 
 # creates a new Async Socket IO Server
 
-sio = socketio.AsyncServer()
+sio = socketio.AsyncServer(logger=True, engineio_logger=True)
 
 ''' Creates a new Aiohttp Web Application '''
 
@@ -54,16 +55,16 @@ async def leave_room(sid, namespace_value, room_name):
 
 
 @sio.on('getProjects', namespace='/project')
-async def getProjects(sid):
+async def getProjects(sid, room_name):
 
     print("---------- Request from Session {} -------------- ".format(sid))
 
     result = await projectsModel.getProjects()
-    await sio.emit('allProjects', result, namespace='/project')
+    await sio.emit('allProjects', result, namespace='/project', room=room_name)
 
 
 @sio.on('createProject', namespace='/project')
-async def createProjects(sid, record):
+async def createProjects(sid, record, room_name):
 
     print("---------- Request from Session {} -- with record {} ------------ ".format(sid, record))
 
@@ -71,11 +72,11 @@ async def createProjects(sid, record):
     await sio.emit('projectResponse', {"message": "Project created with ID {} ".format(record_id)}, namespace='/project', room=sid)
 
     result = await projectsModel.getProjects()
-    await sio.emit('allProjects', result, namespace='/project')
+    await sio.emit('allProjects', result, namespace='/project', room=room_name)
 
 
 @sio.on('deleteProject', namespace='/project')
-async def deleteProject(sid, object_id):
+async def deleteProject(sid, object_id, room_name):
 
     print("---------- Request from Session {} --- with record {} ----------- ".format(sid, object_id))
 
@@ -83,11 +84,11 @@ async def deleteProject(sid, object_id):
     await sio.emit('projectsResponse', {'message': 'project Deleted with id {}'.format(record_id)}, namespace='/project', room=sid)
 
     result = await projectsModel.getProjects()
-    await sio.emit('allProjects', result, namespace='/project')
+    await sio.emit('allProjects', result, namespace='/project', room=room_name)
 
 
 @sio.on('updateProject', namespace='/project')
-async def updateProject(sid, update_query):
+async def updateProject(sid, update_query, room_name):
 
     print("---------- Request from Session {} - with record {} ------- ".format(sid, update_query))
 
@@ -95,11 +96,10 @@ async def updateProject(sid, update_query):
     await sio.emit('projectsResponse', {"message": "Updated project with row {}".format(result)}, namespace='/project', room=sid)
 
     result = await projectsModel.getProjects()
-    await sio.emit('allProjects', result, namespace='/project')
+    await sio.emit('allProjects', result, namespace='/project', room=room_name)
 
 
 # Domains Endpoints
-
 
 @sio.on('getDomains', namespace='/domain')
 async def getDomains(sid, project_id, room_name):
@@ -107,7 +107,7 @@ async def getDomains(sid, project_id, room_name):
     print("---------- Request from Session {} -- with record {} -- and room {} ---------- ".format(sid, project_id, room_name))
 
     result = await domainsModel.getDomains(project_id)
-    await sio.emit('allDomains', result, namespace='/domain', room=room_name)
+    await sio.emit('allDomains', result, namespace='/domain',room=room_name)
 
 
 @sio.on('createDomain', namespace='/domain')
