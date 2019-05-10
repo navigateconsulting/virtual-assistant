@@ -1,7 +1,7 @@
 from . import app
-from . import sio
+from . import socketio
 
-@sio.on('getEntities', namespace='/entity')
+@socketio.on('getEntities', namespace='/entity')
 async def getEntities(sid, data):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
