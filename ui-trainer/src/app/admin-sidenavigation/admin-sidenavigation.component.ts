@@ -21,7 +21,7 @@ export class AdminSidenavigationComponent implements OnInit {
     this.sideDrawerService.setSideDrawer(this.sideDrawer);
     this.sideDrawerService.close();
     this.sideDrawerService.drawerIconState = 'open';
-    this.setComponent = 'manage-domains';
+    this.setComponent = 'manage-projects';
   }
 
   closeSideDrawer() {
@@ -36,7 +36,7 @@ export class AdminSidenavigationComponent implements OnInit {
 
   openMatDrawerContent(component: string) {
     this.setComponent = component;
-    if (component === 'manage-domains') {
+    if (component === 'manage-projects') {
       this.closeSideDrawer();
     }
   }

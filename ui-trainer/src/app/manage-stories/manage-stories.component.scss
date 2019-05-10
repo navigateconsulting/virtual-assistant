@@ -1,6 +1,6 @@
 .place_div_center {
     padding: 1%;
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
 }
 .ui-form {
@@ -31,19 +31,6 @@
     cursor: move;
     background: white;
     font-size: 14px;
-}
-.entities-box {
-    border: solid 1px #ccc;
-    color: rgba(0, 0, 0, 0.87);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-    padding-top: 0.5%;
-    padding-bottom: 0.5%;
-    border-radius: 4px;
-    overflow-y: auto;
 }
 .responses-box {
     border-bottom: solid 1px #ccc;
@@ -90,3 +77,113 @@
 .display-none {
     display: none;
 }
+
+/* New Layout CSS Start */
+
+.story-main-box {
+	width: 100%;
+	height: 480px;
+    background-color: #DDD;
+    
+    border-radius: 1%;
+	
+	margin: auto;
+}
+
+.story-box {
+    height: 400px;
+    overflow-y: auto;
+}
+
+.inside-story-box {
+    width: 100%;
+    padding: 3%;
+}
+
+.story-table {
+    width: 100%;
+}
+
+.story-buttons-box {
+    height: 80px;
+}
+
+.add-intent-button, .add-response-button {
+    padding:3%;
+    margin-top: -30px;
+}
+
+.intent-textbox {
+    font-size: 14px;
+    width: 100%;
+    margin-top: -2%;
+    margin-left: 4%;
+}
+
+.response-textbox {
+    font-size: 14px;
+    width: 100%;
+    margin-top: -2%;
+    margin-left: -4%;
+}
+
+.entity-textbox {
+    font-size: 14px;
+    width: 100%;
+}
+
+.intent-buttons-box {
+    margin-top: 9%;
+}
+
+.response-buttons-box {
+    margin-top: 9%;
+    margin-left: 0;
+    padding: 0;
+}
+
+.intent-buttons.mat-mini-fab {
+    width: 20px;
+    height: 20px;
+}
+
+.intent-buttons .material-icons {
+    margin-top: -20px;
+    margin-left: -2px;
+}
+
+.response-buttons.mat-mini-fab {
+    width: 20px;
+    height: 20px;
+}
+
+.response-buttons .material-icons {
+    margin-top: -20px;
+    margin-left: -2px;
+}
+
+.accordion-intent-class, .accordion-response-class {
+    width: 100%;
+    overflow-y: auto;
+}
+
+.card-header {
+    background-color: #FFF;
+    padding: 0;
+}
+
+.entities-box {
+    border: solid 1px #ccc;
+    color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
+    border-radius: 4px;
+    min-height: 40px;
+}
+
+/* New Layout CSS End */

@@ -1,5 +1,7 @@
 export class FileElement {
     id?: string;
+    oid?: string;
+    project_id?: number;
     domain_id?: number;
     intent_id?: number;
     story_id?: number;
