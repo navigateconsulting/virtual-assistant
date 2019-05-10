@@ -1,2 +1,2 @@
-{"_id":{"$oid":"5cb5c8a996705d387b7597b1"},"project_id":{"$numberInt":"1"},"entity_name":"user_name","entity_description":"name of the Entityt Etc","entity_slot":{"type":"text","values":[""]}}
-{"_id":{"$oid":"5cb5c9377ef7df387b5f8b07"},"project_id":{"$numberInt":"1"},"entity_name":"user_name","entity_description":"name of the Entityt Etc","entity_slot":{"type":"categorical","values":["india","us","uk"]}}
+[{"project_id":1,"entity_name":"user_name","entity_description":"name of the Entityt Etc","entity_slot":{"type":"text","values":[""]}},
+{"project_id":1,"entity_name":"user_name","entity_description":"name of the Entityt Etc","entity_slot":{"type":"categorical","values":["india","us","uk"]}}]
