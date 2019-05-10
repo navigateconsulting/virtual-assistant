@@ -1,6 +1,6 @@
-import { Intent } from './intent';
+import { IntentResponse } from './intent_response';
 
 export class Story {
     story_name: string;
-    intents_responses: Intent[];
+    intents_responses: IntentResponse[];
 }

@@ -2,6 +2,11 @@
   height: 40px;
   background: inherit;
 }
+.pseudolink { 
+  color:blue; 
+  text-decoration:underline; 
+  cursor:pointer; 
+}
 span.breadcrumb_path {
   font-size: 15px;
 }

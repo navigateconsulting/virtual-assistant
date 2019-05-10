@@ -36,6 +36,9 @@ import { ManageResponsesComponent } from './manage-responses/manage-responses.co
 import { ManageStoriesComponent } from './manage-stories/manage-stories.component';
 import { AddEntityValueComponent } from './common/modals/add-entity-value/add-entity-value.component';
 import { ApplicationsComponent } from './applications/applications.component';
+import { SocketIoComponent } from './socket-io/socket-io.component';
+import { ManageProjectsComponent } from './manage-projects/manage-projects.component';
+
 
 @NgModule({
   declarations: [
@@ -60,6 +63,8 @@ import { ApplicationsComponent } from './applications/applications.component';
     ManageStoriesComponent,
     AddEntityValueComponent,
     ApplicationsComponent,
+    SocketIoComponent,
+    ManageProjectsComponent,
   ],
   entryComponents: [
     CreateUserComponent,
@@ -81,7 +86,7 @@ import { ApplicationsComponent } from './applications/applications.component';
     DragDropModule,
     FileExplorerModule,
     FlexLayoutModule,
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
   ],
   providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}, FileService, EntitiesDataService],
   bootstrap: [AppComponent]

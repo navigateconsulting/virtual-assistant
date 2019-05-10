@@ -10,8 +10,16 @@ export const constant = {
     URL_GET_ALL_ROLES: '/get_all_roles',
     URL_GET_ALL_AGENTS: '/get_all_agents',
 
+    PROJECTS_URL: 'getProjects',
+    PROJECTS_NSP: '/project',
+    PROJECTS_LISTEN: 'allProjects',
+    PROJECTS_RESPONSE: 'projectResponse',
+
+    DOMAINS_URL: 'getDomains',
+    DOMAINS_NSP: '/domain',
+    DOMAINS_LISTEN: 'allDomains',
+    DOMAINS_RESPONSE: 'domainResponse',
+
     MODULE_COMMON: 'common',
-    // tslint:disable-next-line:max-line-length
-    pwdCheck: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{8,16}$/ //  password should be 8 to 16 char length combination of Caps letter, small letter and numbers.
 };
 

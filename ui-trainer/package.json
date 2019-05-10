@@ -24,6 +24,8 @@
     "@angular/router": "~7.1.0",
     "@syncfusion/ej2-angular-diagrams": "^16.4.52",
     "@syncfusion/ej2-angular-dropdowns": "^16.4.52",
+    "@types/socket.io": "^2.1.2",
+    "@types/socket.io-client": "^1.4.32",
     "core-js": "^2.5.4",
     "hammerjs": "^2.0.8",
     "ng-multiselect-dropdown": "^0.2.3",

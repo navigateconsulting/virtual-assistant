@@ -140,6 +140,7 @@ export class FileExplorerComponent {
   }
 
   changePath(event: any) {
+    console.log(event);
     // console.log(event);
     // if (event.target.innerText === 'NLU' || event.target.innerText === 'Stories' || event.target.innerText === 'Utterances') {
     //   this.showAddFolderFile = true;
@@ -147,6 +148,6 @@ export class FileExplorerComponent {
     //   split.pop();
     //   this.path = split.join(' / ') + ' / ';
     // }
-    this.navigateUp(event.target.className);
+    // this.navigateUp(event.target.className);
   }
 }

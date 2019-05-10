@@ -10,9 +10,13 @@ import { Story } from '../common/models/story';
 import { Intent } from '../common/models/intent';
 import { Response } from '../common/models/response';
 import { Entity } from '../common/models/entity';
+import { IntentResponse } from '../common/models/intent_response';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEntityValueComponent } from '../common/modals/add-entity-value/add-entity-value.component';
 import { MatSnackBar } from '@angular/material';
+
+declare var collapseClose: Function;
+declare var adjustScroll: Function;
 
 @Component({
   selector: 'app-manage-stories',
@@ -39,7 +43,7 @@ export class ManageStoriesComponent implements OnInit {
   entitiesfilteredOptions: Observable<string[]>;
   entityControl = new FormControl();
 
-  intent_entity_arr = new Array<object[]>();
+  intent_response_entity_arr = new Array<object[]>();
 
   intents_responses: any;
   intents_responses_backup: any;
@@ -48,6 +52,9 @@ export class ManageStoriesComponent implements OnInit {
 
   removable = true;
   selectable = true;
+
+  disable_response = false;
+  show_intent_error = false;
 
   @Input() currentStory: any;
 
@@ -86,8 +93,8 @@ export class ManageStoriesComponent implements OnInit {
   onSubmit() {
     if ( this.storyForm.valid ) {
       this.intents_entities_responses = this.storyForm.value['intents_responses'];
-      this.intents_entities_responses.forEach((intent, intentIndex) => {
-        this.intents_entities_responses[intentIndex]['entities'] = this.intent_entity_arr[intentIndex];
+      this.intents_entities_responses.forEach((intent_response, intentresponseIndex) => {
+        this.intents_entities_responses[intentresponseIndex]['entities'] = this.intent_response_entity_arr[intentresponseIndex];
       });
       this.saveStoryJSON.emit({ story_index: this.currentStory.story_id, intents_responses: this.intents_entities_responses });
       this.snackBar.open('Story Saved Successfully', 'Close', {
@@ -103,27 +110,28 @@ export class ManageStoriesComponent implements OnInit {
 
   initForm(story?: Story): void {
 
-    const intents: FormArray = new FormArray([]);
+    const intents_responses: FormArray = new FormArray([]);
 
     this.storyForm = this.fb.group({
-      intents_responses: intents
+      intents_responses: intents_responses
     });
 
     if (!story) {
       // Creating a new story
       this.addIntentToStory();
-      this.addResponseToIntent(0);
+      this.addResponseToStory();
     } else {
       // Editing a story
-      story.intents_responses.forEach((intent, intentIndex) => {
-        this.addIntentToStory(intent);
-        if (this.intent_entity_arr[intentIndex] === undefined) {
-          this.intent_entity_arr[intentIndex] = new Array<object>();
+      story.intents_responses.forEach((intent_response, intentresponseIndex) => {
+        if (intent_response.type === 'Intent') {
+          this.addIntentToStory(intent_response);
+        } else if (intent_response.type === 'Response') {
+          this.addResponseToStory(intent_response);
         }
-        this.intent_entity_arr[intentIndex] = intent.entities;
-        intent.responses.forEach((response, responseIndex) => {
-          this.addResponseToIntent(intentIndex, response);
-        });
+        if (this.intent_response_entity_arr[intentresponseIndex] === undefined) {
+          this.intent_response_entity_arr[intentresponseIndex] = new Array<object>();
+        }
+        this.intent_response_entity_arr[intentresponseIndex] = intent_response.entities;
       });
     }
   }
@@ -209,8 +217,8 @@ export class ManageStoriesComponent implements OnInit {
     return this.intents_text_arr.filter(option => option.intent_text.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  private _filter_entities(value: string): string[] {
-    const filterValue = value.toLowerCase();
+  private _filter_entities(entity: string): string[] {
+    const filterValue = entity.toLowerCase();
     return this.entities_text_arr.filter(option => option.entity_name.toLowerCase().includes(filterValue));
   }
 
@@ -238,62 +246,120 @@ export class ManageStoriesComponent implements OnInit {
    * @return void
    */
 
-  addIntentToStory(intent?: Intent): void {
-    const responses = new FormArray([]);
-    const intent_id = intent ? intent.intent_id : '';
-    const intent_intent = intent ? intent.intent : '';
-    const intent_text = intent ? intent.intent_text : '';
+  addIntentToStory(intent_response?: IntentResponse): void {
+    const intent_id = intent_response ? intent_response.id : '';
+    const intent_key = intent_response ? intent_response.key : '';
+    const intent_value = intent_response ? intent_response.value : '';
+    const type = intent_response ? intent_response.type : 'Intent';
     (<FormArray>this.storyForm.controls['intents_responses']).push(
       new FormGroup({
-        intent_id: new FormControl(intent_id, Validators.required),
-        intent: new FormControl(intent_intent, Validators.required),
-        intent_text: new FormControl(intent_text, [Validators.required, requireIntentMatch(this.intents_text_arr)]),
-        responses: responses
+        id: new FormControl(intent_id, Validators.required),
+        key: new FormControl(intent_key, Validators.required),
+        value: new FormControl(intent_value, [Validators.required, requireIntentMatch(this.intents_text_arr)]),
+        type: new FormControl(type),
       })
     );
+    if ((<FormArray>this.storyForm.controls['intents_responses']).length > 0) {
+      this.disable_response = false;
+    }
     const intent_length = (<FormArray>this.storyForm.controls['intents_responses']).length;
     const intentControl = (<FormArray>this.storyForm.controls['intents_responses']).at(intent_length - 1);
-    intentControl['controls'].intent_text.valueChanges.pipe(
+    if (this.intent_response_entity_arr[intent_length - 1] === undefined) {
+      this.intent_response_entity_arr[intent_length - 1] = new Array<object>();
+    }
+    intentControl['controls'].value.valueChanges.pipe(
       startWith(''),
       map(value => typeof value === 'string' ? value : value[0].text),
       map(text => text ? this._filter_intents(text.toString()) : this.intents_text_arr.slice())
     ).subscribe(filteredIntentResult => { this.intentsfilteredOptions = filteredIntentResult; });
+    adjustScroll();
   }
 
-  removeIntentFromStory(intent_index: number) {
-    (<FormArray>this.storyForm.controls['intents_responses']).removeAt(intent_index);
-  }
+  /* New Layout TS Changes */
 
-  /**
-   * Adds a response FormGroup to the intent's <FormArray>FormControl(__responses__)
-   * @method addResponseToIntent
-   * @param {intent_index} index of the intent to which response is to be added
-   * @return {void}
-   */
-
-  addResponseToIntent(intent_index: number, response?: Response): void {
-    const response_id = response ? response.response_id : '';
-    const response_response = response ? response.response : '';
-    const response_text = response ? response.response_text : '';
-
-    (<FormArray>(<FormGroup>(<FormArray>this.storyForm.controls['intents_responses'])
-      .controls[intent_index]).controls['responses']).push(
-        new FormGroup({
-          response_id: new FormControl(response_id, Validators.required),
-          response: new FormControl(response_response, Validators.required),
-          response_text: new FormControl(response_text, [Validators.required, requireResponseMatch(this.responses_text_arr)]),
-        })
+  addIntentBelowIntent(intent_index: number): void {
+    (<FormArray>this.storyForm.controls['intents_responses']).insert(intent_index,
+      new FormGroup({
+        id: new FormControl('', Validators.required),
+        key: new FormControl('', Validators.required),
+        value: new FormControl('', [Validators.required, requireIntentMatch(this.intents_text_arr)]),
+        type: new FormControl('Intent'),
+      })
     );
+    const intent_length = (<FormArray>this.storyForm.controls['intents_responses']).length;
+    const intentControl = (<FormArray>this.storyForm.controls['intents_responses']).at(intent_length - 1);
+    this.intent_response_entity_arr.splice(intent_index, 0, []);
+    intentControl['controls'].value.valueChanges.pipe(
+      startWith(''),
+      map(value => typeof value === 'string' ? value : value[0].text),
+      map(text => text ? this._filter_intents(text.toString()) : this.intents_text_arr.slice())
+    ).subscribe(filteredIntentResult => { this.intentsfilteredOptions = filteredIntentResult; });
+    adjustScroll();
+  }
 
-    const response_length = (<FormArray>(<FormGroup>(<FormArray>this.storyForm.controls['intents_responses'])
-    .controls[intent_index]).controls['responses']).length;
-    const responseControl = (<FormArray>(<FormGroup>(<FormArray>this.storyForm.controls['intents_responses'])
-    .controls[intent_index]).controls['responses']).at(response_length - 1);
-    responseControl['controls'].response_text.valueChanges.pipe(
+  addResponseToStory(intent_response?: IntentResponse): void {
+    const response_id = intent_response ? intent_response.id : '';
+    const response_key = intent_response ? intent_response.key : '';
+    const response_value = intent_response ? intent_response.value : '';
+    const type = intent_response ? intent_response.type : 'Response';
+    (<FormArray>this.storyForm.controls['intents_responses']).push(
+      new FormGroup({
+        id: new FormControl(response_id, Validators.required),
+        key: new FormControl(response_key, Validators.required),
+        value: new FormControl(response_value, [Validators.required, requireResponseMatch(this.responses_text_arr)]),
+        type: new FormControl(type),
+      })
+    );
+    const response_length = (<FormArray>this.storyForm.controls['intents_responses']).length;
+    const responseControl = (<FormArray>this.storyForm.controls['intents_responses']).at(response_length - 1);
+    if (this.intent_response_entity_arr[response_length - 1] === undefined) {
+      this.intent_response_entity_arr[response_length - 1] = new Array<object>();
+    }
+    responseControl['controls'].value.valueChanges.pipe(
       startWith(''),
       map(value => typeof value === 'string' ? value : value[0].text),
       map(text => text ? this._filter_responses(text.toString()) : this.responses_text_arr.slice())
     ).subscribe(filteredResponseResult => { this.responsesfilteredOptions = filteredResponseResult; });
+    adjustScroll();
+  }
+
+  addResponseBelowResponse(response_index: number): void {
+    (<FormArray>this.storyForm.controls['intents_responses']).insert(response_index,
+      new FormGroup({
+        id: new FormControl('', Validators.required),
+        key: new FormControl('', Validators.required),
+        value: new FormControl('', [Validators.required, requireResponseMatch(this.responses_text_arr)]),
+        type: new FormControl('Response'),
+      })
+    );
+    const response_length = (<FormArray>this.storyForm.controls['intents_responses']).length;
+    const responseControl = (<FormArray>this.storyForm.controls['intents_responses']).at(response_length - 1);
+    this.intent_response_entity_arr.splice(response_index, 0, []);
+    responseControl['controls'].value.valueChanges.pipe(
+      startWith(''),
+      map(value => typeof value === 'string' ? value : value[0].text),
+      map(text => text ? this._filter_responses(text.toString()) : this.responses_text_arr.slice())
+    ).subscribe(filteredResponseResult => { this.responsesfilteredOptions = filteredResponseResult; });
+    adjustScroll();
+  }
+
+  removeIntentORResponseFromStory(intent_index: number) {
+    if (intent_index === 0 && (<FormArray>this.storyForm.controls['intents_responses']).length > 1) {
+      if ((<FormArray>this.storyForm.controls['intents_responses']).at(intent_index + 1).value['type'] === 'Response') {
+        this.show_intent_error = true;
+        setTimeout(() => {
+          this.show_intent_error = false;
+        }, 2000);
+      }
+    } else {
+      this.show_intent_error = false;
+      (<FormArray>this.storyForm.controls['intents_responses']).removeAt(intent_index);
+      this.intent_response_entity_arr.splice(intent_index, 1);
+      if ((<FormArray>this.storyForm.controls['intents_responses']).length === 0) {
+        this.disable_response = true;
+      }
+    }
+    adjustScroll();
   }
 
   removeResponseFromIntent(intent_index: number, response_index: number) {
@@ -301,44 +367,41 @@ export class ManageStoriesComponent implements OnInit {
     .controls[intent_index]).controls['responses']).removeAt(response_index);
   }
 
-  removeEntityFromIntent(intent_index: number, entity_index: number) {
-    this.intent_entity_arr[intent_index].splice(entity_index, 1);
+  removeEntityFromIntentResponse(intent_response_index: number, entity_index: number) {
+    this.intent_response_entity_arr[intent_response_index].splice(entity_index, 1);
   }
 
   onIntentChange(event: any, intent_index: number, intent_id: number, intent: string) {
     if (event.source.selected) {
-      console.log(event);
       const storyControl = (<FormArray>this.storyForm.controls['intents_responses']).at(intent_index);
-      storyControl['controls'].intent_id.setValue(intent_id);
-      storyControl['controls'].intent.setValue(intent);
+      storyControl['controls'].id.setValue(intent_id);
+      storyControl['controls'].key.setValue(intent);
     }
   }
 
-  onResponseChange(event: any, intent_index: number, response_index: number, response_id: number, response: string) {
+  onResponseChange(event: any, response_index: number, response_id: number, response: string) {
     if (event.source.selected) {
-      const storyControl = (<FormArray>(<FormGroup>(<FormArray>this.storyForm.controls['intents_responses'])
-      .controls[intent_index]).controls['responses']).at(response_index);
-      storyControl['controls'].response_id.setValue(response_id);
-      storyControl['controls'].response.setValue(response);
+      const storyControl = (<FormArray>this.storyForm.controls['intents_responses']).at(response_index);
+      storyControl['controls'].id.setValue(response_id);
+      storyControl['controls'].key.setValue(response);
     }
   }
 
-  onEntityChange(event: any, intent_index: number) {
+  onEntityChange(event: any, intent_response_index: number) {
     if (event.source.selected) {
       const entity_name_value = event.source._element.nativeElement.innerText.split(':');
-      if (this.intent_entity_arr[intent_index] === undefined) {
-        this.intent_entity_arr[intent_index] = new Array<object>();
-      }
       if (entity_name_value[1] === '') {
         const dialogRef = this.dialog.open(AddEntityValueComponent);
         dialogRef.afterClosed().subscribe(res => {
           if (res) {
             entity_name_value[1] = res;
-            this.intent_entity_arr[intent_index].push({'entity_name': entity_name_value[0], 'entity_value': entity_name_value[1]});
+            // tslint:disable-next-line: max-line-length
+            this.intent_response_entity_arr[intent_response_index].push({'entity_name': entity_name_value[0], 'entity_value': entity_name_value[1]});
           }
         });
       } else {
-        this.intent_entity_arr[intent_index].push({'entity_name': entity_name_value[0], 'entity_value': entity_name_value[1]});
+        // tslint:disable-next-line: max-line-length
+        this.intent_response_entity_arr[intent_response_index].push({'entity_name': entity_name_value[0], 'entity_value': entity_name_value[1]});
       }
       event.source.value = '';
     }
@@ -348,6 +411,10 @@ export class ManageStoriesComponent implements OnInit {
     if (event.keyCode === 32 || event.keyCode === 13) {
       event.stopPropagation();
     }
+  }
+
+  collapse_close(type: string, index: number) {
+    collapseClose(type, index);
   }
 }
 
