@@ -39,16 +39,72 @@ def disconnect(sid):
 
 # Rooms Hooks
 
-@sio.on('join_room')
-async def join_room(sid, namespace_value, room_name):
-    print("________________________ User {} joined room {} with namespace {}_______________________".format(sid, room_name, namespace_value))
-    sio.enter_room(sid, room=room_name, namespace=namespace_value)
+@sio.on('join_room', namespace='/project')
+async def join_room(sid, room_name):
+    print("________________________ User {} joined room {} with namespace /project_______________________".format(sid, room_name))
+    sio.enter_room(sid, room=room_name, namespace='/project')
 
 
-@sio.on('leave_room')
-async def leave_room(sid, namespace_value, room_name):
-    print("________________________ User {} Left room {} with namespace {}_______________________".format(sid, room_name, namespace_value))
-    sio.leave_room(sid, room_name, namespace=namespace_value)
+@sio.on('leave_room', namespace='/project')
+async def leave_room(sid, room_name):
+    print("________________________ User {} Left room {} with namespace /project_______________________".format(sid, room_name))
+    sio.leave_room(sid, room=room_name, namespace='/project')
+
+#########################################
+
+
+@sio.on('join_room', namespace='/domain')
+async def join_room(sid, room_name):
+    print("________________________ User {} joined room {} with namespace /domain _______________________".format(sid, room_name))
+    sio.enter_room(sid, room=room_name, namespace='/domain')
+
+
+@sio.on('leave_room', namespace='/domain')
+async def leave_room(sid, room_name):
+    print("________________________ User {} Left room {} with namespace /domain _______________________".format(sid, room_name))
+    sio.leave_room(sid, room=room_name, namespace='/domain')
+
+##########################################
+
+
+@sio.on('join_room', namespace='/intent')
+async def join_room(sid, room_name):
+    print("________________________ User {} joined room {} with namespace /intent _______________________".format(sid, room_name))
+    sio.enter_room(sid, room=room_name, namespace='/intent')
+
+
+@sio.on('leave_room', namespace='/intent')
+async def leave_room(sid, room_name):
+    print("________________________ User {} Left room {} with namespace /intent _______________________".format(sid, room_name))
+    sio.leave_room(sid, room=room_name, namespace='/intent')
+
+##########################################
+
+
+@sio.on('join_room', namespace='/response')
+async def join_room(sid, room_name):
+    print("________________________ User {} joined room {} with namespace /response _______________________".format(sid, room_name))
+    sio.enter_room(sid, room=room_name, namespace='/response')
+
+
+@sio.on('leave_room', namespace='/response')
+async def leave_room(sid, room_name):
+    print("________________________ User {} Left room {} with namespace /response _______________________".format(sid, room_name))
+    sio.leave_room(sid, room=room_name, namespace='/response')
+
+##########################################
+
+
+@sio.on('join_room', namespace='/story')
+async def join_room(sid, room_name):
+    print("________________________ User {} joined room {} with namespace /story _______________________".format(sid, room_name))
+    sio.enter_room(sid, room=room_name, namespace='/story')
+
+
+@sio.on('leave_room', namespace='/story')
+async def leave_room(sid, room_name):
+    print("________________________ User {} Left room {} with namespace /story _______________________".format(sid, room_name))
+    sio.leave_room(sid, room=room_name, namespace='/story')
 
 
 # projects Endpoints
