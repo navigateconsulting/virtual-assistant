@@ -275,3 +275,16 @@ class storyModel():
         stories_list = await getStories(get_stories)
 
         return update_record, stories_list
+
+
+class entityModel():
+
+    async def getEntities(record):
+
+        json_record = json.load(record)
+
+        cursor = db.entities.find(json_record)
+        result = await cursor.to_list(length=1000)
+
+        print("Entities sent {}".format(json.loads(dumps(result))))
+        return json.loads(dumps(result))

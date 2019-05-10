@@ -294,3 +294,36 @@ Domains Update status
     Broadcast - Yes  
     
     Room - room_name
+
+
+## Intents
+
+
+### Get Intents 
+
+### Create Intents 
+
+### Delete intents 
+
+### Update Intents 
+
+## Response
+
+### Get Responses
+
+### Create Response 
+
+### Delete Response
+
+### Update Response
+
+
+## Stories
+
+### Get Stories
+
+### Create Story
+
+### Delete Story
+
+### Update Story
