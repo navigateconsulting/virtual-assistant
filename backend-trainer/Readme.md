@@ -6,6 +6,22 @@
 
 ##Projects 
 
+
+## Rooms 
+
+### Join Rooms 
+
+Emit on 
+
+    Name space - /
+    
+    Method - join_room
+    
+    Argument - 
+    namespace_name , room_name
+
+
+
 ### Get projects 
 
 
