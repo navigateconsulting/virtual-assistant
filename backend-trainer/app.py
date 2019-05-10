@@ -1,7 +1,7 @@
 from aiohttp import web
 import socketio
 
-from models import dbname, projectsModel, domainsModel, intentsModel, responsesModel, storyModel
+from models import dbname, projectsModel, domainsModel, intentsModel, responsesModel, storyModel, entityModel
 
 # creates a new Async Socket IO Server
 
@@ -311,8 +311,20 @@ async def updateStory(sid, data, room_name):
     await sio.emit('allResponses', stories_list, namespace='/story', room=room_name)
 
 
+# Entities Endpoints
 
+'''
+@sio.on('getEntities', namespace='/entity')
+async def getEntities(sid, data, room_name):
 
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    data = {"project_id": "123"}
+
+    entities_list = entityModel.getEntities(data)
+
+    await sio.emit('allEntities', entities_list, namespace='/entity', room=room_name)
+'''
 
 # We bind our aiohttp endpoint to our app
 
