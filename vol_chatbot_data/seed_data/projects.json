@@ -1,2 +1,2 @@
-{"_id":{"$oid":"5cb5c69196705d387b7597ad"},"project_id":{"$numberInt":"1"},"project_name":"Base Project","project_description":"Base project"}
-{"_id":{"$oid":"5cb5c6a296705d387b7597ae"},"project_id":{"$numberInt":"2"},"project_name":"Project 2","project_description":"Clone of Project 1"}
+[{"project_id":1,"project_name":"Base Project","project_description":"Base project"},
+{"project_id":2,"project_name":"Project 2","project_description":"Clone of Project 1"}]

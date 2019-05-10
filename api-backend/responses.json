@@ -1,6 +1,0 @@
-[{"project_id":1,"domain_id":1,"response_id":1,"response":"utter_greet","text_entities":["Hi There , How may i help you ?","Hello {user_name} how are you doing ?"]},
-{"project_id":1,"domain_id":1,"response_id":2,"response":"utter_help","text_entities":["How can i help you ?","How may i help you today ?"]},
-{"project_id":1,"domain_id":1,"response_id":3,"response":"utter_sure","text_entities":["Sure i can help you with that ","Sure "]},
-{"project_id":1,"domain_id":1,"response_id":4,"response":"utter_ask_zone","text_entities":["can you tell me the time zone you are currently in ?","Can you please tell me your time zone ?"]},
-{"project_id":1,"domain_id":1,"response_id":5,"response":"utter_ultimate_answer","text_entities":["Its 00:00:00 :) ","Its Rajnikant","I dont know "]},
-{"project_id":1,"domain_id":1,"response_id":6,"response":"utter_goodbye","text_entities":["You are welcome ! Good Day !","Have a good Day ! "]}]
