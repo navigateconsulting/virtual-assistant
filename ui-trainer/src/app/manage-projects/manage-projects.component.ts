@@ -37,8 +37,8 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     // },
     // err => console.error('Observer got an error: ' + err),
     // () => console.log('Observer got a complete notification'));
-    // this.getProjects();
-    this.getDomains('1', '2');
+    this.getProjects();
+    // this.getDomains('1', '2');
     this.currentPath = '<span class="root pseudolink"> Home </span>' + ' / ';
     this.currentType = 'project';
     this.propertyPanel = 'entities';
@@ -46,28 +46,28 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   getProjects() {
     this.webSocketService.createProjectsRoom('root');
-    // this.connection = this.projectsCopyService.getProjects('root').subscribe(projects => {
-    //   this.projectsJSON = (projects !== '' && projects !== null) ? projects : [];
-    //   if (this.projectsJSON.length === 0) {
-    //     this.projectsJSON = new Array<object>();
-    //   }
-    //   this.createProjectsFolder(this.projectsJSON);
-    // },
-    // err => console.error('Observer got an error: ' + err),
-    // () => console.log('Observer got a complete notification'));
+    this.connection = this.webSocketService.getProjects('root').subscribe(projects => {
+      this.projectsJSON = (projects !== '' && projects !== null) ? projects : [];
+      if (this.projectsJSON.length === 0) {
+        this.projectsJSON = new Array<object>();
+      }
+      this.createProjectsFolder(this.projectsJSON);
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   getDomains(pelement_id, project_id) {
-    // this.domainsService.createDomainsRoom('project_' + project_id);
-    // this.connection = this.domainsService.getDomains(project_id, 'project_' + project_id).subscribe(domains => {
-    //   this.domainsJSON = (domains !== '' && domains !== null) ? domains : [];
-    //   if (this.domainsJSON.length === 0) {
-    //     this.domainsJSON = new Array<object>();
-    //   }
-    //   this.createDomainsFolder(this.domainsJSON, pelement_id);
-    // },
-    // err => console.error('Observer got an error: ' + err),
-    // () => console.log('Observer got a complete notification'));
+    this.webSocketService.createDomainsRoom('project_' + project_id);
+    this.connection = this.webSocketService.getDomains(project_id, 'project_' + project_id).subscribe(domains => {
+      this.domainsJSON = (domains !== '' && domains !== null) ? domains : [];
+      if (this.domainsJSON.length === 0) {
+        this.domainsJSON = new Array<object>();
+      }
+      this.createDomainsFolder(this.domainsJSON, pelement_id);
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   createProjectsFolder(projects_json: any) {
@@ -94,7 +94,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     const isFile = false;
     if (element.parent === 'root') {
       this.showAddFolderFile = true;
-      // this.projectService.leaveProjectsRoom('root');
+      this.webSocketService.leaveProjectsRoom('root');
       this.getDomains(element.id, element.project_id);
     }
     // if (element.parent === 'root') {
