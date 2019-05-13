@@ -16,6 +16,13 @@ class dbname():
         return json.loads(dumps(result))
 
 
+class refreshDB():
+
+    async def refreshdb():
+        print('received request to refresh database')
+        return "Success"
+
+
 class projectsModel():
 
     async def getProjects():
