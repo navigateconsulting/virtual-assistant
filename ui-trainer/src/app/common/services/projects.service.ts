@@ -30,7 +30,7 @@ export class ProjectsService {
       console.log(d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
       this.socket.on(constant.PROJECTS_LISTEN, (data) => {
         if (data) {
-          console.log('Inside Projects Listeting ')
+          console.log('Inside Projects Listeting');
           observer.next(data);
         } else {
           observer.error('Unable To Reach Server');
