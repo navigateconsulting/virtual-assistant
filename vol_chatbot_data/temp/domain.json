@@ -1,0 +1,2 @@
+{"project_id":1,"domain_id":1,"domain_name":"Base Domain Greet","domain_description":"Base Domain containing Greet instructions","domain":{"Intents":[{}],"Stories":[{}],"Responses":[{}]}}
+{"project_id":1,"domain_id":2,"domain_name":"Small Talk Domain","domain_description":"Domain Description","domain":{"Intents":[{}],"Stories":[{}],"Responses":[{}]}}
