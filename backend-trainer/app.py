@@ -135,11 +135,25 @@ async def createProjects(sid, record, room_name):
 
     print("---------- Request from Session {} -- with record {} ------------ ".format(sid, record))
 
-    record_id= await projectsModel.createProjects(record)
-    await sio.emit('projectResponse', {"message": "Project created with ID {} ".format(record_id)}, namespace='/project', room=sid)
+    message = await projectsModel.createProjects(record)
+    await sio.emit('projectResponse', message, namespace='/project', room=sid)
 
-    result = await projectsModel.getProjects()
-    await sio.emit('allProjects', result, namespace='/project', room=room_name)
+    if message['status'] == 'Success':
+        result = await projectsModel.getProjects()
+        await sio.emit('allProjects', result, namespace='/project', room=room_name)
+
+
+@sio.on('copyProject', namespace='/project')
+async def copyProjects(sid, record, room_name):
+
+    print("---------- Request from Session {} -- with record {} ------------ ".format(sid, record))
+
+    message = await projectsModel.copyProject(record)
+    await sio.emit('projectResponse', message, namespace='/project', room=sid)
+
+    if message['status'] == 'Success':
+        result = await projectsModel.getProjects()
+        await sio.emit('allProjects', result, namespace='/project', room=room_name)
 
 
 @sio.on('deleteProject', namespace='/project')
@@ -147,8 +161,8 @@ async def deleteProject(sid, object_id, room_name):
 
     print("---------- Request from Session {} --- with record {} ----------- ".format(sid, object_id))
 
-    record_id = await projectsModel.deleteProject(object_id)
-    await sio.emit('projectsResponse', {'message': 'project Deleted with id {}'.format(record_id)}, namespace='/project', room=sid)
+    message = await projectsModel.deleteProject(object_id)
+    await sio.emit('projectResponse', message, namespace='/project', room=sid)
 
     result = await projectsModel.getProjects()
     await sio.emit('allProjects', result, namespace='/project', room=room_name)
@@ -159,11 +173,12 @@ async def updateProject(sid, update_query, room_name):
 
     print("---------- Request from Session {} - with record {} ------- ".format(sid, update_query))
 
-    result = await projectsModel.updateProject(update_query)
-    await sio.emit('projectsResponse', {"message": "Updated project with row {}".format(result)}, namespace='/project', room=sid)
+    message = await projectsModel.updateProject(update_query)
+    await sio.emit('projectResponse', message, namespace='/project', room=sid)
 
-    result = await projectsModel.getProjects()
-    await sio.emit('allProjects', result, namespace='/project', room=room_name)
+    if message['status'] == 'Success':
+        result = await projectsModel.getProjects()
+        await sio.emit('allProjects', result, namespace='/project', room=room_name)
 
 
 # Domains Endpoints
@@ -216,7 +231,7 @@ async def updateDomains(sid, data, room_name):
     await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
 
 
-# Endpoints to get all intents in a particular domain
+# intents Endpoint
 
 
 @sio.on('getIntents', namespace='/intent')
@@ -270,7 +285,7 @@ async def updateIntent(sid, data, room_name):
     await sio.emit('allIntents', intents_list, namespace='/intent', room=room_name)
 
 
-# Endpoints to get responses
+# responses Endpoints
 
 
 @sio.on('getResponses', namespace='/response')
