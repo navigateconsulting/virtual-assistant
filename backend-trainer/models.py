@@ -50,8 +50,8 @@ class projectsModel():
     async def deleteProject(object_id):
         query = {"_id": ObjectId("{}".format(object_id))}
 
+        # TODO
         ''' 
-        TODO 
         Need to add Validation section - Need to remove all dependencies 
         from this project before deleting the project'''
 
@@ -111,17 +111,26 @@ class domainsModel():
 
     async def createDomain(record):
 
-        json_record = json.loads(record)
+        json_record = json.loads(json.dumps(record))
 
-        insert_record = {"project_id":json_record['project_id'],"domain_id":json_record['domain_id'],"domain_name":json_record['domain_name'],"domain_description":json_record['domain_description'],
-                  "domain":{"Intents":[{}],"Stories":[{}],"Responses":[{}]}}
+        insert_record = {"project_id": json_record['project_id'], "domain_name": json_record['domain_name'],
+                         "domain_description": json_record['domain_description']}
 
-        insert_result = await db.domains.insert_one(json.loads(insert_record))
-        print("Domain created with ID {}".format(result.inserted_id))
+        # Check if domain exists already
 
-        domains_list = await getDomains(json_record['project_id'])
+        val_res = await db.domains.find_one({"project_id": json_record['project_id'],
+                                             "domain_name": json_record['domain_name']})
 
-        return insert_result.inserted_id, domains_list
+        if val_res is not None:
+            print('Domain already exists')
+            return {"status": "Error", "message": "Domain already exists"}
+        else:
+            insert_result = await db.domains.insert_one(json.loads(insert_record))
+            print("Domain created with ID {}".format(insert_result.inserted_id))
+
+            domains_list = await getDomains(json_record['project_id'])
+
+            return {"status": "Success", "message": "Domain created successfully"}, domains_list
 
     async def deleteDomain(record):
 
@@ -130,26 +139,33 @@ class domainsModel():
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
 
         delete_record = await db.domains.delete_one(query)
-        print("Domain Deleted count {}".format(result))
+        print("Domain Deleted count {}".format(delete_record))
 
         domains_list = await getDomains(json_record['project_id'])
 
-        return delete_record, domains_list
+        return {"status": "Success", "message": "Domain Deleted Successfully"}, domains_list
 
     async def updateDomain(record):
 
-        json_record = json.loads(record)
+        json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        update_field = {"$set": {"domain_id": json_record['domain_id'], "domain_name": json_record['domain_name'],
-                                 "domain_description": json_record['domain_description']}}
-        update_record = await db.domains.update_one(query, update_field)
+        update_field = {"$set": { "domain_name": json_record['domain_name'],
+                                  "domain_description": json_record['domain_description']}}
 
-        print("Domain Updated , rows modified {}".format(update_record))
+        # Check if Domain already exists
+        val_res = await db.domains.find_one({"project_id": json_record['project_id'],
+                                             "domain_name": json_record['domain_name']})
 
-        domains_list = await getDomains(json_record['project_id'])
+        if val_res is not None:
+            print('Domain already exists')
+            return {"status": "Error", "message": "Domain already exists"}
+        else:
+            update_record = await db.domains.update_one(query, update_field)
+            print("Domain Updated , rows modified {}".format(update_record))
 
-        return update_record, domains_list
+            domains_list = await getDomains(json_record['project_id'])
+            return {"status": "Success", "message": "Domain updated successfully "}, domains_list
 
 
 class intentsModel():
