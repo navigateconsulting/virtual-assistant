@@ -197,12 +197,11 @@ async def createDomain(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ---------- ".format(sid, data, room_name))
 
-    data = {"project_id": "1", "domain_id":"1", "domain_name":"New domain", "domain_description":"Test domain"}
+    message, domains_list = await domainsModel.createDomain(data)
+    await sio.emit('domainResponse', message, namespace='/domain', room=sid)
 
-    insert_result, domains_list = await domainsModel.createDomain(data)
-
-    await sio.emit('domainResponse', {'message': 'Domain created with ID {}'.format(insert_result)}, namespace='/domain', room=sid)
-    await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
+    if domains_list is not None:
+        await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
 
 
 @sio.on('deleteDomain', namespace='/domain')
@@ -210,11 +209,11 @@ async def deleteDomain(sid, data , room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ---------- ".format(sid, data, room_name))
 
-    data = {"project_id": "123", "object_id": "abbsdskdlkscnksnc"}
+    #data = {"project_id": "123", "object_id": "abbsdskdlkscnksnc"}
 
-    delete_result, domains_list = await domainsModel.deleteDomain(data)
+    message, domains_list = await domainsModel.deleteDomain(data)
 
-    await sio.emit('domainResponse', {'message': 'Domain deleted with ID {}'.format(delete_result)},namespace='/domain', room=sid)
+    await sio.emit('domainResponse', message,namespace='/domain', room=sid)
     await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
 
 
@@ -223,12 +222,11 @@ async def updateDomains(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    data = {"project_id": "123", "object_id": "1233", "domain_id": "1", "domain_name":"name ", "domain_description": "Domain Description"}
+    message, domains_list = await domainsModel.updateDomain(data)
+    await sio.emit('domainResponse', message, namespace='/domain', room=sid)
 
-    update_result, domains_list = await domainsModel.updateDomain(data)
-
-    await sio.emit('domainResponse', {'message': 'Domain updated with ID {}'.format(update_result)}, namespace='/domain', room=sid)
-    await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
+    if domains_list is not None:
+        await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
 
 
 # intents Endpoint
