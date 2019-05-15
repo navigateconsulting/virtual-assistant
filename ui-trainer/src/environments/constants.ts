@@ -14,11 +14,18 @@ export const constant = {
     PROJECTS_NSP: '/project',
     PROJECTS_LISTEN: 'allProjects',
     PROJECTS_RESPONSE: 'projectResponse',
+    PROJECTS_CREATE: 'createProject',
+    PROJECTS_DELETE: 'deleteProject',
+    PROJECTS_UPDATE: 'updateProject',
+    PROJECTS_COPY: 'copyProject',
 
     DOMAINS_URL: 'getDomains',
     DOMAINS_NSP: '/domain',
     DOMAINS_LISTEN: 'allDomains',
     DOMAINS_RESPONSE: 'domainResponse',
+    DOMAINS_CREATE: 'createDomain',
+    DOMAINS_DELETE: 'deleteDomain',
+    DOMAINS_UPDATE: 'updateDomain',
 
     MODULE_COMMON: 'common',
 };

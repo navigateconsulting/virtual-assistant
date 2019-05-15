@@ -1,4 +1,4 @@
-<div class="row grid-divider" style="padding: 5px; height: 100%; box-sizing: border-box;">
+<!-- <div class="row grid-divider" style="padding: 5px; height: 100%; box-sizing: border-box;">
   <div class="col-md-9">
     <div class="col-padding">
       <mat-card style="height: 100%; box-sizing: border-box; padding:0">
@@ -45,6 +45,43 @@
       </div>
     </div>
   </div>      
+</div> -->
+
+<div class="domains-container">
+  <div class="row add-domain">
+    <div class="col-md-11">
+      <div *ngIf="show_success_error===true" class="alert alert-{{success_error_class}}">
+        <strong>{{success_error_type}} !</strong> {{success_error_message}}.
+      </div>
+    </div>
+    <div class="col-md-1 text-right">
+      <button mat-mini-fab matTooltip="Add Domain" color="primary" (click)="addNewDomain()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <br />
+  <div class="row domains-card-container">
+    <div class="col-md-12">
+      <mat-form-field>
+        <input matInput (keyup)="applyDomainsFilter($event.target.value)" placeholder="Filter Domains">
+      </mat-form-field>
+      <div class="domains-card">
+        <mat-grid-list cols="6">
+          <mat-grid-tile *ngFor="let domain of domains_json; let i = index">
+            <div class="card domain-card">
+              <div class="card-header"><span class="mat-subheading-1">{{domain.domain_name}}</span></div>
+              <div class="card-body"><span class="mat-body-1">{{domain.domain_description}}</span></div> 
+              <div class="card-footer">
+                <button mat-button (click)="editDomain(domain._id.$oid, domain.domain_name, domain.domain_description)">Edit</button>
+                <button mat-flat-button color="warn" (click)="deleteDomain(domain._id.$oid)">Delete</button>
+              </div>
+            </div>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- <div class="row modify_content text-right">
