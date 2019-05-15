@@ -1,0 +1,17 @@
+<mat-sidenav-container class="trainer-container">
+  <mat-sidenav-content class="main-container">
+    <mat-toolbar class="">
+      <span class="breadcrumb_path">{{breadcrumb_string}}</span>
+      <span class="spacer"></span>
+    </mat-toolbar>
+    <div *ngIf="setComponent === 'manage-projects'">
+      <app-manage-projects (selectedProject)="projectSelected($event)"></app-manage-projects>
+    </div>
+    <div *ngIf="setComponent === 'manage-domains'">
+      <app-manage-domains [projectObjectId]="projectObjectId"></app-manage-domains>
+    </div>
+  </mat-sidenav-content>
+  <mat-sidenav mode="over" position="end" class="entities-container">
+    Sample Content
+  </mat-sidenav>
+</mat-sidenav-container>

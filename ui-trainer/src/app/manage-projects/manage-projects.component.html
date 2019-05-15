@@ -1,4 +1,4 @@
-<div class="row grid-divider" style="padding: 5px; height: 100%; box-sizing: border-box;">
+<!-- <div class="row grid-divider" style="padding: 5px; height: 100%; box-sizing: border-box;">
   <div class="col-md-9">
     <div class="col-padding">
       <mat-card style="height: 100%; box-sizing: border-box; padding:0">
@@ -45,4 +45,88 @@
       </div>
     </div>
   </div>      
+</div> -->
+<div class="projects-container">
+  <div class="row add-project">
+    <div class="col-md-11">
+      <div *ngIf="show_success_error===true" class="alert alert-{{success_error_class}}">
+        <strong>{{success_error_type}} !</strong> {{success_error_message}}.
+      </div>
+    </div>
+    <div class="col-md-1 text-right">
+      <button mat-mini-fab matTooltip="Add Project" color="primary" (click)="addNewProject()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <br />
+  <div class="row projects-table-container">
+    <div class="col-md-12">
+      <mat-form-field>
+        <input matInput (keyup)="applyProjectsFilter($event.target.value)" placeholder="Filter Projects">
+      </mat-form-field>
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="projectsDataSource">
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="icon">
+            <th mat-header-cell *matHeaderCellDef> <mat-icon>insert_drive_file</mat-icon> </th>
+            <td mat-cell *matCellDef="let project"> <mat-icon color="primary">folder</mat-icon> </td>
+          </ng-container>
+        
+          <!-- Name Column -->
+          <ng-container matColumnDef="project_name">
+            <th mat-header-cell *matHeaderCellDef> Project Name </th>
+            <td mat-cell *matCellDef="let project" class="project_name_text"><span (click)="selectProject(project._id.$oid)">{{project.project_name}}</span></td>
+          </ng-container>
+        
+          <!-- Weight Column -->
+          <ng-container matColumnDef="project_description">
+            <th mat-header-cell *matHeaderCellDef> Project Description </th>
+            <td mat-cell *matCellDef="let project"> {{project.project_description}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="created_by">
+            <th mat-header-cell *matHeaderCellDef> Created By </th>
+            <td mat-cell *matCellDef="let project"> {{project.created_by}} </td>
+          </ng-container>
+        
+          <!-- Weight Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let project"> <span *ngIf="project.status === 0">Not Published</span> <span *ngIf="project.status === 1">Published</span> </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="source">
+            <th mat-header-cell *matHeaderCellDef> Source </th>
+            <td mat-cell *matCellDef="let project"> {{project.source}} </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef> Edit </th>
+            <td mat-cell *matCellDef="let project" class="edit_remove"><mat-icon (click)="editProject(project._id.$oid, project.project_name, project.project_description)">edit</mat-icon></td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef> Delete </th>
+            <td mat-cell *matCellDef="let project" class="edit_remove"><mat-icon color="warn" (click)="deleteProject(project._id.$oid)">remove_circle</mat-icon></td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="copy">
+            <th mat-header-cell *matHeaderCellDef> Copy </th>
+            <td mat-cell *matCellDef="let project" class="edit_remove"><mat-icon color="accent" (click)="copyProject(project._id.$oid, project.project_name)">file_copy</mat-icon></td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="projectsDisplayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: projectsDisplayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+  </div>
 </div>
