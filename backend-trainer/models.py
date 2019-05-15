@@ -16,6 +16,13 @@ class dbname():
         return json.loads(dumps(result))
 
 
+class refreshDB():
+
+    async def refreshdb():
+        print('received request to refresh database')
+        return "Success"
+
+
 class projectsModel():
 
     async def getProjects():
@@ -25,26 +32,92 @@ class projectsModel():
         return json.loads(dumps(result))
 
     async def createProjects(record):
-        result=await db.projects.insert_one(json.loads(record))
-        print("project created {}".format(result.inserted_id))
-        return result.inserted_id
+
+        json_record = json.loads(json.dumps(record))
+
+        # Validation to check if project already exists
+
+        val_res = await db.projects.find_one({"project_name": json_record['project_name']})
+
+        if val_res is not None:
+            print('Project already exists')
+            return {"status": "Error", "message": "Project already exists"}
+        else:
+            result = await db.projects.insert_one(json_record)
+            print("project created {}".format(result.inserted_id))
+            return {"status": "Success", "message": "Project Created with ID {}".format(result.inserted_id)}
 
     async def deleteProject(object_id):
         query = {"_id": ObjectId("{}".format(object_id))}
-        result=db.projects.delete_one(query)
+
+        # TODO
+        ''' 
+        Need to add sections for Delete Intents Entities Responses '''
+
+        # Delete Domains
+
+        result = await db.domains.delete_many({"project_id": object_id})
+        print("Domains Deleted - count {}".format(result))
+
+        # Delete Project
+        result = await db.projects.delete_one(query)
         print("Project Deleted count {}".format(result))
-        return result
+        return {"status": "Success", "message": "Project Deleted Successfully"}
 
     async def updateProject(record):
 
-        json_record = json.loads(record)
+        json_record = json.loads(json.dumps(record))
 
-        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        update_field = {"$set": {"project_id": json_record['project_id'], "project_name": json_record['project_name'],
-                                 "project_description": json_record['project_description']}}
-        result = db.projects.update_one(query,update_field)
-        print("Project Updated , rows modified {}".format(result))
-        return result
+        val_res = await db.projects.find_one({"project_name": json_record['project_name']})
+
+        if val_res is not None:
+            print('Project already exists')
+            return {"status": "Error", "message": "Project name already exists"}
+        else:
+            query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+            update_field = {"$set": {"project_name": json_record['project_name'],
+                                     "project_description": json_record['project_description']
+                                     }}
+            result = db.projects.update_one(query,update_field)
+            print("Project Updated , rows modified {}".format(result))
+            return {"status": "Success", "message": "Project details updated successfully"}
+
+    async def copyProject(record):
+        json_record = json.loads(json.dumps(record))
+
+        # check if the project name exists
+
+        val_res = await db.projects.find_one({"project_name": json_record['project_name']})
+
+        if val_res is not None:
+            print('Project already exists')
+            return {"status": "Error", "message": "Project already exists"}
+        else:
+
+            # get source project ID
+
+            source_project = await db.projects.find_one({"project_name": json_record['source']})
+            source_project_id = source_project.get('_id')
+            print("Source project ID {}".format(source_project_id))
+
+            # Create Project
+
+            new_project = await db.projects.insert_one(json_record)
+            print("project created {}".format(new_project.inserted_id))
+
+            # Copy domains
+
+            domains_cursor = db.domains.find({"project_id": str(source_project_id)})
+            for domain in await domains_cursor.to_list(length=100):
+                del domain['_id']
+                domain['project_id'] = "{}".format(new_project.inserted_id)
+                new_domain = await db.domains.insert_one(domain)
+                print("new domain inserted with id {}".format(new_domain.inserted_id))
+
+            # Copy Intents Entities etc TODO
+
+            return {"status": "Success", "message": "Project Copied ID {}".format(new_project.inserted_id)}
+
 
 
 class domainsModel():
@@ -58,45 +131,71 @@ class domainsModel():
 
     async def createDomain(record):
 
-        json_record = json.loads(record)
+        json_record = json.loads(json.dumps(record))
 
-        insert_record = {"project_id":json_record['project_id'],"domain_id":json_record['domain_id'],"domain_name":json_record['domain_name'],"domain_description":json_record['domain_description'],
-                  "domain":{"Intents":[{}],"Stories":[{}],"Responses":[{}]}}
+        insert_record = {"project_id": json_record['project_id'], "domain_name": json_record['domain_name'],
+                         "domain_description": json_record['domain_description']}
 
-        insert_result = await db.domains.insert_one(json.loads(insert_record))
-        print("Domain created with ID {}".format(result.inserted_id))
+        # Check if domain exists already
 
-        domains_list = await getDomains(json_record['project_id'])
+        val_res = await db.domains.find_one({"project_id": json_record['project_id'],
+                                             "domain_name": json_record['domain_name']})
 
-        return insert_result.inserted_id, domains_list
+        if val_res is not None:
+            print('Domain already exists')
+            return {"status": "Error", "message": "Domain already exists"}
+        else:
+            insert_result = await db.domains.insert_one(json.loads(json.dumps(insert_record)))
+            print("Domain created with ID {}".format(insert_result.inserted_id))
+
+            domains_list = await domainsModel.getDomains(json_record['project_id'])
+
+            return {"status": "Success", "message": "Domain created successfully"}, domains_list
 
     async def deleteDomain(record):
 
-        json_record = json.loads(record)
+        json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
 
         delete_record = await db.domains.delete_one(query)
-        print("Domain Deleted count {}".format(result))
+        print("Domain Deleted count {}".format(delete_record))
 
-        domains_list = await getDomains(json_record['project_id'])
+        domains_list = await domainsModel.getDomains(json_record['project_id'])
 
-        return delete_record, domains_list
+        return {"status": "Success", "message": "Domain Deleted Successfully"}, domains_list
 
     async def updateDomain(record):
 
-        json_record = json.loads(record)
+        json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        update_field = {"$set": {"domain_id": json_record['domain_id'], "domain_name": json_record['domain_name'],
-                                 "domain_description": json_record['domain_description']}}
-        update_record = await db.domains.update_one(query, update_field)
+        update_field = {"$set": { "domain_name": json_record['domain_name'],
+                                  "domain_description": json_record['domain_description']}}
 
-        print("Domain Updated , rows modified {}".format(update_record))
+        # Check if Domain already exists
+        val_res = await db.domains.find_one({"project_id": json_record['project_id'],
+                                             "domain_name": json_record['domain_name']})
 
-        domains_list = await getDomains(json_record['project_id'])
+        if val_res is None:
+            update_record = await db.domains.update_one(query, update_field)
+            print("Domain Updated , rows modified {}".format(update_record))
 
-        return update_record, domains_list
+            domains_list = await domainsModel.getDomains(json_record['project_id'])
+            return {"status": "Success", "message": "Domain updated successfully "}, domains_list
+
+        elif val_res['domain_name'] == json_record['domain_name']:
+            print("updating domain description")
+
+            update_record = await db.domains.update_one(query, update_field)
+            print("Domain Updated , rows modified {}".format(update_record))
+
+            domains_list = await domainsModel.getDomains(json_record['project_id'])
+            return {"status": "Success", "message": "Domain updated successfully "}, domains_list
+
+        else:
+            print('Domain already exists')
+            return {"status": "Error", "message": "Domain already exists"}, None
 
 
 class intentsModel():

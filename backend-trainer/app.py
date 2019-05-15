@@ -1,7 +1,6 @@
 from aiohttp import web
 import socketio
-
-from models import dbname, projectsModel, domainsModel, intentsModel, responsesModel, storyModel, entityModel
+from models import dbname, projectsModel, domainsModel, intentsModel, responsesModel, storyModel, entityModel, refreshDB
 
 # creates a new Async Socket IO Server
 
@@ -24,7 +23,8 @@ async def index(request):
     with open('index.html') as f:
         return web.Response(text=f.read(), content_type='text/html')
 
-# Connect Disconnect events
+
+''' Events handlers for connect and disconnect , nothing special is done except logging'''
 
 
 @sio.on('connect')
@@ -37,7 +37,10 @@ def disconnect(sid):
     print('disconnect ', sid)
 
 
-# Rooms Hooks
+''' Events handlers for Join room and leave room , 
+This method contains join room and leave room for all name spaces. This was introduced to ensure join room and leave 
+room happens within the namespace'''
+
 
 @sio.on('join_room', namespace='/project')
 async def join_room(sid, room_name):
@@ -49,8 +52,6 @@ async def join_room(sid, room_name):
 async def leave_room(sid, room_name):
     print("________________________ User {} Left room {} with namespace /project_______________________".format(sid, room_name))
     sio.leave_room(sid, room=room_name, namespace='/project')
-
-#########################################
 
 
 @sio.on('join_room', namespace='/domain')
@@ -64,8 +65,6 @@ async def leave_room(sid, room_name):
     print("________________________ User {} Left room {} with namespace /domain _______________________".format(sid, room_name))
     sio.leave_room(sid, room=room_name, namespace='/domain')
 
-##########################################
-
 
 @sio.on('join_room', namespace='/intent')
 async def join_room(sid, room_name):
@@ -78,8 +77,6 @@ async def leave_room(sid, room_name):
     print("________________________ User {} Left room {} with namespace /intent _______________________".format(sid, room_name))
     sio.leave_room(sid, room=room_name, namespace='/intent')
 
-##########################################
-
 
 @sio.on('join_room', namespace='/response')
 async def join_room(sid, room_name):
@@ -91,8 +88,6 @@ async def join_room(sid, room_name):
 async def leave_room(sid, room_name):
     print("________________________ User {} Left room {} with namespace /response _______________________".format(sid, room_name))
     sio.leave_room(sid, room=room_name, namespace='/response')
-
-##########################################
 
 
 @sio.on('join_room', namespace='/story')
@@ -107,7 +102,23 @@ async def leave_room(sid, room_name):
     sio.leave_room(sid, room=room_name, namespace='/story')
 
 
-# projects Endpoints
+''' Refresh seed data. 
+
+This method will wip off the mongo db instance of all user created data and reload it with seed data. 
+This endpoint needs to be used with caution and ensure proper backup is taken before this is invoked '''
+
+
+@sio.on('refresh_data', namespace='/refresh')
+async def refresh_data(sid):
+    print("##################################User {} Requested to refresh DB  ##########################".format(sid))
+
+    result= await refreshDB.refreshdb()
+    await sio.emit('refresh', result)
+
+
+'''Projects Endpoints 
+
+These contains methods to get all projects , update delete and insert new project in the mongo db'''
 
 
 @sio.on('getProjects', namespace='/project')
@@ -124,11 +135,25 @@ async def createProjects(sid, record, room_name):
 
     print("---------- Request from Session {} -- with record {} ------------ ".format(sid, record))
 
-    record_id= await projectsModel.createProjects(record)
-    await sio.emit('projectResponse', {"message": "Project created with ID {} ".format(record_id)}, namespace='/project', room=sid)
+    message = await projectsModel.createProjects(record)
+    await sio.emit('projectResponse', message, namespace='/project', room=sid)
 
-    result = await projectsModel.getProjects()
-    await sio.emit('allProjects', result, namespace='/project', room=room_name)
+    if message['status'] == 'Success':
+        result = await projectsModel.getProjects()
+        await sio.emit('allProjects', result, namespace='/project', room=room_name)
+
+
+@sio.on('copyProject', namespace='/project')
+async def copyProjects(sid, record, room_name):
+
+    print("---------- Request from Session {} -- with record {} ------------ ".format(sid, record))
+
+    message = await projectsModel.copyProject(record)
+    await sio.emit('projectResponse', message, namespace='/project', room=sid)
+
+    if message['status'] == 'Success':
+        result = await projectsModel.getProjects()
+        await sio.emit('allProjects', result, namespace='/project', room=room_name)
 
 
 @sio.on('deleteProject', namespace='/project')
@@ -136,8 +161,8 @@ async def deleteProject(sid, object_id, room_name):
 
     print("---------- Request from Session {} --- with record {} ----------- ".format(sid, object_id))
 
-    record_id = await projectsModel.deleteProject(object_id)
-    await sio.emit('projectsResponse', {'message': 'project Deleted with id {}'.format(record_id)}, namespace='/project', room=sid)
+    message = await projectsModel.deleteProject(object_id)
+    await sio.emit('projectResponse', message, namespace='/project', room=sid)
 
     result = await projectsModel.getProjects()
     await sio.emit('allProjects', result, namespace='/project', room=room_name)
@@ -148,11 +173,12 @@ async def updateProject(sid, update_query, room_name):
 
     print("---------- Request from Session {} - with record {} ------- ".format(sid, update_query))
 
-    result = await projectsModel.updateProject(update_query)
-    await sio.emit('projectsResponse', {"message": "Updated project with row {}".format(result)}, namespace='/project', room=sid)
+    message = await projectsModel.updateProject(update_query)
+    await sio.emit('projectResponse', message, namespace='/project', room=sid)
 
-    result = await projectsModel.getProjects()
-    await sio.emit('allProjects', result, namespace='/project', room=room_name)
+    if message['status'] == 'Success':
+        result = await projectsModel.getProjects()
+        await sio.emit('allProjects', result, namespace='/project', room=room_name)
 
 
 # Domains Endpoints
@@ -171,12 +197,11 @@ async def createDomain(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ---------- ".format(sid, data, room_name))
 
-    data = {"project_id": "1", "domain_id":"1", "domain_name":"New domain", "domain_description":"Test domain"}
+    message, domains_list = await domainsModel.createDomain(data)
+    await sio.emit('domainResponse', message, namespace='/domain', room=sid)
 
-    insert_result, domains_list = await domainsModel.createDomain(data)
-
-    await sio.emit('domainResponse', {'message': 'Domain created with ID {}'.format(insert_result)}, namespace='/domain', room=sid)
-    await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
+    if domains_list is not None:
+        await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
 
 
 @sio.on('deleteDomain', namespace='/domain')
@@ -184,11 +209,9 @@ async def deleteDomain(sid, data , room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ---------- ".format(sid, data, room_name))
 
-    data = {"project_id": "123", "object_id": "abbsdskdlkscnksnc"}
+    message, domains_list = await domainsModel.deleteDomain(data)
 
-    delete_result, domains_list = await domainsModel.deleteDomain(data)
-
-    await sio.emit('domainResponse', {'message': 'Domain deleted with ID {}'.format(delete_result)},namespace='/domain', room=sid)
+    await sio.emit('domainResponse', message,namespace='/domain', room=sid)
     await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
 
 
@@ -197,15 +220,15 @@ async def updateDomains(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    data = {"project_id": "123", "object_id": "1233", "domain_id": "1", "domain_name":"name ", "domain_description": "Domain Description"}
+    message, domains_list = await domainsModel.updateDomain(data)
+    print("Message value {}".format(message))
+    await sio.emit('domainResponse', {'message':'Test'}, room=sid, namespace='/domain')
 
-    update_result, domains_list = await domainsModel.updateDomain(data)
-
-    await sio.emit('domainResponse', {'message': 'Domain updated with ID {}'.format(update_result)}, namespace='/domain', room=sid)
-    await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
+    if domains_list is not None:
+        await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
 
 
-# Endpoints to get all intents in a particular domain
+# intents Endpoint
 
 
 @sio.on('getIntents', namespace='/intent')
@@ -259,7 +282,7 @@ async def updateIntent(sid, data, room_name):
     await sio.emit('allIntents', intents_list, namespace='/intent', room=room_name)
 
 
-# Endpoints to get responses
+# responses Endpoints
 
 
 @sio.on('getResponses', namespace='/response')
@@ -369,7 +392,6 @@ async def updateStory(sid, data, room_name):
 
 # Entities Endpoints
 
-'''
 @sio.on('getEntities', namespace='/entity')
 async def getEntities(sid, data, room_name):
 
@@ -380,7 +402,7 @@ async def getEntities(sid, data, room_name):
     entities_list = entityModel.getEntities(data)
 
     await sio.emit('allEntities', entities_list, namespace='/entity', room=room_name)
-'''
+
 
 # We bind our aiohttp endpoint to our app
 
@@ -389,4 +411,5 @@ app.router.add_get('/', index)
 
 # We kick off our server
 if __name__ == '__main__':
+    sio.attach(app)
     web.run_app(app, port=8089)
