@@ -40,9 +40,19 @@ Listen On
     Method - allProjects
     
     Response - 
-    [{_id: {…}, project_id: 2, project_name: "Project 2", project_description: "Clone of Project 1"}
-    {_id: {…}, project_id: "123456", project_name: "Test", project_description: "Test 123"}
-    {_id: {…}, project_id: "7", project_name: "Test7", project_description: "Test7 Desc"}]
+    [{'_id': {'$oid': '5cd920645290f01deb51d87a'}, 
+        'project_name': 'Base Project', 
+        'project_description': 'Base project', 
+        'status': 0, 
+        'created_by': 'trainer', 
+        'source': '-'}, 
+     {'_id': {'$oid': '5cd920645290f01deb51d87b'}, 
+        'project_name': 'Project 2', 
+        'project_description': 'Clone of Project 1', 
+        'status': 0, 
+        'created_by': 'trainer', 
+        'source': '-'}
+     ]
 
     Broadcast - Yes 
 
@@ -55,9 +65,11 @@ Emit on
     Method - createProject
     
     Argument - 
-        {  "project_id": "〈project id〉",
-           "project_name" : "〈project name〉",
-           "project_description":"〈project description〉"
+        {  "project_name" : "〈project name〉",
+           "project_description":"〈project description〉",
+           "status":0,
+           "created_by":"username",
+           "source":"Copied from Project 1"
         }
 
 Listen On 
@@ -69,7 +81,7 @@ Record update status
     Method - projectResponse
     
     Response 
-        {message: "Project created with ID 5cd29631464026722d63ec30 "}
+        {"status":"Success", message: "Project created with ID 5cd29631464026722d63ec30 "}
         
     Broadcast - No  (Sent to the emitter only)
 
@@ -80,9 +92,19 @@ New projects status
     Method - allProjects
     
     Response - 
-    [{_id: {…}, project_id: 2, project_name: "Project 2", project_description: "Clone of Project 1"}
-    {_id: {…}, project_id: "123456", project_name: "Test", project_description: "Test 123"}
-    {_id: {…}, project_id: "7", project_name: "Test7", project_description: "Test7 Desc"}]
+    [{'_id': {'$oid': '5cd920645290f01deb51d87a'}, 
+        'project_name': 'Base Project', 
+        'project_description': 'Base project', 
+        'status': 0, 
+        'created_by': 'trainer', 
+        'source': '-'}, 
+     {'_id': {'$oid': '5cd920645290f01deb51d87b'}, 
+        'project_name': 'Project 2', 
+        'project_description': 'Clone of Project 1', 
+        'status': 0, 
+        'created_by': 'trainer', 
+        'source': '-'}
+     ]
 
     Broadcast - Yes 
 
@@ -108,7 +130,7 @@ Record update status
     Method - projectResponse
     
     Response 
-        {message: "Project Deleted with ID 5cd29631464026722d63ec30 "}
+        {"status":"Success", message: "Project Deleted with ID 5cd29631464026722d63ec30 "}
         
     Broadcast - No  (Sent to the emitter only)
 
@@ -119,9 +141,19 @@ New projects status
     Method - allProjects
     
     Response - 
-    [{_id: {…}, project_id: 2, project_name: "Project 2", project_description: "Clone of Project 1"}
-    {_id: {…}, project_id: "123456", project_name: "Test", project_description: "Test 123"}
-    {_id: {…}, project_id: "7", project_name: "Test7", project_description: "Test7 Desc"}]
+    [{'_id': {'$oid': '5cd920645290f01deb51d87a'}, 
+        'project_name': 'Base Project', 
+        'project_description': 'Base project', 
+        'status': 0, 
+        'created_by': 'trainer', 
+        'source': '-'}, 
+     {'_id': {'$oid': '5cd920645290f01deb51d87b'}, 
+        'project_name': 'Project 2', 
+        'project_description': 'Clone of Project 1', 
+        'status': 0, 
+        'created_by': 'trainer', 
+        'source': '-'}
+     ]
 
     Broadcast - Yes 
     
@@ -134,7 +166,7 @@ Emit On
     Method - updateProject
     
     Argument - 
-        {"object_id": "123", "project_id": "123", "project_name": "project_name", "project_description" : "project description"}
+        {"object_id": "123", "project_name": "project_name", "project_description" : "project description"}
 
 
 Listen On 
@@ -146,7 +178,7 @@ Record update status
     Method - projectResponse
     
     Response 
-        {"message": "Updated project with row 1"}
+        {"status":"Success", "message": "Updated project with row 1"}
         
     Broadcast - No  (Sent to the emitter only)
 
@@ -157,9 +189,19 @@ New projects status
     Method - allProjects
     
     Response - 
-    [{_id: {…}, project_id: 2, project_name: "Project 2", project_description: "Clone of Project 1"}
-    {_id: {…}, project_id: "123456", project_name: "Test", project_description: "Test 123"}
-    {_id: {…}, project_id: "7", project_name: "Test7", project_description: "Test7 Desc"}]
+    [{'_id': {'$oid': '5cd920645290f01deb51d87a'}, 
+        'project_name': 'Base Project', 
+        'project_description': 'Base project', 
+        'status': 0, 
+        'created_by': 'trainer', 
+        'source': '-'}, 
+     {'_id': {'$oid': '5cd920645290f01deb51d87b'}, 
+        'project_name': 'Project 2', 
+        'project_description': 'Clone of Project 1', 
+        'status': 0, 
+        'created_by': 'trainer', 
+        'source': '-'}
+     ]
 
     Broadcast - Yes 
 
@@ -198,7 +240,7 @@ Emit on
     Method - createDomain
     
     Arguments - 
-    {"project_id": "1", "domain_id":"1", "domain_name":"New domain", "domain_description":"Test domain"}, room_name
+    {"project_id": "1", "domain_name":"New domain", "domain_description":"Test domain"}, room_name
 
 Record update status  
 
@@ -269,7 +311,7 @@ Emit on
     Method - updateDomain
     
     Arguments - 
-    {"project_id": "123", "object_id": "1233", "domain_id": "1", "domain_name":"name ", "domain_description": "Domain Description"}, room_name
+    {"project_id": "123", "object_id": "1233", "domain_name":"name ", "domain_description": "Domain Description"}, room_name
 
 Record update status  
 
