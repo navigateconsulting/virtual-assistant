@@ -1,0 +1,34 @@
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
+
+@Component({
+  selector: 'app-edit-project',
+  templateUrl: './edit-project.component.html',
+  styleUrls: ['./edit-project.component.scss']
+})
+export class EditProjectComponent implements OnInit {
+
+  editProjectForm: FormGroup;
+
+  constructor(public dialogRef: MatDialogRef<EditProjectComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  ngOnInit() {
+    this.editProjectForm = new FormGroup({
+      projectName: new FormControl(this.data.projectName, Validators.required),
+      projectDescription: new FormControl(this.data.projectDescription, Validators.required)
+    });
+  }
+
+  closeDialog() {
+    if (this.editProjectForm.valid) {
+      this.dialogRef.close({
+        object_id: this.data.projectObjectId,
+        project_name: this.editProjectForm.value.projectName,
+        project_description: this.editProjectForm.value.projectDescription
+      });
+    }
+  }
+
+}
