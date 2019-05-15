@@ -46,60 +46,83 @@ room happens within the namespace'''
 async def join_room(sid, room_name):
     print("________________________ User {} joined room {} with namespace /project_______________________".format(sid, room_name))
     sio.enter_room(sid, room=room_name, namespace='/project')
+    sio.enter_room(sid, room=sid, namespace='/project')
 
 
 @sio.on('leave_room', namespace='/project')
 async def leave_room(sid, room_name):
     print("________________________ User {} Left room {} with namespace /project_______________________".format(sid, room_name))
     sio.leave_room(sid, room=room_name, namespace='/project')
+    sio.leave_room(sid, room=sid, namespace='/project')
 
 
 @sio.on('join_room', namespace='/domain')
 async def join_room(sid, room_name):
     print("________________________ User {} joined room {} with namespace /domain _______________________".format(sid, room_name))
     sio.enter_room(sid, room=room_name, namespace='/domain')
+    sio.enter_room(sid, room=sid, namespace='/domain')
 
 
 @sio.on('leave_room', namespace='/domain')
 async def leave_room(sid, room_name):
     print("________________________ User {} Left room {} with namespace /domain _______________________".format(sid, room_name))
     sio.leave_room(sid, room=room_name, namespace='/domain')
+    sio.leave_room(sid, room=sid, namespace='/domain')
 
 
 @sio.on('join_room', namespace='/intent')
 async def join_room(sid, room_name):
     print("________________________ User {} joined room {} with namespace /intent _______________________".format(sid, room_name))
     sio.enter_room(sid, room=room_name, namespace='/intent')
+    sio.enter_room(sid, room=sid, namespace='/intent')
 
 
 @sio.on('leave_room', namespace='/intent')
 async def leave_room(sid, room_name):
     print("________________________ User {} Left room {} with namespace /intent _______________________".format(sid, room_name))
     sio.leave_room(sid, room=room_name, namespace='/intent')
+    sio.leave_room(sid, room=sid, namespace='/intent')
 
 
 @sio.on('join_room', namespace='/response')
 async def join_room(sid, room_name):
     print("________________________ User {} joined room {} with namespace /response _______________________".format(sid, room_name))
     sio.enter_room(sid, room=room_name, namespace='/response')
+    sio.enter_room(sid, room=sid, namespace='/response')
 
 
 @sio.on('leave_room', namespace='/response')
 async def leave_room(sid, room_name):
     print("________________________ User {} Left room {} with namespace /response _______________________".format(sid, room_name))
     sio.leave_room(sid, room=room_name, namespace='/response')
+    sio.leave_room(sid, room=sid, namespace='/response')
 
 
 @sio.on('join_room', namespace='/story')
 async def join_room(sid, room_name):
     print("________________________ User {} joined room {} with namespace /story _______________________".format(sid, room_name))
     sio.enter_room(sid, room=room_name, namespace='/story')
-
+    sio.enter_room(sid, room=sid, namespace='/story')
 
 @sio.on('leave_room', namespace='/story')
 async def leave_room(sid, room_name):
     print("________________________ User {} Left room {} with namespace /story _______________________".format(sid, room_name))
     sio.leave_room(sid, room=room_name, namespace='/story')
+    sio.leave_room(sid, room=sid, namespace='/story')
+
+
+@sio.on('join_room', namespace='/dashboard')
+async def join_room(sid, room_name):
+    print("________________________ User {} joined room {} with namespace /dashboard _______________________".format(sid, room_name))
+    sio.enter_room(sid, room=room_name, namespace='/dashboard')
+    sio.enter_room(sid, room=sid, namespace='/dashboard')
+
+
+@sio.on('leave_room', namespace='/dashboard')
+async def leave_room(sid, room_name):
+    print("________________________ User {} Left room {} with namespace /dashboard _______________________".format(sid, room_name))
+    sio.leave_room(sid, room=room_name, namespace='/dashboard')
+    sio.leave_room(sid, room=sid, namespace='/dashboard')
 
 
 ''' Refresh seed data. 
@@ -222,7 +245,7 @@ async def updateDomains(sid, data, room_name):
 
     message, domains_list = await domainsModel.updateDomain(data)
     print("Message value {}".format(message))
-    await sio.emit('domainResponse', {'message':'Test'}, room=sid, namespace='/domain')
+    await sio.emit('domainResponse', message, room=sid, namespace='/domain')
 
     if domains_list is not None:
         await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
@@ -231,115 +254,101 @@ async def updateDomains(sid, data, room_name):
 # intents Endpoint
 
 
-@sio.on('getIntents', namespace='/intent')
+@sio.on('getIntents', namespace='/dashboard')
 async def getIntents(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
-
-    data = {"project_id": "123", "domain_id": "1"}
-
-    intents_list = intentsModel.getIntents(data)
-
-    await sio.emit('allIntents', intents_list, namespace='/intent', room=room_name)
+    intents_list = await intentsModel.getIntents(data)
+    await sio.emit('allIntents', intents_list, namespace='/dashboard', room=room_name)
 
 
-@sio.on('createIntent', namespace='/intent')
+@sio.on('createIntent', namespace='/dashboard')
 async def createIntent(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    data = {"project_id": "1", "domain_id": "1", "intent_id":"1", "intent_name": "ABC Intent", "intent_description": "DHKJSNDAN"}
+    message, intents_list= await intentsModel.createIntent(data)
+    await sio.emit('intentResponse', message, namespace='/dashboard', room=sid)
 
-    insert_result, intents_list = await intentsModel.createIntent(data)
-
-    await sio.emit('intentResponse', {'message': 'Intent has been inserted with ID {}'.format(insert_result)},namespace='/intent', room=sid)
-    await sio.emit('allIntents', intents_list, namespace='/intent', room=room_name)
+    if intents_list is not None:
+        await sio.emit('allIntents', intents_list, namespace='/dashboard', room=room_name)
 
 
-@sio.on('deleteIntent', namespace='/intent')
+@sio.on('deleteIntent', namespace='/dashboard')
 async def deleteIntent(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    data = {"project_id": "1", "domain_id": "1", "object_id": "kasjdhkjansd"}
+    message, intents_list = await intentsModel.deleteIntent(data)
 
-    delete_result, intents_list = await intentsModel.deleteIntent(data)
-
-    await sio.emit('intentResponse', {'message': 'Intent has been deleted with ID {}'.format(delete_result)},namespace='/intent', room=sid)
-    await sio.emit('allIntents', intents_list, namespace='/intent', room=room_name)
+    await sio.emit('intentResponse', message, namespace='/dashboard', room=sid)
+    await sio.emit('allIntents', intents_list, namespace='/dashboard', room=room_name)
 
 
-@sio.on('updateIntent', namespace='/intent')
+@sio.on('updateIntent', namespace='/dashboard')
 async def updateIntent(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    data = {"project_id": "12", "domain_id": "123", "object_id":"abbdkkdnsd", "intent_id":"1", "intent_name": "abc", "intent_description": "Abbskkskndkjn"}
+    message, intents_list = await intentsModel.updateIntent(data)
+    await sio.emit('intentResponse', message,namespace='/dashboard', room=sid)
 
-    update_result , intents_list = await intentsModel.updateIntent(data)
-
-    await sio.emit('intentResponse', {'message': 'Intent has been updated with ID {}'.format(update_result)},namespace='/intent', room=sid)
-    await sio.emit('allIntents', intents_list, namespace='/intent', room=room_name)
+    if intents_list is not None:
+        await sio.emit('allIntents', intents_list, namespace='/dashboard', room=room_name)
 
 
 # responses Endpoints
 
 
-@sio.on('getResponses', namespace='/response')
+@sio.on('getResponses', namespace='/dashboard')
 async def getResponses(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    data = {"project_id": "123", "domain_id": "1"}
-
-    responses_list = responsesModel.getResponses(data)
-
-    await sio.emit('allResponses', responses_list, namespace='/response', room=room_name)
+    responses_list = await responsesModel.getResponses(data)
+    await sio.emit('allResponses', responses_list, namespace='/dashboard', room=room_name)
 
 
-@sio.on('createResponse', namespace='/response')
+@sio.on('createResponse', namespace='/dashboard')
 async def createResponse(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    data = {"project_id": "1", "domain_id": "1", "response_id":"1", "response_name": "ABC Intent", "response_description": "DHKJSNDAN"}
+    message, responses_list = await responsesModel.createResponse(data)
 
-    insert_result, responses_list = await responsesModel.createResponse(data)
+    await sio.emit('respResponse', message, namespace='/dashboard', room=sid)
 
-    await sio.emit('intentResponse', {'message': 'Response has been inserted with ID {}'.format(insert_result)},namespace='/response', room=sid)
-    await sio.emit('allResponses', responses_list, namespace='/response', room=room_name)
+    if responses_list is not None:
+        await sio.emit('allResponses', responses_list, namespace='/dashboard', room=room_name)
 
 
-@sio.on('deleteResponse', namespace='/response')
+@sio.on('deleteResponse', namespace='/dashboard')
 async def deleteResponse(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    data = {"project_id": "1", "domain_id": "1", "object_id": "kasjdhkjansd"}
+    message, responses_list = await responsesModel.deleteResponse(data)
 
-    delete_result, responses_list = await responsesModel.deleteResponse(data)
-
-    await sio.emit('intentResponse', {'message': 'Response has been deleted with ID {}'.format(delete_result)},namespace='/response', room=sid)
-    await sio.emit('allResponses', responses_list, namespace='/response', room=room_name)
+    await sio.emit('respResponse', message, namespace='/dashboard', room=sid)
+    await sio.emit('allResponses', responses_list, namespace='/dashboard', room=room_name)
 
 
-@sio.on('updateResponse', namespace='/response')
+@sio.on('updateResponse', namespace='/dashboard')
 async def updateResponse(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    data = {"project_id": "12", "domain_id": "123", "object_id":"abbdkkdnsd", "response_id":"1", "response_name": "abc", "response_description": "Abbskkskndkjn"}
+    message, responses_list = await responsesModel.updateResponse(data)
+    await sio.emit('respResponse', message, namespace='/dashboard', room=sid)
 
-    update_result , responses_list = await responsesModel.updateResponse(data)
-
-    await sio.emit('intentResponse', {'message': 'Response has been updated with ID {}'.format(update_result)},namespace='/response', room=sid)
-    await sio.emit('allResponses', responses_list, namespace='/response', room=room_name)
+    if responses_list is not None:
+        await sio.emit('allResponses', responses_list, namespace='/dashboard', room=room_name)
 
 
 # Endpoints for Stories
 
 
-@sio.on('getStories', namespace='/story')
+@sio.on('getStories', namespace='/dashboard')
 async def getStories(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
@@ -348,7 +357,7 @@ async def getStories(sid, data, room_name):
 
     stories_list = storyModel.getStories(data)
 
-    await sio.emit('allStories', stories_list, namespace='/story', room=room_name)
+    await sio.emit('allStories', stories_list, namespace='/dashboard', room=room_name)
 
 
 @sio.on('createStory', namespace='/story')
