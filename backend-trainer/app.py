@@ -209,8 +209,6 @@ async def deleteDomain(sid, data , room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ---------- ".format(sid, data, room_name))
 
-    #data = {"project_id": "123", "object_id": "abbsdskdlkscnksnc"}
-
     message, domains_list = await domainsModel.deleteDomain(data)
 
     await sio.emit('domainResponse', message,namespace='/domain', room=sid)
@@ -223,7 +221,8 @@ async def updateDomains(sid, data, room_name):
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
     message, domains_list = await domainsModel.updateDomain(data)
-    await sio.emit('domainResponse', message, namespace='/domain', room=sid)
+    print("Message value {}".format(message))
+    await sio.emit('domainResponse', {'message':'Test'}, room=sid, namespace='/domain')
 
     if domains_list is not None:
         await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
