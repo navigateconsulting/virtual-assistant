@@ -1,3 +1,50 @@
+.projects-container {
+    padding: 1.5%;
+}
+table {
+    width: 100%;
+}
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+.mat-column-icon{
+    width: 5%;
+}
+.mat-column-project_name{
+    width: 10%;
+}
+.mat-column-project_description {
+    width: 40%;
+}
+.mat-column-created_by {
+    width: 10%;
+}
+.mat-column-status {
+    width: 10%;
+}
+.mat-column-source {
+    width: 10%;
+}
+.mat-column-rename {
+    width: 5%;
+}
+.mat-column-delete {
+    width: 5%;
+}
+.mat-column-copy {
+    width: 5%;
+}
+.mat-row:hover {
+    background-color: #eee;
+}
+.project_name_text:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.edit_remove {
+    cursor: pointer;
+}
 @media ( min-width: 768px ) {
     .grid-divider {
         padding: 0;

@@ -38,6 +38,14 @@ import { AddEntityValueComponent } from './common/modals/add-entity-value/add-en
 import { ApplicationsComponent } from './applications/applications.component';
 import { SocketIoComponent } from './socket-io/socket-io.component';
 import { ManageProjectsComponent } from './manage-projects/manage-projects.component';
+import { ManageTrainerComponent } from './manage-trainer/manage-trainer.component';
+import { AddProjectComponent } from './common/modals/add-project/add-project.component';
+import { EditProjectComponent } from './common/modals/edit-project/edit-project.component';
+import { DeleteProjectComponent } from './common/modals/delete-project/delete-project.component';
+import { CopyProjectComponent } from './common/modals/copy-project/copy-project.component';
+import { AddDomainComponent } from './common/modals/add-domain/add-domain.component';
+import { DeleteDomainComponent } from './common/modals/delete-domain/delete-domain.component';
+import { EditDomainComponent } from './common/modals/edit-domain/edit-domain.component';
 
 
 @NgModule({
@@ -65,6 +73,14 @@ import { ManageProjectsComponent } from './manage-projects/manage-projects.compo
     ApplicationsComponent,
     SocketIoComponent,
     ManageProjectsComponent,
+    ManageTrainerComponent,
+    AddProjectComponent,
+    EditProjectComponent,
+    DeleteProjectComponent,
+    CopyProjectComponent,
+    AddDomainComponent,
+    DeleteDomainComponent,
+    EditDomainComponent,
   ],
   entryComponents: [
     CreateUserComponent,
@@ -73,7 +89,14 @@ import { ManageProjectsComponent } from './manage-projects/manage-projects.compo
     AddEntityComponent,
     EditEntityComponent,
     ChooseEntityComponent,
-    AddEntityValueComponent
+    AddEntityValueComponent,
+    AddProjectComponent,
+    EditProjectComponent,
+    DeleteProjectComponent,
+    CopyProjectComponent,
+    AddDomainComponent,
+    DeleteDomainComponent,
+    EditDomainComponent
   ],
   imports: [
     BrowserModule,
