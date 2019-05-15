@@ -70,8 +70,8 @@
         <mat-grid-list cols="6">
           <mat-grid-tile *ngFor="let domain of domains_json; let i = index">
             <div class="card domain-card">
-              <div class="card-header"><span class="mat-subheading-1">{{domain.domain_name}}</span></div>
-              <div class="card-body"><span class="mat-body-1">{{domain.domain_description}}</span></div> 
+              <div class="card-header" (click)="selectDomain(domain._id.$oid)"><span class="mat-subheading-1">{{domain.domain_name}}</span></div>
+              <div class="card-body" (click)="selectDomain(domain._id.$oid)"><span class="mat-body-1">{{domain.domain_description}}</span></div> 
               <div class="card-footer">
                 <button mat-button (click)="editDomain(domain._id.$oid, domain.domain_name, domain.domain_description)">Edit</button>
                 <button mat-flat-button color="warn" (click)="deleteDomain(domain._id.$oid)">Delete</button>

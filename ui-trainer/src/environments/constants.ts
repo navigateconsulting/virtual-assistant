@@ -27,6 +27,26 @@ export const constant = {
     DOMAINS_DELETE: 'deleteDomain',
     DOMAINS_UPDATE: 'updateDomain',
 
+    IRS_NSP: '/dashboard',
+    IRS_INTENTS_URL: 'getIntents',
+    IRS_INTENTS_LISTEN: 'allIntents',
+    IRS_INTENTS_RESPONSE: 'intentResponse',
+    IRS_INTENTS_CREATE: 'createIntent',
+    IRS_INTENTS_UPDATE: 'updateIntent',
+    IRS_INTENTS_DELETE: 'deleteIntent',
+    IRS_RESPONSES_URL: 'getResponses',
+    IRS_RESPONSES_LISTEN: 'allResponses',
+    IRS_RESPONSES_RESPONSE: 'responseResponse',
+    IRS_RESPONSES_CREATE: 'createResponse',
+    IRS_RESPONSES_UPDATE: 'updateResponse',
+    IRS_RESPONSES_DELETE: 'deleteResponse',
+    // IRS_STORIES_URL: 'getResponses',
+    // IRS_RESPONSES_LISTEN: 'allResponses',
+    // IRS_RESPONSES_RESPONSE: 'responseResponse',
+    // IRS_RESPONSES_CREATE: 'createResponse',
+    // IRS_RESPONSES_UPDATE: 'updateResponse',
+    // IRS_RESPONSES_DELETE: 'deleteResponse',
+
     MODULE_COMMON: 'common',
 };
 

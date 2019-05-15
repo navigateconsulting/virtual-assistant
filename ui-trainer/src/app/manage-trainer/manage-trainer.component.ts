@@ -9,6 +9,7 @@ export class ManageTrainerComponent implements OnInit {
 
   setComponent: string;
   projectObjectId: string;
+  domainObjectId: string;
   breadcrumb_arr: Array<string>;
   breadcrumb_string: string;
 
@@ -24,6 +25,11 @@ export class ManageTrainerComponent implements OnInit {
   projectSelected($event: any) {
     this.projectObjectId = $event;
     this.setComponent = 'manage-domains';
+  }
+
+  domainSelected($event: any) {
+    this.domainObjectId = $event;
+    this.setComponent = 'manage-irs';
   }
 
 }

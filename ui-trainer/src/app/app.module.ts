@@ -46,7 +46,10 @@ import { CopyProjectComponent } from './common/modals/copy-project/copy-project.
 import { AddDomainComponent } from './common/modals/add-domain/add-domain.component';
 import { DeleteDomainComponent } from './common/modals/delete-domain/delete-domain.component';
 import { EditDomainComponent } from './common/modals/edit-domain/edit-domain.component';
-
+import { ManageIrsComponent } from './manage-irs/manage-irs.component';
+import { AddIntentComponent } from './common/modals/add-intent/add-intent.component';
+import { DeleteIntentComponent } from './common/modals/delete-intent/delete-intent.component';
+import { EditIntentComponent } from './common/modals/edit-intent/edit-intent.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +84,10 @@ import { EditDomainComponent } from './common/modals/edit-domain/edit-domain.com
     AddDomainComponent,
     DeleteDomainComponent,
     EditDomainComponent,
+    ManageIrsComponent,
+    AddIntentComponent,
+    DeleteIntentComponent,
+    EditIntentComponent,
   ],
   entryComponents: [
     CreateUserComponent,
@@ -96,7 +103,10 @@ import { EditDomainComponent } from './common/modals/edit-domain/edit-domain.com
     CopyProjectComponent,
     AddDomainComponent,
     DeleteDomainComponent,
-    EditDomainComponent
+    EditDomainComponent,
+    AddIntentComponent,
+    DeleteIntentComponent,
+    EditIntentComponent
   ],
   imports: [
     BrowserModule,
