@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Confirm Delete Intent</h1>
+
+<mat-dialog-content>
+  <h4 class="mat-subheading-1">Are you sure you want to delete?</h4>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="confirmDelete()" color="primary">Confirm</button>
+</mat-dialog-actions>
