@@ -143,13 +143,12 @@ class domainsModel():
 
         if val_res is not None:
             print('Domain already exists')
-            return {"status": "Error", "message": "Domain already exists"}
+            return {"status": "Error", "message": "Domain already exists"}, None
         else:
             insert_result = await db.domains.insert_one(json.loads(json.dumps(insert_record)))
             print("Domain created with ID {}".format(insert_result.inserted_id))
 
             domains_list = await domainsModel.getDomains(json_record['project_id'])
-
             return {"status": "Success", "message": "Domain created successfully"}, domains_list
 
     async def deleteDomain(record):
@@ -202,68 +201,87 @@ class intentsModel():
 
     async def getIntents(record):
 
-        json_record = json.loads(record)
+        json_record = json.loads(json.dumps(record))
 
-        cursor = db.intents.find(json_record)
+        cursor = db.intents.find(json_record, {"project_id": 1, "domain_id": 1, "intent_name": 1, "intent_description": 1})
         result = await cursor.to_list(length=1000)
-
-        print("Intents sent {}".format(json.loads(dumps(result))))
-        return json.loads(dumps(result))
+        json_result = json.loads(dumps(result))
+        print("Intents sent {}".format(json_result))
+        return json_result
 
     async def createIntent(record):
 
-        json_record = json.loads(record)
+        json_record = json.loads(json.dumps(record))
 
         insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
-                         "intent_id": json_record['intent_id'], "intent_name": json_record['intent_name'],
+                         "intent_name": json_record['intent_name'],
                          "intent_description": json_record['intent_description'], "text_entities": [""]}
 
-        result = await db.intents.insert_one(json.loads(insert_record))
-        print("Intent created with ID {}".format(result.inserted_id))
+        val_res = await db.intents.find_one({"project_id": json_record['project_id'],
+                                             "domain_id": json_record['domain_id'],
+                                             "intent_name": json_record['intent_name']})
 
-        get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        intents_list = await getIntents(get_intents)
+        if val_res is not None:
+            print('Intent already exists')
+            return {"status": "Error", "message": "Intent already exists"}, None
+        else:
+            result = await db.intents.insert_one(json.loads(json.dumps(insert_record)))
+            message = {"status": "Success", "message": "Intent created with ID {}".format(result.inserted_id)}
 
-        return result.inserted_id, intents_list
+            get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            intents_list = await intentsModel.getIntents(get_intents)
+
+            return message, intents_list
 
     async def deleteIntent(record):
 
-        json_record = json.loads(record)
+        json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
 
         result = await db.intents.delete_one(query)
-        print("Intent Deleted count {}".format(result))
+        print("Intent deleted successfully {}".format(result))
+        message = {"status": "Success", "message": "Intent deleted successfully "}
 
         get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        intents_list = await getIntents(get_intents)
+        intents_list = await intentsModel.getIntents(get_intents)
 
-        return result, intents_list
+        return message, intents_list
 
     async def updateIntent(record):
 
-        json_record = json.load(record)
+        json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        update_field = {"$set": {"intent_id": json_record['intent_id'], "intent_name": json_record['intent_name'],
+        update_field = {"$set": {"intent_name": json_record['intent_name'],
                                  "intent_description": json_record['intent_description']}}
-        update_record = await db.intents.update_one(query, update_field)
 
-        print("Intent Updated , rows modified {}".format(update_record))
+        # Check if intent already exists
+        val_res = await db.intents.find_one({"project_id": json_record['project_id'],
+                                             "domain_id": json_record['domain_id'],
+                                             "intent_name": json_record['intent_name']})
 
-        get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        intents_list = await getIntents(get_intents)
+        if val_res is None or val_res['intent_name'] == json_record['intent_name']:
 
-        return update_record, intents_list
+            update_record = await db.intents.update_one(query, update_field)
+
+            print("Intent Updated , rows modified {}".format(update_record))
+
+            get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            intents_list = await intentsModel.getIntents(get_intents)
+
+            return {"status": "Success", "message": "Intent Updated Successfully"}, intents_list
+        else:
+            return {"status": "Error", "message": "Intent Name already exists"}, None
 
 
 class responsesModel():
 
     async def getResponses(record):
 
-        json_record = json.load(record)
+        json_record = json.loads(json.dumps(record))
 
-        cursor = db.responses.find(json_record)
+        cursor = db.responses.find(json_record, {"project_id": 1, "domain_id": 1, "response_name": 1, "response_description": 1})
         result = await cursor.to_list(length=1000)
 
         print("Responses sent {}".format(json.loads(dumps(result))))
@@ -272,23 +290,32 @@ class responsesModel():
 
     async def createResponse(record):
 
-        json_record = json.load(record)
+        json_record = json.loads(json.dumps(record))
 
         insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
-                         "response_id": json_record['response_id'], "response_name": json_record['response_name'],
+                         "response_name": json_record['response_name'],
                          "response_description": json_record['response_description'], "text_entities": [""]}
 
-        result = await db.responses.insert_one(json.loads(insert_record))
-        print("Response created with ID {}".format(result.inserted_id))
+        val_res = await db.responses.find_one({"project_id": json_record['project_id'],
+                                               "domain_id": json_record['domain_id'],
+                                               "response_name": json_record['response_name']})
 
-        get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        responses_list = await getResponses(get_responses)
+        if val_res is not None:
+            print('Response already exists')
+            return {"status": "Error", "message": "Response already exists"}, None
+        else:
 
-        return result, responses_list
+            result = await db.responses.insert_one(json.loads(insert_record))
+            print("Response created with ID {}".format(result.inserted_id))
+
+            get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            responses_list = await responsesModel.getResponses(get_responses)
+
+            return {"status": "Success", "message": "Response created successfully"}, responses_list
 
     async def deleteResponse(record):
 
-        json_record = json.loads(record)
+        json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
 
@@ -296,25 +323,34 @@ class responsesModel():
         print("Response Deleted count {}".format(result))
 
         get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        responses_list = await getResponses(get_responses)
+        responses_list = await responsesModel.getResponses(get_responses)
 
-        return result, responses_list
+        return {"status": "Success", "message": "Response Deleted successfully"}, responses_list
 
     async def updateResponse(record):
 
-        json_record = json.load(record)
+        json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        update_field = {"$set": {"response_id": json_record['response_id'], "response_name": json_record['response_name'],
+        update_field = {"$set": {"response_name": json_record['response_name'],
                                  "response_description": json_record['response_description']}}
-        update_record = await db.responses.update_one(query, update_field)
 
-        print("Intent Updated , rows modified {}".format(update_record))
+        # Check if Response already exists
+        val_res = await db.responses.find_one({"project_id": json_record['project_id'],
+                                               "domain_id": json_record['domain_id'],
+                                               "response_name": json_record['response_name']})
 
-        get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        responses_list = await getResponses(get_responses)
+        if val_res is None or val_res['response_name'] == json_record['response_name']:
+            update_record = await db.responses.update_one(query, update_field)
 
-        return update_record, responses_list
+            print("Response Updated , rows modified {}".format(update_record))
+
+            get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            responses_list = await responsesModel.getResponses(get_responses)
+
+            return {"status": "Success", "message": "Response Updated successfully"}, responses_list
+        else:
+            return {"status": "Error", "message": "Response Name already exists"}, None
 
 
 class storyModel():
