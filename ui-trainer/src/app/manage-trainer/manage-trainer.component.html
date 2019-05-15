@@ -8,7 +8,10 @@
       <app-manage-projects (selectedProject)="projectSelected($event)"></app-manage-projects>
     </div>
     <div *ngIf="setComponent === 'manage-domains'">
-      <app-manage-domains [projectObjectId]="projectObjectId"></app-manage-domains>
+      <app-manage-domains [projectObjectId]="projectObjectId" (selectedDomain)="domainSelected($event)"></app-manage-domains>
+    </div>
+    <div *ngIf="setComponent === 'manage-irs'">
+      <app-manage-irs [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId"></app-manage-irs>
     </div>
   </mat-sidenav-content>
   <mat-sidenav mode="over" position="end" class="entities-container">

@@ -1,0 +1,48 @@
+.example-stretched-tabs {
+    width: 100%;
+}
+.irs-container {
+    padding: 1.5%;
+}
+table {
+    width: 100%;
+}
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+.mat-column-icon{
+    width: 5%;
+}
+.mat-column-intent_name{
+    width: 10%;
+}
+.mat-column-intent_description {
+    width: 75%;
+}
+.mat-column-response_name{
+    width: 10%;
+}
+.mat-column-response_description {
+    width: 75%;
+}
+.mat-column-edit {
+    width: 5%;
+}
+.mat-column-delete {
+    width: 5%;
+}
+.mat-row:hover {
+    background-color: #eee;
+}
+.intent_name_text:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.response_name_text:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.edit_remove {
+    cursor: pointer;
+}

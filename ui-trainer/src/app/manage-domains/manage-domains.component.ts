@@ -57,6 +57,8 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
 
   @Input() projectObjectId: string;
 
+  @Output() selectedDomain = new EventEmitter<string>();
+
   ngOnInit() {
     this.getDomains();
     // this.getIntents();
@@ -132,6 +134,11 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
     });
   }
 
+  selectDomain(domainObjectId: string) {
+    this.webSocketService.leaveDomainsRoom('project_' + this.projectObjectId);
+    this.selectedDomain.emit(domainObjectId);
+  }
+
   showDomainAlerts(res: any) {
     if (res.status === 'Error') {
       this.success_error_class = 'danger';
@@ -146,9 +153,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
     }, 2000);
   }
 
-  ngOnDestroy(): void {
-    this.connection.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 
   // getIntents() {
   //   this.intents_data.newIntent.subscribe((intents: any) => {

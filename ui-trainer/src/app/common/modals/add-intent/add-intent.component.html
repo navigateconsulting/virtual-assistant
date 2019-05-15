@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Create New Intent</h1>
+
+<form [formGroup]="newIntentForm" (ngSubmit)="closeDialog()">
+<mat-dialog-content>
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Intent Name</mat-label>
+    <input matInput formControlName="intentName">
+  </mat-form-field>
+  <br />
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Intent Description</mat-label>
+    <textarea matInput formControlName="intentDescription"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button type="submit" [disabled]="!newIntentForm.valid" color="primary">OK</button>
+</mat-dialog-actions>
+</form>
