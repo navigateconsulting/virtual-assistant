@@ -1,8 +1,5 @@
 # Ui Trainer backend  - Backend Trainer 
 
-domain 5cd920445290f01deb51d878
-project 5cd920645290f01deb51d87a
-
 #Socket IO Calls 
 
 
