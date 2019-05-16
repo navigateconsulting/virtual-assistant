@@ -3,35 +3,42 @@ from bson.json_util import dumps
 import json
 from bson.objectid import ObjectId
 
-# motor MongoDb connection
+'''motor Mongo Db connection '''
 
 client = AsyncIOMotorClient('mongodb://localhost:27017')
 db = client['eva_platform']
 
-class dbname():
 
-    async def getName():
-        db= client['eva_platform']
-        result= await db.projects.find_one({"project_id":2})
+# noinspection PyMethodMayBeStatic
+class DbName:
+
+    async def get_name(self):
+        db_name = client['eva_platform']
+        result = await db_name.projects.find_one({"project_id": 2})
         return json.loads(dumps(result))
 
 
-class refreshDB():
+# noinspection PyMethodMayBeStatic
+class RefreshDb:
 
-    async def refreshdb():
+    async def refresh_db(self):
         print('received request to refresh database')
         return "Success"
 
 
-class projectsModel():
+# noinspection PyMethodMayBeStatic
+class ProjectsModel:
 
-    async def getProjects():
-        cursor= db.projects.find()
-        result=await cursor.to_list(length=1000)
+    def __init__(self):
+        pass
+
+    async def get_projects(self):
+        cursor = db.projects.find()
+        result = await cursor.to_list(length=1000)
         print("Projects sent {}".format(json.loads(dumps(result))))
         return json.loads(dumps(result))
 
-    async def createProjects(record):
+    async def create_projects(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -47,7 +54,7 @@ class projectsModel():
             print("project created {}".format(result.inserted_id))
             return {"status": "Success", "message": "Project Created with ID {}".format(result.inserted_id)}
 
-    async def deleteProject(object_id):
+    async def delete_project(self, object_id):
         query = {"_id": ObjectId("{}".format(object_id))}
 
         # TODO
@@ -64,7 +71,7 @@ class projectsModel():
         print("Project Deleted count {}".format(result))
         return {"status": "Success", "message": "Project Deleted Successfully"}
 
-    async def updateProject(record):
+    async def update_project(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -78,11 +85,11 @@ class projectsModel():
             update_field = {"$set": {"project_name": json_record['project_name'],
                                      "project_description": json_record['project_description']
                                      }}
-            result = db.projects.update_one(query,update_field)
+            result = db.projects.update_one(query, update_field)
             print("Project Updated , rows modified {}".format(result))
             return {"status": "Success", "message": "Project details updated successfully"}
 
-    async def copyProject(record):
+    async def copy_project(self, record):
         json_record = json.loads(json.dumps(record))
 
         # check if the project name exists
@@ -119,17 +126,20 @@ class projectsModel():
             return {"status": "Success", "message": "Project Copied ID {}".format(new_project.inserted_id)}
 
 
+# noinspection PyMethodMayBeStatic
+class DomainsModel:
 
-class domainsModel():
+    def __init__(self):
+        pass
 
-    async def getDomains(project_id):
+    async def get_domains(self, project_id):
         query = {"project_id": project_id}
         cursor = db.domains.find(query)
         result = await cursor.to_list(length=1000)
         print("Domains sent {}".format(json.loads(dumps(result))))
         return json.loads(dumps(result))
 
-    async def createDomain(record):
+    async def create_domain(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -148,10 +158,10 @@ class domainsModel():
             insert_result = await db.domains.insert_one(json.loads(json.dumps(insert_record)))
             print("Domain created with ID {}".format(insert_result.inserted_id))
 
-            domains_list = await domainsModel.getDomains(json_record['project_id'])
+            domains_list = await self.get_domains(json_record['project_id'])
             return {"status": "Success", "message": "Domain created successfully"}, domains_list
 
-    async def deleteDomain(record):
+    async def delete_domain(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -160,17 +170,17 @@ class domainsModel():
         delete_record = await db.domains.delete_one(query)
         print("Domain Deleted count {}".format(delete_record))
 
-        domains_list = await domainsModel.getDomains(json_record['project_id'])
+        domains_list = await self.get_domains(json_record['project_id'])
 
         return {"status": "Success", "message": "Domain Deleted Successfully"}, domains_list
 
-    async def updateDomain(record):
+    async def update_domain(self, record):
 
         json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        update_field = {"$set": { "domain_name": json_record['domain_name'],
-                                  "domain_description": json_record['domain_description']}}
+        update_field = {"$set": {"domain_name": json_record['domain_name'],
+                                 "domain_description": json_record['domain_description']}}
 
         # Check if Domain already exists
         val_res = await db.domains.find_one({"project_id": json_record['project_id'],
@@ -180,7 +190,7 @@ class domainsModel():
             update_record = await db.domains.update_one(query, update_field)
             print("Domain Updated , rows modified {}".format(update_record))
 
-            domains_list = await domainsModel.getDomains(json_record['project_id'])
+            domains_list = await self.get_domains(json_record['project_id'])
             return {"status": "Success", "message": "Domain updated successfully "}, domains_list
 
         elif val_res['domain_name'] == json_record['domain_name']:
@@ -189,7 +199,7 @@ class domainsModel():
             update_record = await db.domains.update_one(query, update_field)
             print("Domain Updated , rows modified {}".format(update_record))
 
-            domains_list = await domainsModel.getDomains(json_record['project_id'])
+            domains_list = await self.get_domains(json_record['project_id'])
             return {"status": "Success", "message": "Domain updated successfully "}, domains_list
 
         else:
@@ -197,9 +207,13 @@ class domainsModel():
             return {"status": "Error", "message": "Domain already exists"}, None
 
 
-class intentsModel():
+# noinspection PyMethodMayBeStatic
+class IntentsModel:
 
-    async def getIntents(record):
+    def __init__(self):
+        pass
+
+    async def get_intents(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -209,7 +223,7 @@ class intentsModel():
         print("Intents sent {}".format(json_result))
         return json_result
 
-    async def createIntent(record):
+    async def create_intent(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -229,11 +243,11 @@ class intentsModel():
             message = {"status": "Success", "message": "Intent created with ID {}".format(result.inserted_id)}
 
             get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-            intents_list = await intentsModel.getIntents(get_intents)
+            intents_list = await self.get_intents(get_intents)
 
             return message, intents_list
 
-    async def deleteIntent(record):
+    async def delete_intent(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -244,11 +258,11 @@ class intentsModel():
         message = {"status": "Success", "message": "Intent deleted successfully "}
 
         get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        intents_list = await intentsModel.getIntents(get_intents)
+        intents_list = await self.get_intents(get_intents)
 
         return message, intents_list
 
-    async def updateIntent(record):
+    async def update_intent(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -268,16 +282,55 @@ class intentsModel():
             print("Intent Updated , rows modified {}".format(update_record))
 
             get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-            intents_list = await intentsModel.getIntents(get_intents)
+            intents_list = await self.get_intents(get_intents)
 
             return {"status": "Success", "message": "Intent Updated Successfully"}, intents_list
         else:
             return {"status": "Error", "message": "Intent Name already exists"}, None
 
+    async def get_intent_details(self, data):
 
-class responsesModel():
+        json_record = json.loads(json.dumps(data))
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        result = db.intents.find_one(query)
+        print("Intent Details sent {}".format(json.loads(dumps(result))))
+        return json.loads(dumps(result))
 
-    async def getResponses(record):
+    async def modify_intent_detail(self, data):
+
+        # Data format
+        # {"object_id":"", "text":"I am in india ","entities":[{"start":8,"end":13,"value":"india","entity":"timezone"}]}
+
+        json_record = json.loads(json.dumps(data))
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        del json_record['object_id']
+        result = db.intents.update_one(query, {"$push": {"text_entities": json_record}}, upsert=True)
+        print("Inserted new row in Intent {}".format(result))
+
+        intent_detail = self.get_intent_details(json_record['object_id'])
+        return {"status": "Success", "message": "Intent text added "}, intent_detail
+
+    async def delete_intent_detail(self, data):
+
+        # {"object_id": "", "text":"I am in india ","entities":[{"start":8,"end":13,"value":"india","entity":"timezone"}] }
+
+        json_record= json.loads(json.dumps(data))
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        del json_record['object_id']
+        result = db.intents.update_one(query, {"$pull": {"text_entities": json_record}})
+        print("Removed row from Intent {}".format(result))
+
+        intent_detail = self.get_intent_details(json_record['object_id'])
+        return {"status": "Success", "message": "Intent text Removed "}, intent_detail
+
+
+# noinspection PyMethodMayBeStatic
+class ResponseModel:
+
+    def __init__(self):
+        pass
+
+    async def get_responses(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -287,8 +340,7 @@ class responsesModel():
         print("Responses sent {}".format(json.loads(dumps(result))))
         return json.loads(dumps(result))
 
-
-    async def createResponse(record):
+    async def create_response(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -305,15 +357,15 @@ class responsesModel():
             return {"status": "Error", "message": "Response already exists"}, None
         else:
 
-            result = await db.responses.insert_one(json.loads(insert_record))
+            result = await db.responses.insert_one(json.loads(json.dumps(insert_record)))
             print("Response created with ID {}".format(result.inserted_id))
 
             get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-            responses_list = await responsesModel.getResponses(get_responses)
+            responses_list = await self.get_responses(get_responses)
 
             return {"status": "Success", "message": "Response created successfully"}, responses_list
 
-    async def deleteResponse(record):
+    async def delete_response(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -323,11 +375,11 @@ class responsesModel():
         print("Response Deleted count {}".format(result))
 
         get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        responses_list = await responsesModel.getResponses(get_responses)
+        responses_list = await self.get_responses(get_responses)
 
         return {"status": "Success", "message": "Response Deleted successfully"}, responses_list
 
-    async def updateResponse(record):
+    async def update_response(self, record):
 
         json_record = json.loads(json.dumps(record))
 
@@ -346,44 +398,58 @@ class responsesModel():
             print("Response Updated , rows modified {}".format(update_record))
 
             get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-            responses_list = await responsesModel.getResponses(get_responses)
+            responses_list = await self.get_responses(get_responses)
 
             return {"status": "Success", "message": "Response Updated successfully"}, responses_list
         else:
             return {"status": "Error", "message": "Response Name already exists"}, None
 
 
-class storyModel():
+# noinspection PyMethodMayBeStatic
+class StoryModel:
 
-    async def getStories(record):
+    def __init__(self):
+        pass
 
-        json_record = json.load(record)
+    async def get_stories(self, record):
 
-        cursor = db.stories.find(json_record)
+        json_record = json.loads(json.dumps(record))
+
+        cursor = db.stories.find(json_record, {"project_id": 1, "domain_id": 1, "story_name": 1, "story_description": 1})
         result = await cursor.to_list(length=1000)
 
         print("Stories sent {}".format(json.loads(dumps(result))))
         return json.loads(dumps(result))
 
-    async def createStory(record):
+    async def create_story(self, record):
 
-        json_record = json.load(record)
+        json_record = json.loads(json.dumps(record))
 
         insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
-                         "story_id": json_record['story_id'], "story_name": json_record['story_name'],
-                         "story_description": json_record['story_description'], "intents_responses": [""]}
+                         "story_name": json_record['story_name'],
+                         "story_description": json_record['story_description'], "story": [""]}
 
-        result = await db.stories.insert_one(json.loads(insert_record))
-        print("Story created with ID {}".format(result.inserted_id))
+        val_res = await db.stories.find_one({"project_id": json_record['project_id'],
+                                             "domain_id": json_record['domain_id'],
+                                             "story_name": json_record['story_name']})
 
-        get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        stories_list = await getStories(get_stories)
+        if val_res is not None:
+            print('Story already exists')
+            return {"status": "Error", "message": "Story already exists"}, None
 
-        return result, stories_list
+        else:
 
-    async def deleteStory(record):
+            result = await db.stories.insert_one(json.loads(json.dumps(insert_record)))
+            print("Story created with ID {}".format(result.inserted_id))
 
-        json_record = json.loads(record)
+            get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            stories_list = await self.get_stories(get_stories)
+
+            return {"status": "Success", "message": "Story created successfully "}, stories_list
+
+    async def delete_story(self, record):
+
+        json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
 
@@ -391,35 +457,118 @@ class storyModel():
         print("Story Deleted count {}".format(result))
 
         get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        stories_list = await getStories(get_stories)
+        stories_list = await self.get_stories(get_stories)
 
-        return result, stories_list
+        return {"status": "Success", "message": "Story Deleted successfully"}, stories_list
 
-    async def updateStory(self):
+    async def update_story(self, record):
 
-        json_record = json.load(record)
+        json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        update_field = {"$set": {"story_id": json_record['story_id'], "story_name": json_record['story_name'],
+        update_field = {"$set": {"story_name": json_record['story_name'],
                                  "story_description": json_record['story_description']}}
-        update_record = await db.stories.update_one(query, update_field)
 
-        print("Story Updated , rows modified {}".format(update_record))
+        # Check if Response already exists
+        val_res = await db.stories.find_one({"project_id": json_record['project_id'],
+                                             "domain_id": json_record['domain_id'],
+                                             "story_name": json_record['story_name']})
 
-        get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        stories_list = await getStories(get_stories)
+        if val_res is None or val_res['story_name'] == json_record['story_name']:
 
-        return update_record, stories_list
+            update_record = await db.stories.update_one(query, update_field)
+            print("Story Updated , rows modified {}".format(update_record))
+
+            get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            stories_list = await self.get_stories(get_stories)
+            return {"status": "Success", "message": "Story Updated successfully "}, stories_list
+
+        else:
+            return {"status": "Error", "message": "Story Name already exists"}, None
 
 
-class entityModel():
+# noinspection PyMethodMayBeStatic
+class EntityModel:
 
-    async def getEntities(record):
+    def __init__(self):
+        pass
 
-        json_record = json.load(record)
+    async def get_entities(self, record):
 
+        json_record = json.loads(json.dumps(record))
         cursor = db.entities.find(json_record)
         result = await cursor.to_list(length=1000)
-
         print("Entities sent {}".format(json.loads(dumps(result))))
         return json.loads(dumps(result))
+
+    async def create_entity(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        # Check if Entity already exists
+        val_res = await db.entities.find_one({"project_id": json_record['project_id'],
+                                              "entity_name": json_record['entity_name']})
+
+        if val_res is not None:
+            print("Entity Already exists ")
+            return {"status": "Error", "message": "Entity Already exists "}, None
+        else:
+            result = await db.entities.insert_one(json_record)
+            print("Entity created with ID {}".format(result.inserted_id))
+
+            get_entities = {"project_id": json_record['project_id']}
+            entities_list = await self.get_entities(get_entities)
+
+            return {"status": "Success", "message": "Entity created successfully"}, entities_list
+
+    async def delete_entity(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        result = await db.entities.delete_one(query)
+        print("Entity Deleted count {}".format(result))
+
+        get_entities = {"project_id": json_record['project_id']}
+        entities_list = await self.get_entities(get_entities)
+
+        return {"status": "Success", "message": "Entity deleted successfully"}, entities_list
+
+    async def update_entity(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        # Check if Entity already exists
+        val_res = await db.entities.find_one({"project_id": json_record['project_id'],
+                                              "entity_name": json_record['entity_name']})
+
+        object_id = val_res.get('_id')
+        query = {"_id": ObjectId("{}".format(object_id))}
+
+        if val_res is None or val_res['entity_name'] == json_record['entity_name']:
+            del json_record['_id']
+            print("Got value ", json_record)
+            update_record = await db.entities.update_one(query, {"$set": json_record})
+            print("Entity Updated , rows modified {}".format(update_record.modified_count))
+
+            get_entities = {"project_id": json_record['project_id']}
+            entities_list = await self.get_entities(get_entities)
+            return {"status": "Success", "message": "Entity updated successfully"}, entities_list
+
+        else:
+            return {"status": "Error", "message": "Entity Name already exists"}, None
+
+
+# noinspection PyMethodMayBeStatic
+class StoryDetail:
+
+    def __init__(self):
+        print("Init Story Detail")
+
+    async def getstorydetail(self, record):
+
+        json_record = json.loads(json.dumps(record))
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        story_details = await db.stories.find_one(query)
+
+        return story_details
