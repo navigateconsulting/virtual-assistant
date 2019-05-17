@@ -1,15 +1,7 @@
 @import '../../scss/styles';
 
-.mat-tab-body-content {
-  overflow: hidden !important;
-}
-.intent-table-container {
-  height: 250px;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.table-row {
-  margin-top: 2%;
+.intent-container {
+  padding: 1.5%;
 }
 table {
   width: 100%;
@@ -18,75 +10,16 @@ table {
   font-size: 14px;
   width: 90%;
 }
-.mat-column-Index {
-  word-wrap: break-word !important;
-  white-space: unset !important;
-  flex: 0 0 10% !important;
-  width: 10% !important;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-
-  word-break: break-word;
-
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
-}
-.mat-column-Intent-Text {
-  word-wrap: break-word !important;
-  white-space: unset !important;
-  flex: 0 0 80% !important;
-  width: 80% !important;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-
-  word-break: break-word;
-
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
-}
-.mat-column-Delete {
-  word-wrap: break-word !important;
-  white-space: unset !important;
-  flex: 0 0 10% !important;
-  width: 10% !important;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-
-  word-break: break-word;
-
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
-}
 .error {
   color: #E34256;
   opacity: 0.8;
   font-size: 12px;
   margin-top: 1%;
 }
-.manage-map-intent-row {
-  margin-top: 2%;
-}
-.intent-grid-list {
-  height: 300px;
-  overflow-y: auto;
-  position: unset !important;
-}
-.mat-list-base {
-  width: 100%;
-}
-mat-card.intent-text.mat-card {
-  width: 100%;
-}
 #accordion {
   width: 100%;
-  padding: 2%;
-  height: 300px;
+  height: 350px;
+  padding: 1.5%;
   overflow-y: auto;
 }
 .highlight {

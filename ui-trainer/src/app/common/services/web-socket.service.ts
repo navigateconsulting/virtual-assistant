@@ -202,4 +202,125 @@ export class WebSocketService {
       };
     });
   }
+
+  createResponse(new_response_stub: any, irs_room: string) {
+    this.socket.emit(constant.IRS_RESPONSES_CREATE, new_response_stub, irs_room);
+  }
+
+  editResponse(edit_response_stub: any, irs_room: string) {
+    this.socket.emit(constant.IRS_RESPONSES_UPDATE, edit_response_stub, irs_room);
+  }
+
+  deleteResponse(delete_response_stub: any, irs_room: string) {
+    this.socket.emit(constant.IRS_RESPONSES_DELETE, delete_response_stub, irs_room);
+  }
+
+  getStories(project_domain_ids: any, irs_room: string) {
+    this.socket.emit(constant.IRS_STORIES_URL, project_domain_ids, irs_room);
+    return Observable.create((observer) => {
+      this.socket.on(constant.IRS_STORIES_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  getStoryAlerts() {
+    return Observable.create((observer) => {
+      this.socket.on(constant.IRS_STORIES_RESPONSE, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable to reach the server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  createStory(new_story_stub: any, irs_room: string) {
+    this.socket.emit(constant.IRS_STORIES_CREATE, new_story_stub, irs_room);
+  }
+
+  editStory(edit_story_stub: any, irs_room: string) {
+    this.socket.emit(constant.IRS_STORIES_UPDATE, edit_story_stub, irs_room);
+  }
+
+  deleteStory(delete_story_stub: any, irs_room: string) {
+    this.socket.emit(constant.IRS_STORIES_DELETE, delete_story_stub, irs_room);
+  }
+
+  leaveIRSRoom(irs_room: string) {
+    this.socket.emit('leave_room', irs_room);
+  }
+
+  createIntentRoom(intent_room: string) {
+    this.socket.nsp = constant.INTENT_NSP;
+    this.socket.emit('join_room', intent_room);
+  }
+
+  getIntentDetails(intent_details_stub: any, intent_room: string) {
+    this.socket.emit(constant.INTENT_DETAILS_URL, intent_details_stub, intent_room);
+    return Observable.create((observer) => {
+      this.socket.on(constant.INTENT_DETAILS_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  createIntentText(new_intent_text_stub: any, intent_room: string) {
+    this.socket.emit(constant.INTENT_TEXT_CREATE, new_intent_text_stub, intent_room);
+  }
+
+  editIntentText(edit_intent_text_stub: any, intent_room: string) {
+    this.socket.emit(constant.INTENT_TEXT_UPDATE, edit_intent_text_stub, intent_room);
+  }
+
+  deleteIntentText(delete_intent_text_stub: any, intent_room: string) {
+    this.socket.emit(constant.INTENT_TEXT_DELETE, delete_intent_text_stub, intent_room);
+  }
+
+  createResponseRoom(response_room: string) {
+    this.socket.nsp = constant.RESPONSE_NSP;
+    this.socket.emit('join_room', response_room);
+  }
+
+  getResponseDetails(response_details_stub: any, response_room: string) {
+    this.socket.emit(constant.RESPONSE_DETAILS_URL, response_details_stub, response_room);
+    return Observable.create((observer) => {
+      this.socket.on(constant.RESPONSE_DETAILS_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  createResponseText(new_response_text_stub: any, response_room: string) {
+    this.socket.emit(constant.RESPONSE_TEXT_CREATE, new_response_text_stub, response_room);
+  }
+
+  deleteResponseText(delete_response_text_stub: any, response_room: string) {
+    this.socket.emit(constant.RESPONSE_TEXT_DELETE, delete_response_text_stub, response_room);
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material';
 import { AddEntityComponent } from '../common/modals/add-entity/add-entity.component';
@@ -19,14 +19,33 @@ export class ManageEntitiesComponent implements OnInit {
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   entities: any;
+  show_success_error: boolean;
+  success_error_class: string;
+  success_error_type: string;
+  success_error_message: string;
+
+  @Input() projectObjectId: string;
 
   constructor(public dialog: MatDialog,
-              private entities_data: EntitiesDataService) { }
+              private entities_service: EntitiesDataService) { }
 
   ngOnInit() {
-    this.entities_data.newEntity.subscribe((entities: any) => {
-      this.entities = (entities !== '' && entities !== null) ? entities : [];
-    });
+    this.getEntities();
+  }
+
+  getEntities() {
+    this.entities_service.createEntitiesRoom();
+    this.entities_service.getEntities({project_id: this.projectObjectId}).subscribe(entities => {
+      this.entities = entities;
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
+
+    this.entities_service.getEntityAlerts().subscribe(entities => {
+      this.showEntityAlerts(entities);
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   addEntity(event: MatChipInputEvent): void {
@@ -36,18 +55,18 @@ export class ManageEntitiesComponent implements OnInit {
     if ((value || '').trim()) {
       const dialogRef = this.dialog.open(AddEntityComponent, {
         width: '500px',
+        data: {project_id: this.projectObjectId}
       });
-
       dialogRef.afterClosed().subscribe(entity_details => {
-        if (Object.keys(entity_details).length !== 0) {
-          // tslint:disable-next-line:max-line-length
-          this.entities.push({entity: value.trim(), entity_desc: entity_details.entity_desc, entity_slot: entity_details.entity_slot_details});
-          this.entities_data.saveEntitiesJson(this.entities.slice(0));
-          this.updateEntitiesObject(this.entities);
+        if (entity_details) {
+          if (Object.keys(entity_details).length !== 0) {
+            entity_details['entity_name'] = value.trim();
+            console.log(entity_details);
+            this.entities_service.createEntity(entity_details);
+          }
         }
       });
     }
-
     // Reset the input value
     if (input) {
       input.value = '';
@@ -55,26 +74,34 @@ export class ManageEntitiesComponent implements OnInit {
   }
 
   editEntity(entity: any) {
-    const index = this.entities.indexOf(entity);
     const dialogRef = this.dialog.open(EditEntityComponent, {
       width: '500px',
       data: {entity: entity}
     });
 
     dialogRef.afterClosed().subscribe(entity_details => {
-      if (entity_details !== '') {
-        if (entity_details === '0') {
-          this.entities.splice(index, 1);
+      if (entity_details) {
+        if (typeof entity_details === 'string') {
+          entity_details = {project_id: this.projectObjectId, object_id: entity_details};
+          this.entities_service.deleteEntity(entity_details);
         } else {
-          this.entities[index] = entity_details;
+          this.entities_service.editEntity(entity_details);
         }
-        this.entities_data.saveEntitiesJson(this.entities.slice(0));
-        this.updateEntitiesObject(this.entities);
       }
     });
   }
 
-  updateEntitiesObject(entities: any) {
-    this.entities_data.changeEntity(entities);
+  showEntityAlerts(res: any) {
+    if (res.status === 'Error') {
+      this.success_error_class = 'danger';
+    } else if (res.status === 'Success') {
+      this.success_error_class = 'success';
+    }
+    this.success_error_type = res.status;
+    this.success_error_message = res.message;
+    this.show_success_error = true;
+    setTimeout(() => {
+      this.show_success_error = false;
+    }, 2000);
   }
 }

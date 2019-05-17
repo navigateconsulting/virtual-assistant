@@ -2,7 +2,7 @@
     <mat-form-field class="example-chip-list">
         <mat-chip-list #chipList>
             <mat-chip *ngFor="let entity of entities" [selectable]="selectable" (click)="editEntity(entity)">
-            {{entity.entity}}
+            {{entity.entity_name}}
             </mat-chip>
             <input placeholder="New Entity..."
                     [matChipInputFor]="chipList"

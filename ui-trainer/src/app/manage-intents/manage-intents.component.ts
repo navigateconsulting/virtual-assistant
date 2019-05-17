@@ -6,6 +6,7 @@ import { map, startWith, debounceTime, distinctUntilChanged, switchMap } from 'r
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ChooseEntityComponent } from '../common/modals/choose-entity/choose-entity.component';
 import { EntitiesDataService } from '../common/services/entities-data.service';
+import { WebSocketService } from '../common/services/web-socket.service';
 
 declare var selectText: Function;
 declare var highlightText: Function;
@@ -19,10 +20,6 @@ declare var unhighlightText: Function;
 })
 export class ManageIntentsComponent implements OnInit {
 
-  displayedColumns: string[] = ['Index', 'Intent Text', 'Delete'];
-  dataSource: any;
-  text_entities: any;
-  text_entities_backup: any;
   intentForm: FormGroup;
   intentFormArray: FormArray;
   intentHasError: Array<boolean>;
@@ -33,34 +30,42 @@ export class ManageIntentsComponent implements OnInit {
   entityfilteredOptions: Observable<string[]>;
   new_intent_text: string;
 
-  constructor(private entities_data: EntitiesDataService, public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog,
+              private entities_service: EntitiesDataService,
+              private webSocketService: WebSocketService) {}
 
-  @Input() currentIntent: any;
-
-  @Output() saveIntentJSON = new EventEmitter<{ intent_index: number, text_entities: [{}] }>();
-  @Output() saveIntentEntityValue = new EventEmitter<{ intent_text_index: number, intent_entities: {} }>();
+  currentIntent: any;
+  text_entities: any;
+  text_entities_backup: any;
+  @Input() intentObjectId: string;
+  @Input() projectObjectId: string;
 
   ngOnInit() {
-    this.text_entities = this.text_entities_backup = this.currentIntent.text_entities;
-    this.intentHasError = new Array<boolean>();
-    if (this.text_entities.length > 0) {
-      for (let i = 0; i < this.text_entities.length; i++) {
-        this.intentHasError.push(false);
-      }
-    }
-    this.dataSource = new MatTableDataSource(this.text_entities);
+    this.getEntities();
+    this.getIntentDetails();
+  }
 
-    this.entities_data.newEntity.subscribe(entities => {
+  getEntities() {
+    this.entities_service.createEntitiesRoom();
+    this.entities_service.getEntities({project_id: this.projectObjectId}).subscribe(entities => {
       this.entities = entities;
       this.entityfilteredOptions = this.entitiesControl.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value))
       );
-    });
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  getIntentDetails() {
+    this.webSocketService.createIntentRoom('intent_' + this.intentObjectId);
+    this.webSocketService.getIntentDetails({object_id: this.intentObjectId}, 'intent_' + this.intentObjectId).subscribe(intent_details => {
+      this.currentIntent = intent_details;
+      this.text_entities = this.text_entities_backup = this.currentIntent.text_entities;
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   applyMapFilter(filterValue: string) {
@@ -74,32 +79,32 @@ export class ManageIntentsComponent implements OnInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.entities.filter(option => option.entity.toLowerCase().includes(filterValue));
+    return this.entities.filter(option => option.entity_name.toLowerCase().includes(filterValue));
   }
 
   addIntentTextElement() {
     if (this.new_intent_text.trim() !== '') {
-      this.text_entities.push({text: this.new_intent_text, entities: []});
+      // tslint:disable-next-line: max-line-length
+      this.webSocketService.createIntentText({object_id: this.intentObjectId, text: this.new_intent_text, entities: []}, 'intent_' + this.intentObjectId);
       this.new_intent_text = '';
-      this.saveIntentJSONMethod();
     }
   }
 
-  removeIntentTextElement(index: number) {
-    this.text_entities.splice(index, 1);
-    this.saveIntentJSONMethod();
+  removeIntentTextElement(index_text: string, intent_text_entities: Array<string>) {
+    // tslint:disable-next-line: max-line-length
+    this.webSocketService.deleteIntentText({object_id: this.intentObjectId, text: index_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
   }
 
   getEntityValue(entity_value: string) {
     this.entity_value = entity_value;
   }
 
-  mouseUpFunction(event: any) {
+  mouseUpFunction(event: any, intent_text_index: number, intent_text: string, intent_text_entities: Array<string>) {
     this.entityValue = selectText(event);
     if (this.entity_value !== '') {
       if (this.entityValue !== 0) {
         const selected_entity = this.entities.filter((value) => {
-          if (value.entity === this.entity_value) {
+          if (value.entity_name === this.entity_value) {
             return value;
           }
         })[0];
@@ -113,16 +118,18 @@ export class ManageIntentsComponent implements OnInit {
               delete this.entityValue['text_id'];
               this.entityValue['value'] = entity_value.chosen_entity_value;
               this.entityValue['entity'] = this.entity_value;
-              this.text_entities[+event.target.id.split('_')[2]]['entities'].push(this.entityValue);
-              this.saveIntentJSONMethod();
+              intent_text_entities.push(this.entityValue);
+              // tslint:disable-next-line: max-line-length
+              this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
               toggleIntentEntity(event);
             }
           });
         } else {
           delete this.entityValue['text_id'];
           this.entityValue['entity'] = this.entity_value;
-          this.text_entities[+event.target.id.split('_')[2]]['entities'].push(this.entityValue);
-          this.saveIntentJSONMethod();
+          intent_text_entities.push(this.entityValue);
+          // tslint:disable-next-line: max-line-length
+          this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
           toggleIntentEntity(event);
         }
       }
@@ -138,17 +145,19 @@ export class ManageIntentsComponent implements OnInit {
           }
           delete this.entityValue['text_id'];
           this.entityValue['entity'] = entity_value.chosen_entity;
-          this.text_entities[+event.target.id.split('_')[2]]['entities'].push(this.entityValue);
-          this.saveIntentJSONMethod();
+          intent_text_entities.push(this.entityValue);
+          // tslint:disable-next-line: max-line-length
+          this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
           toggleIntentEntity(event);
         }
       });
     }
   }
 
-  removeEntityElement(intent_index: number, entity_index: number) {
-    this.text_entities[intent_index]['entities'].splice(entity_index, 1);
-    this.saveIntentJSONMethod();
+  removeEntityElement(intent_text_index: number, intent_text: string, intent_text_entities: Array<string>, entity_index: number) {
+    intent_text_entities.splice(entity_index, 1);
+    // tslint:disable-next-line: max-line-length
+    this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
   }
 
   highlightTextEntity(entity_start: number, entity_end: number, index: number) {
@@ -157,9 +166,5 @@ export class ManageIntentsComponent implements OnInit {
 
   unhighlightTextEntity(index: number) {
     unhighlightText('intent_text_' + index);
-  }
-
-  saveIntentJSONMethod() {
-    this.saveIntentJSON.emit({ intent_index: this.currentIntent.intent_id, text_entities: this.text_entities });
   }
 }
