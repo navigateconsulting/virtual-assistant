@@ -50,6 +50,12 @@ import { ManageIrsComponent } from './manage-irs/manage-irs.component';
 import { AddIntentComponent } from './common/modals/add-intent/add-intent.component';
 import { DeleteIntentComponent } from './common/modals/delete-intent/delete-intent.component';
 import { EditIntentComponent } from './common/modals/edit-intent/edit-intent.component';
+import { AddResponseComponent } from './common/modals/add-response/add-response.component';
+import { EditResponseComponent } from './common/modals/edit-response/edit-response.component';
+import { DeleteResponseComponent } from './common/modals/delete-response/delete-response.component';
+import { AddStoryComponent } from './common/modals/add-story/add-story.component';
+import { EditStoryComponent } from './common/modals/edit-story/edit-story.component';
+import { DeleteStoryComponent } from './common/modals/delete-story/delete-story.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +94,12 @@ import { EditIntentComponent } from './common/modals/edit-intent/edit-intent.com
     AddIntentComponent,
     DeleteIntentComponent,
     EditIntentComponent,
+    AddResponseComponent,
+    EditResponseComponent,
+    DeleteResponseComponent,
+    AddStoryComponent,
+    EditStoryComponent,
+    DeleteStoryComponent,
   ],
   entryComponents: [
     CreateUserComponent,
@@ -106,7 +118,13 @@ import { EditIntentComponent } from './common/modals/edit-intent/edit-intent.com
     EditDomainComponent,
     AddIntentComponent,
     DeleteIntentComponent,
-    EditIntentComponent
+    EditIntentComponent,
+    AddResponseComponent,
+    EditResponseComponent,
+    DeleteResponseComponent,
+    AddStoryComponent,
+    EditStoryComponent,
+    DeleteStoryComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
-
+import { WebSocketService } from '../common/services/web-socket.service';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 
 @Component({
@@ -16,18 +16,37 @@ export class ManageResponsesComponent implements OnInit {
   new_response_text: string;
   showEntityDropdown = false;
   readonly = false;
+  currentResponse: any;
 
-  @Input() currentResponse: any;
+  @Input() responseObjectId: string;
+  @Input() projectObjectId: string;
 
-  @Output() saveResponseJSON = new EventEmitter<{ response_index: number, text_entities: [] }>();
-
-  constructor(private entities_data: EntitiesDataService) { }
+  constructor(private entities_service: EntitiesDataService,
+              private webSocketService: WebSocketService) { }
 
   ngOnInit() {
-    this.text_entities = this.text_entities_backup = this.currentResponse.text_entities;
-    this.entities_data.newEntity.subscribe(entities => {
+    this.getEntities();
+    this.getResponseDetails();
+  }
+
+  getEntities() {
+    this.entities_service.createEntitiesRoom();
+    this.entities_service.getEntities({project_id: this.projectObjectId}).subscribe(entities => {
       this.entities = this.entities_backup = entities;
-    });
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
+  }
+
+  getResponseDetails() {
+    this.webSocketService.createResponseRoom('response_' + this.responseObjectId);
+    // tslint:disable-next-line: max-line-length
+    this.webSocketService.getResponseDetails({object_id: this.responseObjectId}, 'response_' + this.responseObjectId).subscribe(response_details => {
+      this.currentResponse = response_details;
+      this.text_entities = this.text_entities_backup = this.currentResponse.text_entities;
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   addResponseTextElement() {
@@ -40,15 +59,15 @@ export class ManageResponsesComponent implements OnInit {
         }
       }
       this.new_response_text = new_response_text_arr.join(' ');
-      this.text_entities.push(this.new_response_text);
+      // tslint:disable-next-line: max-line-length
+      this.webSocketService.createResponseText({object_id: this.responseObjectId, text_entities: this.new_response_text}, 'response_' + this.responseObjectId);
       this.new_response_text = '';
-      this.saveResponseJSONMethod();
     }
   }
 
-  removeResponseTextElement(index: number) {
-    this.text_entities.splice(index, 1);
-    this.saveResponseJSONMethod();
+  removeResponseTextElement(index: number, text_entity: string) {
+    // tslint:disable-next-line: max-line-length
+    this.webSocketService.deleteResponseText({object_id: this.responseObjectId, text_entities: text_entity}, 'response_' + this.responseObjectId);
   }
 
   applyMapFilter(filterValue: string) {
@@ -63,11 +82,10 @@ export class ManageResponsesComponent implements OnInit {
   applyEntityFilter(filterValue: string) {
     this.entities = this.entities_backup;
     this.entities = this.entities.filter((value) => {
-      if (value.entity.includes(filterValue.trim())) {
+      if (value.entity_name.includes(filterValue.trim())) {
         return value;
       }
     });
-
   }
 
   populateEntities(event: any) {
@@ -90,10 +108,6 @@ export class ManageResponsesComponent implements OnInit {
       this.showEntityDropdown = false;
       this.readonly = false;
     }
-  }
-
-  saveResponseJSONMethod() {
-    this.saveResponseJSON.emit({ response_index: this.currentResponse.response_id, text_entities: this.text_entities });
   }
 
 }

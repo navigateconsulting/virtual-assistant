@@ -32,5 +32,4 @@ export class EditIntentComponent implements OnInit {
       });
     }
   }
-
 }

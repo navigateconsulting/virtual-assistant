@@ -7,16 +7,16 @@
         <mat-label>Select Entity</mat-label>
         <input type="text" class="entity-auto-complete" aria-label="Entity" matInput [formControl]="entitiesControl" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)='getEntityValue($event.option.value)'>
-          <mat-option *ngFor="let option of entityfilteredOptions | async" [value]="option.entity">
-            {{option.entity}}
+          <mat-option *ngFor="let option of entityfilteredOptions | async" [value]="option.entity_name">
+            {{option.entity_name}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
     </form>
   </div>
   <div *ngIf="entity !== ''">
-    <p class="mat-body-strong">Entity: {{entity.entity}}</p>
-    <p class="mat-body-strong">Entity Description: {{entity.entity_desc}}</p>
+    <p class="mat-body-strong">Entity: {{entity.entity_name}}</p>
+    <p class="mat-body-strong">Entity Description: {{entity.entity_description}}</p>
     <div *ngIf="entity.entity_slot.type === 'categorical'">
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-select placeholder="Entity Value" [(ngModel)]="chosen_entity_value">

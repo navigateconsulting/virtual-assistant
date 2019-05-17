@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Create New Story</h1>
+
+<form [formGroup]="newStoryForm" (ngSubmit)="closeDialog()">
+<mat-dialog-content>
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Story Name</mat-label>
+    <input matInput formControlName="storyName">
+  </mat-form-field>
+  <br />
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Story Description</mat-label>
+    <textarea matInput formControlName="storyDescription"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button type="submit" [disabled]="!newStoryForm.valid" color="primary">OK</button>
+</mat-dialog-actions>
+</form>
