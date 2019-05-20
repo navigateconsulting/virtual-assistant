@@ -1,9 +1,14 @@
 # Ui Trainer backend  - Backend Trainer 
 
+<<<<<<< HEAD
 
 #Socket IO Calls 
 
 
+=======
+#Socket IO Calls 
+
+>>>>>>> 78b303980a5ddee6b11762fb8359a23827a939ea
 ##Projects 
 
 
@@ -24,6 +29,11 @@ Emit on
 
 ### Get projects 
 
+<<<<<<< HEAD
+=======
+Get list of all projects 
+
+>>>>>>> 78b303980a5ddee6b11762fb8359a23827a939ea
 
 Emit on 
 
@@ -58,6 +68,13 @@ Listen On
 
 ### Create Project 
 
+<<<<<<< HEAD
+=======
+Create a new project 
+
+Validation - Check if project name already exists 
+
+>>>>>>> 78b303980a5ddee6b11762fb8359a23827a939ea
 Emit on 
 
     Name Space - /project
@@ -111,6 +128,11 @@ New projects status
 
 ### Delete Project
 
+<<<<<<< HEAD
+=======
+Delete an existing project
+
+>>>>>>> 78b303980a5ddee6b11762fb8359a23827a939ea
 Emit On 
 
     Name Space - /project
@@ -159,6 +181,13 @@ New projects status
     
 ### Update Project
 
+<<<<<<< HEAD
+=======
+Update Project name and description of an existing project 
+
+Validation - Check if the project name already exists 
+
+>>>>>>> 78b303980a5ddee6b11762fb8359a23827a939ea
 Emit On 
 
     Name Space - /project
@@ -205,6 +234,13 @@ New projects status
 
     Broadcast - Yes 
 
+<<<<<<< HEAD
+=======
+### Copy project 
+
+Copies current project into a new project , with all project dependents , eg copy domains , intents entities etc 
+
+>>>>>>> 78b303980a5ddee6b11762fb8359a23827a939ea
 
 ## Domains
 

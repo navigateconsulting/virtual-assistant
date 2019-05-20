@@ -1,3 +1,8 @@
 motor
 aiohttp
+<<<<<<< HEAD
 python-socketio
+=======
+python-socketio
+rasa
+>>>>>>> 78b303980a5ddee6b11762fb8359a23827a939ea
