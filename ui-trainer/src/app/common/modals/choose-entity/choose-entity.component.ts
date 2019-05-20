@@ -33,20 +33,20 @@ export class ChooseEntityComponent implements OnInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.entities.filter(option => option.entity.toLowerCase().includes(filterValue));
+    return this.entities.filter(option => option.entity_name.toLowerCase().includes(filterValue));
   }
 
   chooseEntity() {
     if (this.chosen_entity_value !== undefined && this.entity.entity_slot.type === 'categorical') {
-      this.dialogRef.close({chosen_entity: this.entity.entity, chosen_entity_value: this.chosen_entity_value});
+      this.dialogRef.close({chosen_entity: this.entity.entity_name, chosen_entity_value: this.chosen_entity_value});
     } else if (this.chosen_entity_value === undefined && this.entity.entity_slot.type !== 'categorical') {
-      this.dialogRef.close({chosen_entity: this.entity.entity, chosen_entity_value: ''});
+      this.dialogRef.close({chosen_entity: this.entity.entity_name, chosen_entity_value: ''});
     }
   }
 
   getEntityValue(entity_value: string) {
     this.entity = this.entities.filter((value) => {
-      if (value.entity === entity_value) {
+      if (value.entity_name === entity_value) {
         return value;
       }
     })[0];

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
@@ -14,7 +14,8 @@ export class AddEntityComponent implements OnInit {
   min_value: number;
   max_value: number;
 
-  constructor(public dialogRef: MatDialogRef<AddEntityComponent>) { }
+  constructor(public dialogRef: MatDialogRef<AddEntityComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
   }
@@ -32,7 +33,7 @@ export class AddEntityComponent implements OnInit {
     } else {
       entity_slot_details = {type: this.entitySlotType, values: []};
     }
-    this.dialogRef.close({entity_desc: this.entity_desc, entity_slot_details: entity_slot_details});
+    this.dialogRef.close({project_id: this.data.project_id, entity_description: this.entity_desc, entity_slot: entity_slot_details});
   }
 
 }

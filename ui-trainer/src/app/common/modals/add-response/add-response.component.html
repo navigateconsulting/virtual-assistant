@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Create New Response</h1>
+
+<form [formGroup]="newResponseForm" (ngSubmit)="closeDialog()">
+<mat-dialog-content>
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Response Name</mat-label>
+    <input matInput formControlName="responseName">
+  </mat-form-field>
+  <br />
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Response Description</mat-label>
+    <textarea matInput formControlName="responseDescription"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button type="submit" [disabled]="!newResponseForm.valid" color="primary">OK</button>
+</mat-dialog-actions>
+</form>
