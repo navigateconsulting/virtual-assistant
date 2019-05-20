@@ -22,6 +22,8 @@ Emit on
 
 ### Get projects 
 
+Get list of all projects 
+
 
 Emit on 
 
@@ -55,6 +57,10 @@ Listen On
     Broadcast - Yes 
 
 ### Create Project 
+
+Create a new project 
+
+Validation - Check if project name already exists 
 
 Emit on 
 
@@ -109,6 +115,8 @@ New projects status
 
 ### Delete Project
 
+Delete an existing project
+
 Emit On 
 
     Name Space - /project
@@ -157,6 +165,10 @@ New projects status
     
 ### Update Project
 
+Update Project name and description of an existing project 
+
+Validation - Check if the project name already exists 
+
 Emit On 
 
     Name Space - /project
@@ -202,6 +214,10 @@ New projects status
      ]
 
     Broadcast - Yes 
+
+### Copy project 
+
+Copies current project into a new project , with all project dependents , eg copy domains , intents entities etc 
 
 
 ## Domains

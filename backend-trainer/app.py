@@ -185,19 +185,6 @@ async def create_projects(sid, record, room_name):
         await sio.emit('allProjects', result, namespace='/project', room=room_name)
 
 
-@sio.on('copyProject', namespace='/project')
-async def copy_projects(sid, record, room_name):
-
-    print("---------- Request from Session {} -- with record {} ------------ ".format(sid, record))
-
-    message = await ProjectsModel.copy_project(record)
-    await sio.emit('projectResponse', message, namespace='/project', room=sid)
-
-    if message['status'] == 'Success':
-        result = await ProjectsModel.get_projects()
-        await sio.emit('allProjects', result, namespace='/project', room=room_name)
-
-
 @sio.on('deleteProject', namespace='/project')
 async def delete_project(sid, object_id, room_name):
 
@@ -223,6 +210,17 @@ async def update_project(sid, update_query, room_name):
         await sio.emit('allProjects', result, namespace='/project', room=room_name)
 
 
+@sio.on('copyProject', namespace='/project')
+async def copy_projects(sid, record, room_name):
+
+    print("---------- Request from Session {} -- with record {} ------------ ".format(sid, record))
+
+    message = await ProjectsModel.copy_project(record)
+    await sio.emit('projectResponse', message, namespace='/project', room=sid)
+
+    if message['status'] == 'Success':
+        result = await ProjectsModel.get_projects()
+        await sio.emit('allProjects', result, namespace='/project', room=room_name)
 # Domains Endpoints
 
 DomainsModel = DomainsModel()
@@ -273,6 +271,23 @@ async def update_domains(sid, data, room_name):
         await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
 
 
+@sio.on('importDomain', namespace='/domain')
+async def import_domains(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    # TODO
+    await sio.emit('domainResponse', "Message", room=sid, namespace='/domain')
+
+
+@sio.on('updateDomainStatus', namespace='/domain')
+async def update_domains_status(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+    # TODO
+    await sio.emit('domainResponse', "Message", room=sid, namespace='/domain')
+
+
 # intents Endpoint
 IntentsModel = IntentsModel()
 
@@ -320,7 +335,7 @@ async def update_intent(sid, data, room_name):
         await sio.emit('allIntents', intents_list, namespace='/dashboard', room=room_name)
 
 
-@sio.on('intentDetails', namespace='/intent')
+@sio.on('getIntentDetails', namespace='/intent')
 async def get_intent_details(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
@@ -329,13 +344,23 @@ async def get_intent_details(sid, data, room_name):
     await sio.emit('intentDetail', intent_detail, namespace='/intent', room=room_name)
 
 
-@sio.on('modifyIntentDetails', namespace='/intent')
+@sio.on('insertIntentDetails', namespace='/intent')
 async def insert_intent_details(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    message, intent_detail = await IntentsModel.modify_intent_detail(data)
-    await sio.emit('responseDetail', message, namespace='/intent', room=sid)
+    message, intent_detail = await IntentsModel.insert_intent_detail(data)
+    await sio.emit('respIntentDetail', message, namespace='/intent', room=sid)
+    await sio.emit('intentDetail', intent_detail, namespace='/intent', room=room_name)
+
+
+@sio.on('updateIntentDetails', namespace='/intent')
+async def update_intent_details(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    message, intent_detail = await IntentsModel.update_intent_detail(data)
+    await sio.emit('respIntentDetail', message, namespace='/intent', room=sid)
     await sio.emit('intentDetail', intent_detail, namespace='/intent', room=room_name)
 
 
@@ -345,9 +370,8 @@ async def insert_intent_details(sid, data, room_name):
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
     message, intent_detail = await IntentsModel.delete_intent_detail(data)
-    await sio.emit('responseDetail', message, namespace='/intent', room=sid)
+    await sio.emit('respIntentDetail', message, namespace='/intent', room=sid)
     await sio.emit('intentDetail', intent_detail, namespace='/intent', room=room_name)
-
 
 
 # responses Endpoints
@@ -399,6 +423,45 @@ async def update_response(sid, data, room_name):
         await sio.emit('allResponses', responses_list, namespace='/dashboard', room=room_name)
 
 
+@sio.on('getResponseDetails', namespace='/response')
+async def get_response_details(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room  ----------  ".format(sid, data))
+
+    intent_detail = await ResponseModel.get_response_details(data)
+    await sio.emit('responseDetail', intent_detail, namespace='/response', room=room_name)
+
+
+@sio.on('insertResponseDetails', namespace='/response')
+async def insert_response_details(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    message, intent_detail = await ResponseModel.insert_response_detail(data)
+    await sio.emit('respResponseDetail', message, namespace='/response', room=sid)
+    await sio.emit('responseDetail', intent_detail, namespace='/response', room=room_name)
+
+
+@sio.on('updateResponseDetails', namespace='/response')
+async def update_response_details(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    message, intent_detail = await ResponseModel.update_response_detail(data)
+    await sio.emit('respResponseDetail', message, namespace='/response', room=sid)
+    await sio.emit('responseDetail', intent_detail, namespace='/response', room=room_name)
+
+
+@sio.on('deleteResponseDetails', namespace='/response')
+async def insert_response_details(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    message, intent_detail = await ResponseModel.delete_response_detail(data)
+    await sio.emit('respResponseDetail', message, namespace='/response', room=sid)
+    await sio.emit('responseDetail', intent_detail, namespace='/response', room=room_name)
+
+
 # Endpoints for Stories
 StoryModel = StoryModel()
 
@@ -447,6 +510,14 @@ async def update_story(sid, data, room_name):
     if stories_list is not None:
         await sio.emit('allStories', stories_list, namespace='/dashboard', room=room_name)
 
+
+@sio.on('getStoryDetails', namespace='/story')
+async def get_response_details(sid, data):
+
+    print("---------- Request from Session {} -- with record {} -- and room  ----------  ".format(sid, data))
+
+    intent_detail = await StoryModel.get_story_details(data)
+    await sio.emit('storyDetail', intent_detail, namespace='/story', room=sid)
 
 # Entities Endpoints
 

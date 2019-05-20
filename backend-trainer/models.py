@@ -292,35 +292,59 @@ class IntentsModel:
 
         json_record = json.loads(json.dumps(data))
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        result = db.intents.find_one(query)
+        result = await db.intents.find_one(query)
         print("Intent Details sent {}".format(json.loads(dumps(result))))
         return json.loads(dumps(result))
 
-    async def modify_intent_detail(self, data):
+    async def insert_intent_detail(self, data):
 
-        # Data format
+        # Data format - No check for Intent already exists
         # {"object_id":"", "text":"I am in india ","entities":[{"start":8,"end":13,"value":"india","entity":"timezone"}]}
 
         json_record = json.loads(json.dumps(data))
+
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        object_id = json_record['object_id']
         del json_record['object_id']
-        result = db.intents.update_one(query, {"$push": {"text_entities": json_record}}, upsert=True)
+
+        result = await db.intents.update_one(query, {"$push": {"text_entities": json_record}}, upsert=True)
         print("Inserted new row in Intent {}".format(result))
 
-        intent_detail = self.get_intent_details(json_record['object_id'])
+        intent_detail = await self.get_intent_details({"object_id": object_id})
         return {"status": "Success", "message": "Intent text added "}, intent_detail
+
+    async def update_intent_detail(self, data):
+
+        # {"object_id": "5cdbde00bcab8628b454377c", "doc_index":"16", "text":"I am in maldives 16 ","entities":[{"start":8,"end":13,"value":"srilanka","entity":"timezone"}]}
+
+        json_record = json.loads(json.dumps(data))
+
+        object_id = json_record['object_id']
+        index = json_record['doc_index']
+        del json_record['object_id']
+        del json_record['doc_index']
+        query = {"_id": ObjectId("{}".format(object_id))}
+        result = await db.intents.update_one(query, {"$set": {"text_entities."+index: json_record}})
+        print("Record updated {}".format(result))
+
+        intent_detail = await self.get_intent_details({"object_id": object_id})
+        return {"status": "Success", "message": "Intent Updated successfully"}, intent_detail
 
     async def delete_intent_detail(self, data):
 
         # {"object_id": "", "text":"I am in india ","entities":[{"start":8,"end":13,"value":"india","entity":"timezone"}] }
 
-        json_record= json.loads(json.dumps(data))
-        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        json_record = json.loads(json.dumps(data))
+        object_id = json_record['object_id']
         del json_record['object_id']
-        result = db.intents.update_one(query, {"$pull": {"text_entities": json_record}})
+
+        query = {"_id": ObjectId("{}".format(object_id))}
+
+        result = await db.intents.update_one(query, {"$pull": {"text_entities": json_record}})
         print("Removed row from Intent {}".format(result))
 
-        intent_detail = self.get_intent_details(json_record['object_id'])
+        intent_detail = await self.get_intent_details({"object_id": object_id})
         return {"status": "Success", "message": "Intent text Removed "}, intent_detail
 
 
@@ -404,6 +428,45 @@ class ResponseModel:
         else:
             return {"status": "Error", "message": "Response Name already exists"}, None
 
+    async def get_response_details(self, data):
+
+        json_record = json.loads(json.dumps(data))
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        result = await db.responses.find_one(query)
+        print("Response Details sent {}".format(json.loads(dumps(result))))
+        return json.loads(dumps(result))
+
+    async def insert_response_detail(self, data):
+
+        json_record = json.loads(json.dumps(data))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        object_id = json_record['object_id']
+        del json_record['object_id']
+
+        result = await db.responses.update_one(query, {"$push": {"text_entities": json_record['text_entities']}}, upsert=True)
+        print("Inserted new row in Intent {}".format(result))
+
+        intent_detail = await self.get_response_details({"object_id": object_id})
+        return {"status": "Success", "message": "Response text added "}, intent_detail
+
+    async def delete_response_detail(self, data):
+
+        # {"object_id": "", "text":"I am in india ","entities":[{"start":8,"end":13,"value":"india","entity":"timezone"}] }
+
+        json_record = json.loads(json.dumps(data))
+        object_id = json_record['object_id']
+        del json_record['object_id']
+
+        query = {"_id": ObjectId("{}".format(object_id))}
+
+        result = await db.responses.update_one(query, {"$pull": {"text_entities": json_record['text_entities']}})
+        print("Removed row from Intent {}".format(result))
+
+        intent_detail = await self.get_response_details({"object_id": object_id})
+        return {"status": "Success", "message": "Response text Removed "}, intent_detail
+
 
 # noinspection PyMethodMayBeStatic
 class StoryModel:
@@ -486,6 +549,13 @@ class StoryModel:
         else:
             return {"status": "Error", "message": "Story Name already exists"}, None
 
+    async def get_story_details(self, data):
+
+        json_record = json.loads(json.dumps(data))
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        result = await db.stories.find_one(query)
+        print("Intent Details sent {}".format(json.loads(dumps(result))))
+        return json.loads(dumps(result))
 
 # noinspection PyMethodMayBeStatic
 class EntityModel:

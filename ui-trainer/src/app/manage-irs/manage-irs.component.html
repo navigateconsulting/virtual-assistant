@@ -79,7 +79,8 @@
       <div class="row irs-table-container">
         <div class="col-md-12">
           <mat-form-field>
-            <input matInput (keyup)="applyResponsesFilter($event.target.value)" placeholder="Filter Responses">
+           <!-- <input matInput (keyup)="applyResponsesFilter($event.target.value)" placeholder="Filter Responses"> -->
+           <input matInput  placeholder="Filter Responses">
           </mat-form-field>
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="responsesDataSource">
