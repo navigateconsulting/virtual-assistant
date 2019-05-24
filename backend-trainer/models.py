@@ -1,21 +1,12 @@
-from motor.motor_asyncio import AsyncIOMotorClient
 from bson.json_util import dumps
 import json
 from bson.objectid import ObjectId
+from database import ConDatabase
+
 
 '''motor Mongo Db connection '''
 
-client = AsyncIOMotorClient('mongodb://localhost:27017')
-db = client['eva_platform']
-
-
-# noinspection PyMethodMayBeStatic
-class DbName:
-
-    async def get_name(self):
-        db_name = client['eva_platform']
-        result = await db_name.projects.find_one({"project_id": 2})
-        return json.loads(dumps(result))
+db = ConDatabase.connect()
 
 
 # noinspection PyMethodMayBeStatic
@@ -316,8 +307,6 @@ class IntentsModel:
 
     async def update_intent_detail(self, data):
 
-        # {"object_id": "5cdbde00bcab8628b454377c", "doc_index":"16", "text":"I am in maldives 16 ","entities":[{"start":8,"end":13,"value":"srilanka","entity":"timezone"}]}
-
         json_record = json.loads(json.dumps(data))
 
         object_id = json_record['object_id']
@@ -549,13 +538,91 @@ class StoryModel:
         else:
             return {"status": "Error", "message": "Story Name already exists"}, None
 
+    async def get_only_story_details(self, data):
+
+        json_record = json.loads(json.dumps(data))
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        result = await db.stories.find_one(query)
+        print("Story Details sent {}".format(json.loads(dumps(result))))
+        return result
+
     async def get_story_details(self, data):
 
         json_record = json.loads(json.dumps(data))
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
         result = await db.stories.find_one(query)
-        print("Intent Details sent {}".format(json.loads(dumps(result))))
-        return json.loads(dumps(result))
+        print("Story Details sent {}".format(json.loads(dumps(result))))
+
+        # TODO If intents or responses are created , when user is in Story details page , all intents / responses should be
+        #  broadcast to this room as well
+
+        # Get intents
+
+        cursor = db.intents.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
+        result_intents = await cursor.to_list(length=1000)
+        intents_list = json.loads(dumps(result_intents))
+
+        # Get Responses
+
+        cursor = db.responses.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
+        result_response = await cursor.to_list(length=1000)
+        response_list = json.loads(dumps(result_response))
+
+        return json.loads(dumps(result)), intents_list, response_list
+
+    async def insert_story_details(self, data):
+
+        # {'object_id':"", "position":"", "story": ["key":"abc", "value":"", "type": "intent",
+        #                           "entities": [{"entity_name": "test entity", "entity_value": "Test"}]]}
+
+        json_record = json.loads(json.dumps(data))
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        position = json_record['position']
+
+        result = await db.stories.update_one(query, {"$push": {"story": {"$each": json_record['story'],
+                                                                         "$position": position}
+                                                               }})
+
+        print("Story Details Updated {}".format(result))
+
+        story_details, intents_list, response_list = await self.get_story_details({"object_id": json_record['object_id'],
+                                                                                   "project_id": json_record['project_id'],
+                                                                                   "domain_id": json_record['domain_id']})
+
+        return {"status": "Success", "message": "Story created"}, story_details, intents_list, response_list
+
+    async def delete_story_detail(self, data):
+
+        # {"object_id": "", "text":"I am in india ","story":[{"start":8,"end":13,"value":"india","entity":"timezone"}] }
+
+        json_record = json.loads(json.dumps(data))
+        object_id = json_record['object_id']
+
+        query = {"_id": ObjectId("{}".format(object_id))}
+
+        result = await db.stories.update_one(query, {"$pull": {"story": json_record['story'][0]}})
+        print("Removed row from Story {}".format(result))
+
+        story_detail,  intents_list, response_list = await self.get_story_details({"object_id": json_record['object_id'],
+                                                                                   "project_id": json_record['project_id'],
+                                                                                   "domain_id": json_record['domain_id']})
+        return {"status": "Success", "message": "Story element Removed "}, story_detail, intents_list, response_list
+
+    async def update_story_detail(self, data):
+
+        json_record = json.loads(json.dumps(data))
+
+        object_id = json_record['object_id']
+        index = json_record['doc_index']
+        query = {"_id": ObjectId("{}".format(object_id))}
+        result = await db.stories.update_one(query, {"$set": {"story."+str(index): json_record['story']}})
+        print("Record updated {}".format(result))
+
+        story_detail,  intents_list, response_list = await self.get_story_details({"object_id": json_record['object_id'],
+                                                                                   "project_id": json_record['project_id'],
+                                                                                   "domain_id": json_record['domain_id']})
+        return {"status": "Success", "message": "Story Updated successfully"}, story_detail, intents_list, response_list
+
 
 # noinspection PyMethodMayBeStatic
 class EntityModel:
@@ -627,18 +694,3 @@ class EntityModel:
 
         else:
             return {"status": "Error", "message": "Entity Name already exists"}, None
-
-
-# noinspection PyMethodMayBeStatic
-class StoryDetail:
-
-    def __init__(self):
-        print("Init Story Detail")
-
-    async def getstorydetail(self, record):
-
-        json_record = json.loads(json.dumps(record))
-        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        story_details = await db.stories.find_one(query)
-
-        return story_details
