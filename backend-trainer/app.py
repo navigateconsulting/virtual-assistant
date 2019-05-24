@@ -1,6 +1,9 @@
 from aiohttp import web
 import socketio
-from models import DbName, ProjectsModel, DomainsModel, IntentsModel, ResponseModel, StoryModel, EntityModel, RefreshDb, StoryDetail
+from models import ProjectsModel, DomainsModel, IntentsModel, ResponseModel, StoryModel, EntityModel, RefreshDb
+from export_project import ExportProject
+
+from threading import Thread
 
 # creates a new Async Socket IO Server
 
@@ -8,8 +11,8 @@ sio = socketio.AsyncServer(logger=True, engineio_logger=True)
 
 ''' Creates a new Aiohttp Web Application '''
 
-app = web.Application()
 
+app = web.Application()
 # Binds our Socket.IO server to our Web App
 # instance
 
@@ -26,6 +29,17 @@ async def index(request):
 
 
 ''' Events handlers for connect and disconnect , nothing special is done except logging'''
+# Init Class Methods
+
+
+EntityModel = EntityModel()
+ProjectsModel = ProjectsModel()
+DomainsModel = DomainsModel()
+IntentsModel = IntentsModel()
+ResponseModel = ResponseModel()
+StoryModel = StoryModel()
+ExportProject = ExportProject()
+#TryNow = TryNow()
 
 
 @sio.on('connect')
@@ -35,8 +49,16 @@ def connect(sid, environ):
 
 
 @sio.on('disconnect')
-def disconnect(sid):
+async def disconnect(sid):
     print('disconnect ', sid)
+
+    # invoke cleanup of volumes
+    result = await ExportProject.clean_up(sid)
+
+    if result == 1:
+        print("Clean up successful")
+    else:
+        print("-------------------- Error during cleanup ---------------------")
 
 
 ''' Events handlers for Join room and leave room , 
@@ -160,8 +182,6 @@ async def refresh_data(sid):
 
 These contains methods to get all projects , update delete and insert new project in the mongo db'''
 
-ProjectsModel = ProjectsModel()
-
 
 @sio.on('getProjects', namespace='/project')
 async def get_projects(sid, room_name):
@@ -221,9 +241,8 @@ async def copy_projects(sid, record, room_name):
     if message['status'] == 'Success':
         result = await ProjectsModel.get_projects()
         await sio.emit('allProjects', result, namespace='/project', room=room_name)
-# Domains Endpoints
 
-DomainsModel = DomainsModel()
+# Domains Endpoints
 
 
 @sio.on('getDomains', namespace='/domain')
@@ -289,7 +308,6 @@ async def update_domains_status(sid, data, room_name):
 
 
 # intents Endpoint
-IntentsModel = IntentsModel()
 
 
 @sio.on('getIntents', namespace='/dashboard')
@@ -375,7 +393,6 @@ async def insert_intent_details(sid, data, room_name):
 
 
 # responses Endpoints
-ResponseModel = ResponseModel()
 
 
 @sio.on('getResponses', namespace='/dashboard')
@@ -463,7 +480,6 @@ async def insert_response_details(sid, data, room_name):
 
 
 # Endpoints for Stories
-StoryModel = StoryModel()
 
 
 @sio.on('getStories', namespace='/dashboard')
@@ -512,16 +528,52 @@ async def update_story(sid, data, room_name):
 
 
 @sio.on('getStoryDetails', namespace='/story')
-async def get_response_details(sid, data):
+async def get_story_details(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room  ----------  ".format(sid, data))
 
-    intent_detail = await StoryModel.get_story_details(data)
-    await sio.emit('storyDetail', intent_detail, namespace='/story', room=sid)
+    story_detail, intents_list, response_list = await StoryModel.get_story_details(data)
+    await sio.emit('storyDetail', story_detail, namespace='/story', room=room_name)
+    await sio.emit('allIntents', intents_list, namespace='/story', room=room_name)
+    await sio.emit('allResponses', response_list, namespace='/story', room=room_name)
+
+
+@sio.on('insertStoryDetails', namespace='/story')
+async def insert_story_details(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room  ----------  ".format(sid, data))
+
+    message, story_detail, intents_list, response_list = await StoryModel.insert_story_details(data)
+    await sio.emit('respStoryDetail', message, namespace='/story', room=sid)
+    await sio.emit('storyDetail', story_detail, namespace='/story', room=room_name)
+    await sio.emit('allIntents', intents_list, namespace='/story', room=room_name)
+    await sio.emit('allResponses', response_list, namespace='/story', room=room_name)
+
+
+@sio.on('deleteStoryDetails', namespace='/story')
+async def delete_story_details(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    message, story_detail, intents_list, response_list = await StoryModel.delete_story_detail(data)
+    await sio.emit('respStoryDetail', message, namespace='/story', room=sid)
+    await sio.emit('storyDetail', story_detail, namespace='/story', room=room_name)
+    await sio.emit('allIntents', intents_list, namespace='/story', room=room_name)
+    await sio.emit('allResponses', response_list, namespace='/story', room=room_name)
+
+
+@sio.on('updateStoryDetails', namespace='/story')
+async def update_story_details(sid, data, room_name):
+
+    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
+
+    message, story_detail, intents_list, response_list = await StoryModel.update_story_detail(data)
+    await sio.emit('respStoryDetail', message, namespace='/story', room=sid)
+    await sio.emit('storyDetail', story_detail, namespace='/story', room=room_name)
+    await sio.emit('allIntents', intents_list, namespace='/story', room=room_name)
+    await sio.emit('allResponses', response_list, namespace='/story', room=room_name)
 
 # Entities Endpoints
-
-EntityModel = EntityModel()
 
 
 @sio.on('getEntities', namespace='/nav')
@@ -565,21 +617,47 @@ async def update_entity(sid, data, room_name):
         await sio.emit('allEntities', entities_list, namespace='/nav', room=room_name)
 
 
-# get Stories Details endpoints
+@sio.on('exportProject', namespace='/train')
+async def export_project(sid, data):
+    print("---------- Request from Session {} -- with record {} -- and room  ----------  ".format(sid, data))
 
-StoryDetail = StoryDetail()
-
-
-@sio.on('getStoryDetails', namespace='/story')
-async def getstoriesdetail(sid, data, room_name):
-
-    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
-
-    story_details = await StoryDetail.getstorydetail(data)
-
-    await sio.emit('storyDetails', story_details, namespace='/story', room=room_name)
+    result = await ExportProject.main(sid, data)
+    print("Result of Export project {}".format(result))
 
 
+@sio.on('tryNow', namespace='/trynow')
+def try_now(sid, data):
+    print("----------- Inside Try now ----------------")
+    from train_model import chat_now
+
+    worker = Thread(target=chat_now)
+    worker.start()
+
+
+'''
+@sio.on('tryNow', namespace='trynow')
+async def try_now(sid, data):
+    print("Starting Training for the Model for SID {}".format(sid))
+
+    base_path = '../vol_chatbot_data/temp/trainer-sessions/example_folder/'
+    config = base_path + "config.yml"
+    training_files = base_path + "data/"
+    domain = base_path + "domain.yml"
+    output = base_path + "models/"
+
+    model_path = rasa.train(domain, config, [training_files], output)
+    unpacked = model.get_model(model_path)
+    agent = Agent.load(unpacked)
+    loop = asyncio.get_event_loop()
+    while True:
+        message = data
+        if message == "/stop":
+            break
+        responses = loop.run_until_complete(agent.handle_text(message))
+        #responses = agent.handle_text(message)
+        for response in responses:
+            print("Response from BOT - {}".format(response))
+'''
 # We bind our aiohttp endpoint to our app
 
 
