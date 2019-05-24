@@ -1,4 +1,5 @@
 motor
 aiohttp
 python-socketio
-rasa
+rasa=1.0
+aiofiles
