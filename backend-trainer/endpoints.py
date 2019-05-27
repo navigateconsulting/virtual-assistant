@@ -495,7 +495,7 @@ async def export_project(sid, data):
 
 @sio.on('tryNow', namespace='/trynow')
 async def try_now(sid, data):
-    print("----------- Inside Try now ----------------")
+    print("----------- Inside Try now --from SID {}--------------".format(sid))
     from try_now import TryNow
     trynow = TryNow()
     worker = Thread(target=trynow.chat_now)
