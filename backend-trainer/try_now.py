@@ -1,70 +1,41 @@
-import asyncio
-import pprint as pretty_print
-from typing import Any, Dict, Text, TYPE_CHECKING
-from rasa.cli.utils import print_success, print_error
-from rasa.core.interpreter import NaturalLanguageInterpreter, RasaNLUInterpreter
+import rasa
 import rasa.model as model
+import asyncio
+from rasa.core.agent import Agent
+from __main__ import sio
+
+agent: "Agent"
+loop = None
 
 
-if TYPE_CHECKING:
-    from rasa.core.agent import Agent
+class TryNow:
 
+    def __init__(self):
+        self.base_path = '../vol_chatbot_data/temp/trainer-sessions/example_folder/'
+        self.config = self.base_path + "config.yml"
+        self.training_files = self.base_path + "data/"
+        self.domain = self.base_path + "domain.yml"
+        self.output = self.base_path + "models/"
+        global agent
 
-def pprint(object: Any):
-    pretty_print.pprint(object, indent=2)
+    def chat_now(self):
+        global agent
+        global loop
 
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
 
-def chat(
-    model_path: Text = None,
-    agent: "Agent" = None,
-    interpreter: NaturalLanguageInterpreter = None,
-) -> None:
-    """Chat to the bot within a Jupyter notebook.
-    Args:
-        model_path: Path to a Rasa Stack model.
-        agent: Rasa Core agent (used if no Rasa Stack model given).
-        interpreter: Rasa NLU interpreter (used with Rasa Core agent if no
-                     Rasa Stack model is given).
-    """
-
-    if model_path:
-        from rasa.run import create_agent
-
+        model_path = rasa.train(self.domain, self.config, [self.training_files], self.output)
         unpacked = model.get_model(model_path)
-        agent = create_agent(unpacked)
+        agent = Agent.load(unpacked)
 
-    elif agent and interpreter:
-        # HACK: this skips loading the interpreter and directly
-        # sets it afterwards
-        nlu_interpreter = RasaNLUInterpreter(
-            "skip this and use given interpreter", lazy_init=True
-        )
-        nlu_interpreter.interpreter = interpreter
-        agent.interpreter = interpreter
-    else:
-        print_error(
-            "You either have to define a model path or an agent and an interpreter."
-        )
+    @sio.on('chatNow', namespace='/trynow')
+    async def handle_incoming(self, message):
+        global agent
+        global loop
 
-    print ("Your bot is ready to talk! Type your messages here or send '/stop'.")
-    loop = asyncio.get_event_loop()
-    while True:
-        message = input()
-        if message == "/stop":
-            break
-
-        responses = loop.run_until_complete(agent.handle_text(message))
+        responses = await agent.handle_text(message)
         for response in responses:
-            _display_bot_response(response)
+            print("--------- BOT Response {}".format(response))
+            await sio.emit('chatResponse', response, namespace='/trynow')
 
-
-def _display_bot_response(response: Dict):
-    from IPython.display import Image, display
-
-    for response_type, value in response.items():
-        if response_type == "text":
-            print_success(value)
-
-        if response_type == "image":
-            image = Image(url=value)
-            display(image)
