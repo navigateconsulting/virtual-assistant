@@ -5,11 +5,11 @@ version: '3.0'
 services:
 
 
-  ui_trainer:
-    container_name: ui-trainer
-    build: './ui-trainer'
-    ports:
-      - "8080:80"
+#  ui_trainer:
+#    container_name: ui-trainer
+#    build: './ui-trainer'
+#    ports:
+#      - "8080:80"
 
   mongodb:
     image: mongo:latest
