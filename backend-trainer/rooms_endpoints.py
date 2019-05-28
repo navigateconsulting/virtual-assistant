@@ -101,3 +101,18 @@ async def leave_room(sid, room_name):
     print("________________________ User {} Left room {} with namespace /dashboard _______________________".format(sid, room_name))
     sio.leave_room(sid, room=room_name, namespace='/nav')
     sio.leave_room(sid, room=sid, namespace='/nav')
+
+
+@sio.on('join_room', namespace='/trynow')
+async def join_room(sid, room_name):
+    print("________________________ User {} joined room {} with namespace /trynow _______________________".format(sid, room_name))
+    sio.enter_room(sid, room=room_name, namespace='/trynow')
+    sio.enter_room(sid, room=sid, namespace='/trynow')
+
+
+@sio.on('leave_room', namespace='/trynow')
+async def leave_room(sid, room_name):
+    print("________________________ User {} Left room {} with namespace /trynow _______________________".format(sid, room_name))
+    sio.leave_room(sid, room=room_name, namespace='/trynow')
+    sio.leave_room(sid, room=sid, namespace='/trynow')
+
