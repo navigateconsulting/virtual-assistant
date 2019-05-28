@@ -106,10 +106,6 @@ class ProjectsModel:
     async def delete_project(self, object_id):
         query = {"_id": ObjectId("{}".format(object_id))}
 
-        # TODO
-        ''' 
-        Need to add sections for Delete Intents Entities Responses '''
-
         # Delete Domains Intents , Entities , Stories , Responses
 
         result = await db.domains.delete_many({"project_id": object_id})
@@ -211,7 +207,6 @@ class ProjectsModel:
                     response['domain_id'] = "{}".format(new_domain.inserted_id)
                     new_responses = await db.responses.insert_one(response)
                     print("new response inserted with id {}".format(new_responses.inserted_id))
-
 
                 # Copy Stories
 
@@ -671,7 +666,7 @@ class StoryModel:
         result = await db.stories.find_one(query)
         print("Story Details sent {}".format(json.loads(dumps(result))))
 
-        # TODO If intents or responses are created , when user is in Story details page , all intents / responses should be
+        # TODO  - Verify if this works If intents or responses are created , when user is in Story details page , all intents / responses should be
         #  broadcast to this room as well
 
         # Get intents
