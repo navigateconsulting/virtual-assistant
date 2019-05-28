@@ -6,6 +6,8 @@ import os
 import shutil
 
 
+# TODO Do files need to be split by domain ? or combine them under common files after chcking if domain is to be exported or not
+
 # noinspection PyMethodMayBeStatic
 class ExportProject:
 
@@ -170,13 +172,11 @@ class ExportProject:
 
         async with aiofiles.open(self.project_home + '/skills/' + domain_name + '/domain.yml', "w") as out:
             await out.write("intents:"+"\n")
-            #self.master_domain_intents = self.master_domain_intents + "intents:"+"\n"
             for intents in intents_list:
                 await out.write("- "+intents['intent_name']+"\n")
                 self.master_domain_intents = self.master_domain_intents + "- "+intents['intent_name']+"\n"
             await out.write("\n")
             await out.write("\n")
-            #self.master_domain_intents = self.master_domain_intents + "\n" + "\n"
 
             response_list = await self.ResponseModel.get_responses({"project_id": project_id, "domain_id": domain_id})
 
