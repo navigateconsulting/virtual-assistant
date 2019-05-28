@@ -11,10 +11,11 @@ IntentsModel = IntentsModel()
 ResponseModel = ResponseModel()
 StoryModel = StoryModel()
 ExportProject = ExportProject()
+RefreshDb = RefreshDb()
 
 
 @sio.on('connect')
-def connect(sid, environ):
+async def connect(sid, environ):
     print('connect ', sid)
     print('Environment ', environ)
 
@@ -39,10 +40,10 @@ This endpoint needs to be used with caution and ensure proper backup is taken be
 
 
 @sio.on('refresh_data', namespace='/refresh')
-async def refresh_data(sid):
+async def refresh_data(sid, data):
     print("##################################User {} Requested to refresh DB  ##########################".format(sid))
 
-    result = await RefreshDb.refreshdb()
+    result = await RefreshDb.refresh_db()
     await sio.emit('refresh', result)
 
 
