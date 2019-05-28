@@ -4,4 +4,5 @@ misc.xml
 modules.xml
 vcs.xml
 workspace.xml
-/vol_chatbot_data/database/db/*
+vol_chatbot_data/database/db/*
+!vol_chatbot_data/database/db/placeholder
