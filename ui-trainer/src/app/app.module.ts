@@ -49,6 +49,8 @@ import { DeleteResponseComponent } from './common/modals/delete-response/delete-
 import { AddStoryComponent } from './common/modals/add-story/add-story.component';
 import { EditStoryComponent } from './common/modals/edit-story/edit-story.component';
 import { DeleteStoryComponent } from './common/modals/delete-story/delete-story.component';
+import { ToastrModule } from 'ng6-toastr-notifications';
+import { TryNowComponent } from './try-now/try-now.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +89,7 @@ import { DeleteStoryComponent } from './common/modals/delete-story/delete-story.
     AddStoryComponent,
     EditStoryComponent,
     DeleteStoryComponent,
+    TryNowComponent,
   ],
   entryComponents: [
     AddEntityComponent,
@@ -121,6 +124,7 @@ import { DeleteStoryComponent } from './common/modals/delete-story/delete-story.
     DragDropModule,
     FileExplorerModule,
     FlexLayoutModule,
+    ToastrModule.forRoot()
   ],
   providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}, FileService, EntitiesDataService],
   bootstrap: [AppComponent]

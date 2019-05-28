@@ -2,4 +2,7 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 html, body { height: 100%; }
-body { margin: 0; font-family: 'Roboto', sans-serif; overflow-y: hidden; overflow-x: hidden; background-color: #EED; }
+body { margin: 0; font-family: 'Roboto', sans-serif; overflow-y: hidden; overflow-x: hidden; background-color: #FFF; }
+.cdk-global-scrollblock {
+    overflow-y: hidden;
+}

@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-manage-trainer',
@@ -16,10 +17,11 @@ export class ManageTrainerComponent implements OnInit {
   breadcrumb_string: string;
   propertyPanel: string;
   showPropertyPanel: boolean;
+  loadTryNow: boolean;
 
   @ViewChild('entitiesSidenav') public entitiesSidenav: MatSidenav;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
     this.breadcrumb_arr = new Array<string>();
@@ -27,12 +29,18 @@ export class ManageTrainerComponent implements OnInit {
     this.breadcrumb_string = this.breadcrumb_arr.join('/');
     this.setComponent = 'manage-projects';
     this.showPropertyPanel = false;
+    this.loadTryNow = false;
   }
 
   projectSelected($event: any) {
-    this.projectObjectId = $event;
+    this.projectObjectId = $event.projectObjectId;
     this.showPropertyPanel = true;
-    this.setComponent = 'manage-domains';
+    if ($event.component === 'manage-domains') {
+      this.setComponent = 'manage-domains';
+    } else if ($event.component === 'try-now') {
+      this.loadTryNow = true;
+      this.router.navigate(['/trainer/try-now']);
+    }
   }
 
   domainSelected($event: any) {
@@ -47,6 +55,9 @@ export class ManageTrainerComponent implements OnInit {
     } else if ($event.type === 'response') {
       this.irsObjectId = $event.object_id;
       this.setComponent = 'manage-responses';
+    } else if ($event.type === 'story') {
+      this.irsObjectId = $event.object_id;
+      this.setComponent = 'manage-stories';
     }
   }
 

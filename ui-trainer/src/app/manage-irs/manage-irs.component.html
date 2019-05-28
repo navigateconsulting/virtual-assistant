@@ -3,9 +3,9 @@
     <div class="irs-container">
       <div class="row add-intent">
         <div class="col-md-11">
-          <div *ngIf="show_success_error===true" class="alert alert-{{success_error_class}}">
-            <strong>{{success_error_type}} !</strong> {{success_error_message}}.
-          </div>
+          <mat-form-field>
+            <input matInput (keyup)="applyIntentsFilter($event.target.value)" placeholder="Filter Intents">
+          </mat-form-field>
         </div>
         <div class="col-md-1 text-right">
           <button mat-mini-fab matTooltip="Add Intent" color="primary" (click)="addNewIntent()">
@@ -16,9 +16,6 @@
       <br />
       <div class="row irs-table-container">
         <div class="col-md-12">
-          <mat-form-field>
-            <input matInput (keyup)="applyIntentsFilter($event.target.value)" placeholder="Filter Intents">
-          </mat-form-field>
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="intentsDataSource">
     
@@ -65,9 +62,9 @@
     <div class="irs-container">
       <div class="row add-intent">
         <div class="col-md-11">
-          <div *ngIf="show_success_error===true" class="alert alert-{{success_error_class}}">
-            <strong>{{success_error_type}} !</strong> {{success_error_message}}.
-          </div>
+          <mat-form-field>
+            <input matInput (keyup)="applyResponsesFilter($event.target.value)" placeholder="Filter Responses">
+          </mat-form-field>
         </div>
         <div class="col-md-1 text-right">
           <button mat-mini-fab matTooltip="Add Response" color="primary" (click)="addNewResponse()">
@@ -78,9 +75,6 @@
       <br />
       <div class="row irs-table-container">
         <div class="col-md-12">
-          <mat-form-field>
-            <input matInput (keyup)="applyResponsesFilter($event.target.value)" placeholder="Filter Responses">
-          </mat-form-field>
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="responsesDataSource">
     
@@ -127,9 +121,9 @@
     <div class="irs-container">
       <div class="row add-story">
         <div class="col-md-11">
-          <div *ngIf="show_success_error===true" class="alert alert-{{success_error_class}}">
-            <strong>{{success_error_type}} !</strong> {{success_error_message}}.
-          </div>
+          <mat-form-field>
+            <input matInput (keyup)="applyStoriesFilter($event.target.value)" placeholder="Filter Stories">
+          </mat-form-field>
         </div>
         <div class="col-md-1 text-right">
           <button mat-mini-fab matTooltip="Add Story" color="primary" (click)="addNewStory()">
@@ -140,9 +134,6 @@
       <br />
       <div class="row irs-table-container">
         <div class="col-md-12">
-          <mat-form-field>
-            <input matInput (keyup)="applyStoriesFilter($event.target.value)" placeholder="Filter Stories">
-          </mat-form-field>
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="storiesDataSource">
     
@@ -155,7 +146,7 @@
               <!-- Name Column -->
               <ng-container matColumnDef="story_name">
                 <th mat-header-cell *matHeaderCellDef> Story Name </th>
-                <td mat-cell *matCellDef="let story" class="response_name_text"><span>{{story.story_name}}</span></td>
+                <td mat-cell *matCellDef="let story" class="story_name_text"><span (click)="selectStory(story._id.$oid)">{{story.story_name}}</span></td>
               </ng-container>
             
               <!-- Weight Column -->

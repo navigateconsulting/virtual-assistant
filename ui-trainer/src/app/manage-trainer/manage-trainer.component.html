@@ -1,3 +1,4 @@
+<div *ngIf="loadTryNow === false">
 <mat-sidenav-container class="trainer-container">
   <mat-sidenav-content class="main-container">
     <mat-toolbar class="row">
@@ -25,6 +26,9 @@
     </div>
     <div *ngIf="setComponent === 'manage-responses'">
       <app-manage-responses [projectObjectId]="projectObjectId" [responseObjectId]="irsObjectId"></app-manage-responses>
+    </div>
+    <div *ngIf="setComponent === 'manage-stories'">
+      <app-manage-stories [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId" [storyObjectId]="irsObjectId"></app-manage-stories>
     </div>
   </mat-sidenav-content>
   <mat-sidenav #entitiesSidenav mode="over" position="end" class="property-panel-container">
@@ -59,3 +63,7 @@
     </div>
   </mat-sidenav>
 </mat-sidenav-container>
+</div>
+<div *ngIf="loadTryNow">
+  <router-outlet></router-outlet>
+</div>

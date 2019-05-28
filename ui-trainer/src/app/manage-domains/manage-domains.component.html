@@ -50,9 +50,9 @@
 <div class="domains-container">
   <div class="row add-domain">
     <div class="col-md-11">
-      <div *ngIf="show_success_error===true" class="alert alert-{{success_error_class}}">
-        <strong>{{success_error_type}} !</strong> {{success_error_message}}.
-      </div>
+      <mat-form-field>
+        <input matInput (keyup)="applyDomainsFilter($event.target.value)" placeholder="Filter Domains">
+      </mat-form-field>
     </div>
     <div class="col-md-1 text-right">
       <button mat-mini-fab matTooltip="Add Domain" color="primary" (click)="addNewDomain()">
@@ -63,9 +63,6 @@
   <br />
   <div class="row domains-card-container">
     <div class="col-md-12">
-      <mat-form-field>
-        <input matInput (keyup)="applyDomainsFilter($event.target.value)" placeholder="Filter Domains">
-      </mat-form-field>
       <div class="domains-card">
         <mat-grid-list cols="6">
           <mat-grid-tile *ngFor="let domain of domains_json; let i = index">
