@@ -14,6 +14,64 @@ class RefreshDb:
 
     async def refresh_db(self):
         print('received request to refresh database')
+
+        # Setting source data paths
+
+        seed_data_path = '../vol_chatbot_data/seed_data/'
+
+        # Cleaning up collections
+        await db.entities.delete_many({})
+
+        await db.projects.delete_many({})
+        await db.domains.delete_many({})
+        await db.intents.delete_many({})
+        await db.responses.delete_many({})
+        await db.stories.delete_many({})
+        await db.conversations.delete_many({})
+
+        # Inserting Data in collection
+
+        with open(seed_data_path+'projects.json') as json_file:
+            data = json.load(json_file)
+            await db.projects.insert_many(data)
+
+        # Get project ID
+
+        project = await db.projects.find_one({})
+        project_id = project.get('_id')
+        print("project ID {}".format(project_id))
+
+        with open(seed_data_path+'domains.json') as json_file:
+            data = json.load(json_file)
+            await db.domains.insert_many(data)
+
+        await db.domains.update_many({}, {'$set': {'project_id': str(project_id)}})
+        domain_id = await db.domains.find_one({})
+
+        with open(seed_data_path+'intents.json') as json_file:
+            data = json.load(json_file)
+            await db.intents.insert_many(data)
+
+        await db.intents.update_many({}, {'$set': {'project_id': str(project_id), 'domain_id': str(domain_id.get('_id'))}})
+
+        with open(seed_data_path+'entities.json') as json_file:
+            data = json.load(json_file)
+            await db.entities.insert_many(data)
+
+        await db.entities.update_many({}, {'$set': {'project_id': str(project_id)}})
+
+        with open(seed_data_path+'responses.json') as json_file:
+            data = json.load(json_file)
+            await db.responses.insert_many(data)
+
+        await db.responses.update_many({}, {'$set': {'project_id': str(project_id), 'domain_id': str(domain_id.get('_id'))}})
+
+        with open(seed_data_path+'stories.json') as json_file:
+            data = json.load(json_file)
+            await db.stories.insert_many(data)
+
+        await db.stories.update_many({}, {'$set': {'project_id': str(project_id), 'domain_id': str(domain_id.get('_id'))}})
+
         return "Success"
 
 
@@ -52,10 +110,22 @@ class ProjectsModel:
         ''' 
         Need to add sections for Delete Intents Entities Responses '''
 
-        # Delete Domains
+        # Delete Domains Intents , Entities , Stories , Responses
 
         result = await db.domains.delete_many({"project_id": object_id})
         print("Domains Deleted - count {}".format(result))
+
+        result = await db.intents.delete_many({"project_id": object_id})
+        print("Intents Deleted - count {}".format(result))
+
+        result = await db.entities.delete_many({"project_id": object_id})
+        print("Entities Deleted - count {}".format(result))
+
+        result = await db.stories.delete_many({"project_id": object_id})
+        print("Stories Deleted - count {}".format(result))
+
+        result = await db.responses.delete_many({"project_id": object_id})
+        print("Responses Deleted - count {}".format(result))
 
         # Delete Project
         result = await db.projects.delete_one(query)
@@ -103,16 +173,55 @@ class ProjectsModel:
             new_project = await db.projects.insert_one(json_record)
             print("project created {}".format(new_project.inserted_id))
 
+            # Copy Entities
+
+            entities_cursor = db.entities.find({"project_id": str(source_project_id)})
+            for entity in await entities_cursor.to_list(length=100):
+                del entity['_id']
+                entity['project_id'] = "{}".format(new_project.inserted_id)
+                new_entity = await db.entities.insert_one(entity)
+                print("new entity inserted with id {}".format(new_entity.inserted_id))
+
             # Copy domains
 
             domains_cursor = db.domains.find({"project_id": str(source_project_id)})
             for domain in await domains_cursor.to_list(length=100):
+                source_domain_id = domain.get('_id')
                 del domain['_id']
                 domain['project_id'] = "{}".format(new_project.inserted_id)
                 new_domain = await db.domains.insert_one(domain)
                 print("new domain inserted with id {}".format(new_domain.inserted_id))
 
-            # Copy Intents Entities etc TODO
+                # Copy Intents
+
+                intents_cursor = db.intents.find({"project_id": str(source_project_id), "domain_id": str(source_domain_id)})
+                for intents in await intents_cursor.to_list(length=100):
+                    del intents['_id']
+                    intents['project_id'] = "{}".format(new_project.inserted_id)
+                    intents['domain_id'] = "{}".format(new_domain.inserted_id)
+                    new_intents = await db.intents.insert_one(intents)
+                    print("new intents inserted with id {}".format(new_intents.inserted_id))
+
+                # Copy Responses
+
+                responses_cursor = db.responses.find({"project_id": str(source_project_id), "domain_id": str(source_domain_id)})
+                for response in await responses_cursor.to_list(length=100):
+                    del response['_id']
+                    response['project_id'] = "{}".format(new_project.inserted_id)
+                    response['domain_id'] = "{}".format(new_domain.inserted_id)
+                    new_responses = await db.responses.insert_one(response)
+                    print("new response inserted with id {}".format(new_responses.inserted_id))
+
+
+                # Copy Stories
+
+                stories_cursor = db.stories.find({"project_id": str(source_project_id), "domain_id": str(source_domain_id)})
+                for story in await stories_cursor.to_list(length=100):
+                    del story['_id']
+                    story['project_id'] = "{}".format(new_project.inserted_id)
+                    story['domain_id'] = "{}".format(new_domain.inserted_id)
+                    new_story = await db.stories.insert_one(story)
+                    print("new story inserted with id {}".format(new_story.inserted_id))
 
             return {"status": "Success", "message": "Project Copied ID {}".format(new_project.inserted_id)}
 
@@ -157,6 +266,15 @@ class DomainsModel:
         json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        result = await db.intents.delete_many({"domain_id": json_record['object_id']})
+        print("Intents Deleted - count {}".format(result))
+
+        result = await db.stories.delete_many({"domain_id": json_record['object_id']})
+        print("Stories Deleted - count {}".format(result))
+
+        result = await db.responses.delete_many({"domain_id": json_record['object_id']})
+        print("Responses Deleted - count {}".format(result))
 
         delete_record = await db.domains.delete_one(query)
         print("Domain Deleted count {}".format(delete_record))
@@ -220,7 +338,7 @@ class IntentsModel:
 
         insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
                          "intent_name": json_record['intent_name'],
-                         "intent_description": json_record['intent_description'], "text_entities": [""]}
+                         "intent_description": json_record['intent_description'], "text_entities": []}
 
         val_res = await db.intents.find_one({"project_id": json_record['project_id'],
                                              "domain_id": json_record['domain_id'],
@@ -359,7 +477,7 @@ class ResponseModel:
 
         insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
                          "response_name": json_record['response_name'],
-                         "response_description": json_record['response_description'], "text_entities": [""]}
+                         "response_description": json_record['response_description'], "text_entities": []}
 
         val_res = await db.responses.find_one({"project_id": json_record['project_id'],
                                                "domain_id": json_record['domain_id'],
@@ -479,7 +597,7 @@ class StoryModel:
 
         insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
                          "story_name": json_record['story_name'],
-                         "story_description": json_record['story_description'], "story": [""]}
+                         "story_description": json_record['story_description'], "story": []}
 
         val_res = await db.stories.find_one({"project_id": json_record['project_id'],
                                              "domain_id": json_record['domain_id'],
