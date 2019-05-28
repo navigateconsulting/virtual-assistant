@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddDomainComponent } from '../common/modals/add-domain/add-domain.component';
 import { DeleteDomainComponent } from '../common/modals/delete-domain/delete-domain.component';
 import { EditDomainComponent } from '../common/modals/edit-domain/edit-domain.component';
+import { NotificationsService } from '../common/services/notifications.service';
 
 @Component({
   selector: 'app-manage-domains',
@@ -24,6 +25,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
 
   constructor(public fileService: FileService,
               public webSocketService: WebSocketService,
+              public notificationsService: NotificationsService,
               public dialog: MatDialog) { }
 
   currentRoot: FileElement;
@@ -50,10 +52,6 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   connection: any;
   domains_json: any;
   domains_json_backup: any;
-  show_success_error: boolean;
-  success_error_class: string;
-  success_error_type: string;
-  success_error_message: string;
 
   @Input() projectObjectId: string;
 
@@ -61,14 +59,6 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getDomains();
-    // this.getIntents();
-    // this.getStories();
-    // this.getResponses();
-    // this.getDomains();
-    // this.getProjects();
-    // // tslint:disable-next-line:quotemark
-    // this.currentPath = "<a href='javascript:;' class='root'> Home </a>" + ' / ';
-    // this.propertyPanel = 'entities';
   }
 
   getDomains() {
@@ -80,7 +70,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
     () => console.log('Observer got a complete notification'));
 
     this.webSocketService.getDomainAlerts().subscribe(response => {
-      this.showDomainAlerts(response);
+      this.notificationsService.showToast(response);
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
@@ -137,20 +127,6 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   selectDomain(domainObjectId: string) {
     this.webSocketService.leaveDomainsRoom('project_' + this.projectObjectId);
     this.selectedDomain.emit(domainObjectId);
-  }
-
-  showDomainAlerts(res: any) {
-    if (res.status === 'Error') {
-      this.success_error_class = 'danger';
-    } else if (res.status === 'Success') {
-      this.success_error_class = 'success';
-    }
-    this.success_error_type = res.status;
-    this.success_error_message = res.message;
-    this.show_success_error = true;
-    setTimeout(() => {
-      this.show_success_error = false;
-    }, 2000);
   }
 
   ngOnDestroy(): void {}

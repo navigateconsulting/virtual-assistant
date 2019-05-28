@@ -1,2 +1,7 @@
+<<<<<<< HEAD
+[{"project_id":1,"entity_name":"user_name","entity_description":"name of the Entityt Etc","entity_slot":{"type":"text","values":[""]}},
+{"project_id":1,"entity_name":"user_name","entity_description":"name of the Entityt Etc","entity_slot":{"type":"categorical","values":["india","us","uk"]}}]
+=======
 {"project_id":1,"entity_name":"user_name","entity_description":"name of the Entityt Etc","entity_slot":{"type":"text","values":[""]}}
 {"project_id":1,"entity_name":"user_name","entity_description":"name of the Entityt Etc","entity_slot":{"type":"categorical","values":["india","us","uk"]}}
+>>>>>>> 78b303980a5ddee6b11762fb8359a23827a939ea

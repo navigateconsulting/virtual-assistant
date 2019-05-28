@@ -60,6 +60,14 @@ export const constant = {
     RESPONSE_TEXT_CREATE: 'insertResponseDetails',
     RESPONSE_TEXT_DELETE: 'deleteResponseDetails',
 
+    STORY_NSP: '/story',
+    STORY_DETAILS_URL: 'getStoryDetails',
+    STORY_ALERT_DETAILS_LISTEN: 'respStoryDetail',
+    STORY_DETAILS_LISTEN: 'storyDetail',
+    STORY_DETAILS_INSERT: 'insertStoryDetails',
+    STORY_DETAILS_DELETE: 'deleteStoryDetails',
+    STORY_DETAILS_UPDATE: 'updateStoryDetails',
+
     ENTITIES_NSP: '/nav',
     ENTITIES_URL: 'getEntities',
     ENTITIES_LISTEN: 'allEntities',
@@ -67,6 +75,10 @@ export const constant = {
     ENTITIES_CREATE: 'createEntity',
     ENTITIES_UPDATE: 'updateEntity',
     ENTITIES_DELETE: 'deleteEntity',
+
+    TRY_NOW_NSP: '/trynow',
+    TRY_NOW_URL: 'tryNow',
+    TRY_NOW_LISTEN: 'chatResponse',
 
     MODULE_COMMON: 'common',
 };

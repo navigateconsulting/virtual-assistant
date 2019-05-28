@@ -11,7 +11,7 @@ import { DeleteResponseComponent } from '../common/modals/delete-response/delete
 import { AddStoryComponent } from '../common/modals/add-story/add-story.component';
 import { EditStoryComponent } from '../common/modals/edit-story/edit-story.component';
 import { DeleteStoryComponent } from '../common/modals/delete-story/delete-story.component';
-
+import { NotificationsService } from '../common/services/notifications.service';
 
 @Component({
   selector: 'app-manage-irs',
@@ -21,6 +21,7 @@ import { DeleteStoryComponent } from '../common/modals/delete-story/delete-story
 export class ManageIrsComponent implements OnInit {
 
   constructor(public webSocketService: WebSocketService,
+              public notificationsService: NotificationsService,
               public dialog: MatDialog) { }
 
   @Input() projectObjectId: string;
@@ -36,10 +37,6 @@ export class ManageIrsComponent implements OnInit {
   responsesDataSource: any;
   storiesDisplayedColumns: string[] = ['icon', 'story_name', 'story_description', 'edit', 'delete'];
   storiesDataSource: any;
-  show_success_error: boolean;
-  success_error_class: string;
-  success_error_type: string;
-  success_error_message: string;
 
   ngOnInit() {
     this.webSocketService.createIRSRoom('domain_' + this.domainObjectId);
@@ -58,7 +55,7 @@ export class ManageIrsComponent implements OnInit {
     () => console.log('Observer got a complete notification'));
 
     this.webSocketService.getIntentAlerts().subscribe(response => {
-      this.showIRSAlerts(response);
+      this.notificationsService.showToast(response);
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
@@ -74,7 +71,7 @@ export class ManageIrsComponent implements OnInit {
     () => console.log('Observer got a complete notification'));
 
     this.webSocketService.getResponseAlerts().subscribe(response => {
-      this.showIRSAlerts(response);
+      this.notificationsService.showToast(response);
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
@@ -90,7 +87,7 @@ export class ManageIrsComponent implements OnInit {
     () => console.log('Observer got a complete notification'));
 
     this.webSocketService.getStoryAlerts().subscribe(response => {
-      this.showIRSAlerts(response);
+      this.notificationsService.showToast(response);
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
@@ -250,18 +247,8 @@ export class ManageIrsComponent implements OnInit {
     this.storiesDataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  showIRSAlerts(res: any) {
-    if (res.status === 'Error') {
-      this.success_error_class = 'danger';
-    } else if (res.status === 'Success') {
-      this.success_error_class = 'success';
-    }
-    this.success_error_type = res.status;
-    this.success_error_message = res.message;
-    this.show_success_error = true;
-    setTimeout(() => {
-      this.show_success_error = false;
-    }, 2000);
+  selectStory(storyObjectId: string) {
+    this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
+    this.selectedIRS.emit({object_id: storyObjectId, type: 'story'});
   }
-
 }

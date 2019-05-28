@@ -323,4 +323,103 @@ export class WebSocketService {
   deleteResponseText(delete_response_text_stub: any, response_room: string) {
     this.socket.emit(constant.RESPONSE_TEXT_DELETE, delete_response_text_stub, response_room);
   }
+
+  createStoryRoom(story_room: string) {
+    this.socket.nsp = constant.STORY_NSP;
+    this.socket.emit('join_room', story_room);
+  }
+
+  getStoryDetails(story_details_stub: any, story_room: string) {
+    this.socket.emit(constant.STORY_DETAILS_URL, story_details_stub, story_room);
+    return Observable.create((observer) => {
+      this.socket.on(constant.STORY_DETAILS_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  getStoryDetailAlerts() {
+    return Observable.create((observer) => {
+      this.socket.on(constant.STORY_ALERT_DETAILS_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  getIntentsForStory() {
+    return Observable.create((observer) => {
+      this.socket.on(constant.IRS_INTENTS_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  getResponsesForStory() {
+    return Observable.create((observer) => {
+      this.socket.on(constant.IRS_RESPONSES_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  insertDetailsToStory(new_ir_to_story_stub: any, story_room: string) {
+    this.socket.emit(constant.STORY_DETAILS_INSERT, new_ir_to_story_stub, story_room);
+  }
+
+  deleteDetailsFromStory(delete_ir_from_story_stub: any, story_room: string) {
+    this.socket.emit(constant.STORY_DETAILS_DELETE, delete_ir_from_story_stub, story_room);
+  }
+
+  updateDetailsFromStory(update_ir_from_story_stub: any, story_room: string) {
+    this.socket.emit(constant.STORY_DETAILS_UPDATE, update_ir_from_story_stub, story_room);
+  }
+
+  createTryNowRoom(try_now_room: string) {
+    this.socket.nsp = constant.TRY_NOW_NSP;
+    this.socket.emit('join_room', try_now_room);
+  }
+
+  tryNowProject(try_now_project_stub: any, try_now_room: string) {
+    this.socket.emit(constant.TRY_NOW_URL, try_now_project_stub, try_now_room);
+    return Observable.create((observer) => {
+      this.socket.on(constant.TRY_NOW_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
 }

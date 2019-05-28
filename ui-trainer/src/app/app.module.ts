@@ -13,15 +13,8 @@ import { MaterialModule } from './material.module';
 import { LoginComponent } from './login/login.component';
 import { FooterComponent } from './common/footer/footer.component';
 import { HeaderComponent } from './common/header/header.component';
-import { SidenavigationComponent } from './sidenavigation/sidenavigation.component';
 import { HomeComponent } from './home/home.component';
-import { AdminSidenavigationComponent } from './admin-sidenavigation/admin-sidenavigation.component';
-import { QueryUserComponent } from './manage-users/query-user/query-user.component';
-import { CreateUserComponent } from './manage-users/create-user/create-user.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
-import { DeleteUserComponent } from './manage-users/delete-user/delete-user.component';
-import { UpdateUserComponent } from './manage-users/update-user/update-user.component';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { ManageDomainsComponent } from './manage-domains/manage-domains.component';
 import { FileExplorerModule } from './file-explorer/file-explorer.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -56,6 +49,8 @@ import { DeleteResponseComponent } from './common/modals/delete-response/delete-
 import { AddStoryComponent } from './common/modals/add-story/add-story.component';
 import { EditStoryComponent } from './common/modals/edit-story/edit-story.component';
 import { DeleteStoryComponent } from './common/modals/delete-story/delete-story.component';
+import { ToastrModule } from 'ng6-toastr-notifications';
+import { TryNowComponent } from './try-now/try-now.component';
 
 @NgModule({
   declarations: [
@@ -63,13 +58,7 @@ import { DeleteStoryComponent } from './common/modals/delete-story/delete-story.
     LoginComponent,
     FooterComponent,
     HeaderComponent,
-    SidenavigationComponent,
     HomeComponent,
-    AdminSidenavigationComponent,
-    QueryUserComponent,
-    CreateUserComponent,
-    DeleteUserComponent,
-    UpdateUserComponent,
     ManageDomainsComponent,
     ManageEntitiesComponent,
     ManageIntentsComponent,
@@ -100,11 +89,9 @@ import { DeleteStoryComponent } from './common/modals/delete-story/delete-story.
     AddStoryComponent,
     EditStoryComponent,
     DeleteStoryComponent,
+    TryNowComponent,
   ],
   entryComponents: [
-    CreateUserComponent,
-    DeleteUserComponent,
-    UpdateUserComponent,
     AddEntityComponent,
     EditEntityComponent,
     ChooseEntityComponent,
@@ -137,7 +124,7 @@ import { DeleteStoryComponent } from './common/modals/delete-story/delete-story.
     DragDropModule,
     FileExplorerModule,
     FlexLayoutModule,
-    NgMultiSelectDropDownModule.forRoot(),
+    ToastrModule.forRoot()
   ],
   providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}, FileService, EntitiesDataService],
   bootstrap: [AppComponent]

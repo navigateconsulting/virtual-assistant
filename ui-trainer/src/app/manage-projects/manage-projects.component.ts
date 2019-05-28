@@ -9,7 +9,10 @@ import { AddProjectComponent } from '../common/modals/add-project/add-project.co
 import { EditProjectComponent } from '../common/modals/edit-project/edit-project.component';
 import { DeleteProjectComponent } from '../common/modals/delete-project/delete-project.component';
 import { CopyProjectComponent } from '../common/modals/copy-project/copy-project.component';
-
+import { NotificationsService } from '../common/services/notifications.service';
+import { SharedDataService } from '../common/services/shared-data.service';
+import { Router } from '@angular/router';
+import { constant } from '../../environments/constants';
 
 @Component({
   selector: 'app-manage-projects',
@@ -20,10 +23,12 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   constructor(public fileService: FileService,
               public webSocketService: WebSocketService,
+              public notificationsService: NotificationsService,
+              public sharedDataService: SharedDataService,
               public dialog: MatDialog) {}
 
 // tslint:disable-next-line: max-line-length
-  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'project_description', 'created_by', 'status', 'source', 'edit', 'delete', 'copy'];
+  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'project_description', 'created_by', 'status', 'source', 'edit', 'delete', 'copy', 'try_now'];
   projectsDataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -42,19 +47,11 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   projectsJSON: any;
   domainsJSON: any;
-  show_success_error: boolean;
-  success_error_class: string;
-  success_error_type: string;
-  success_error_message: string;
 
-  @Output() selectedProject = new EventEmitter<string>();
+  @Output() selectedProject = new EventEmitter<object>();
 
   ngOnInit() {
-    this.show_success_error = false;
     this.getProjects();
-    // this.currentPath = '<span class="root pseudolink"> Home </span>' + ' / ';
-    // this.currentType = 'project';
-    // this.propertyPanel = 'entities';
   }
 
   getProjects() {
@@ -70,8 +67,8 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
 
-    this.webSocketService.getProjectAlerts().subscribe(projects => {
-      this.showProjectAlerts(projects);
+    this.webSocketService.getProjectAlerts().subscribe(response => {
+      this.notificationsService.showToast(response);
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
@@ -121,60 +118,19 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     });
   }
 
+  tryNowProject(projectObjectId: string) {
+    this.webSocketService.leaveProjectsRoom('root');
+    this.sharedDataService.setSharedData('projectObjectId', projectObjectId, constant.MODULE_COMMON);
+    this.selectedProject.emit({projectObjectId: projectObjectId, component: 'try-now'});
+  }
+
   selectProject(projectObjectId: string) {
     this.webSocketService.leaveProjectsRoom('root');
-    this.selectedProject.emit(projectObjectId);
+    this.selectedProject.emit({projectObjectId: projectObjectId, component: 'manage-domains'});
   }
-
-  showProjectAlerts(res: any) {
-    if (res.status === 'Error') {
-      this.success_error_class = 'danger';
-    } else if (res.status === 'Success') {
-      this.success_error_class = 'success';
-    }
-    this.success_error_type = res.status;
-    this.success_error_message = res.message;
-    this.show_success_error = true;
-    setTimeout(() => {
-      this.show_success_error = false;
-    }, 2000);
-  }
-
-  // getDomains(pelement_id, project_id) {
-  //   this.webSocketService.createDomainsRoom('project_' + project_id);
-  //   this.connection = this.webSocketService.getDomains(project_id, 'project_' + project_id).subscribe(domains => {
-  //     this.domainsJSON = (domains !== '' && domains !== null) ? domains : [];
-  //     if (this.domainsJSON.length === 0) {
-  //       this.domainsJSON = new Array<object>();
-  //     }
-  //     this.createDomainsFolder(this.domainsJSON, pelement_id);
-  //   },
-  //   err => console.error('Observer got an error: ' + err),
-  //   () => console.log('Observer got a complete notification'));
-  // }
-
-  // createProjectsFolder(projects_json: any) {
-  //   console.log(projects_json);
-  //   // this.fileService.clearProjectsMapElement();
-  //   // projects_json.forEach(project => {
-  //   //   // tslint:disable-next-line: max-line-length
-  //   //   this.fileService.addProjectFolder({ oid: project._id['$oid'], project_id: project.project_id, name: project.project_name, description: project.project_description, isFolder: true, parent: 'root', type: 'project' });
-  //   // });
-  //   // this.updateFileElementQuery();
-  // }
 
   applyProjectsFilter(filterValue: string) {
     this.projectsDataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  createDomainsFolder(domains_json: any, pelement_id: string) {
-    console.log(domains_json);
-    this.fileService.clearDomainsMapElement();
-    domains_json.forEach(domain => {
-      // tslint:disable-next-line: max-line-length
-      this.fileService.addDomainFolder({ oid: domain._id['$oid'], project_id: domain.domain_id, name: domain.domain_name, description: domain.domain_description, isFolder: true, parent: pelement_id, type: 'domain' });
-    });
-    this.updateFileElementQuery();
   }
 
   navigateToFolder(element: FileElement) {
@@ -197,7 +153,6 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     this.currentRoot = element;
     this.currentPath = this.pushToPath(this.currentPath, element.name, element.id, isFile);
     this.canNavigateUp = true;
-    this.updateFileElementQuery();
   }
 
   pushToPath(path: string, folderName: string, elementId: string, isFile: boolean) {
@@ -224,10 +179,6 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     split.splice(index + 1);
     p = split.join(' / ') + ' / ';
     return p;
-  }
-
-  updateFileElementQuery() {
-    this.fileElements = this.fileService.queryInFolder(this.currentRoot ? this.currentRoot.id : 'root');
   }
 
   ngOnDestroy(): void {}
