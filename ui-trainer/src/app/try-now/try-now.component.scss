@@ -1,34 +1,76 @@
 .place_div_center {
 	width: 100px;
 	height: 100px;
-	
 	position: absolute;
 	top:0;
 	bottom: 0;
 	left: 0;
 	right: 0;
-  	
 	margin: auto;
 }
-
-/* Split the screen in half */
-.split {
-	height: 100%;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	overflow-x: hidden;
-	padding-top: 20px;
-  }
   
 /* Control the left side */
 .left {
-	width: 70%;
-	left: 0;
+	border-right: 1px solid #DDD;
+	padding: 0;
+}
+
+.type-message {
+	position:absolute;
+	height: 130px;
+	bottom: 0;
+	width: 100%;
+	border-top: 1px solid #DDD;
+}
+
+.no-padding {
+	padding: 0;
+}
+
+.input-full-width {
+	margin-top: 2%;
+	width: 100%;
+	font-size: 14px;
+}
+
+::ng-deep .mat-form-field.input-full-width {
+    .mat-input-element {
+        color: slategray;
+    }
+    .mat-form-field-label {
+        color: slategray;
+    }
+    .mat-form-field-underline {
+        background-color: transparent;
+    }
+    .mat-form-field-ripple {
+        background-color: transparent;
+    }
+    .mat-form-field-required-marker {
+        color: slategray;
+    }
+}
+
+.refresh-send {
+	margin-top: 3%;
+	cursor: pointer;
+}
+
+.refresh-send-button {
+	color: #AAA;
 }
   
 /* Control the right side */
 .right {
-	width: 30%;
-	right: 0;
+	padding: 0;
+}
+
+.example-card {
+	width: 100%;
+	height: 80px;
+}
+
+.example-header-image {
+	background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+	background-size: cover;
 }

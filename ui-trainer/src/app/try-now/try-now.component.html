@@ -1,12 +1,76 @@
 <div *ngIf="showSpinner" class="place_div_center">
   <mat-spinner></mat-spinner>
 </div>
-<div *ngIf="showSpinner===false" class="row">
-  <div class="split left">
-    Original Chat
-  </div>
-  
-  <div class="split right">
-    Classified Chat
+<div *ngIf="showSpinner===false" class="trynow-container">
+  <div  class="row" style="height: 100vh;">
+    <div class="col-md-8 left">
+      <div class="row">
+        <div class="user-message">
+          
+        </div>
+      </div>
+      <div class="type-message">
+        <div class="row">
+          <div class="col-md-1 no-padding"></div>
+          <div class="col-md-9 no-padding">
+            <span>
+              <mat-form-field class="input-full-width">
+                <input matInput placeholder="Start typing a message">
+              </mat-form-field>
+            </span>
+          </div>
+          <div class="col-md-1 text-right refresh-send">
+            <span><mat-icon class="refresh-send-button">refresh</mat-icon></span>
+          </div>
+          <div class="col-md-1 refresh-send">
+            <span><mat-icon class="refresh-send-button">send</mat-icon></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 right">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Hey there</mat-card-title>
+          <mat-card-subtitle>2:02 pm</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Annotate
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+      
+          <mat-form-field>
+            <input matInput placeholder="First name">
+          </mat-form-field>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Story till now
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+      
+          <mat-form-field>
+            <input matInput placeholder="First name">
+          </mat-form-field>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Slots
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+      
+          <mat-form-field>
+            <input matInput placeholder="First name">
+          </mat-form-field>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
   </div>
 </div>

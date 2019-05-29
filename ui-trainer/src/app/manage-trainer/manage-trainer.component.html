@@ -1,68 +1,68 @@
 <div *ngIf="loadTryNow === false">
-<mat-sidenav-container class="trainer-container">
-  <mat-sidenav-content class="main-container">
-    <mat-toolbar class="row">
-      <div class="col-md-11">
-        <span class="breadcrumb_path">{{breadcrumb_string}}</span>
-        <span class="spacer"></span>
-      </div>
-      <div class="col-md-1 text-right">
-        <button *ngIf="showPropertyPanel === true" mat-button matTooltip="Show Entities" (click)="toggleEntities()">
-          <mat-icon>reply</mat-icon>
-        </button>
-      </div>
-    </mat-toolbar>
-    <div *ngIf="setComponent === 'manage-projects'">
-      <app-manage-projects (selectedProject)="projectSelected($event)"></app-manage-projects>
-    </div>
-    <div *ngIf="setComponent === 'manage-domains'">
-      <app-manage-domains [projectObjectId]="projectObjectId" (selectedDomain)="domainSelected($event)"></app-manage-domains>
-    </div>
-    <div *ngIf="setComponent === 'manage-irs'">
-      <app-manage-irs [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId" (selectedIRS)="irsSelected($event)"></app-manage-irs>
-    </div>
-    <div *ngIf="setComponent === 'manage-intents'">
-      <app-manage-intents [projectObjectId]="projectObjectId" [intentObjectId]="irsObjectId"></app-manage-intents>
-    </div>
-    <div *ngIf="setComponent === 'manage-responses'">
-      <app-manage-responses [projectObjectId]="projectObjectId" [responseObjectId]="irsObjectId"></app-manage-responses>
-    </div>
-    <div *ngIf="setComponent === 'manage-stories'">
-      <app-manage-stories [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId" [storyObjectId]="irsObjectId"></app-manage-stories>
-    </div>
-  </mat-sidenav-content>
-  <mat-sidenav #entitiesSidenav mode="over" position="end" class="property-panel-container">
-    <div class="row property-panel-row">
-      <div class="col-md-12">
-        <div class="text-center">
-          <h4 class="mat-body-strong">Property Panel</h4>
+  <mat-sidenav-container class="trainer-container">
+    <mat-sidenav-content class="main-container">
+      <mat-toolbar class="row">
+        <div class="col-md-11">
+          <span class="breadcrumb_path">{{breadcrumb_string}}</span>
+          <span class="spacer"></span>
         </div>
-        <div class="row property-panel">
-          <div class="col-md-4 text-center">
-            <button mat-flat-button color="primary" (click)="openPropertyPanelComponent('entities')">Entities</button>
-          </div>
-          <div class="col-md-4 text-center">
-            <button mat-flat-button (click)="openPropertyPanelComponent('actions')">Actions</button>
-          </div>
-          <div class="col-md-4 text-center">
-            <button mat-flat-button color="accent" (click)="openPropertyPanelComponent('app-prop')">AppProp</button>
-          </div>
+        <div class="col-md-1 text-right">
+          <button *ngIf="showPropertyPanel === true" mat-button matTooltip="Show Entities" (click)="toggleEntities()">
+            <mat-icon>reply</mat-icon>
+          </button>
         </div>
-        <div class="row property-panel-components">
-          <div style="width: 100%;" *ngIf="propertyPanel === 'entities'">
-            <app-manage-entities [projectObjectId]="projectObjectId"></app-manage-entities>
+      </mat-toolbar>
+      <div *ngIf="setComponent === 'manage-projects'">
+        <app-manage-projects (selectedProject)="projectSelected($event)"></app-manage-projects>
+      </div>
+      <div *ngIf="setComponent === 'manage-domains'">
+        <app-manage-domains [projectObjectId]="projectObjectId" (selectedDomain)="domainSelected($event)"></app-manage-domains>
+      </div>
+      <div *ngIf="setComponent === 'manage-irs'">
+        <app-manage-irs [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId" (selectedIRS)="irsSelected($event)"></app-manage-irs>
+      </div>
+      <div *ngIf="setComponent === 'manage-intents'">
+        <app-manage-intents [projectObjectId]="projectObjectId" [intentObjectId]="irsObjectId"></app-manage-intents>
+      </div>
+      <div *ngIf="setComponent === 'manage-responses'">
+        <app-manage-responses [projectObjectId]="projectObjectId" [responseObjectId]="irsObjectId"></app-manage-responses>
+      </div>
+      <div *ngIf="setComponent === 'manage-stories'">
+        <app-manage-stories [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId" [storyObjectId]="irsObjectId"></app-manage-stories>
+      </div>
+    </mat-sidenav-content>
+    <mat-sidenav #entitiesSidenav mode="over" position="end" class="property-panel-container">
+      <div class="row property-panel-row">
+        <div class="col-md-12">
+          <div class="text-center">
+            <h4 class="mat-body-strong">Property Panel</h4>
           </div>
-          <div style="width: 100%;" *ngIf="propertyPanel === 'actions'">
-            Manage Actions
+          <div class="row property-panel">
+            <div class="col-md-4 text-center">
+              <button mat-flat-button color="primary" (click)="openPropertyPanelComponent('entities')">Entities</button>
+            </div>
+            <div class="col-md-4 text-center">
+              <button mat-flat-button (click)="openPropertyPanelComponent('actions')">Actions</button>
+            </div>
+            <div class="col-md-4 text-center">
+              <button mat-flat-button color="accent" (click)="openPropertyPanelComponent('app-prop')">AppProp</button>
+            </div>
           </div>
-          <div style="width: 100%;" *ngIf="propertyPanel === 'app-prop'">
-            Manage App Properties
+          <div class="row property-panel-components">
+            <div style="width: 100%;" *ngIf="propertyPanel === 'entities'">
+              <app-manage-entities [projectObjectId]="projectObjectId"></app-manage-entities>
+            </div>
+            <div style="width: 100%;" *ngIf="propertyPanel === 'actions'">
+              Manage Actions
+            </div>
+            <div style="width: 100%;" *ngIf="propertyPanel === 'app-prop'">
+              Manage App Properties
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </mat-sidenav>
-</mat-sidenav-container>
+    </mat-sidenav>
+  </mat-sidenav-container>
 </div>
 <div *ngIf="loadTryNow">
   <router-outlet></router-outlet>

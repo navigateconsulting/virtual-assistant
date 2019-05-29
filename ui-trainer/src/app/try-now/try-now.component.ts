@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { SharedDataService } from '../common/services/shared-data.service';
@@ -9,7 +9,7 @@ import { constant } from '../../environments/constants';
   templateUrl: './try-now.component.html',
   styleUrls: ['./try-now.component.scss']
 })
-export class TryNowComponent implements OnInit {
+export class TryNowComponent implements OnInit, OnDestroy {
 
   projectObjectId: string;
   showSpinner: boolean;
@@ -20,8 +20,8 @@ export class TryNowComponent implements OnInit {
 
   ngOnInit() {
     this.projectObjectId = this.sharedDataService.getSharedData('projectObjectId', constant.MODULE_COMMON);
-    this.showSpinner = true;
-    this.tryNowProject();
+    this.showSpinner = false;
+    // this.tryNowProject();
   }
 
   tryNowProject() {
@@ -32,6 +32,10 @@ export class TryNowComponent implements OnInit {
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
+  }
+
+  ngOnDestroy(): void {
+    window.location.reload();
   }
 
 }

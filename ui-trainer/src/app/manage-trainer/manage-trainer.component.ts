@@ -29,7 +29,8 @@ export class ManageTrainerComponent implements OnInit {
     this.breadcrumb_string = this.breadcrumb_arr.join('/');
     this.setComponent = 'manage-projects';
     this.showPropertyPanel = false;
-    this.loadTryNow = false;
+    this.loadTryNow = true;
+    this.router.navigate(['/trainer/try-now']);
   }
 
   projectSelected($event: any) {
