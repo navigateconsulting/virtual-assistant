@@ -57,6 +57,7 @@ export class ManageStoriesComponent implements OnInit {
   disable_response = false;
   show_intent_error = false;
   show_ir_error: boolean;
+  on_intent_response_entity: boolean;
 
   currentStory: any;
   @Input() projectObjectId: string;
@@ -89,6 +90,7 @@ export class ManageStoriesComponent implements OnInit {
     this.getResponses();
 
     this.show_ir_error = false;
+    this.on_intent_response_entity = false;
   }
 
   getStory() {
@@ -221,7 +223,7 @@ export class ManageStoriesComponent implements OnInit {
           const s = intent_response.value;
           const arrStr = s.split(/[{}]/);
           for (let i = 0; i < arrStr.length; i++) {
-            if (/\s/.test(arrStr[i]) === false) {
+            if (/\s/.test(arrStr[i]) === false && arrStr[i].trim() !== '') {
               entities.push(arrStr[i]);
             }
           }
@@ -359,62 +361,67 @@ export class ManageStoriesComponent implements OnInit {
 
   // tslint:disable-next-line: max-line-length
   onIntentResponseEntityChange(event: any, intent_response_index: number, intent_name: string, intent_text: string, type: string, entities?: any) {
-    if (event.source.selected) {
-      const update_ir_in_story = {
-        project_id: this.projectObjectId,
-        domain_id: this.domainObjectId,
-        object_id: this.storyObjectId,
-        doc_index: intent_response_index,
-        story: {
-          key: intent_name,
-          value: intent_text,
-          type: type,
-          entities: entities ? entities : []
-        }
-      };
-      this.webSocketService.updateDetailsFromStory(update_ir_in_story, 'story_' + this.storyObjectId);
-    }
+    const update_ir_in_story = {
+      project_id: this.projectObjectId,
+      domain_id: this.domainObjectId,
+      object_id: this.storyObjectId,
+      doc_index: intent_response_index,
+      story: {
+        key: intent_name,
+        value: intent_text,
+        type: type,
+        entities: entities ? entities : []
+      }
+    };
+    this.webSocketService.updateDetailsFromStory(update_ir_in_story, 'story_' + this.storyObjectId);
+    this.on_intent_response_entity = true;
   }
 
   validateIntentInput(intent_index: number, event: any) {
-    const intentControl = (<FormArray>this.storyForm.controls['intents_responses']).at(intent_index);
-    const validate_intent = this.intents_text_arr.filter(value => value.intent_text === intentControl.value.value)[0];
-    if (validate_intent !== undefined) {
-      intentControl.value.key = validate_intent.intent_name;
-      intentControl.value.value = validate_intent.intent_text;
-      intentControl.value.type = 'intent';
-      this.onIntentResponseEntityChange(event, intent_index, intentControl.value.key, intentControl.value.value, 'intent');
+    if (this.on_intent_response_entity === false) {
+      const intentControl = (<FormArray>this.storyForm.controls['intents_responses']).at(intent_index);
+      const validate_intent = this.intents_text_arr.filter(value => (value.intent_text === intentControl.value.value))[0];
+      if (validate_intent !== undefined) {
+        intentControl.value.key = validate_intent.intent_name;
+        intentControl.value.value = validate_intent.intent_text;
+        intentControl.value.type = 'intent';
+        this.onIntentResponseEntityChange(event, intent_index, intentControl.value.key, intentControl.value.value, 'intent');
+      } else {
+        event.srcElement.value = '';
+        intentControl.value.key = '';
+        intentControl.value.value = '';
+        intentControl.value.type = 'intent';
+        intentControl['controls'].value.valueChanges.pipe(
+          startWith(''),
+          map(value => typeof value === 'string' ? value : value[0].text),
+          map(text => text ? this._filter_intents(text.toString()) : this.intents_text_arr.slice())
+        ).subscribe(filteredIntentResult => { this.intentsfilteredOptions = filteredIntentResult; });
+      }
     } else {
-      event.srcElement.value = '';
-      intentControl.value.key = '';
-      intentControl.value.value = '';
-      intentControl.value.type = 'intent';
-      intentControl['controls'].value.valueChanges.pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value[0].text),
-        map(text => text ? this._filter_intents(text.toString()) : this.intents_text_arr.slice())
-      ).subscribe(filteredIntentResult => { this.intentsfilteredOptions = filteredIntentResult; });
+      this.on_intent_response_entity = false;
     }
   }
 
   validateResponseInput(response_index: number, event: any) {
-    const responseControl = (<FormArray>this.storyForm.controls['intents_responses']).at(response_index);
-    const validate_response = this.responses_text_arr.filter(value => value.response_text === responseControl.value.value)[0];
-    if (validate_response !== undefined) {
-      responseControl.value.key = validate_response.response_name;
-      responseControl.value.value = validate_response.response_text;
-      responseControl.value.type = 'response';
-      this.onIntentResponseEntityChange(event, response_index, responseControl.value.key, responseControl.value.value, 'response');
-    } else {
-      event.srcElement.value = '';
-      responseControl.value.key = '';
-      responseControl.value.value = '';
-      responseControl.value.type = 'response';
-      responseControl['controls'].value.valueChanges.pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value[0].text),
-        map(text => text ? this._filter_responses(text.toString()) : this.responses_text_arr.slice())
-      ).subscribe(filteredResponseResult => { this.responsesfilteredOptions = filteredResponseResult; });
+    if (this.on_intent_response_entity === false) {
+      const responseControl = (<FormArray>this.storyForm.controls['intents_responses']).at(response_index);
+      const validate_response = this.responses_text_arr.filter(value => value.response_text === responseControl.value.value)[0];
+      if (validate_response !== undefined) {
+        responseControl.value.key = validate_response.response_name;
+        responseControl.value.value = validate_response.response_text;
+        responseControl.value.type = 'response';
+        this.onIntentResponseEntityChange(event, response_index, responseControl.value.key, responseControl.value.value, 'response');
+      } else {
+        event.srcElement.value = '';
+        responseControl.value.key = '';
+        responseControl.value.value = '';
+        responseControl.value.type = 'response';
+        responseControl['controls'].value.valueChanges.pipe(
+          startWith(''),
+          map(value => typeof value === 'string' ? value : value[0].text),
+          map(text => text ? this._filter_responses(text.toString()) : this.responses_text_arr.slice())
+        ).subscribe(filteredResponseResult => { this.responsesfilteredOptions = filteredResponseResult; });
+      }
     }
   }
 

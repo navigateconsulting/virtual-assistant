@@ -13,11 +13,99 @@
 .left {
 	border-right: 1px solid #DDD;
 	padding: 0;
+	height: 100%;
+}
+
+.user-bot-chat {
+	height: 81%;
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.user-message, .bot-message {
+	padding: 3%;
+}
+
+.user-box {
+	box-sizing: border-box;
+	float: right;
+}
+
+.user {
+	box-sizing: border-box;
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(135, 229, 226);
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    line-height: 1em;
+    border-radius: 50%;
+}
+
+.user-chat {
+	box-sizing: border-box;
+    margin-left: 8px;
+    margin-right: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-size: 13px;
+    color: rgb(255, 255, 255);
+    background-color: #ff6358;
+    max-width: 408px;
+    letter-spacing: 0.6px;
+    line-height: 20px;
+    border-radius: 20px 4px 20px 20px;
+}
+
+.bot-box {
+	box-sizing: border-box;
+	float: left;
+}
+
+.bot {
+	box-sizing: border-box;
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(135, 229, 226);
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    line-height: 1em;
+    border-radius: 50%;
+}
+
+.bot-chat {
+	box-sizing: border-box;
+    margin-left: 8px;
+    margin-right: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-size: 13px;
+    color: rgb(0, 0, 0);
+    background-color: rgb(236, 239, 247);
+    max-width: 408px;
+    letter-spacing: 0.6px;
+    line-height: 20px;
+    border-radius: 4px 20px 20px;
 }
 
 .type-message {
 	position:absolute;
-	height: 130px;
+	height: 19%;
 	bottom: 0;
 	width: 100%;
 	border-top: 1px solid #DDD;

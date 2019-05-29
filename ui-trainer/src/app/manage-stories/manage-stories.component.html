@@ -33,7 +33,7 @@
                                   <mat-form-field class="intent-textbox">
                                     <input matInput id="intent_text_{{ind}}" (keydown)="handleSpacebar($event)" (blur)="validateIntentInput(ind, $event)" formControlName="value" [matAutocomplete]="intent_auto">
                                     <mat-autocomplete #intent_auto="matAutocomplete" id="intent_auto_complete">
-                                      <mat-option *ngFor="let option of intentsfilteredOptions" (onSelectionChange)="onIntentResponseEntityChange($event, ind, option.intent_name, option.intent_text, 'intent', intent_response_entity_arr[ind])" [value]="option.intent_text">
+                                      <mat-option *ngFor="let option of intentsfilteredOptions" (mousedown)="onIntentResponseEntityChange($event, ind, option.intent_name, option.intent_text, 'intent', intent_response_entity_arr[ind])" [value]="option.intent_text">
                                         <span>{{option.intent_text}}</span> |
                                         <small>Intent: {{option.intent_name}}</small>
                                       </mat-option>
@@ -71,7 +71,7 @@
                                 <mat-form-field class="entity-textbox">
                                   <input type="text" placeholder="Add Entity" (keydown)="handleSpacebar($event)" matInput [formControl]="entityControl" name="intent_entity_{{ind}}" [matAutocomplete]="auto">
                                   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayEntityWith">
-                                    <mat-option *ngFor="let option of entitiesfilteredOptions | async" (onSelectionChange)="onEntityChange($event, ind, intent_response)" [value]="option">
+                                    <mat-option *ngFor="let option of entitiesfilteredOptions | async" (mousedown)="onEntityChange($event, ind, intent_response)" [value]="option">
                                       {{option.entity_name}}:{{option.entity_value}}
                                     </mat-option>
                                   </mat-autocomplete>
@@ -122,7 +122,7 @@
                                   <mat-form-field class="response-textbox">
                                     <input matInput id="response_text_{{ind}}" (keydown)="handleSpacebar($event)" (blur)="validateResponseInput(ind, $event)" formControlName="value" [matAutocomplete]="response_auto">
                                     <mat-autocomplete #response_auto="matAutocomplete" id="response_auto_complete">
-                                      <mat-option *ngFor="let option of responsesfilteredOptions" (onSelectionChange)="onIntentResponseEntityChange($event, ind, option.response_name, option.response_text, 'response', intent_response_entity_arr[ind])" [value]="option.response_text">
+                                      <mat-option *ngFor="let option of responsesfilteredOptions" (mousedown)="onIntentResponseEntityChange($event, ind, option.response_name, option.response_text, 'response', intent_response_entity_arr[ind])" [value]="option.response_text">
                                         <span>{{option.response_text}}</span> |
                                         <small>Response: {{option.response_name}}</small>
                                       </mat-option>

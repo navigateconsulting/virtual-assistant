@@ -89,14 +89,14 @@ export class ManageResponsesComponent implements OnInit {
   }
 
   populateEntities(event: any) {
-    if (event.which === 50) {
+    if (event.which === 50 && event.key === '@') {
       this.showEntityDropdown = true;
       this.readonly = true;
     }
   }
 
   selectEntity(entity: string) {
-    this.new_response_text = this.new_response_text + entity;
+    this.new_response_text = this.new_response_text + entity + ' ';
     this.showEntityDropdown = false;
     this.readonly = false;
   }
