@@ -407,8 +407,24 @@ export class WebSocketService {
     this.socket.emit('join_room', try_now_room);
   }
 
-  tryNowProject(try_now_project_stub: any, try_now_room: string) {
-    this.socket.emit(constant.TRY_NOW_URL, try_now_project_stub, try_now_room);
+  tryNowProject(try_now_project_stub: any) {
+    this.socket.emit(constant.TRY_NOW_URL, try_now_project_stub);
+    return Observable.create((observer) => {
+      this.socket.on(constant.TRY_NOW_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  chatNowProject(chat_now_stub: any) {
+    this.socket.emit(constant.CHAT_NOW_URL, chat_now_stub);
     return Observable.create((observer) => {
       this.socket.on(constant.TRY_NOW_LISTEN, (data) => {
         if (data) {

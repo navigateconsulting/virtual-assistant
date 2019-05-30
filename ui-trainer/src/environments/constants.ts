@@ -78,6 +78,7 @@ export const constant = {
 
     TRY_NOW_NSP: '/trynow',
     TRY_NOW_URL: 'tryNow',
+    CHAT_NOW_URL: 'chatNow',
     TRY_NOW_LISTEN: 'chatResponse',
 
     MODULE_COMMON: 'common',
