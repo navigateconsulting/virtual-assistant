@@ -5,8 +5,9 @@ from rasa.core.agent import Agent
 from __main__ import sio
 from rasa.core.tracker_store import MongoTrackerStore
 from rasa.core.domain import Domain
+import json
 
-agent: "Agent"
+#agent: "Agent"
 loop = None
 session_id = ""
 
@@ -20,14 +21,14 @@ class TryNow:
         self.domain = "domain.yml"
         self.output = "models/"
         self.session_id = ''
-        global agent
+        #self.agent: "Agent"
 
-    def chat_now(self, sid, room_name, data):
-        global agent
+    def chat_now(self, sid, data):
+        #global agent
         global loop
         global session_id
         session_id = sid
-        print("received Data {} room_name {}".format(data, room_name))
+        print("received Data {} form session ID {}".format(data, session_id))
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
@@ -54,16 +55,38 @@ class TryNow:
                                             collection="conversations",
                                             event_broker=None)
         agent = Agent.load(unpacked, tracker_store=_tracker_store)
-        loop.run_until_complete(sio.emit('chatResponse', {"status": "Success", "message": "Ready to chat"}, namespace='/trynow', room=room_name))
+        loop.run_until_complete(sio.emit('chatResponse', {"status": "Success", "message": "Ready to chat"}, namespace='/trynow', room=session_id))
+        print("_________________________________ Session ID after Train{} ___________".format(session_id))
 
+        while True:
+
+            @sio.on('chatNow', namespace='/trynow')
+            async def chat_now(sid_new, message):
+                responses = await agent.handle_text(message, sender_id=sid_new)
+
+                for response in responses:
+                    print("--------- BOT Response {}".format(response))
+                    await sio.emit('chatResponse', response, namespace='/trynow', room_name=sid_new, broadcast=False)
+
+'''
     @sio.on('chatNow', namespace='/trynow')
     async def handle_incoming(self, message):
         global agent
         global loop
         global session_id
+        #loop = asyncio.get_event_loop()
+
+        print("________________________________ Session ID During chat Now {}_______________".format(session_id))
 
         responses = await agent.handle_text(message, sender_id=session_id)
-        for response in responses:
-            print("--------- BOT Response {}".format(response))
-            await sio.emit('chatResponse', response, namespace='/trynow', room_name = session_id)
 
+        if 1 == 1:
+
+            if message == '/restart':
+                await sio.emit('chatResponse', {"receipient_id": session_id, "text": "Bot Restarted"}, namespace='/trynow', room_name=session_id)
+
+            for response in responses:
+                print("--------- BOT Response {}".format(response))
+                await sio.emit('chatResponse', response, namespace='/trynow', room_name=session_id, broadcast=False)
+
+'''
