@@ -1,2 +1,1 @@
-[{"project_id":"5ced111e2497752da640fd82","entity_description":"Test Entity Description","entity_slot":{"type":"categorical","values":["US "," UK "," IND"," CHN"]},"entity_name":"Test_Entity"},
-{"project_id":"5ced111e2497752da640fd82","entity_description":"test_entity","entity_slot":{"type":"text","values":[]},"entity_name":"second_entity"}]
+[{"project_id":"5cee4f33177b9568551dde67","entity_description":"stores location value","entity_slot":{"type":"text","values":[]},"entity_name":"location_value"}]

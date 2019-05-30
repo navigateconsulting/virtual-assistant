@@ -485,13 +485,14 @@ async def update_entity(sid, data, room_name):
     if entities_list is not None:
         await sio.emit('allEntities', entities_list, namespace='/nav', room=room_name)
 
-
+''' This is invoked on TryNow method 
 @sio.on('exportProject', namespace='/train')
 async def export_project(sid, data):
     print("---------- Request from Session {} -- with record {} -- and room  ----------  ".format(sid, data))
 
     result = await ExportProject.main(sid, data)
     print("Result of Export project {}".format(result))
+'''
 
 
 @sio.on('tryNow', namespace='/trynow')

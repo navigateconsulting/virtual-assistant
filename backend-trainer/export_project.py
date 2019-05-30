@@ -1,6 +1,6 @@
 import aiofiles
 import json
-from models import db, DomainsModel, IntentsModel, StoryModel, ResponseModel
+from models import db, DomainsModel, IntentsModel, StoryModel, ResponseModel, EntityModel
 import asyncio
 import os
 import shutil
@@ -16,6 +16,7 @@ class ExportProject:
         self.IntentsModel = IntentsModel()
         self.StoryModel = StoryModel()
         self.ResponseModel = ResponseModel()
+        self.EntityModel = EntityModel()
         self.project_home = ''
         self.project_base_path = '../vol_chatbot_data/temp/trainer-sessions/'
         self.session_id = ''
@@ -24,6 +25,7 @@ class ExportProject:
         self.master_domain_intents = ""
         self.master_domain_actions = ""
         self.master_domain_templates = ""
+        self.master_domain_entities = ""
 
     async def reset_globals(self, sid):
         self.master_nlu = {"rasa_nlu_data": {"common_examples": []}}
@@ -31,6 +33,7 @@ class ExportProject:
         self.master_domain_intents = ""
         self.master_domain_actions = ""
         self.master_domain_templates = ""
+        self.master_domain_entities = ""
         self.session_id = sid
         self.project_home = self.project_base_path + self.session_id
 
@@ -96,6 +99,9 @@ class ExportProject:
         async with aiofiles.open(self.project_home + '/domain.yml', "w") as out:
             await out.write("intents:"+"\n")
             await out.write(self.master_domain_intents + "\n" + "\n")
+
+            await out.write("slots:"+"\n")
+            await out.write(self.master_domain_entities + "\n" + "\n")
 
             await out.write("actions:"+"\n")
             await out.write(self.master_domain_actions + "\n" + "\n")
@@ -177,6 +183,14 @@ class ExportProject:
                 self.master_domain_intents = self.master_domain_intents + "- "+intents['intent_name']+"\n"
             await out.write("\n")
             await out.write("\n")
+
+            # TODO need to add entities and slots
+
+            slots_list = await self.EntityModel.get_entities({"project_id": project_id})
+
+            for slots in slots_list:
+                self.master_domain_entities = self.master_domain_entities+"  "+slots['entity_name']+":"+"\n"
+                self.master_domain_entities = self.master_domain_entities+"    "+"type: "+slots['entity_slot']['type']+"\n"
 
             response_list = await self.ResponseModel.get_responses({"project_id": project_id, "domain_id": domain_id})
 
