@@ -5,43 +5,41 @@
   <div  class="row" style="height: 100vh;">
     <div class="col-md-8 left">
       <div class="user-bot-chat">
-        <div class="row user-message">
-          <div class="col-md-12">
-            <div class="user-box">
-              <div color="white" font-size="4" class="user">M</div>
-            </div>
-            <div class="user-box">
-                <div font-size="2" letter-spacing="0" class="user-chat"><span>hey, how are you ?</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="row bot-message">
-          <div class="col-md-12">
-            <div class="bot-box">
-              <div color="white" font-size="4" class="bot">B</div>
-            </div>
-            <div class="bot-box">
-                <div font-size="2" letter-spacing="0" class="bot-chat"><span>hey, how can i help you ?</span></div>
+        <div *ngFor="let chat of chats; let i = index;">
+          <div *ngIf="chat.type==='user'" class="row user-message">
+            <div class="col-md-12">
+              <div class="user-box">
+                <div color="white" font-size="4" class="user">M</div>
+              </div>
+              <div class="user-box">
+                  <div font-size="2" letter-spacing="0" class="user-chat"><span>{{chat.text}}</span></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row user-message">
-          <div class="col-md-12">
-            <div class="user-box">
-              <div color="white" font-size="4" class="user">M</div>
-            </div>
-            <div class="user-box">
-                <div font-size="2" letter-spacing="0" class="user-chat"><span>tell me the current time</span></div>
+          <div *ngIf="chat.type==='bot'" class="row bot-message">
+            <div class="col-md-12">
+              <div class="bot-box">
+                <div color="white" font-size="4" class="bot">B</div>
+              </div>
+              <div class="bot-box">
+                  <div font-size="2" letter-spacing="0" class="bot-chat"><span>{{chat.text}}</span></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row bot-message">
-          <div class="col-md-12">
-            <div class="bot-box">
-              <div color="white" font-size="4" class="bot">B</div>
-            </div>
-            <div class="bot-box">
-                <div font-size="2" letter-spacing="0" class="bot-chat"><span>Its 3:22 pm</span></div>
+          <div *ngIf="showBotTyping" class="row bot-message">
+            <div class="col-md-12">
+              <div class="bot-box">
+                <div color="white" font-size="4" class="bot">B</div>
+              </div>
+              <div class="bot-box">
+                  <div font-size="2" letter-spacing="0" class="bot-chat">
+                    <span>
+                      <span class="dot"></span>
+                      <span class="dot"></span>
+                      <span class="dot"></span>
+                    </span>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
@@ -52,7 +50,7 @@
           <div class="col-md-9 no-padding">
             <span>
               <mat-form-field class="input-full-width">
-                <input matInput placeholder="Start typing a message">
+                <input matInput [(ngModel)]="userChatMessage" placeholder="Start typing a message">
               </mat-form-field>
             </span>
           </div>
@@ -60,7 +58,7 @@
             <span><mat-icon class="refresh-send-button">refresh</mat-icon></span>
           </div>
           <div class="col-md-1 refresh-send">
-            <span><mat-icon class="refresh-send-button">send</mat-icon></span>
+            <span><mat-icon class="refresh-send-button" (click)="sendChat()">send</mat-icon></span>
           </div>
         </div>
       </div>
