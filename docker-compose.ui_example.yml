@@ -26,11 +26,13 @@ services:
     command: mongod --smallfiles --logpath=/dev/null # --quiet
 
 
-#  backend-trainer:
-#    container_name: backend-trainer
-#    build: './backend-trainer'
-#    ports:
-#      - "8089:8089"
+  backend-trainer:
+    container_name: backend-trainer
+    volumes:
+      - ./vol_chatbot_data:/vol_chatbot_data
+    build: './backend-trainer'
+    ports:
+      - "8089:8089"
 
 
 volumes:
