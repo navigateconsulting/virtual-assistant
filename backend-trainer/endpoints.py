@@ -1,8 +1,7 @@
 from __main__ import sio
 from models import ProjectsModel, DomainsModel, IntentsModel, ResponseModel, StoryModel, EntityModel, RefreshDb
 from export_project import ExportProject
-from threading import Thread
-import asyncio
+from config import CONFIG
 
 
 EntityModel = EntityModel()
@@ -486,14 +485,6 @@ async def update_entity(sid, data, room_name):
     if entities_list is not None:
         await sio.emit('allEntities', entities_list, namespace='/nav', room=room_name)
 
-''' This is invoked on TryNow method 
-@sio.on('exportProject', namespace='/train')
-async def export_project(sid, data):
-    print("---------- Request from Session {} -- with record {} -- and room  ----------  ".format(sid, data))
-
-    result = await ExportProject.main(sid, data)
-    print("Result of Export project {}".format(result))
-'''
 
 from __main__ import socketio
 
@@ -507,15 +498,14 @@ class TryNow(socketio.AsyncNamespace):
         result = await ExportProject.main(sid, data)
         print(result)
 
-        import rasa
         import rasa.model as model
         from rasa.core.agent import Agent
         from rasa.core.tracker_store import MongoTrackerStore
         from rasa.core.domain import Domain
         from rasa.train import train_async
-        #import asyncio
 
-        base_path = '../vol_chatbot_data/temp/trainer-sessions/'
+        #base_path = '../vol_chatbot_data/temp/trainer-sessions/'
+        base_path = CONFIG.get('backend-trainer', 'SESSION_MODEL_PATH')
         config = "config.yml"
         training_files = "data/"
         domain = "domain.yml"
@@ -532,14 +522,15 @@ class TryNow(socketio.AsyncNamespace):
         unpacked = model.get_model(model_path)
         domain = Domain.load(domain)
         _tracker_store = MongoTrackerStore(domain=domain,
-                                           host="mongodb://localhost:27017",
-                                           db="eva_platform",
+                                           host=CONFIG.get('backend-trainer', 'MONGODB_URL'),
+                                           db=CONFIG.get('backend-trainer', 'MONGODB_NAME'),
                                            username=None,
                                            password=None,
                                            auth_source="admin",
                                            collection="conversations",
                                            event_broker=None)
         self.agent = Agent.load(unpacked, tracker_store=_tracker_store)
+        await sio.emit('chatResponse', {"status": "Success", "message": "Ready to chat"}, namespace='/trynow', room=sid)
 
     async def on_chatNow(self, sid, message):
 
@@ -548,73 +539,7 @@ class TryNow(socketio.AsyncNamespace):
 
         for response in responses:
             print("--------- BOT Response {}".format(response))
-            await sio.emit('chatResponse', response, namespace='/trynowTest', room_name=sid)
+            await sio.emit('chatResponse', response, namespace='/trynow', room=sid)
 
 
-sio.register_namespace(TryNow('/trynowTest'))
-
-
-'''
-@sio.on('tryNow', namespace='/trynow')
-async def try_now(sid, data):
-
-    print("----------- Inside Try now --from SID {}--------------".format(sid))
-    result = await ExportProject.main(sid, data)
-    print(result)
-    #from try_now import TryNow
-    #room_name = "TEST"
-    #trynow = TryNow()
-    #worker = Thread(target=trynow.chat_now, args=(sid, data,))
-    #worker.start()
-
-    import rasa
-    import rasa.model as model
-    from rasa.core.agent import Agent
-    from rasa.core.tracker_store import MongoTrackerStore
-    from rasa.core.domain import Domain
-    import asyncio
-
-    base_path = '../vol_chatbot_data/temp/trainer-sessions/'
-    config = "config.yml"
-    training_files = "data/"
-    domain = "domain.yml"
-    output = "models/"
-
-    base_path = base_path + sid + "/"
-
-    config = base_path + config
-    training_files = base_path + training_files
-    domain = base_path + domain
-    output = base_path + output
-
-    model_path = rasa.train(domain, config, [training_files], output)
-    unpacked = model.get_model(model_path)
-    domain = Domain.load(domain)
-    _tracker_store = MongoTrackerStore(domain=domain,
-                                       host="mongodb://localhost:27017",
-                                       db="eva_platform",
-                                       username=None,
-                                       password=None,
-                                       auth_source="admin",
-                                       collection="conversations",
-                                       event_broker=None)
-    agent = Agent.load(unpacked, tracker_store=_tracker_store)
-
-    #loop=asyncio.get_event_loop()
-
-    #loop.run_forever(chat_now())
-
-    while True:
-
-        await asyncio.sleep(3)
-        print("inside While loop ")
-        @sio.on('chatNow', namespace='/trynow')
-        async def chat_now(sid_new, message):
-            print("inside method ")
-            responses = await agent.handle_text(message, sender_id=sid_new)
-
-            for response in responses:
-                print("--------- BOT Response {}".format(response))
-                await sio.emit('chatResponse', response, namespace='/trynow', room_name=sid_new, broadcast=False)
-
-'''
+sio.register_namespace(TryNow('/trynow'))
