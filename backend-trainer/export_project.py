@@ -4,9 +4,10 @@ from models import db, DomainsModel, IntentsModel, StoryModel, ResponseModel, En
 import asyncio
 import os
 import shutil
-
+from config import CONFIG
 
 # TODO Do files need to be split by domain ? or combine them under common files after chcking if domain is to be exported or not
+
 
 # noinspection PyMethodMayBeStatic
 class ExportProject:
@@ -18,7 +19,8 @@ class ExportProject:
         self.ResponseModel = ResponseModel()
         self.EntityModel = EntityModel()
         self.project_home = ''
-        self.project_base_path = '../vol_chatbot_data/temp/trainer-sessions/'
+        #self.project_base_path = '../vol_chatbot_data/temp/trainer-sessions/'
+        self.project_base_path=CONFIG.get('backend-trainer', 'SESSION_MODEL_PATH')
         self.session_id = ''
         self.master_nlu = {"rasa_nlu_data": {"common_examples": []}}
         self.master_stories = ""
