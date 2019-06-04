@@ -2,6 +2,7 @@ from bson.json_util import dumps
 import json
 from bson.objectid import ObjectId
 from database import ConDatabase
+from config import CONFIG
 
 
 '''motor Mongo Db connection '''
@@ -17,7 +18,7 @@ class RefreshDb:
 
         # Setting source data paths
 
-        seed_data_path = '../vol_chatbot_data/seed_data/'
+        seed_data_path = CONFIG.get('backend-trainer', 'SEED_DATA_PATH')
 
         # Cleaning up collections
         await db.entities.delete_many({})
