@@ -426,6 +426,7 @@ export class WebSocketService {
   chatNowProject(chat_now_stub: any) {
     this.socket.emit(constant.CHAT_NOW_URL, chat_now_stub);
     return Observable.create((observer) => {
+      this.socket['_callbacks']['$chatResponse'] = [];
       this.socket.on(constant.TRY_NOW_LISTEN, (data) => {
         if (data) {
           observer.next(data);

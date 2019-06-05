@@ -5,6 +5,8 @@ import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
 import { Chats } from '../common/models/chats';
 
+declare var adjustTryNowScroll: Function;
+
 @Component({
   selector: 'app-try-now',
   templateUrl: './try-now.component.html',
@@ -41,17 +43,20 @@ export class TryNowComponent implements OnInit, OnDestroy {
   }
 
   sendChat() {
-    this.chats.push({text: this.userChatMessage, type: 'user'});
-    this.showBotTyping = true;
-    this.webSocketService.chatNowProject(this.userChatMessage).subscribe(response => {
-      if (response) {
-        this.showBotTyping = false;
-        this.chats.push({text: response.text, type: 'bot'});
-      }
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
-    this.userChatMessage = '';
+    if (this.userChatMessage.trim() !== '') {
+      this.chats.push({text: this.userChatMessage, type: 'user'});
+      this.showBotTyping = true;
+      this.webSocketService.chatNowProject(this.userChatMessage).subscribe(response => {
+        if (response) {
+          this.showBotTyping = false;
+          this.chats.push({text: response.text, type: 'bot'});
+          adjustTryNowScroll();
+        }
+      },
+      err => console.error('Observer got an error: ' + err),
+      () => console.log('Observer got a complete notification'));
+      this.userChatMessage = '';
+    }
   }
 
   ngOnDestroy(): void {

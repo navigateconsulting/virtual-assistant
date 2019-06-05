@@ -1,31 +1,46 @@
 @import '../../../scss/styles';
 
-.example-container {
-    height: 100%;
-}
 .material-icons {
     cursor: pointer;
 }
 .header {
-    background-color: #173962;
+    background-color: #383838;
     overflow: hidden;
+    height: 75px;
+}
+.eva-logo-div {
+    background-color: #000;
+    width: 135px;
+    height: 100%;
+}
+.logo-div {
+    position: relative;
+    height: 100%;
+}
+.logo-div img {
+    height: 35px;
+    width: 77px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .side_header_logo_div {
     float: left;
     padding: 0.3%;
 }
-.side_header_logo {
-    height: 45px;
-    width: 45px;
-    background-color: #E3DFD9;
-    border-radius: 10%;
-    display: inline-block;
-}
-.side_header_logo_img {
-    height: 40px;
-    width: 40px;
-    display: inline-block;
-}
+// .side_header_logo {
+//     // height: 45px;
+//     // width: 45px;
+//     // background-color: #E3DFD9;
+//     // border-radius: 10%;
+//     // display: inline-block;
+// }
+// .side_header_logo_img {
+//     height: 35px;
+//     width: 77px;
+//     display: inline-block;
+// }
 .header-right {
     float: right;
     width: 10%;

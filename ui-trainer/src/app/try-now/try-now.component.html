@@ -26,7 +26,7 @@
               </div>
             </div>
           </div>
-          <div *ngIf="showBotTyping" class="row bot-message">
+          <!-- <div *ngIf="showBotTyping" class="row bot-message">
             <div class="col-md-12">
               <div class="bot-box">
                 <div color="white" font-size="4" class="bot">B</div>
@@ -41,7 +41,7 @@
                   </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="type-message">
@@ -50,7 +50,7 @@
           <div class="col-md-9 no-padding">
             <span>
               <mat-form-field class="input-full-width">
-                <input matInput [(ngModel)]="userChatMessage" placeholder="Start typing a message">
+                <input matInput [(ngModel)]="userChatMessage" placeholder="Start typing a message" (keydown.enter)="sendChat()">
               </mat-form-field>
             </span>
           </div>
