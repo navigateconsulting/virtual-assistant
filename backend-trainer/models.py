@@ -368,14 +368,28 @@ class IntentsModel:
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
 
-        result = await db.intents.delete_one(query)
-        print("Intent deleted successfully {}".format(result))
-        message = {"status": "Success", "message": "Intent deleted successfully "}
+        # Query to check intent   - {"story": {$elemMatch: {"key": "greet" }}}
 
-        get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        intents_list = await self.get_intents(get_intents)
+        # check if intent exists in any story
 
-        return message, intents_list
+        intent_detail = await db.intents.find_one(query)
+
+        exists = await db.stories.find_one({"story": {"$elemMatch": {"key": intent_detail['intent_name']}}})
+
+        if exists is None:
+
+            result = await db.intents.delete_one(query)
+            print("Intent deleted successfully {}".format(result))
+            message = {"status": "Success", "message": "Intent deleted successfully "}
+
+            get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            intents_list = await self.get_intents(get_intents)
+
+            return message, intents_list
+        else:
+
+            message = {"status": "Error", "message": "Intent is used in a story cannot delete this intent"}
+            return message, None
 
     async def update_intent(self, record):
 
@@ -508,13 +522,23 @@ class ResponseModel:
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
 
-        result = await db.responses.delete_one(query)
-        print("Response Deleted count {}".format(result))
+        # check if response exists in any story
 
-        get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        responses_list = await self.get_responses(get_responses)
+        response_detail = await db.responses.find_one(query)
 
-        return {"status": "Success", "message": "Response Deleted successfully"}, responses_list
+        exists = await db.stories.find_one({"story": {"$elemMatch": {"key": response_detail['response_name']}}})
+
+        if exists is None:
+
+            result = await db.responses.delete_one(query)
+            print("Response Deleted count {}".format(result))
+
+            get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            responses_list = await self.get_responses(get_responses)
+
+            return {"status": "Success", "message": "Response Deleted successfully"}, responses_list
+        else:
+            return {"status": "Error", "message": "Response exists in story cannot delete response"}, None
 
     async def update_response(self, record):
 
@@ -787,13 +811,29 @@ class EntityModel:
         json_record = json.loads(json.dumps(record))
 
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        result = await db.entities.delete_one(query)
-        print("Entity Deleted count {}".format(result))
 
-        get_entities = {"project_id": json_record['project_id']}
-        entities_list = await self.get_entities(get_entities)
+        # check if entity is used in any Intent
+        # {"text_entities": {"$elemMatch":  {"entities.entity": "location_value"} }}
 
-        return {"status": "Success", "message": "Entity deleted successfully"}, entities_list
+        entity_detail = await db.entities.find_one(query)
+
+        res = await db.intents.find_one({"text_entities": {"$elemMatch":  {"entities.entity": entity_detail['entity_name']}}})
+
+        res2 = await db.responses.find_one({"text_entities": "/"+entity_detail['entity_name']+"/"})
+
+        if res is None and res2 is None:
+
+            result = await db.entities.delete_one(query)
+            print("Entity Deleted count {}".format(result))
+
+            get_entities = {"project_id": json_record['project_id']}
+            entities_list = await self.get_entities(get_entities)
+
+            return {"status": "Success", "message": "Entity deleted successfully"}, entities_list
+        elif res is None:
+            return {"status": "Success", "message": "Unable to delete entity , its used in an Response"}, None
+        else:
+            return {"status": "Success", "message": "Unable to delete entity , its used in an Intent"}, None
 
     async def update_entity(self, record):
 

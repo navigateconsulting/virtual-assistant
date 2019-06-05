@@ -186,8 +186,6 @@ class ExportProject:
             await out.write("\n")
             await out.write("\n")
 
-            # TODO need to add entities and slots
-
             slots_list = await self.EntityModel.get_entities({"project_id": project_id})
 
             for slots in slots_list:
