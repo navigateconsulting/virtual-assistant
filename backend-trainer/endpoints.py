@@ -1,5 +1,5 @@
 from __main__ import sio
-from models import ProjectsModel, DomainsModel, IntentsModel, ResponseModel, StoryModel, EntityModel, RefreshDb
+from models import ProjectsModel, DomainsModel, IntentsModel, ResponseModel, StoryModel, EntityModel, RefreshDb, RasaConversations
 from export_project import ExportProject
 from config import CONFIG
 
@@ -12,7 +12,7 @@ ResponseModel = ResponseModel()
 StoryModel = StoryModel()
 ExportProject = ExportProject()
 RefreshDb = RefreshDb()
-
+RasaConversations = RasaConversations()
 
 @sio.on('connect')
 async def connect(sid, environ):
@@ -537,8 +537,11 @@ class TryNow(socketio.AsyncNamespace):
         print("inside chat now")
         responses = await self.agent.handle_text(message, sender_id=sid)
 
+        result = await RasaConversations.get_conversations(sid)
+
         for response in responses:
             print("--------- BOT Response {}".format(response))
+            response['tracker-store'] = result
             await sio.emit('chatResponse', response, namespace='/trynow', room=sid)
 
 

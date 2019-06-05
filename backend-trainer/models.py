@@ -11,6 +11,16 @@ db = ConDatabase.connect()
 
 
 # noinspection PyMethodMayBeStatic
+class RasaConversations:
+
+    async def get_conversations(self, sender_id):
+        print("Pulling tracker data for a conversation")
+
+        result = await db.conversations.find_one({"sender_id": sender_id})
+        return json.loads(dumps(result))
+
+
+# noinspection PyMethodMayBeStatic
 class RefreshDb:
 
     async def refresh_db(self):
