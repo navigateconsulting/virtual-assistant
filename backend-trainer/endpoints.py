@@ -2,6 +2,7 @@ from __main__ import sio
 from models import ProjectsModel, DomainsModel, IntentsModel, ResponseModel, StoryModel, EntityModel, RefreshDb, RasaConversations
 from export_project import ExportProject
 from config import CONFIG
+import os
 
 
 EntityModel = EntityModel()
@@ -477,8 +478,11 @@ async def update_entity(sid, data, room_name):
     if entities_list is not None:
         await sio.emit('allEntities', entities_list, namespace='/nav', room=room_name)
 
+# End points for Training
+
 
 from __main__ import socketio
+#from __main__ import aiohttp
 
 
 class TryNow(socketio.AsyncNamespace):
@@ -487,7 +491,7 @@ class TryNow(socketio.AsyncNamespace):
 
     async def on_tryNow(self, sid, data):
         print("----------- Inside Try now --from SID {}--------------".format(sid))
-        result = await ExportProject.main(sid, data)
+        result = await ExportProject.main(sid, data, 'SESSION')
         print(result)
 
         import rasa.model as model
@@ -496,7 +500,6 @@ class TryNow(socketio.AsyncNamespace):
         from rasa.core.domain import Domain
         from rasa.train import train_async
 
-        #base_path = '../vol_chatbot_data/temp/trainer-sessions/'
         base_path = CONFIG.get('backend-trainer', 'SESSION_MODEL_PATH')
         config = "config.yml"
         training_files = "data/"
@@ -538,3 +541,60 @@ class TryNow(socketio.AsyncNamespace):
 
 
 sio.register_namespace(TryNow('/trynow'))
+
+# Endpoints for Model Publishing and Final training
+
+
+class ModelPublish(socketio.AsyncNamespace):
+
+    async def on_getDashboard(self, sid):
+
+        result = await ProjectsModel.get_projects()
+        await sio.emit('respModelPublish', result, namespace='/modelpublish')
+
+    async def on_trainModel(self, sid, project_id):
+
+        # export model to rasa folder
+        result = await ExportProject.main(sid, project_id, 'DEPLOY')
+
+        from rasa.train import train_async
+        import aiohttp
+
+        print(result)
+
+        base_path = CONFIG.get('backend-trainer', 'DEPLOY_MODEL_PATH')
+        config = "config.yml"
+        training_files = "data/"
+        domain = "domain.yml"
+        output = "models/"
+
+        base_path = base_path + project_id + "/"
+
+        config = base_path + config
+        training_files = base_path + training_files
+        domain = base_path + domain
+        output = base_path + output
+
+        model_path = await train_async(domain, config, [training_files], output)
+
+        # Upload model to Rasa Server
+
+        model_name = os.path.basename(model_path)
+        load_model_path = "/app/models/"+project_id+"/models/"+model_name
+
+        async with aiohttp.ClientSession() as session:
+            async with session.put('http://localhost:5005/model',
+                                   data={"model_file": load_model_path},
+                                   headers={'content-type': 'application/json'}) as resp:
+                print(resp)
+
+        result = await ProjectsModel.update_project_model({"object_id": str(project_id),
+                                                           "model_name": model_name,
+                                                           "state": "Published"})
+
+        await sio.emit('publishMessage', {"status": "Success", "message": "Model Published successfully"}, namespace='/modelpublish')
+        result = await ProjectsModel.get_projects()
+        await sio.emit('respModelPublish', result, namespace='/modelpublish')
+
+
+sio.register_namespace(ModelPublish('/modelpublish'))
