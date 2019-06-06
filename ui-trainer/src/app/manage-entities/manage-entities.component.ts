@@ -61,7 +61,6 @@ export class ManageEntitiesComponent implements OnInit {
         if (entity_details) {
           if (Object.keys(entity_details).length !== 0) {
             entity_details['entity_name'] = value.trim();
-            console.log(entity_details);
             this.entities_service.createEntity(entity_details);
           }
         }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { constant } from '../../../environments/constants';
-import io from 'socket.io-client';
+import * as io from 'socket.io-client';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import io from 'socket.io-client';
 export class WebSocketService {
 
   private url = environment.BASEURL;
-  private socket: SocketIOClient.Socket;
+  private socket: any;
 
   constructor() {
     this.socket = io(this.url);
@@ -438,5 +438,44 @@ export class WebSocketService {
         this.socket.disconnect();
       };
     });
+  }
+
+  createProjectDeployNSP() {
+    this.socket.nsp = constant.PROJECT_DEPLOY_NSP;
+  }
+
+  getProjectsForDeploy() {
+    this.socket.emit(constant.PROJECT_DEPLOY_URL);
+    return Observable.create((observer) => {
+      this.socket.on(constant.PROJECT_DEPLOY_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  getModelDeployAlerts() {
+    return Observable.create((observer) => {
+      this.socket.on(constant.MODEL_DEPLOY_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable to reach the server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  deployModel(projectObjectId: string) {
+    this.socket.emit(constant.MODEL_DEPLOY_URL, projectObjectId);
   }
 }

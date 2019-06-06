@@ -25,7 +25,8 @@ export class AddProjectComponent implements OnInit {
       this.dialogRef.close({
         project_name: this.newProjectForm.value.projectName,
         project_description: this.newProjectForm.value.projectDescription,
-        status: '0',
+        model_name: '',
+        state: '',
         created_by: 'trainer',
         source: '-'
       });

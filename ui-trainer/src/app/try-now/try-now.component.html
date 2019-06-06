@@ -6,7 +6,14 @@
     <div class="col-md-8 left">
       <div class="user-bot-chat">
         <div *ngFor="let chat of chats; let i = index;">
-          <div *ngIf="chat.type==='user'" class="row user-message">
+          <div *ngIf="chat.event==='action'" class="row action-message" id="chat-{{i}}" (click)="selectRowIndex(i)">
+            <div class="col-md-12">
+              <div class="action-box">
+                <p class="action-chat">{{chat.name}}</p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="chat.event==='user'" class="row user-message" id="chat-{{i}}" (click)="selectRowIndex(i)">
             <div class="col-md-12">
               <div class="user-box">
                 <div color="white" font-size="4" class="user">M</div>
@@ -14,9 +21,12 @@
               <div class="user-box">
                   <div font-size="2" letter-spacing="0" class="user-chat"><span>{{chat.text}}</span></div>
               </div>
+              <div class="user-intent-box">
+                <p class="user-intent">{{chat.parse_data.intent.name}}</p>
+              </div>
             </div>
           </div>
-          <div *ngIf="chat.type==='bot'" class="row bot-message">
+          <div *ngIf="chat.event==='bot'" class="row bot-message" id="chat-{{i}}" (click)="selectRowIndex(i)">
             <div class="col-md-12">
               <div class="bot-box">
                 <div color="white" font-size="4" class="bot">B</div>
@@ -26,22 +36,6 @@
               </div>
             </div>
           </div>
-          <!-- <div *ngIf="showBotTyping" class="row bot-message">
-            <div class="col-md-12">
-              <div class="bot-box">
-                <div color="white" font-size="4" class="bot">B</div>
-              </div>
-              <div class="bot-box">
-                  <div font-size="2" letter-spacing="0" class="bot-chat">
-                    <span>
-                      <span class="dot"></span>
-                      <span class="dot"></span>
-                      <span class="dot"></span>
-                    </span>
-                  </div>
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
       <div class="type-message">
@@ -55,7 +49,7 @@
             </span>
           </div>
           <div class="col-md-1 text-right refresh-send">
-            <span><mat-icon class="refresh-send-button">refresh</mat-icon></span>
+            <span><mat-icon class="refresh-send-button" (click)="sendChat('/restart')">refresh</mat-icon></span>
           </div>
           <div class="col-md-1 refresh-send">
             <span><mat-icon class="refresh-send-button" (click)="sendChat()">send</mat-icon></span>
@@ -64,46 +58,72 @@
       </div>
     </div>
     <div class="col-md-4 right">
-      <mat-card class="example-card">
+      <mat-card *ngIf="showUserBotCardDetails" class="user-bot-card">
         <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>Hey there</mat-card-title>
-          <mat-card-subtitle>2:02 pm</mat-card-subtitle>
+          <div mat-card-avatar color="white" font-size="4" class="bot">{{userBotCardType}}</div>
+          <mat-card-title>{{userBotCardText}}</mat-card-title>
+          <mat-card-subtitle>
+            {{userBotCardTime | date : 'shortTime'}} <span *ngIf="userBotCardIntent!==''">|</span> {{userBotCardIntent}} <span *ngIf="userBotCardConfidence!==''">|</span> {{userBotCardConfidence}}
+          </mat-card-subtitle>
         </mat-card-header>
       </mat-card>
+      <br />
       <mat-accordion>
-        <mat-expansion-panel>
+        <mat-expansion-panel [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              Annotate
+              <b>Story till now</b>
             </mat-panel-title>
           </mat-expansion-panel-header>
-      
-          <mat-form-field>
-            <input matInput placeholder="First name">
-          </mat-form-field>
+          <div class="story-box">
+            <div class="story-conversation-box">
+              <code *ngIf="!storyCode" class="story-conversation-code">No story yet</code>
+              <code *ngIf="storyCode" class="story-conversation-code">
+                <pre style="margin: 0px;">## Story from conversation with me</pre>
+                <span *ngFor="let code of storyCode;">
+                    <pre *ngIf="code.event==='user'" style="margin: 0px;">* {{code.parse_data.intent.name}}</pre>
+                    <pre *ngIf="code.event==='action' && code.name!=='action_listen'" style="margin: 0px;">    - {{code.name}}</pre>
+                </span>
+              </code>
+            </div>
+          </div>
         </mat-expansion-panel>
-        <mat-expansion-panel>
+      </mat-accordion>
+      <br />
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              Story till now
+              <b>Predictions for message: <span *ngIf="predictions">{{predictions.text}}</span></b>
             </mat-panel-title>
           </mat-expansion-panel-header>
-      
-          <mat-form-field>
-            <input matInput placeholder="First name">
-          </mat-form-field>
+          <table *ngIf="predictions && showUserPredictionsDetails" class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Intent</th>
+                <th scope="col">Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let prediction of predictions.intent_ranking;">
+                <th scope="row">{{prediction.name}}</th>
+                <td>{{prediction.confidence}}</td>
+              </tr>
+            </tbody>
+          </table>
         </mat-expansion-panel>
-        <mat-expansion-panel>
+      </mat-accordion>
+      <br />
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              Slots
+              <b>Slots</b>
             </mat-panel-title>
           </mat-expansion-panel-header>
-      
-          <mat-form-field>
-            <input matInput placeholder="First name">
-          </mat-form-field>
+            <div *ngFor="let slot of slots | keyvalue">
+              <span *ngIf="slot.value">Key: <b>{{slot.key}}</b> & Value: <b>{{slot.value}}</b></span>
+            </div>
         </mat-expansion-panel>
       </mat-accordion>
     </div>

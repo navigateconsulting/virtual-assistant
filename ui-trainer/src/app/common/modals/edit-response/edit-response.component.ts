@@ -16,7 +16,7 @@ export class EditResponseComponent implements OnInit {
 
   ngOnInit() {
     this.editResponseForm = new FormGroup({
-      responseName: new FormControl(this.data.responseName, Validators.required),
+      responseName: new FormControl({value: this.data.responseName, disabled: true}, Validators.required),
       responseDescription: new FormControl(this.data.responseDescription, Validators.required)
     });
   }

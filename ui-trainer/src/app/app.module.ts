@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import bootstrap from 'bootstrap';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -16,9 +18,7 @@ import { HeaderComponent } from './common/header/header.component';
 import { HomeComponent } from './home/home.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ManageDomainsComponent } from './manage-domains/manage-domains.component';
-import { FileExplorerModule } from './file-explorer/file-explorer.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FileService } from './common/services/file.service';
 import { ManageEntitiesComponent } from './manage-entities/manage-entities.component';
 import { ManageIntentsComponent } from './manage-intents/manage-intents.component';
 import { AddEntityComponent } from './common/modals/add-entity/add-entity.component';
@@ -51,6 +51,8 @@ import { EditStoryComponent } from './common/modals/edit-story/edit-story.compon
 import { DeleteStoryComponent } from './common/modals/delete-story/delete-story.component';
 import { ToastrModule } from 'ng6-toastr-notifications';
 import { TryNowComponent } from './try-now/try-now.component';
+import { DeployComponent } from './deploy/deploy.component';
+import { DeployModelComponent } from './common/modals/deploy-model/deploy-model.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +92,8 @@ import { TryNowComponent } from './try-now/try-now.component';
     EditStoryComponent,
     DeleteStoryComponent,
     TryNowComponent,
+    DeployComponent,
+    DeployModelComponent,
   ],
   entryComponents: [
     AddEntityComponent,
@@ -112,6 +116,7 @@ import { TryNowComponent } from './try-now/try-now.component';
     AddStoryComponent,
     EditStoryComponent,
     DeleteStoryComponent,
+    DeployModelComponent
   ],
   imports: [
     BrowserModule,
@@ -122,11 +127,10 @@ import { TryNowComponent } from './try-now/try-now.component';
     ReactiveFormsModule,
     HttpClientModule,
     DragDropModule,
-    FileExplorerModule,
     FlexLayoutModule,
     ToastrModule.forRoot()
   ],
-  providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}, FileService, EntitiesDataService],
+  providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}, EntitiesDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

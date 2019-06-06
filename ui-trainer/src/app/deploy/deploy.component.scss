@@ -1,0 +1,36 @@
+.models-container {
+    padding: 2%;
+    overflow-y: auto;
+    height: 600px;
+}
+table {
+    width: 100%;
+}
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+.mat-column-icon{
+    width: 5%;
+}
+.mat-column-project_name{
+    width: 25%;
+}
+.mat-column-source {
+    width: 25%;
+}
+.mat-column-model_name {
+    width: 25%;
+}
+.mat-column-state {
+    width: 15%;
+}
+.mat-column-deploy {
+    width: 5%;
+}
+.mat-row:hover {
+    background-color: #eee;
+}
+.deploy {
+    cursor: pointer;
+}

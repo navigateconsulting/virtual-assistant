@@ -17,19 +17,50 @@
 }
 
 .user-bot-chat {
-	height: 81%;
+	height: 82%;
 	width: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
 
-.user-message, .bot-message {
-	padding: 3%;
+.action-message, .user-message, .bot-message {
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
+}
+
+.action-box {
+    box-sizing: border-box;
+    padding-left: 55px;
+    padding-right: 55px;
+	float: left;
+}
+
+.action-chat {
+    box-sizing: border-box;
+    font-size: 11px;
+    color: rgb(151, 159, 180);
+    font-weight: 400;
+    line-height: 12px;
+    letter-spacing: 0.6px;
+    display: inline-block;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    margin: 0px;
+    overflow: hidden;
 }
 
 .user-box {
 	box-sizing: border-box;
 	float: right;
+}
+
+.user-intent-box {
+    box-sizing: border-box;
+    clear: both;
+    text-align: right;
+    padding-right: 55px;
 }
 
 .user {
@@ -65,6 +96,20 @@
     border-radius: 20px 4px 20px 20px;
 }
 
+.user-intent {
+    box-sizing: border-box;
+    font-size: 11px;
+    color: rgb(151, 159, 180);
+    font-weight: 400;
+    line-height: 12px;
+    letter-spacing: 0.6px;
+    display: inline-block;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    margin: 0px;
+    overflow: hidden;
+}
+
 .bot-box {
 	box-sizing: border-box;
 	float: left;
@@ -96,7 +141,7 @@
     padding-bottom: 8px;
     font-size: 13px;
     color: rgb(0, 0, 0);
-    background-color: rgb(236, 239, 247);
+    background-color: #DCDCDC;
     max-width: 408px;
     letter-spacing: 0.6px;
     line-height: 20px;
@@ -105,7 +150,7 @@
 
 .type-message {
 	position:absolute;
-	height: 19%;
+	height: 18%;
 	bottom: 0;
 	width: 100%;
 	border-top: 1px solid #DDD;
@@ -147,46 +192,47 @@
 .refresh-send-button {
 	color: #AAA;
 }
-
-.dot {
-    display:inline-block;
-    width:3px;
-    height:3px;
-    border-radius:50%;
-    margin-right:3px;
-    background:#000;
-    animation: wave 1.3s linear infinite;
-
-    &:nth-child(2) {
-        animation-delay: -1.1s;
-    }
-
-    &:nth-child(3) {
-        animation-delay: -0.9s;
-    }
-}
-
-@keyframes wave {
-	0%, 60%, 100% {
-		transform: initial;
-	}
-
-	30% {
-		transform: translateY(-15px);
-	}
-}
   
 /* Control the right side */
 .right {
-	padding: 0;
+    padding: 0;
+    height: 90%;
+    overflow-y: auto;
 }
 
-.example-card {
+.user-bot-card {
 	width: 100%;
 	height: 80px;
 }
 
-.example-header-image {
-	background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-	background-size: cover;
+.story-box {
+    box-sizing: border-box;
+}
+
+.story-conversation-box {
+    box-sizing: border-box;
+    background-color: rgb(246, 247, 251);
+    box-shadow: rgba(34, 36, 38, 0.15) 0px 1px 2px 0px;
+    position: relative;
+    padding: 1em;
+    border-width: 1px;
+    border-style: solid;
+    border-image: initial;
+    border-color: rgb(206, 213, 231);
+    border-radius: 8px;
+}
+
+.story-conversation-code {
+    box-sizing: border-box;
+    font-size: 12px;
+    color: rgb(37, 45, 64);
+    font-family: "IBM Plex Mono";
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.6px;
+    display: inline-block;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    margin: 0px;
+    overflow: hidden;
 }

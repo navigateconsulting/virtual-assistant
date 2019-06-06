@@ -30,7 +30,6 @@ export class ManageTrainerComponent implements OnInit {
     this.setComponent = 'manage-projects';
     this.showPropertyPanel = false;
     this.loadTryNow = false;
-    // this.router.navigate(['/trainer/try-now']);
   }
 
   projectSelected($event: any) {
