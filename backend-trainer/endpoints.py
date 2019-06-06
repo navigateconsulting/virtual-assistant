@@ -14,6 +14,7 @@ ExportProject = ExportProject()
 RefreshDb = RefreshDb()
 RasaConversations = RasaConversations()
 
+
 @sio.on('connect')
 async def connect(sid, environ):
     print('connect ', sid)
@@ -158,24 +159,6 @@ async def update_domains(sid, data, room_name):
     if domains_list is not None:
         await sio.emit('allDomains', domains_list, namespace='/domain', room=room_name)
 
-
-@sio.on('importDomain', namespace='/domain')
-async def import_domains(sid, data, room_name):
-
-    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
-
-    # TODO
-    await sio.emit('domainResponse', "Message", room=sid, namespace='/domain')
-
-
-@sio.on('updateDomainStatus', namespace='/domain')
-async def update_domains_status(sid, data, room_name):
-
-    print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
-    # TODO
-    await sio.emit('domainResponse', "Message", room=sid, namespace='/domain')
-
-
 # intents Endpoint
 
 
@@ -206,8 +189,11 @@ async def delete_intent(sid, data, room_name):
 
     message, intents_list = await IntentsModel.delete_intent(data)
 
-    await sio.emit('intentResponse', message, namespace='/dashboard', room=sid)
-    await sio.emit('allIntents', intents_list, namespace='/dashboard', room=room_name)
+    if intents_list is not None:
+        await sio.emit('intentResponse', message, namespace='/dashboard', room=sid)
+        await sio.emit('allIntents', intents_list, namespace='/dashboard', room=room_name)
+    else:
+        await sio.emit('intentResponse', message, namespace='/dashboard', room=sid)
 
 
 @sio.on('updateIntent', namespace='/dashboard')
@@ -293,8 +279,12 @@ async def delete_response(sid, data, room_name):
 
     message, responses_list = await ResponseModel.delete_response(data)
 
-    await sio.emit('respResponse', message, namespace='/dashboard', room=sid)
-    await sio.emit('allResponses', responses_list, namespace='/dashboard', room=room_name)
+    if responses_list is not None:
+
+        await sio.emit('respResponse', message, namespace='/dashboard', room=sid)
+        await sio.emit('allResponses', responses_list, namespace='/dashboard', room=room_name)
+    else:
+        await sio.emit('respResponse', message, namespace='/dashboard', room=sid)
 
 
 @sio.on('updateResponse', namespace='/dashboard')
@@ -472,7 +462,9 @@ async def delete_entity(sid, data, room_name):
     message, entities_list = await EntityModel.delete_entity(data)
 
     await sio.emit('entitiesResponse', message, namespace='/nav', room=sid)
-    await sio.emit('allEntities', entities_list, namespace='/nav', room=room_name)
+
+    if entities_list is not None:
+        await sio.emit('allEntities', entities_list, namespace='/nav', room=room_name)
 
 
 @sio.on('updateEntity', namespace='/nav')
