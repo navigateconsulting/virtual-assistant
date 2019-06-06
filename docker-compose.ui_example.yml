@@ -25,6 +25,30 @@ services:
       - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
 
+  rasa:
+    image: rasa/rasa:latest-full
+    ports:
+      - 5005:5005
+    volumes:
+    - "./vol_chatbot_data/rasa/server/models:/app/models"
+    - "./vol_chatbot_data/rasa/server/config:/app/config"
+    - "./vol_chatbot_data/rasa/server/project:/app/project"
+    - "./vol_chatbot_data/rasa/server/projects:/app/projects"
+    - "./vol_chatbot_data/rasa/server/logs:/app/logs"
+    - "./vol_chatbot_data/rasa/server/data:/app/data"
+    command:
+    - run
+    - -m
+    - ./models
+    - --enable-api
+
+  action_server:
+    image: rasa/rasa-sdk:latest
+    ports:
+    - "5055:5055"
+    volumes:
+    - "./vol_chatbot_data/rasa/server/actions:/app/actions"
+
 
   backend-trainer:
     container_name: backend-trainer
@@ -33,7 +57,6 @@ services:
     build: './backend-trainer'
     ports:
       - "8089:8089"
-
 
 volumes:
   skype_keys_vol:
