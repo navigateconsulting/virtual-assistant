@@ -16,7 +16,7 @@ export class EditIntentComponent implements OnInit {
 
   ngOnInit() {
     this.editIntentForm = new FormGroup({
-      intentName: new FormControl(this.data.intentName, Validators.required),
+      intentName: new FormControl({value: this.data.intentName, disabled: true}, Validators.required),
       intentDescription: new FormControl(this.data.intentDescription, Validators.required)
     });
   }

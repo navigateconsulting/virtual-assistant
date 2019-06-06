@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { constant } from '../../../environments/constants';
-import io from 'socket.io-client';
+import * as io from 'socket.io-client';
 
 @Injectable()
 export class EntitiesDataService {
@@ -12,7 +12,7 @@ export class EntitiesDataService {
   newEntity: any;
 
   private url = environment.BASEURL;
-  private socket: SocketIOClient.Socket;
+  private socket: any;
 
   constructor() {
     this.socket = io(this.url + constant.ENTITIES_NSP);

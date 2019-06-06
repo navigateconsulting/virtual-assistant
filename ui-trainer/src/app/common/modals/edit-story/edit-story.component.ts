@@ -16,7 +16,7 @@ export class EditStoryComponent implements OnInit {
 
   ngOnInit() {
     this.editStoryForm = new FormGroup({
-      storyName: new FormControl(this.data.storyName, Validators.required),
+      storyName: new FormControl({value: this.data.storyName, disabled: true}, Validators.required),
       storyDescription: new FormControl(this.data.storyDescription, Validators.required)
     });
   }

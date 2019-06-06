@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { constant } from '../../../environments/constants';
-import io from 'socket.io-client';
+import * as io from 'socket.io-client';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import io from 'socket.io-client';
 export class WebSocketService {
 
   private url = environment.BASEURL;
-  private socket: SocketIOClient.Socket;
+  private socket: any;
 
   constructor() {
     this.socket = io(this.url);

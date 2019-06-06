@@ -138,18 +138,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     if (element.parent === 'root') {
       this.showAddFolderFile = true;
       this.webSocketService.leaveProjectsRoom('root');
-      // this.getDomains(element.id, element.project_id);
     }
-    // if (element.parent === 'root') {
-    //   this.showAddFolderFile = false;
-    //   sessionStorage.setItem('domain_id', '' + element.domain_id);
-    // } else if (this.rootFoldersArray.includes(element.name)) {
-    //   this.showAddFolderFile = true;
-    // } else {
-    //   this.showAddFolderFile = false;
-    //   this.showIntentORStoryORResponse(element);
-    //   isFile = true;
-    // }
     this.currentRoot = element;
     this.currentPath = this.pushToPath(this.currentPath, element.name, element.id, isFile);
     this.canNavigateUp = true;

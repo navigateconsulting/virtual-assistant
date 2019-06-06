@@ -29,9 +29,7 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [
-              "src/assets/js/query-user.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -85,7 +83,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss"            
             ],
             "scripts": [],
             "assets": [
