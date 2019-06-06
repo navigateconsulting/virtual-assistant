@@ -1,7 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { FileElement } from '../file-explorer/model/element';
 import { Observable } from 'rxjs';
-import { FileService } from '../common/services/file.service';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDomainComponent } from '../common/modals/add-domain/add-domain.component';
@@ -16,14 +14,10 @@ import { NotificationsService } from '../common/services/notifications.service';
 })
 export class ManageDomainsComponent implements OnInit, OnDestroy {
 
-  public fileElements: Observable<FileElement[]>;
-
-  constructor(public fileService: FileService,
-              public webSocketService: WebSocketService,
+  constructor(public webSocketService: WebSocketService,
               public notificationsService: NotificationsService,
               public dialog: MatDialog) { }
 
-  currentRoot: FileElement;
   currentPath: string;
   currentPathID: string;
   canNavigateUp = false;

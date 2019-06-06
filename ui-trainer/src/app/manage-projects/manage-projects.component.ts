@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
-import { FileElement } from '../file-explorer/model/element';
 import { Observable } from 'rxjs';
-import { FileService } from '../common/services/file.service';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { AddProjectComponent } from '../common/modals/add-project/add-project.component';
 import { EditProjectComponent } from '../common/modals/edit-project/edit-project.component';
@@ -21,20 +19,17 @@ import { constant } from '../../environments/constants';
 })
 export class ManageProjectsComponent implements OnInit, OnDestroy {
 
-  constructor(public fileService: FileService,
-              public webSocketService: WebSocketService,
+  constructor(public webSocketService: WebSocketService,
               public notificationsService: NotificationsService,
               public sharedDataService: SharedDataService,
               public dialog: MatDialog) {}
 
 // tslint:disable-next-line: max-line-length
-  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'project_description', 'created_by', 'status', 'source', 'edit', 'delete', 'copy', 'try_now'];
+  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'project_description', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'try_now'];
   projectsDataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  public fileElements: Observable<FileElement[]>;
-  currentRoot: FileElement;
   currentPath: string;
   currentPathID: string;
   currentType: string;
@@ -57,6 +52,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   getProjects() {
     this.webSocketService.createProjectsRoom('root');
     this.webSocketService.getProjects('root').subscribe(projects => {
+      console.log(projects);
       this.projectsJSON = (projects !== '' && projects !== null) ? projects : [];
       if (this.projectsJSON.length === 0) {
         this.projectsJSON = new Array<object>();
@@ -133,42 +129,46 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     this.projectsDataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  navigateToFolder(element: FileElement) {
-    const isFile = false;
-    if (element.parent === 'root') {
-      this.showAddFolderFile = true;
-      this.webSocketService.leaveProjectsRoom('root');
-    }
-    this.currentRoot = element;
-    this.currentPath = this.pushToPath(this.currentPath, element.name, element.id, isFile);
-    this.canNavigateUp = true;
+  showErrorOnProject() {
+    this.notificationsService.showToast({status: 'Error', message: 'No changes can be made to a project in published / archived state'});
   }
 
-  pushToPath(path: string, folderName: string, elementId: string, isFile: boolean) {
-    let p = path ? path : '';
-    if (isFile) {
-      // tslint:disable-next-line:quotemark
-      p += folderName;
-    } else {
-      // tslint:disable-next-line:quotemark
-      p += "<span class='" + elementId + "'>" + `${folderName}` + "</span>" + ' / ';
-    }
-    return p;
-  }
+  // navigateToFolder(element: FileElement) {
+  //   const isFile = false;
+  //   if (element.parent === 'root') {
+  //     this.showAddFolderFile = true;
+  //     this.webSocketService.leaveProjectsRoom('root');
+  //   }
+  //   this.currentRoot = element;
+  //   this.currentPath = this.pushToPath(this.currentPath, element.name, element.id, isFile);
+  //   this.canNavigateUp = true;
+  // }
 
-  popFromPath(path: string, path_class: string) {
-    let index = 0;
-    let p = path ? path : '';
-    const split = p.split(' / ');
-    for (let i = 0; i < split.length; i++) {
-      if (split[i].includes(path_class)) {
-        index = i;
-      }
-    }
-    split.splice(index + 1);
-    p = split.join(' / ') + ' / ';
-    return p;
-  }
+  // pushToPath(path: string, folderName: string, elementId: string, isFile: boolean) {
+  //   let p = path ? path : '';
+  //   if (isFile) {
+  //     // tslint:disable-next-line:quotemark
+  //     p += folderName;
+  //   } else {
+  //     // tslint:disable-next-line:quotemark
+  //     p += "<span class='" + elementId + "'>" + `${folderName}` + "</span>" + ' / ';
+  //   }
+  //   return p;
+  // }
+
+  // popFromPath(path: string, path_class: string) {
+  //   let index = 0;
+  //   let p = path ? path : '';
+  //   const split = p.split(' / ');
+  //   for (let i = 0; i < split.length; i++) {
+  //     if (split[i].includes(path_class)) {
+  //       index = i;
+  //     }
+  //   }
+  //   split.splice(index + 1);
+  //   p = split.join(' / ') + ' / ';
+  //   return p;
+  // }
 
   ngOnDestroy(): void {}
 

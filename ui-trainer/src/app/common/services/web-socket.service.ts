@@ -439,4 +439,43 @@ export class WebSocketService {
       };
     });
   }
+
+  createProjectDeployNSP() {
+    this.socket.nsp = constant.PROJECT_DEPLOY_NSP;
+  }
+
+  getProjectsForDeploy() {
+    this.socket.emit(constant.PROJECT_DEPLOY_URL);
+    return Observable.create((observer) => {
+      this.socket.on(constant.PROJECT_DEPLOY_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  getModelDeployAlerts() {
+    return Observable.create((observer) => {
+      this.socket.on(constant.MODEL_DEPLOY_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable to reach the server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  deployModel(projectObjectId: string) {
+    this.socket.emit(constant.MODEL_DEPLOY_URL, projectObjectId);
+  }
 }

@@ -81,6 +81,12 @@ export const constant = {
     CHAT_NOW_URL: 'chatNow',
     TRY_NOW_LISTEN: 'chatResponse',
 
+    PROJECT_DEPLOY_NSP: '/modelpublish',
+    PROJECT_DEPLOY_URL: 'getDashboard',
+    MODEL_DEPLOY_URL: 'trainModel',
+    PROJECT_DEPLOY_LISTEN: 'respModelPublish',
+    MODEL_DEPLOY_LISTEN: 'publishMessage',
+
     MODULE_COMMON: 'common',
 };
 
