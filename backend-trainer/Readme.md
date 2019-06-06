@@ -1,3 +1,33 @@
+Rasa Endpoints 
+
+
+Load a Trained model - 
+
+PUT - http://localhost:5005/model
+
+application/json
+
+{    "model_file": "/app/models/20190606-124051.tar.gz"
+
+}
+- Model file path on the Docker container.
+
+
+Chat with Rasa 
+
+POST - http://localhost:5005/webhooks/rest/webhook
+
+application/json 
+
+{"sender": "user1", "message": "hello"}
+
+
+Train - 
+POST - http://localhost:5005/model/train
+
+
+
+
 # Ui Trainer backend  - Backend Trainer 
 
 <<<<<<< HEAD
