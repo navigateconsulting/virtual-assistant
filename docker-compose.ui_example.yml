@@ -32,8 +32,6 @@ services:
     volumes:
     - "./vol_chatbot_data/rasa/server/models:/app/models"
     - "./vol_chatbot_data/rasa/server/config:/app/config"
-    - "./vol_chatbot_data/rasa/server/project:/app/project"
-    - "./vol_chatbot_data/rasa/server/projects:/app/projects"
     - "./vol_chatbot_data/rasa/server/logs:/app/logs"
     - "./vol_chatbot_data/rasa/server/data:/app/data"
     command:
