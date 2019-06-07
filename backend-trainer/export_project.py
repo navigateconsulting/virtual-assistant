@@ -20,7 +20,7 @@ class ExportProject:
         self.EntityModel = EntityModel()
         self.project_home = ''
         #self.project_base_path = '../vol_chatbot_data/temp/trainer-sessions/'
-        self.project_base_path=CONFIG.get('backend-trainer', 'SESSION_MODEL_PATH')
+        self.project_base_path = ''
         self.session_id = ''
         self.master_nlu = {"rasa_nlu_data": {"common_examples": []}}
         self.master_stories = ""
@@ -37,7 +37,6 @@ class ExportProject:
         self.master_domain_templates = ""
         self.master_domain_entities = ""
         self.session_id = sid
-        self.project_home = self.project_base_path + self.session_id
 
     async def clean_up(self, sid):
         print("Cleaning up on session disconnect for session ID {}".format(sid))
@@ -46,9 +45,17 @@ class ExportProject:
             shutil.rmtree(self.project_base_path + sid)
         return 1
 
-    async def main(self, sid, project_id):
+    async def main(self, sid, project_id, model_path):
         # Invoke Method to start parallel activity
         print("Starting export for project  ID {}".format(project_id))
+
+        if model_path == 'SESSION':
+            self.project_base_path = CONFIG.get('backend-trainer', 'SESSION_MODEL_PATH')
+            self.project_home = self.project_base_path + sid
+
+        else:
+            self.project_base_path = CONFIG.get('backend-trainer', 'DEPLOY_MODEL_PATH')
+            self.project_home = self.project_base_path + project_id
 
         await self.reset_globals(sid)
 
@@ -60,8 +67,10 @@ class ExportProject:
         else:
             print("Working on project home {}".format(self.project_base_path + sid))
 
-        os.mkdir(self.project_home)
-        os.mkdir(self.project_home + '/data')
+        if not os.path.exists(self.project_home):
+            os.mkdir(self.project_home)
+            os.mkdir(self.project_home + '/data')
+
         result = await self.start_export(project_id)
         print(result)
 
@@ -73,7 +82,8 @@ class ExportProject:
         for domain in domain_details:
             domain_id = domain['_id']['$oid']
             domains_list.append([domain_id, domain['domain_name']])
-            os.makedirs(self.project_home+'/skills/'+domain['domain_name']+'/data')
+            if not os.path.exists(self.project_home+'/skills/'+domain['domain_name']+'/data'):
+                os.makedirs(self.project_home+'/skills/'+domain['domain_name']+'/data')
 
         # Starting export of each Domain in Parallel
         result = await asyncio.gather(*(self.write_domain_file(project_id, domain[0], domain[1]) for domain in domains_list))

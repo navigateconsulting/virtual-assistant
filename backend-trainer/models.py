@@ -153,9 +153,24 @@ class ProjectsModel:
             update_field = {"$set": {"project_name": json_record['project_name'],
                                      "project_description": json_record['project_description']
                                      }}
-            result = db.projects.update_one(query, update_field)
+            result = await db.projects.update_one(query, update_field)
             print("Project Updated , rows modified {}".format(result))
             return {"status": "Success", "message": "Project details updated successfully"}
+
+    async def update_project_model(self, record):
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"model_name": json_record['model_name'],
+                                 "state": json_record['state']
+                                 }}
+
+        res_archived = await db.projects.update_many({"state": "Published"}, {"$set": {"state": "Archived"}})
+        result = await db.projects.update_one(query, update_field)
+
+        print("Projects set to Archived state {}".format(res_archived))
+        print("Project Updated , rows modified {}".format(result))
+        return {"status": "Success", "message": "Model Published "}
 
     async def copy_project(self, record):
         json_record = json.loads(json.dumps(record))
