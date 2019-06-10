@@ -583,7 +583,7 @@ class ModelPublish(socketio.AsyncNamespace):
         load_model_path = "/app/models/"+project_id+"/models/"+model_name
 
         async with aiohttp.ClientSession() as session:
-            async with session.put('http://localhost:5005/model',
+            async with session.put(CONFIG.get('backend-trainer', 'RASA_URL'),
                                    data={"model_file": load_model_path},
                                    headers={'content-type': 'application/json'}) as resp:
                 print(resp)
