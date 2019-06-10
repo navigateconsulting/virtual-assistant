@@ -1,0 +1,52 @@
+intents:
+- greet
+- goodbye
+- negative
+- small_talk_about_user
+- ask_time
+- tells_location
+
+
+actions:
+- utter_greet
+- utter_anything_else
+- utter_goodbye
+- utter_how_can_help
+- utter_confirmation_on_help
+- utter_ask_location
+- utter_tell_time
+
+
+templates:
+  utter_greet:
+  - text: "Hello , How are you doing ?"
+  - text: "Hi there !"
+  - text: "Hi there , how may i help you today ?"
+  - text: "Hello, How may i help you today ?"
+
+  utter_anything_else:
+  - text: "Is there anything else i can help you with ?"
+  - text: "may i help you with anything else ?"
+
+  utter_goodbye:
+  - text: "Thank you ! . Have a great day !"
+  - text: "Sure , Have a great day ahead !"
+
+  utter_how_can_help:
+  - text: "How can i help you today ?"
+  - text: "what can i do for you today ?"
+
+  utter_confirmation_on_help:
+  - text: "Sure i can help you with that "
+  - text: "Sure i can help on that "
+  - text: "Sure !"
+
+  utter_ask_location:
+  - text: "Can you tell me what is your current location ?"
+  - text: "can you tell me your current city ?"
+
+  utter_tell_time:
+  - text: "its 00:00:00 at {location_value}"
+  - text: "currently its 13:00:00 {location_value}"
+
+
