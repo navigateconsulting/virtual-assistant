@@ -3,6 +3,7 @@ from models import ProjectsModel, DomainsModel, IntentsModel, ResponseModel, Sto
 from export_project import ExportProject
 from config import CONFIG
 import os
+import json
 
 
 EntityModel = EntityModel()
@@ -581,12 +582,15 @@ class ModelPublish(socketio.AsyncNamespace):
 
         model_name = os.path.basename(model_path)
         load_model_path = "/app/models/"+project_id+"/models/"+model_name
+        print(load_model_path)
 
         async with aiohttp.ClientSession() as session:
             async with session.put(CONFIG.get('backend-trainer', 'RASA_URL'),
-                                   data={"model_file": load_model_path},
-                                   headers={'content-type': 'application/json'}) as resp:
-                print(resp)
+                                   data=json.dumps({'model_file': str(load_model_path)}),
+                                   headers={'content-type': 'application/json'}
+                                   ) as resp:
+                json_resp = await resp.json()
+                print("Response from Rasa {}".format(resp.status))
 
         result = await ProjectsModel.update_project_model({"object_id": str(project_id),
                                                            "model_name": model_name,
