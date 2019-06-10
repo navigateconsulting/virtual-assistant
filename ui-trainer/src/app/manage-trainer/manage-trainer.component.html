@@ -6,7 +6,7 @@
           <!-- <span class="breadcrumb_path">{{breadcrumb_string}}</span> -->
           <nav>
             <ol class="breadcrumb">
-                <li *ngFor="let breadcrumb_elem of breadcrumb_arr" class="breadcrumb-item"><a href="#">{{breadcrumb_elem}}</a></li>
+                <li *ngFor="let breadcrumb of breadcrumb_arr; let i = index;" class="breadcrumb-item" (click)="updateBreadcrumb(breadcrumb, i)"><span class="breadcrumb-element">{{breadcrumb.breadcrumb_name}}</span></li>
             </ol>
           </nav>
         </div>
@@ -75,7 +75,4 @@
 </div>
 <div *ngIf="loadTryNow">
   <router-outlet name="try-now"></router-outlet>
-</div>
-<div *ngIf="loadDeploy">
-  <router-outlet name="deploy"></router-outlet>
 </div>

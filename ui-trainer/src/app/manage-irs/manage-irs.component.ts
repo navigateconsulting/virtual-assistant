@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
 import { WebSocketService } from '../common/services/web-socket.service';
@@ -18,7 +18,7 @@ import { NotificationsService } from '../common/services/notifications.service';
   templateUrl: './manage-irs.component.html',
   styleUrls: ['./manage-irs.component.scss']
 })
-export class ManageIrsComponent implements OnInit {
+export class ManageIrsComponent implements OnInit, OnDestroy {
 
   constructor(public webSocketService: WebSocketService,
               public notificationsService: NotificationsService,
@@ -141,9 +141,9 @@ export class ManageIrsComponent implements OnInit {
     this.intentsDataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  selectIntent(intentObjectId: string) {
+  selectIntent(intentObject: any) {
     this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
-    this.selectedIRS.emit({object_id: intentObjectId, type: 'intent'});
+    this.selectedIRS.emit({irs_object: intentObject, type: 'intent'});
   }
 
   addNewResponse() {
@@ -194,9 +194,9 @@ export class ManageIrsComponent implements OnInit {
     this.responsesDataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  selectResponse(responseObjectId: string) {
+  selectResponse(responseObject: any) {
     this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
-    this.selectedIRS.emit({object_id: responseObjectId, type: 'response'});
+    this.selectedIRS.emit({irs_object: responseObject, type: 'response'});
   }
 
   addNewStory() {
@@ -247,8 +247,12 @@ export class ManageIrsComponent implements OnInit {
     this.storiesDataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  selectStory(storyObjectId: string) {
+  selectStory(storyObject: any) {
     this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
-    this.selectedIRS.emit({object_id: storyObjectId, type: 'story'});
+    this.selectedIRS.emit({irs_object: storyObject, type: 'story'});
+  }
+
+  ngOnDestroy(): void {
+    this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
   }
 }

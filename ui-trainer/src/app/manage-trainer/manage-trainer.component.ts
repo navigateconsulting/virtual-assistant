@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Router } from '@angular/router';
+import { Breadcrumb } from '../common/models/breadcrumb';
 
 @Component({
   selector: 'app-manage-trainer',
@@ -13,30 +14,27 @@ export class ManageTrainerComponent implements OnInit {
   projectObjectId: string;
   domainObjectId: string;
   irsObjectId: string;
-  breadcrumb_arr: Array<string>;
-  breadcrumb_string: string;
+  breadcrumb_arr: Array<Breadcrumb>;
   propertyPanel: string;
   showPropertyPanel: boolean;
   loadTryNow: boolean;
-  loadDeploy: boolean;
 
   @ViewChild('entitiesSidenav') public entitiesSidenav: MatSidenav;
 
   constructor(private router: Router) { }
 
   ngOnInit() {
-    this.breadcrumb_arr = new Array<string>();
-    this.breadcrumb_arr.push('Projects');
-    this.breadcrumb_string = this.breadcrumb_arr.join('/');
+    this.breadcrumb_arr = new Array<Breadcrumb>();
+    this.breadcrumb_arr.push({breadcrumb_name: 'Projects', breadcrumb_stub: {}, breadcrumb_type: 'root'});
     this.setComponent = 'manage-projects';
     this.showPropertyPanel = false;
     this.loadTryNow = false;
-    this.loadDeploy = false;
   }
 
   projectSelected($event: any) {
-    this.breadcrumb_arr.push('Domains');
-    this.projectObjectId = $event.projectObjectId;
+    // tslint:disable-next-line: max-line-length
+    this.breadcrumb_arr.push({breadcrumb_name: $event.projectStub.project_name, breadcrumb_stub: $event.projectStub, breadcrumb_type: 'project'});
+    this.projectObjectId = $event.projectStub._id.$oid;
     this.showPropertyPanel = true;
     if ($event.component === 'manage-domains') {
       this.setComponent = 'manage-domains';
@@ -47,19 +45,24 @@ export class ManageTrainerComponent implements OnInit {
   }
 
   domainSelected($event: any) {
-    this.domainObjectId = $event;
+    this.breadcrumb_arr.push({breadcrumb_name: $event.domain_name, breadcrumb_stub: $event, breadcrumb_type: 'domain'});
+    this.domainObjectId = $event._id.$oid;
     this.setComponent = 'manage-irs';
   }
 
   irsSelected($event: any) {
+    this.irsObjectId = $event.irs_object._id.$oid;
     if ($event.type === 'intent') {
-      this.irsObjectId = $event.object_id;
+      // tslint:disable-next-line: max-line-length
+      this.breadcrumb_arr.push({breadcrumb_name: $event.irs_object.intent_name, breadcrumb_stub: $event.irs_object, breadcrumb_type: 'intent'});
       this.setComponent = 'manage-intents';
     } else if ($event.type === 'response') {
-      this.irsObjectId = $event.object_id;
+      // tslint:disable-next-line: max-line-length
+      this.breadcrumb_arr.push({breadcrumb_name: $event.irs_object.response_name, breadcrumb_stub: $event.irs_object, breadcrumb_type: 'response'});
       this.setComponent = 'manage-responses';
     } else if ($event.type === 'story') {
-      this.irsObjectId = $event.object_id;
+      // tslint:disable-next-line: max-line-length
+      this.breadcrumb_arr.push({breadcrumb_name: $event.irs_object.story_name, breadcrumb_stub: $event.irs_object, breadcrumb_type: 'story'});
       this.setComponent = 'manage-stories';
     }
   }
@@ -69,14 +72,28 @@ export class ManageTrainerComponent implements OnInit {
     this.entitiesSidenav.toggle();
   }
 
-  deployModels() {
-    console.log('deploy');
-    this.loadDeploy = true;
-    this.router.navigate(['/trainer/deploy']);
-  }
-
   openPropertyPanelComponent(propertyPanelComponent: string) {
     this.propertyPanel = propertyPanelComponent;
+  }
+
+  updateBreadcrumb(breadCrumbObject: any, breadCrumbIndex: number) {
+    this.breadcrumb_arr = this.breadcrumb_arr.slice(0, breadCrumbIndex);
+    if (breadCrumbObject.breadcrumb_type === 'root') {
+      this.breadcrumb_arr.push({breadcrumb_name: 'Projects', breadcrumb_stub: {}, breadcrumb_type: 'root'});
+      this.setComponent = 'manage-projects';
+    } else if (breadCrumbObject.breadcrumb_type === 'project') {
+      this.projectSelected({projectStub: breadCrumbObject.breadcrumb_stub, component: 'manage-domains'});
+    } else if (breadCrumbObject.breadcrumb_type === 'domain') {
+      this.domainSelected(breadCrumbObject.breadcrumb_stub);
+    // tslint:disable-next-line: max-line-length
+    } else if (breadCrumbObject.breadcrumb_type === 'intent') {
+      this.irsSelected({irs_object: breadCrumbObject.breadcrumb_stub, type: 'intent'});
+    } else if (breadCrumbObject.breadcrumb_type === 'response') {
+      this.irsSelected({irs_object: breadCrumbObject.breadcrumb_stub, type: 'response'});
+    } else if (breadCrumbObject.breadcrumb_type === 'story') {
+      this.irsSelected({irs_object: breadCrumbObject.breadcrumb_stub, type: 'story'});
+    }
+    console.log(breadCrumbObject, breadCrumbIndex);
   }
 
 }

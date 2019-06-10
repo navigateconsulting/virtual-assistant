@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewEncapsulation, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewEncapsulation, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { MatTableDataSource, MatAutocompleteModule, MatAutocomplete } from '@angular/material';
 import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -18,7 +18,7 @@ declare var unhighlightText: Function;
   styleUrls: ['./manage-intents.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ManageIntentsComponent implements OnInit {
+export class ManageIntentsComponent implements OnInit, OnDestroy {
 
   intentForm: FormGroup;
   intentFormArray: FormArray;
@@ -167,4 +167,6 @@ export class ManageIntentsComponent implements OnInit {
   unhighlightTextEntity(index: number) {
     unhighlightText('intent_text_' + index);
   }
+
+  ngOnDestroy(): void {}
 }

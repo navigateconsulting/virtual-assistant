@@ -113,10 +113,12 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
     });
   }
 
-  selectDomain(domainObjectId: string) {
+  selectDomain(domainStub: any) {
     this.webSocketService.leaveDomainsRoom('project_' + this.projectObjectId);
-    this.selectedDomain.emit(domainObjectId);
+    this.selectedDomain.emit(domainStub);
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.webSocketService.leaveDomainsRoom('project_' + this.projectObjectId);
+  }
 }

@@ -52,7 +52,6 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   getProjects() {
     this.webSocketService.createProjectsRoom('root');
     this.webSocketService.getProjects('root').subscribe(projects => {
-      console.log(projects);
       this.projectsJSON = (projects !== '' && projects !== null) ? projects : [];
       if (this.projectsJSON.length === 0) {
         this.projectsJSON = new Array<object>();
@@ -120,9 +119,9 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     this.selectedProject.emit({projectObjectId: projectObjectId, component: 'try-now'});
   }
 
-  selectProject(projectObjectId: string) {
+  selectProject(projectStub: any) {
     this.webSocketService.leaveProjectsRoom('root');
-    this.selectedProject.emit({projectObjectId: projectObjectId, component: 'manage-domains'});
+    this.selectedProject.emit({projectStub: projectStub, component: 'manage-domains'});
   }
 
   applyProjectsFilter(filterValue: string) {
@@ -133,43 +132,8 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     this.notificationsService.showToast({status: 'Error', message: 'No changes can be made to a project in published / archived state'});
   }
 
-  // navigateToFolder(element: FileElement) {
-  //   const isFile = false;
-  //   if (element.parent === 'root') {
-  //     this.showAddFolderFile = true;
-  //     this.webSocketService.leaveProjectsRoom('root');
-  //   }
-  //   this.currentRoot = element;
-  //   this.currentPath = this.pushToPath(this.currentPath, element.name, element.id, isFile);
-  //   this.canNavigateUp = true;
-  // }
-
-  // pushToPath(path: string, folderName: string, elementId: string, isFile: boolean) {
-  //   let p = path ? path : '';
-  //   if (isFile) {
-  //     // tslint:disable-next-line:quotemark
-  //     p += folderName;
-  //   } else {
-  //     // tslint:disable-next-line:quotemark
-  //     p += "<span class='" + elementId + "'>" + `${folderName}` + "</span>" + ' / ';
-  //   }
-  //   return p;
-  // }
-
-  // popFromPath(path: string, path_class: string) {
-  //   let index = 0;
-  //   let p = path ? path : '';
-  //   const split = p.split(' / ');
-  //   for (let i = 0; i < split.length; i++) {
-  //     if (split[i].includes(path_class)) {
-  //       index = i;
-  //     }
-  //   }
-  //   split.splice(index + 1);
-  //   p = split.join(' / ') + ' / ';
-  //   return p;
-  // }
-
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.webSocketService.leaveProjectsRoom('root');
+  }
 
 }

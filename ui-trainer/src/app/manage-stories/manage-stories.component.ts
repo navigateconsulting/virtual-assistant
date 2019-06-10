@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { IntentsDataService } from '../common/services/intents-data.service';
 import { ResponsesDataService } from '../common/services/responses-data.service';
@@ -24,7 +24,7 @@ declare var adjustScroll: Function;
   templateUrl: './manage-stories.component.html',
   styleUrls: ['./manage-stories.component.scss']
 })
-export class ManageStoriesComponent implements OnInit {
+export class ManageStoriesComponent implements OnInit, OnDestroy {
 
   story: Story;
   storyForm: FormGroup;
@@ -121,10 +121,12 @@ export class ManageStoriesComponent implements OnInit {
   convertToIntentTextArray() {
     const intents_text_arr = new Array<object>();
     this.intents.forEach(function (intent) {
-      const intent_text_entities = intent.text_entities;
-      for (let i = 0; i < intent_text_entities.length; i++) {
-        // tslint:disable-next-line: max-line-length
-        intents_text_arr.push({'intent_id': intent._id.$oid, 'intent_name': intent.intent_name, 'intent_text': intent_text_entities[i].text});
+      if (intent.text_entities !== undefined) {
+        const intent_text_entities = intent.text_entities;
+        for (let i = 0; i < intent_text_entities.length; i++) {
+          // tslint:disable-next-line: max-line-length
+          intents_text_arr.push({'intent_id': intent._id.$oid, 'intent_name': intent.intent_name, 'intent_text': intent_text_entities[i].text});
+        }
       }
     });
     this.intents_text_arr = intents_text_arr;
@@ -134,13 +136,15 @@ export class ManageStoriesComponent implements OnInit {
     this.webSocketService.getResponsesForStory().subscribe(responses => {
       this.responses = responses;
       this.convertToResponseTextArray();
-      if (this.currentStory.story.length > 0) {
-        this.story = new Story;
-        this.story.story_name = this.currentStory.story_name;
-        this.story.story = this.currentStory.story;
-        this.initForm(this.story); // handles both the create and edit logic
-      } else {
-        this.initForm(); // handles both the create and edit logic
+      if (this.currentStory !== undefined) {
+        if (this.currentStory.story.length > 0) {
+          this.story = new Story;
+          this.story.story_name = this.currentStory.story_name;
+          this.story.story = this.currentStory.story;
+          this.initForm(this.story); // handles both the create and edit logic
+        } else {
+          this.initForm(); // handles both the create and edit logic
+        }
       }
     },
     err => console.error('Observer got an error: ' + err),
@@ -150,10 +154,12 @@ export class ManageStoriesComponent implements OnInit {
   convertToResponseTextArray() {
     const responses_text_arr = new Array<object>();
     this.responses.forEach(function (response) {
-      const response_text_entities = response.text_entities;
-      for (let i = 0; i < response_text_entities.length; i++) {
-        // tslint:disable-next-line:max-line-length
-        responses_text_arr.push({'response_id': response._id.$oid, 'response_name': response.response_name, 'response_text': response_text_entities[i]});
+      if (response.text_entities !== undefined) {
+        const response_text_entities = response.text_entities;
+        for (let i = 0; i < response_text_entities.length; i++) {
+          // tslint:disable-next-line:max-line-length
+          responses_text_arr.push({'response_id': response._id.$oid, 'response_name': response.response_name, 'response_text': response_text_entities[i]});
+        }
       }
     });
     this.responses_text_arr = responses_text_arr;
@@ -464,6 +470,10 @@ export class ManageStoriesComponent implements OnInit {
 
   collapse_close(type: string, index: number) {
     // collapseClose(type, index);
+  }
+
+  ngOnDestroy(): void {
+    this.currentStory = undefined;
   }
 }
 

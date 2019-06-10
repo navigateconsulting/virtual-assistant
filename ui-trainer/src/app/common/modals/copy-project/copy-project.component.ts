@@ -27,7 +27,8 @@ export class CopyProjectComponent implements OnInit {
         object_id: this.data.projectObjectId,
         project_name: this.copyProjectForm.value.projectName,
         project_description: this.copyProjectForm.value.projectDescription,
-        status: 0,
+        state: '',
+        model_name: '',
         created_by: 'trainer',
         source: this.data.projectName
       });
