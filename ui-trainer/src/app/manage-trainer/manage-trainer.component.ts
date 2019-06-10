@@ -18,6 +18,7 @@ export class ManageTrainerComponent implements OnInit {
   propertyPanel: string;
   showPropertyPanel: boolean;
   loadTryNow: boolean;
+  loadDeploy: boolean;
 
   @ViewChild('entitiesSidenav') public entitiesSidenav: MatSidenav;
 
@@ -25,14 +26,16 @@ export class ManageTrainerComponent implements OnInit {
 
   ngOnInit() {
     this.breadcrumb_arr = new Array<string>();
-    this.breadcrumb_arr.push('Home');
+    this.breadcrumb_arr.push('Projects');
     this.breadcrumb_string = this.breadcrumb_arr.join('/');
     this.setComponent = 'manage-projects';
     this.showPropertyPanel = false;
     this.loadTryNow = false;
+    this.loadDeploy = false;
   }
 
   projectSelected($event: any) {
+    this.breadcrumb_arr.push('Domains');
     this.projectObjectId = $event.projectObjectId;
     this.showPropertyPanel = true;
     if ($event.component === 'manage-domains') {
@@ -64,6 +67,12 @@ export class ManageTrainerComponent implements OnInit {
   toggleEntities() {
     this.propertyPanel = 'entities';
     this.entitiesSidenav.toggle();
+  }
+
+  deployModels() {
+    console.log('deploy');
+    this.loadDeploy = true;
+    this.router.navigate(['/trainer/deploy']);
   }
 
   openPropertyPanelComponent(propertyPanelComponent: string) {

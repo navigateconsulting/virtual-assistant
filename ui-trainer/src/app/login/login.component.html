@@ -1,4 +1,3 @@
-<br/><br/><br/><br/><br/>
 <div class="content">
     <mat-card class="login-card">
         <mat-card-header>
@@ -7,26 +6,30 @@
             <mat-card-subtitle>Navigate Consulting Platform</mat-card-subtitle>
         </mat-card-header>
         <hr/>
-        <mat-card-content class="login-card-content">
-            <div class="row">
-                <mat-form-field>
-                    <input matInput placeholder="E-mail" [(ngModel)]="email" type="email" name="email">
-                </mat-form-field>
-            </div>
-            <div class="row">
-                <mat-form-field>
-                    <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" required>
-                </mat-form-field>
-            </div>
-            <div *ngIf="checkCredentials === 0" class="error">Invalid Email Id Or Password.</div>
-        </mat-card-content>
-        <hr/>
-        <mat-card-footer>
-            <div class="row text-center footer-row">
-                <div class="col-md-12">
-                    <button class="login-button" (click)="login()" mat-raised-button color="primary">Login</button>
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <mat-card-content class="login-card-content">
+                <div class="row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Username</mat-label>
+                        <input matInput formControlName="username" name="username">
+                    </mat-form-field>
                 </div>
-            </div>
-        </mat-card-footer>
+                <div class="row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Password</mat-label>
+                        <input matInput formControlName="password" type="password" name="password">
+                    </mat-form-field>
+                </div>
+                <div *ngIf="checkCredentials === 0" class="error">Invalid Email Id Or Password.</div>
+            </mat-card-content>
+            <hr/>
+            <mat-card-footer>
+                <div class="row text-center footer-row">
+                    <div class="col-md-12">
+                        <button class="login-button" type="submit" [disabled]="!loginForm.valid" mat-raised-button color="primary">Login</button>
+                    </div>
+                </div>
+            </mat-card-footer>
+        </form>
     </mat-card>
 </div>

@@ -1,16 +1,39 @@
 .trainer-container {
     width: 100%;
     background-color: inherit;
-}
-.spacer {
-    flex: 1 1 auto;
-}  
+} 
 .mat-toolbar-row, .mat-toolbar-single-row {
     height: 60px;
     background-color: inherit;
 }
 span.breadcrumb_path {
-  font-size: 18px;
+    font-size: 18px;
+}
+.toolbar-div {
+    background-color: #E8E8E8;
+    max-height: 50px;
+    padding: 0;
+}
+.breadcrumb-div {
+    padding: 0;
+}
+.breadcrumb {
+    background-color: #E8E8E8;
+    height: 50px;
+}
+/* Style to change separator  */
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+}
+.breadcrumb-item a {
+    color: #383838;
+    font-family: "Lato Semibold";
+    font-size: 20px;
+    line-height: 24px;
+}
+.show-entities-div {
+    background-color: #E8E8E8;
+    margin-top: -1.2%;
 }
 .property-panel-container {
     width: 350px;

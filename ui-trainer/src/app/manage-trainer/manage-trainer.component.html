@@ -1,12 +1,21 @@
 <div *ngIf="loadTryNow === false">
   <mat-sidenav-container class="trainer-container">
     <mat-sidenav-content class="main-container">
-      <mat-toolbar class="row">
-        <div class="col-md-11">
-          <span class="breadcrumb_path">{{breadcrumb_string}}</span>
-          <span class="spacer"></span>
+      <mat-toolbar class="row toolbar-div">
+        <div class="col-md-11 breadcrumb-div">
+          <!-- <span class="breadcrumb_path">{{breadcrumb_string}}</span> -->
+          <nav>
+            <ol class="breadcrumb">
+                <li *ngFor="let breadcrumb_elem of breadcrumb_arr" class="breadcrumb-item"><a href="#">{{breadcrumb_elem}}</a></li>
+            </ol>
+          </nav>
         </div>
-        <div class="col-md-1 text-right">
+        <!-- <div class="col-md-1 text-right">
+          <button *ngIf="showPropertyPanel === false" mat-button color="primary" matTooltip="Deploy Models" (click)="deployModels()">
+            <mat-icon>backup</mat-icon>
+          </button>
+        </div> -->
+        <div class="col-md-1 show-entities-div text-right">
           <button *ngIf="showPropertyPanel === true" mat-button matTooltip="Show Entities" (click)="toggleEntities()">
             <mat-icon>reply</mat-icon>
           </button>
@@ -65,5 +74,8 @@
   </mat-sidenav-container>
 </div>
 <div *ngIf="loadTryNow">
-  <router-outlet></router-outlet>
+  <router-outlet name="try-now"></router-outlet>
+</div>
+<div *ngIf="loadDeploy">
+  <router-outlet name="deploy"></router-outlet>
 </div>
