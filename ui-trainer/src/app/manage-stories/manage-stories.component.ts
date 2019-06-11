@@ -4,7 +4,7 @@ import { IntentsDataService } from '../common/services/intents-data.service';
 import { ResponsesDataService } from '../common/services/responses-data.service';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl, AbstractControl, ValidatorFn } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Story } from '../common/models/story';
 import { Intent } from '../common/models/intent';
@@ -25,6 +25,8 @@ declare var adjustScroll: Function;
   styleUrls: ['./manage-stories.component.scss']
 })
 export class ManageStoriesComponent implements OnInit, OnDestroy {
+
+  private subscription: Subscription = new Subscription();
 
   story: Story;
   storyForm: FormGroup;
@@ -102,11 +104,11 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
 
-    this.webSocketService.getStoryDetailAlerts().subscribe(response => {
+    this.subscription.add(this.webSocketService.getStoryDetailAlerts().subscribe(response => {
       console.log(response);
     },
     err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
+    () => console.log('Observer got a complete notification')));
   }
 
   getIntents() {
@@ -473,6 +475,7 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.currentStory = undefined;
   }
 }

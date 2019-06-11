@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { constant } from '../../../environments/constants';
@@ -46,9 +46,6 @@ export class WebSocketService {
           observer.error('Unable to reach the server');
         }
       });
-      return () => {
-        this.socket.disconnect();
-      };
     });
   }
 
@@ -102,9 +99,6 @@ export class WebSocketService {
           observer.error('Unable to reach the server');
         }
       });
-      return () => {
-        this.socket.disconnect();
-      };
     });
   }
 
@@ -154,9 +148,6 @@ export class WebSocketService {
           observer.error('Unable to reach the server');
         }
       });
-      return () => {
-        this.socket.disconnect();
-      };
     });
   }
 
@@ -197,9 +188,6 @@ export class WebSocketService {
           observer.error('Unable to reach the server');
         }
       });
-      return () => {
-        this.socket.disconnect();
-      };
     });
   }
 
@@ -240,9 +228,6 @@ export class WebSocketService {
           observer.error('Unable to reach the server');
         }
       });
-      return () => {
-        this.socket.disconnect();
-      };
     });
   }
 
@@ -354,9 +339,6 @@ export class WebSocketService {
           observer.error('Unable To Reach Server');
         }
       });
-      return () => {
-        this.socket.disconnect();
-      };
     });
   }
 

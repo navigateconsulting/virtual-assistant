@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDomainComponent } from '../common/modals/add-domain/add-domain.component';
@@ -13,6 +13,8 @@ import { NotificationsService } from '../common/services/notifications.service';
   styleUrls: ['./manage-domains.component.scss']
 })
 export class ManageDomainsComponent implements OnInit, OnDestroy {
+
+  private subscription: Subscription = new Subscription();
 
   constructor(public webSocketService: WebSocketService,
               public notificationsService: NotificationsService,
@@ -58,11 +60,11 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
 
-    this.webSocketService.getDomainAlerts().subscribe(response => {
+    this.subscription.add(this.webSocketService.getDomainAlerts().subscribe(response => {
       this.notificationsService.showToast(response);
     },
     err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
+    () => console.log('Observer got a complete notification')));
   }
 
   addNewDomain() {
@@ -119,6 +121,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.webSocketService.leaveDomainsRoom('project_' + this.projectObjectId);
   }
 }

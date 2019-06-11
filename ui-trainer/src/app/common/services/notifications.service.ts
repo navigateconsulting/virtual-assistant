@@ -24,7 +24,7 @@ export class NotificationsService {
       this.toastr.infoToastr('This is info toast.', 'Info');
   }
 
-  showToast(notification_stub) {
+  showToast(notification_stub: any) {
     const notification_param = {
       toastTimeout: 3000,
       position: 'bottom-left',
