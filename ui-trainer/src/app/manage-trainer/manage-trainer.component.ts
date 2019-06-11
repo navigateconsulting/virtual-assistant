@@ -40,7 +40,7 @@ export class ManageTrainerComponent implements OnInit {
       this.setComponent = 'manage-domains';
     } else if ($event.component === 'try-now') {
       this.loadTryNow = true;
-      this.router.navigate(['/trainer/try-now']);
+      this.router.navigate(['/home/trainer/try-now']);
     }
   }
 
@@ -93,7 +93,6 @@ export class ManageTrainerComponent implements OnInit {
     } else if (breadCrumbObject.breadcrumb_type === 'story') {
       this.irsSelected({irs_object: breadCrumbObject.breadcrumb_stub, type: 'story'});
     }
-    console.log(breadCrumbObject, breadCrumbIndex);
   }
 
 }
