@@ -47,7 +47,7 @@
               <tr mat-header-row *matHeaderRowDef="intentsDisplayedColumns; sticky: true"></tr>
               <tr mat-row *matRowDef="let row; columns: intentsDisplayedColumns;"></tr>
             </table>
-            <mat-paginator #intentsPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            <mat-paginator #intentsPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
           </div>
         </div>
       </div>
@@ -101,7 +101,7 @@
               <tr mat-header-row *matHeaderRowDef="responsesDisplayedColumns; sticky: true"></tr>
               <tr mat-row *matRowDef="let row; columns: responsesDisplayedColumns;"></tr>
             </table>
-            <mat-paginator #responsesPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            <mat-paginator #responsesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
           </div>
         </div>
       </div>
@@ -155,7 +155,7 @@
               <tr mat-header-row *matHeaderRowDef="storiesDisplayedColumns; sticky: true"></tr>
               <tr mat-row *matRowDef="let row; columns: storiesDisplayedColumns;"></tr>
             </table>
-            <mat-paginator #storiesPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            <mat-paginator #storiesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
           </div>
         </div>
       </div>
