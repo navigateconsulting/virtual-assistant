@@ -24,6 +24,7 @@ class SkypeBot:
         self.domain = None
         self.user_token = None
         self.app_token = None
+        self.rasa_url = None
 
         # Communication Variables
         self.meTasks = None
@@ -46,7 +47,7 @@ class SkypeBot:
     async def close_session(self):
         await self._session.close()
 
-    async def setup_ucwa(self, discover_url, username, password, client_id, tenant_id):
+    async def setup_ucwa(self, discover_url, username, password, client_id, tenant_id, rasa_url):
         print("__________________  Starting connection to UCWA  ___________________________")
 
         async with self._session.get(discover_url) as res:
@@ -66,6 +67,7 @@ class SkypeBot:
         self.client_id = client_id
         self.tenant_id = tenant_id
         self.domain = self.username[self.username.index("@")+1:]
+        self.rasa_url = rasa_url
 
         await self.init_application()
 
