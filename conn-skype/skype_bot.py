@@ -2,6 +2,13 @@ from __main__ import aiohttp
 import re
 import adal
 import json
+import asyncio
+import uuid
+# Check if these are redundant
+from urllib.parse import unquote
+import lxml.html
+
+import time
 
 
 class SkypeBot:
@@ -31,6 +38,7 @@ class SkypeBot:
 
         self.post_headers = None
         self.get_headers = None
+        self.post_headers_plain = None
 
         self.matchString = 'https?:\/\/(?:[^\/]+)|^(.*)$'
         self._session = aiohttp.ClientSession()
@@ -104,18 +112,14 @@ class SkypeBot:
             data = {'signInAs': 'Online',
                     'SupportedModalities': ['Messaging'],
                     'supportedMessageFormats' : ['Plain', 'Html']}
-            header={
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': self.app_token
-                }
+            header = {'Accept': 'application/json',
+                      'Content-Type': 'application/json',
+                      'Authorization': self.app_token}
             async with self._session.post(url=url, data=json.dumps(data), headers=header) as res:
-                print(res.status)
-                json_res = res
-                # TODO Need to check what is the status when the user is offline and handle accordingly
+                print("Setting BOT As Available {}".format(res.status))
         else:
             return 'NA'
-        return json_res
+        return res.status
 
     async def init_application(self):
 
@@ -126,15 +130,14 @@ class SkypeBot:
         self.user_token = await self.get_adal_token(self.user_url)
         print("User Token {}".format(self.user_token))
 
-        header_val = { "Authorization" : self.user_token,
-                       "Accept" : "application/json",
-                       "X-Requested-With": "XMLHttpRequest",
-                       #"Referer": user_xframe,
-                       "Accept-Encoding" : "gzip, deflate",
-                       "User-Agent" : "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)",
-                       "Host": self.domain,
-                       "Connection": "Keep-Alive"
-                        }
+        header_val = {"Authorization" : self.user_token,
+                      "Accept" : "application/json",
+                      "X-Requested-With": "XMLHttpRequest",
+                      #"Referer": user_xframe,
+                      "Accept-Encoding" : "gzip, deflate",
+                      "User-Agent" : "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)",
+                      "Host": self.domain,
+                      "Connection": "Keep-Alive"}
 
         async with self._session.get(self.user_url, headers=header_val) as res:
             json_resp = await res.json()
@@ -155,7 +158,7 @@ class SkypeBot:
             "Accept-Language": "en-us",
             "Accept-Encoding": "gzip, deflate",
             "User-Agent": "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)",
-            ##"Host": "webpoolhkn0f03.infra.lync.com",  ## no need to pass host value but this is good to have
+            #"Host": "webpoolhkn0f03.infra.lync.com", no need to pass host value but this is good to have
             "Connection": "Keep-Alive",
             "Cache-Control": "no-cache"
         }
@@ -204,6 +207,11 @@ class SkypeBot:
                             'Accept-Encoding': "gzip, deflate",
                             'Authorization': self.app_token
                             }
+
+        self.post_headers_plain = {'Accept': 'application/json',
+                                   'Content-Type': 'text/plain',
+                                   'Authorization': self.app_token
+                                   }
 
         print("ApplicationURL var {}".format(self.applicationURL))
         print("Hub Address var {}".format(self.hub_address))
@@ -260,3 +268,158 @@ class SkypeBot:
         async with self._session.get(url=self.hub_address+self.meTasks['location']['href'], headers=self.get_headers) as res:
             json_res = await res.json()
         return json_res['location']
+
+    async def task_report_my_activity(self):
+        while True:
+            print("Sleeping for 5 seconds")
+            await asyncio.sleep(60)
+            await self.report_my_activity()
+
+    async def task_process_events(self, queue):
+
+        # Perform a Post on the events URL and check for any inbound messages
+
+        while True:
+
+            async with self._session.get(url=self.hub_address+self.eventsURL, headers=self.get_headers) as res:
+                json_resp = await res.json()
+                status = res.status
+
+            if status == 401:
+                print("Error in Events URL {}".format(json_resp))
+            else:
+                print("Got events {}".format(json_resp))
+
+                # Setting events URL to next value
+                self.eventsURL = json_resp['_links']['next']['href']
+
+            for sender in json_resp['sender']:
+                if sender['rel'] == "communication":
+                    for event in sender['events']:
+                        if '_embedded' in event:
+                            for action in event['_embedded']:
+                                if action == 'messagingInvitation':
+                                    if event['_embedded'][action]['direction'] == "Incoming":
+                                        if 'accept' in event['_embedded']['messagingInvitation']['_links']:
+                                            # Get the Accept conversation link
+
+                                            accept_url = event['_embedded']['messagingInvitation']['_links']['accept']['href']
+
+                                            # Perform a POST on the Accept URL to accept the conversation
+
+                                            async with self._session.post(url=self.hub_address+accept_url, headers=self.post_headers) as res:
+                                                print("Accepted conversation status {}".format(res))
+
+                elif sender['rel'] == "conversation":
+                    for event in sender['events']:
+                        if event['link']['rel'] == 'message':
+                            if 'htmlMessage' in event['_embedded']['message']['_links']:
+                                raw = event['_embedded']['message']['_links']['htmlMessage']['href']
+                                # get Message text from the response
+                                # processing raw text to get content.
+                                # convert from charset to HTML
+                                # Getting rid of HTML Content
+                                # Getting headers and adders out
+                                message = unquote(raw)
+                                message = lxml.html.document_fromstring(message)
+                                message = message.text_content()
+                                message = message.replace('data:text/html;charset=utf-8,', '')
+                                message = message.replace('+', ' ')
+                                message = message.strip()
+
+                                # Get Contact person URI
+                                get_contact = r'(people/)(.*)'
+                                contact_uri = event['_embedded']['message']['_links']['contact']['href']
+                                contact_uri = re.search(get_contact, contact_uri).group(2)
+
+                                # get Contact name
+                                contact_name = event['_embedded']['message']['_links']['participant']['title']
+
+                                # get messaging URL and derive reply URL for this conversation
+                                messaging_url = event['_embedded']['message']['_links']['messaging']['href']
+                                send_message_link = messaging_url + '/messages'
+                                stop_message_link = messaging_url + '/terminate'
+
+                                # Print Information for debug
+                                print('************ Messages from Event stream ***************************')
+                                # print("Messaging URL for current conversation =>",messaging_url)
+                                print("Contact name =>", contact_name)
+                                print('Received Message =>', message)
+                                message_obj = json.dumps({'conversation_id': 1,
+                                                          'contact_url': contact_uri,
+                                                          'contact_name': contact_name,
+                                                          'message': message,
+                                                          'send_message_link': send_message_link,
+                                                          'stop_message_link': stop_message_link})
+
+                                await queue.put(message_obj)
+                                #await self.task_process_and_reply_2(message_obj)
+
+                            if 'plainMessage' in event['_embedded']['message']['_links']:
+                                raw = event['_embedded']['message']['_links']['plainMessage']['href']
+
+                                # Skype for business Andriod and iOS / Mac app does not send HTML Content ,
+                                # so adding another loop to handle plain messages
+                                # get Message text from the response
+                                # processing raw text to get content.
+                                # Getting headers and adders out
+                                message = unquote(raw)
+                                message = message.replace('data:text/plain;charset=utf-8,', '')
+                                message = message.replace('+', ' ')
+
+                                # Get Contact person URI
+                                print('Received raw Plaintext message ', raw)
+                                get_contact = r'(people/)(.*)'
+                                contact_uri = event['_embedded']['message']['_links']['contact']['href']
+                                contact_uri = re.search(get_contact, contact_uri).group(2)
+
+                                # get Contact name
+                                contact_name = event['_embedded']['message']['_links']['participant']['title']
+
+                                # get messaging URL and derive reply URL for this conversation
+                                messaging_url = event['_embedded']['message']['_links']['messaging']['href']
+                                send_message_link = messaging_url + '/messages'
+                                stop_message_link = messaging_url + '/terminate'
+
+                                # Print Information for debug
+                                print('************ Messages from Event stream ***************************')
+                                # print("Messaging URL for current conversation =>",messaging_url)
+                                print("Contact name =>", contact_name)
+                                print('Received Message =>', message)
+                                message_obj = json.dumps({'conversation_id': 1,
+                                                          'contact_url': contact_uri,
+                                                          'contact_name': contact_name,
+                                                          'message': message,
+                                                          'send_message_link': send_message_link,
+                                                          'stop_message_link': stop_message_link})
+                                await queue.put(message_obj)
+                                #await self.task_process_and_reply_2(message_obj)
+
+    async def task_process_and_reply(self, queue):
+        while True:
+            message = await queue.get()
+            print("Passing message to Rasa {}".format(message))
+            random_uuid = str(uuid.uuid4())
+            operation_context = "?OperationContext=" + random_uuid
+            message = json.loads(message)
+            message_text = message['message']+"This is Relay"
+            async with self._session.post(url=self.hub_address+message['send_message_link']+operation_context,
+                                          data=message_text,
+                                          headers=self.post_headers_plain) as res:
+                #json_res = await res
+                print("Sent Request with status {}".format(res.status))
+            #print("Status of Request {}".format(json_res))
+
+    # async def task_process_and_reply_2(self, message):
+    #     #message = await self.queue.get()
+    #     print("Passing message to Rasa {}".format(message))
+    #     random_uuid = str(uuid.uuid4())
+    #     operation_context = "?OperationContext=" + random_uuid
+    #     message = json.loads(message)
+    #     message_text = message['message']+"This is Relay"
+    #     async with self._session.post(url=self.hub_address+message['send_message_link']+operation_context,
+    #                                   data=message_text,
+    #                                   headers=self.post_headers_plain) as res:
+    #         #json_res = await res
+    #         print("Sent Request with status {}".format(res.status))
+    #     #print("Status of Request {}".format(json_res))
