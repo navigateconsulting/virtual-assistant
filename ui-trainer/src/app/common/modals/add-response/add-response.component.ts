@@ -26,7 +26,7 @@ export class AddResponseComponent implements OnInit {
       this.dialogRef.close({
         project_id: this.data.projectObjectId,
         domain_id: this.data.domainObjectId,
-        response_name: this.newResponseForm.value.responseName,
+        response_name: 'utter_' + this.newResponseForm.value.responseName,
         response_description: this.newResponseForm.value.responseDescription
       });
     }

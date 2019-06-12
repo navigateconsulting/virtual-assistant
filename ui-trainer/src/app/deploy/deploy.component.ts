@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { WebSocketService } from '../common/services/web-socket.service';
 import { NotificationsService } from '../common/services/notifications.service';
+import { OverlayService } from '../common/services/overlay.service';
 
 import { DeployModelComponent } from '../common/modals/deploy-model/deploy-model.component';
 
@@ -18,8 +19,9 @@ export class DeployComponent implements OnInit {
   projectModels: any;
 
   constructor(public dialog: MatDialog,
+              public overlayService: OverlayService,
               public webSocketService: WebSocketService,
-              public notificationsService: NotificationsService) { }
+              public notificationsService: NotificationsService) {}
 
   projectsModelDisplayedColumns: string[] = ['icon', 'project_name', 'source', 'model_name', 'state', 'deploy'];
   projectsModelDataSource: any;
@@ -45,6 +47,7 @@ export class DeployComponent implements OnInit {
 
     this.webSocketService.getModelDeployAlerts().subscribe(response => {
       if (response) {
+        this.overlayService.spin$.next(false);
         this.notificationsService.showToast(response);
       }
     },
@@ -60,6 +63,7 @@ export class DeployComponent implements OnInit {
     const dialogRef = this.dialog.open(DeployModelComponent);
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
+        this.overlayService.spin$.next(true);
         this.webSocketService.deployModel(projectObjectId);
       }
     });

@@ -12,7 +12,11 @@ export class WebSocketService {
   private socket: any;
 
   constructor() {
-    this.socket = io();
+    if (environment.production === false) {
+      this.socket = io(environment.BASE_URL);
+    } else {
+      this.socket = io();
+    }
   }
 
   createProjectsRoom(project_room: string) {
