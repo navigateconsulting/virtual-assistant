@@ -4,7 +4,6 @@ version: '3.0'
 
 services:
 
-
   ui_trainer:
     container_name: ui_trainer
     build: './ui-trainer'
@@ -55,6 +54,10 @@ services:
     build: './api_gateway'
     ports:
       - "8089:8089"
+
+  skype_connector:
+    container_name: skype_connector
+    build: './conn-skype'
 
 volumes:
   skype_keys_vol:
