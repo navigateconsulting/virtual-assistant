@@ -7,8 +7,7 @@ import uuid
 # Check if these are redundant
 from urllib.parse import unquote
 import lxml.html
-
-import time
+import sys
 
 
 class SkypeBot:
@@ -167,7 +166,7 @@ class SkypeBot:
 
         # TODO User agent and Endpoint ID should be set Dynamically
         post_body_val = {
-            'UserAgent': 'Eva Chatbot',
+            'UserAgent': 'Eva Chat bot',
             'Culture': 'en-US',
             'EndpointId': 'xxxxxxxx-xxxx-8xxx-yxxx-xxxxxxxxxxxx'
         }
@@ -277,6 +276,12 @@ class SkypeBot:
             await asyncio.sleep(60)
             await self.report_my_activity()
 
+    def sigterm_handler(self,signal, frame):
+        # save the state here or do whatever you want
+        print('Terminating Skype  handler')
+        self.terminate_application()
+        raise KeyboardInterrupt()
+
     async def task_process_events(self, queue):
 
         # Perform a Post on the events URL and check for any inbound messages
@@ -355,7 +360,6 @@ class SkypeBot:
                                                           'stop_message_link': stop_message_link})
 
                                 await queue.put(message_obj)
-                                #await self.task_process_and_reply_2(message_obj)
 
                             if 'plainMessage' in event['_embedded']['message']['_links']:
                                 raw = event['_embedded']['message']['_links']['plainMessage']['href']
@@ -395,33 +399,25 @@ class SkypeBot:
                                                           'send_message_link': send_message_link,
                                                           'stop_message_link': stop_message_link})
                                 await queue.put(message_obj)
-                                #await self.task_process_and_reply_2(message_obj)
 
     async def task_process_and_reply(self, queue):
         while True:
             message = await queue.get()
             print("Passing message to Rasa {}".format(message))
-            random_uuid = str(uuid.uuid4())
-            operation_context = "?OperationContext=" + random_uuid
             message = json.loads(message)
-            message_text = message['message']+"This is Relay"
-            async with self._session.post(url=self.hub_address+message['send_message_link']+operation_context,
-                                          data=message_text,
-                                          headers=self.post_headers_plain) as res:
-                #json_res = await res
-                print("Sent Request with status {}".format(res.status))
-            #print("Status of Request {}".format(json_res))
 
-    # async def task_process_and_reply_2(self, message):
-    #     #message = await self.queue.get()
-    #     print("Passing message to Rasa {}".format(message))
-    #     random_uuid = str(uuid.uuid4())
-    #     operation_context = "?OperationContext=" + random_uuid
-    #     message = json.loads(message)
-    #     message_text = message['message']+"This is Relay"
-    #     async with self._session.post(url=self.hub_address+message['send_message_link']+operation_context,
-    #                                   data=message_text,
-    #                                   headers=self.post_headers_plain) as res:
-    #         #json_res = await res
-    #         print("Sent Request with status {}".format(res.status))
-    #     #print("Status of Request {}".format(json_res))
+            async with self._session.post(url=self.rasa_url,
+                                          data=json.dumps({"sender": message['contact_name'], "message": message['message']}),
+                                          headers={'Content-Type': 'application/json',
+                                                   'Accept': 'application/json'}) as bot_res:
+                json_resp = await bot_res.json()
+
+            # TODO Handle termination of chat in Rasa and in Skype as well
+
+            for response in json_resp:
+                print("Response from Rasa {}".format(response['text']))
+                operation_context = "?OperationContext=" + str(uuid.uuid4())
+                async with self._session.post(url=self.hub_address+message['send_message_link']+operation_context,
+                                              data=response['text'],
+                                              headers=self.post_headers_plain) as res:
+                    print("Sent Request with status {}".format(res.status))

@@ -2,6 +2,8 @@ import aiohttp
 import asyncio
 from skype_bot import SkypeBot
 import uvloop
+from config import CONFIG
+import signal
 
 
 # Main Class
@@ -10,13 +12,16 @@ import uvloop
 async def main():
     bot = SkypeBot()
     queue = asyncio.Queue()
+
+    signal.signal(signal.SIGTERM, bot.sigterm_handler)
+
     try:
-        await bot.setup_ucwa(discover_url="http://lyncdiscover.navigateconsulting.in",
-                             username="daas@navigateconsulting.in",
-                             password="Cfxdzs@123",
-                             client_id="830b6148-30da-4b86-a621-e7d724241f7a",
-                             tenant_id='2f892c02-6a40-43d0-840d-f2485c93fd06',
-                             rasa_url='http://localhost:5005/model/parse'
+        await bot.setup_ucwa(discover_url=CONFIG.get('skype_connector', 'discover_url'),
+                             username=CONFIG.get('skype_connector', 'username'),
+                             password=CONFIG.get('skype_connector', 'password'),
+                             client_id=CONFIG.get('skype_connector', 'client_id'),
+                             tenant_id=CONFIG.get('skype_connector', 'tenant_id'),
+                             rasa_url=CONFIG.get('skype_connector', 'rasa_url')
                              )
 
         report_my_activity = asyncio.create_task(bot.task_report_my_activity())
@@ -30,7 +35,8 @@ async def main():
         await asyncio.gather(*process_message)
         await queue.join()
 
-    except:
+    except KeyboardInterrupt:
+        print("Inside Keyboard Interrupt")
         await bot.close_session()
         asyncio.gather(*asyncio.all_tasks()).cancel()
 
