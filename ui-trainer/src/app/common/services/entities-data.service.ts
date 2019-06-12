@@ -11,11 +11,11 @@ export class EntitiesDataService {
   entitySource: BehaviorSubject<any>;
   newEntity: any;
 
-  private url = environment.BASEURL;
   private socket: any;
 
   constructor() {
-    this.socket = io(this.url + constant.ENTITIES_NSP);
+    this.socket = io();
+    this.socket.nsp = constant.ENTITIES_NSP;
   }
 
   createEntitiesRoom() {
