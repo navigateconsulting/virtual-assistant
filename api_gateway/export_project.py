@@ -50,11 +50,11 @@ class ExportProject:
         print("Starting export for project  ID {}".format(project_id))
 
         if model_path == 'SESSION':
-            self.project_base_path = CONFIG.get('backend-trainer', 'SESSION_MODEL_PATH')
+            self.project_base_path = CONFIG.get('api_gateway', 'SESSION_MODEL_PATH')
             self.project_home = self.project_base_path + sid
 
         else:
-            self.project_base_path = CONFIG.get('backend-trainer', 'DEPLOY_MODEL_PATH')
+            self.project_base_path = CONFIG.get('api_gateway', 'DEPLOY_MODEL_PATH')
             self.project_home = self.project_base_path + project_id
 
         await self.reset_globals(sid)

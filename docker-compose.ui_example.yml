@@ -52,7 +52,7 @@ services:
     container_name: api_gateway
     volumes:
       - ./vol_chatbot_data:/vol_chatbot_data
-    build: './backend-trainer'
+    build: './api_gateway'
     ports:
       - "8089:8089"
 

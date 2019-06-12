@@ -3,7 +3,7 @@ import socketio
 from config import CONFIG
 
 
-if CONFIG.get('backend-trainer', 'LOGGING') == 'TRUE':
+if CONFIG.get('api_gateway', 'LOGGING') == 'TRUE':
     print("--------------------Starting Socketio Connection in Debug Mode --------------------------")
     sio = socketio.AsyncServer(logger=True, engineio_logger=True)
 else:
@@ -29,4 +29,4 @@ app.router.add_get('/', index)
 # We kick off our server
 if __name__ == '__main__':
     sio.attach(app)
-    web.run_app(app, port=CONFIG.get('backend-trainer', 'PORT'))
+    web.run_app(app, port=CONFIG.get('api_gateway', 'PORT'))

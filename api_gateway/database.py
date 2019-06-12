@@ -6,6 +6,6 @@ from config import CONFIG
 class ConDatabase:
 
     def connect():
-        client = AsyncIOMotorClient(CONFIG.get('backend-trainer', 'MONGODB_URL'))
-        db = client[CONFIG.get('backend-trainer', 'MONGODB_NAME')]
+        client = AsyncIOMotorClient(CONFIG.get('api_gateway', 'MONGODB_URL'))
+        db = client[CONFIG.get('api_gateway', 'MONGODB_NAME')]
         return db

@@ -501,7 +501,7 @@ class TryNow(socketio.AsyncNamespace):
         from rasa.core.domain import Domain
         from rasa.train import train_async
 
-        base_path = CONFIG.get('backend-trainer', 'SESSION_MODEL_PATH')
+        base_path = CONFIG.get('api_gateway', 'SESSION_MODEL_PATH')
         config = "config.yml"
         training_files = "data/"
         domain = "domain.yml"
@@ -518,8 +518,8 @@ class TryNow(socketio.AsyncNamespace):
         unpacked = model.get_model(model_path)
         domain = Domain.load(domain)
         _tracker_store = MongoTrackerStore(domain=domain,
-                                           host=CONFIG.get('backend-trainer', 'MONGODB_URL'),
-                                           db=CONFIG.get('backend-trainer', 'MONGODB_NAME'),
+                                           host=CONFIG.get('api_gateway', 'MONGODB_URL'),
+                                           db=CONFIG.get('api_gateway', 'MONGODB_NAME'),
                                            username=None,
                                            password=None,
                                            auth_source="admin",
@@ -563,7 +563,7 @@ class ModelPublish(socketio.AsyncNamespace):
 
         print(result)
 
-        base_path = CONFIG.get('backend-trainer', 'DEPLOY_MODEL_PATH')
+        base_path = CONFIG.get('api_gateway', 'DEPLOY_MODEL_PATH')
         config = "config.yml"
         training_files = "data/"
         domain = "domain.yml"
@@ -585,7 +585,7 @@ class ModelPublish(socketio.AsyncNamespace):
         print(load_model_path)
 
         async with aiohttp.ClientSession() as session:
-            async with session.put(CONFIG.get('backend-trainer', 'RASA_URL'),
+            async with session.put(CONFIG.get('api_gateway', 'RASA_URL'),
                                    data=json.dumps({'model_file': str(load_model_path)}),
                                    headers={'content-type': 'application/json'}
                                    ) as resp:
