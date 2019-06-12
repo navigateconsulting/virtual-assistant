@@ -155,7 +155,7 @@ class ProjectsModel:
                                      }}
             result = await db.projects.update_one(query, update_field)
             print("Project Updated , rows modified {}".format(result))
-            return {"status": "Success", "message": "Project details updated successfully"}
+            return {"status": "Success", "message": "Project details updated successfully "}
 
     async def update_project_model(self, record):
         json_record = json.loads(json.dumps(record))

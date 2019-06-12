@@ -6,7 +6,7 @@ services:
 
 
   ui_trainer:
-    container_name: ui-trainer
+    container_name: ui_trainer
     build: './ui-trainer'
     ports:
       - "8080:80"
@@ -48,8 +48,8 @@ services:
     - "./vol_chatbot_data/rasa/server/actions:/app/actions"
 
 
-  backend-trainer:
-    container_name: backend-trainer
+  api_gateway:
+    container_name: api_gateway
     volumes:
       - ./vol_chatbot_data:/vol_chatbot_data
     build: './backend-trainer'
