@@ -4,12 +4,12 @@
 <mat-dialog-content>
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Story Name</mat-label>
-    <input matInput disabled formControlName="storyName">
+    <input matInput (keydown.space)="$event.preventDefault()" formControlName="storyName">
   </mat-form-field>
   <br />
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Story Description</mat-label>
-    <textarea matInput formControlName="storyDescription"></textarea>
+    <textarea matInput maxlength="140" formControlName="storyDescription"></textarea>
   </mat-form-field>
 </mat-dialog-content>
 

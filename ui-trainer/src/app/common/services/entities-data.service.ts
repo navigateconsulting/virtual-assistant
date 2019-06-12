@@ -14,7 +14,11 @@ export class EntitiesDataService {
   private socket: any;
 
   constructor() {
-    this.socket = io();
+    if (environment.production === false) {
+      this.socket = io(environment.BASE_URL);
+    } else {
+      this.socket = io();
+    }
     this.socket.nsp = constant.ENTITIES_NSP;
   }
 

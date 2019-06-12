@@ -4,12 +4,12 @@
 <mat-dialog-content>
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Response Name</mat-label>
-    <input matInput formControlName="responseName">
+    <input matInput (keydown.space)="$event.preventDefault()" formControlName="responseName">
   </mat-form-field>
   <br />
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Response Description</mat-label>
-    <textarea matInput formControlName="responseDescription"></textarea>
+    <textarea matInput maxlength="140" formControlName="responseDescription"></textarea>
   </mat-form-field>
 </mat-dialog-content>
 

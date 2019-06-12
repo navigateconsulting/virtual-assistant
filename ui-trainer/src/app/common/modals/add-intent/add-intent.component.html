@@ -4,12 +4,12 @@
 <mat-dialog-content>
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Intent Name</mat-label>
-    <input matInput formControlName="intentName">
+    <input matInput (keydown.space)="$event.preventDefault()" formControlName="intentName">
   </mat-form-field>
   <br />
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Intent Description</mat-label>
-    <textarea matInput formControlName="intentDescription"></textarea>
+    <textarea matInput maxlength="140" formControlName="intentDescription"></textarea>
   </mat-form-field>
 </mat-dialog-content>
 

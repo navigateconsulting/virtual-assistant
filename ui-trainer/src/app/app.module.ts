@@ -1,8 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import bootstrap from 'bootstrap';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -53,6 +51,9 @@ import { ToastrModule } from 'ng6-toastr-notifications';
 import { TryNowComponent } from './try-now/try-now.component';
 import { DeployComponent } from './deploy/deploy.component';
 import { DeployModelComponent } from './common/modals/deploy-model/deploy-model.component';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { MatSpinner } from '@angular/material';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { DeployModelComponent } from './common/modals/deploy-model/deploy-model.
     TryNowComponent,
     DeployComponent,
     DeployModelComponent,
+    SpinnerComponent,
   ],
   entryComponents: [
     AddEntityComponent,
@@ -116,7 +118,8 @@ import { DeployModelComponent } from './common/modals/deploy-model/deploy-model.
     AddStoryComponent,
     EditStoryComponent,
     DeleteStoryComponent,
-    DeployModelComponent
+    DeployModelComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -128,6 +131,7 @@ import { DeployModelComponent } from './common/modals/deploy-model/deploy-model.
     HttpClientModule,
     DragDropModule,
     FlexLayoutModule,
+    OverlayModule,
     ToastrModule.forRoot()
   ],
   providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}, EntitiesDataService],
