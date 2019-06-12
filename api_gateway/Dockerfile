@@ -7,8 +7,8 @@ RUN apt-get install -y --no-install-recommends build-essential gcc
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
 
-ADD . /backend-trainer
-WORKDIR /backend-trainer
+ADD . /api_gateway
+WORKDIR /api_gateway
 
 ENTRYPOINT ["python"]
 
