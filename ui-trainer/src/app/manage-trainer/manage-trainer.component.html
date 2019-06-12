@@ -1,9 +1,8 @@
-<div *ngIf="loadTryNow === false">
+<div *ngIf="loadTryNow === false" class="full-height">
   <mat-sidenav-container class="trainer-container">
     <mat-sidenav-content class="main-container">
       <mat-toolbar class="row toolbar-div">
         <div class="col-md-11 breadcrumb-div">
-          <!-- <span class="breadcrumb_path">{{breadcrumb_string}}</span> -->
           <nav>
             <ol class="breadcrumb">
                 <li *ngFor="let breadcrumb of breadcrumb_arr; let i = index;" class="breadcrumb-item" (click)="updateBreadcrumb(breadcrumb, i)"><span class="breadcrumb-element">{{breadcrumb.breadcrumb_name}}</span></li>
@@ -21,22 +20,22 @@
           </button>
         </div>
       </mat-toolbar>
-      <div *ngIf="setComponent === 'manage-projects'">
+      <div *ngIf="setComponent === 'manage-projects'" class="full-height">
         <app-manage-projects (selectedProject)="projectSelected($event)"></app-manage-projects>
       </div>
-      <div *ngIf="setComponent === 'manage-domains'">
+      <div *ngIf="setComponent === 'manage-domains'" class="full-height">
         <app-manage-domains [projectObjectId]="projectObjectId" (selectedDomain)="domainSelected($event)"></app-manage-domains>
       </div>
-      <div *ngIf="setComponent === 'manage-irs'">
+      <div *ngIf="setComponent === 'manage-irs'" class="full-height">
         <app-manage-irs [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId" (selectedIRS)="irsSelected($event)"></app-manage-irs>
       </div>
-      <div *ngIf="setComponent === 'manage-intents'">
+      <div *ngIf="setComponent === 'manage-intents'" class="full-height">
         <app-manage-intents [projectObjectId]="projectObjectId" [intentObjectId]="irsObjectId"></app-manage-intents>
       </div>
-      <div *ngIf="setComponent === 'manage-responses'">
+      <div *ngIf="setComponent === 'manage-responses'" class="full-height">
         <app-manage-responses [projectObjectId]="projectObjectId" [responseObjectId]="irsObjectId"></app-manage-responses>
       </div>
-      <div *ngIf="setComponent === 'manage-stories'">
+      <div *ngIf="setComponent === 'manage-stories'" class="full-height">
         <app-manage-stories [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId" [storyObjectId]="irsObjectId"></app-manage-stories>
       </div>
     </mat-sidenav-content>

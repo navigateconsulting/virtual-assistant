@@ -1,7 +1,15 @@
+.full-height {
+    height: 100%;
+    overflow-y: hidden;
+}
 .trainer-container {
     width: 100%;
     background-color: inherit;
+    height: 100%;
 } 
+.main-container {
+    overflow-y: hidden;
+}
 .mat-toolbar-row, .mat-toolbar-single-row {
     height: 60px;
     background-color: inherit;

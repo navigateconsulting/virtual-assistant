@@ -1,7 +1,11 @@
 .projects-container {
-    padding: 1.5%;
+    padding: 1%;
     overflow-y: auto;
-    height: 575px;
+    overflow-x: hidden;
+}
+.projects-table-container {
+    height: 450px;
+    overflow-y: auto;
 }
 table {
     width: 100%;
@@ -50,24 +54,6 @@ table {
 .edit_remove {
     cursor: pointer;
 }
-@media ( min-width: 768px ) {
-    .grid-divider {
-        padding: 0;
-    }
-    .grid-divider>[class*='col-'] {
-        position: static;
-    }
-    .grid-divider>[class*='col-']:nth-child(n+2):before {
-        content: "";
-        border-left: 1px solid #DDD;
-        position: absolute;
-        top: 8.25%;
-        bottom: 0;
-    }
-    .col-padding {
-        padding: 0 10px;
-    }
-}
 .modify_content {
     position: fixed;
     bottom: 3%;
@@ -80,4 +66,9 @@ table {
 .property-panel-components {
     margin: 0;
     padding: 5%;
+}
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
 }

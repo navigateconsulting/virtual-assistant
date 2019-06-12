@@ -2,7 +2,13 @@
     width: 100%;
 }
 .irs-container {
-    padding: 1.5%;
+    padding: 1%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+.irs-table-container {
+    height: 400px;
+    overflow-y: auto;
 }
 table {
     width: 100%;
@@ -55,4 +61,9 @@ table {
 }
 .edit_remove {
     cursor: pointer;
+}
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
 }

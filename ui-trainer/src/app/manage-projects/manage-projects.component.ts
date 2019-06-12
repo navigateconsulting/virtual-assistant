@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { AddProjectComponent } from '../common/modals/add-project/add-project.component';
 import { EditProjectComponent } from '../common/modals/edit-project/edit-project.component';
@@ -19,12 +19,14 @@ import { constant } from '../../environments/constants';
 })
 export class ManageProjectsComponent implements OnInit, OnDestroy {
 
+  private subscription: Subscription = new Subscription();
+
   constructor(public webSocketService: WebSocketService,
               public notificationsService: NotificationsService,
               public sharedDataService: SharedDataService,
               public dialog: MatDialog) {}
 
-// tslint:disable-next-line: max-line-length
+  // tslint:disable-next-line: max-line-length
   projectsDisplayedColumns: string[] = ['icon', 'project_name', 'project_description', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'try_now'];
   projectsDataSource: any;
 
@@ -62,11 +64,11 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
 
-    this.webSocketService.getProjectAlerts().subscribe(response => {
+    this.subscription.add(this.webSocketService.getProjectAlerts().subscribe(response => {
       this.notificationsService.showToast(response);
     },
     err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
+    () => console.log('Observer got a complete notification')));
   }
 
   addNewProject() {
@@ -133,6 +135,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.webSocketService.leaveProjectsRoom('root');
   }
 

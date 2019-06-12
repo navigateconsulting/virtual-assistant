@@ -81,6 +81,7 @@ export class ManageTrainerComponent implements OnInit {
     if (breadCrumbObject.breadcrumb_type === 'root') {
       this.breadcrumb_arr.push({breadcrumb_name: 'Projects', breadcrumb_stub: {}, breadcrumb_type: 'root'});
       this.setComponent = 'manage-projects';
+      this.showPropertyPanel = false;
     } else if (breadCrumbObject.breadcrumb_type === 'project') {
       this.projectSelected({projectStub: breadCrumbObject.breadcrumb_stub, component: 'manage-domains'});
     } else if (breadCrumbObject.breadcrumb_type === 'domain') {

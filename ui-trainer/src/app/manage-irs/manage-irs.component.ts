@@ -12,6 +12,7 @@ import { AddStoryComponent } from '../common/modals/add-story/add-story.componen
 import { EditStoryComponent } from '../common/modals/edit-story/edit-story.component';
 import { DeleteStoryComponent } from '../common/modals/delete-story/delete-story.component';
 import { NotificationsService } from '../common/services/notifications.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-manage-irs',
@@ -19,6 +20,8 @@ import { NotificationsService } from '../common/services/notifications.service';
   styleUrls: ['./manage-irs.component.scss']
 })
 export class ManageIrsComponent implements OnInit, OnDestroy {
+
+  private subscription: Subscription = new Subscription();
 
   constructor(public webSocketService: WebSocketService,
               public notificationsService: NotificationsService,
@@ -54,11 +57,11 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
 
-    this.webSocketService.getIntentAlerts().subscribe(response => {
+    this.subscription.add(this.webSocketService.getIntentAlerts().subscribe(response => {
       this.notificationsService.showToast(response);
     },
     err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
+    () => console.log('Observer got a complete notification')));
   }
 
   getResponses() {
@@ -70,11 +73,11 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
 
-    this.webSocketService.getResponseAlerts().subscribe(response => {
+    this.subscription.add(this.webSocketService.getResponseAlerts().subscribe(response => {
       this.notificationsService.showToast(response);
     },
     err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
+    () => console.log('Observer got a complete notification')));
   }
 
   getStories() {
@@ -86,11 +89,11 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
 
-    this.webSocketService.getStoryAlerts().subscribe(response => {
+    this.subscription.add(this.webSocketService.getStoryAlerts().subscribe(response => {
       this.notificationsService.showToast(response);
     },
     err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
+    () => console.log('Observer got a complete notification')));
   }
 
   addNewIntent() {
@@ -253,6 +256,7 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
   }
 }
