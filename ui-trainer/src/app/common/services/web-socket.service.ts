@@ -9,11 +9,10 @@ import io from 'socket.io-client';
 })
 export class WebSocketService {
 
-  private url = environment.BASEURL;
   private socket: any;
 
   constructor() {
-    this.socket = io(this.url);
+    this.socket = io();
   }
 
   createProjectsRoom(project_room: string) {
