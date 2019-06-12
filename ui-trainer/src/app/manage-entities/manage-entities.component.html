@@ -5,6 +5,7 @@
             {{entity.entity_name}}
             </mat-chip>
             <input placeholder="New Entity..."
+                    maxlength="30"
                     (keydown.space)="$event.preventDefault()"
                     [matChipInputFor]="chipList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"

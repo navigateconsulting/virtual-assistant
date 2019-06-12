@@ -4,7 +4,7 @@
 <mat-dialog-content>
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Project Name</mat-label>
-    <input matInput (keydown.space)="$event.preventDefault()" formControlName="projectName">
+    <input matInput (keydown.space)="$event.preventDefault()" maxlength="30" formControlName="projectName">
   </mat-form-field>
   <br />
   <mat-form-field class="full-width" appearance="outline">

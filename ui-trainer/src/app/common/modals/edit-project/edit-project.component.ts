@@ -16,7 +16,7 @@ export class EditProjectComponent implements OnInit {
 
   ngOnInit() {
     this.editProjectForm = new FormGroup({
-      projectName: new FormControl(this.data.projectName, Validators.required),
+      projectName: new FormControl({value: this.data.projectName, disabled: true}, Validators.required),
       projectDescription: new FormControl(this.data.projectDescription, Validators.required)
     });
   }
