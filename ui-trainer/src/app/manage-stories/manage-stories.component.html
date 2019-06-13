@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div *ngIf="currentStory" class="place_div_center">
         <form [formGroup]="storyForm">
-          <div class="row">
+          <div class="row story-description-box">
             <div class="col-md-12">
               <span class="mat-subheading-2"><b>Story Description: </b></span>
               <span *ngIf="currentStory">{{currentStory.story_description}}</span>
@@ -138,17 +138,6 @@
                         
                             <div id="collapseResponse_{{ind}}" class="collapse" attr.aria-labelledby="headingResponse_{{ind}}" attr.data-parent="#accordion-response-{{ind}}">
                               <div class="card-body">
-                                <!-- <mat-form-field class="entity-textbox">
-                                  <input type="text" placeholder="Add Entity" (keydown)="handleSpacebar($event)" matInput [formControl]="entityControl" name="response_entity_{{ind}}" [matAutocomplete]="auto">
-                                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayEntityWith">
-                                    <mat-option *ngFor="let option of entitiesfilteredOptions | async" (onSelectionChange)="onEntityChange($event, ind)" [value]="option">
-                                      {{option.entity_name}}:{{option.entity_value}}
-                                    </mat-option>
-                                  </mat-autocomplete>
-                                  <mat-error *ngIf="entityControl.hasError('invalid')">
-                                    Invalid Entity
-                                  </mat-error>
-                                </mat-form-field> -->
                                 <div class="entities-box">
                                   <mat-chip-list>
                                     <mat-chip color="warn" selected *ngFor="let entity of intent_response_entity_arr[ind]; let ind_ent = index" [selectable]="selectable" [removable]="removable" (removed)="removeEntityFromIntentResponse(ind, ind_ent)">

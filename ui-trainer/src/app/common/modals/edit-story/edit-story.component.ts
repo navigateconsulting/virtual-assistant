@@ -27,7 +27,7 @@ export class EditStoryComponent implements OnInit {
         project_id: this.data.projectObjectId,
         domain_id: this.data.domainObjectId,
         object_id: this.data.storyObjectId,
-        story_name: this.editStoryForm.value.storyName,
+        story_name: this.data.storyName,
         story_description: this.editStoryForm.value.storyDescription
       });
     }
