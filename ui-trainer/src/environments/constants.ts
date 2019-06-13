@@ -88,5 +88,6 @@ export const constant = {
     MODEL_DEPLOY_LISTEN: 'publishMessage',
 
     MODULE_COMMON: 'common',
+    MODULE_MODEL: 'model',
 };
 

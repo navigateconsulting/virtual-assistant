@@ -54,6 +54,7 @@ import { DeployModelComponent } from './common/modals/deploy-model/deploy-model.
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatSpinner } from '@angular/material';
 import { SpinnerComponent } from './spinner/spinner.component';
+import { ModelErrorComponent } from './common/modals/model-error/model-error.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
     DeployComponent,
     DeployModelComponent,
     SpinnerComponent,
+    ModelErrorComponent,
   ],
   entryComponents: [
     AddEntityComponent,
@@ -119,7 +121,8 @@ import { SpinnerComponent } from './spinner/spinner.component';
     EditStoryComponent,
     DeleteStoryComponent,
     DeployModelComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    ModelErrorComponent
   ],
   imports: [
     BrowserModule,

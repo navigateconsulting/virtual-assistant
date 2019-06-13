@@ -3,9 +3,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
 
+import { constant } from '../../environments/constants';
+
 import { WebSocketService } from '../common/services/web-socket.service';
 import { NotificationsService } from '../common/services/notifications.service';
 import { OverlayService } from '../common/services/overlay.service';
+import { ModelErrorService } from '../common/services/model-error.service';
+import { SharedDataService } from '../common/services/shared-data.service';
 
 import { DeployModelComponent } from '../common/modals/deploy-model/deploy-model.component';
 
@@ -21,6 +25,8 @@ export class DeployComponent implements OnInit {
   constructor(public dialog: MatDialog,
               public overlayService: OverlayService,
               public webSocketService: WebSocketService,
+              public modelErrorService: ModelErrorService,
+              public sharedDataService: SharedDataService,
               public notificationsService: NotificationsService) {}
 
   projectsModelDisplayedColumns: string[] = ['icon', 'project_name', 'source', 'model_name', 'state', 'deploy'];
@@ -46,9 +52,13 @@ export class DeployComponent implements OnInit {
     () => console.log('Observer got a complete notification'));
 
     this.webSocketService.getModelDeployAlerts().subscribe(response => {
-      if (response) {
+      if (response.status === 'Success') {
         this.overlayService.spin$.next(false);
         this.notificationsService.showToast(response);
+      } else if (response.status === 'Error') {
+        this.overlayService.spin$.next(false);
+        this.sharedDataService.setSharedData('showErrorText', response.message, constant.MODULE_MODEL);
+        this.modelErrorService.modelError$.next(true);
       }
     },
     err => console.error('Observer got an error: ' + err),
