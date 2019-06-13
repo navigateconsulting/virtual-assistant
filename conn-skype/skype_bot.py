@@ -7,7 +7,6 @@ import uuid
 # Check if these are redundant
 from urllib.parse import unquote
 import lxml.html
-import sys
 
 
 class SkypeBot:
@@ -410,9 +409,26 @@ class SkypeBot:
                                           data=json.dumps({"sender": message['contact_name'], "message": message['message']}),
                                           headers={'Content-Type': 'application/json',
                                                    'Accept': 'application/json'}) as bot_res:
+                print(bot_res.status)
                 json_resp = await bot_res.json()
 
             # TODO Handle termination of chat in Rasa and in Skype as well
+
+            print(json_resp)
+            if bot_res.status != 200:
+                operation_context = "?OperationContext=" + str(uuid.uuid4())
+                async with self._session.post(url=self.hub_address + message['send_message_link'] + operation_context,
+                                              data="Unable to reach Rasa servers Please check configuration",
+                                              headers=self.post_headers_plain) as res:
+                    print("Sent Request with status {}".format(res.status))
+
+            if not json_resp:
+                print("No Model available")
+                operation_context = "?OperationContext=" + str(uuid.uuid4())
+                async with self._session.post(url=self.hub_address + message['send_message_link'] + operation_context,
+                                              data="Chat bot not Available. Please use UI Trainer to Train and Deploy new Model",
+                                              headers=self.post_headers_plain) as res:
+                    print("Sent Request with status {}".format(res.status))
 
             for response in json_resp:
                 print("Response from Rasa {}".format(response['text']))
