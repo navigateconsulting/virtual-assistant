@@ -513,20 +513,22 @@ class TryNow(socketio.AsyncNamespace):
         training_files = base_path + training_files
         domain = base_path + domain
         output = base_path + output
-
-        model_path = await train_async(domain, config, [training_files], output)
-        unpacked = model.get_model(model_path)
-        domain = Domain.load(domain)
-        _tracker_store = MongoTrackerStore(domain=domain,
-                                           host=CONFIG.get('api_gateway', 'MONGODB_URL'),
-                                           db=CONFIG.get('api_gateway', 'MONGODB_NAME'),
-                                           username=None,
-                                           password=None,
-                                           auth_source="admin",
-                                           collection="conversations",
-                                           event_broker=None)
-        self.agent = Agent.load(unpacked, tracker_store=_tracker_store)
-        await sio.emit('chatResponse', {"status": "Success", "message": "Ready to chat"}, namespace='/trynow', room=sid)
+        try:
+            model_path = await train_async(domain, config, [training_files], output)
+            unpacked = model.get_model(model_path)
+            domain = Domain.load(domain)
+            _tracker_store = MongoTrackerStore(domain=domain,
+                                               host=CONFIG.get('api_gateway', 'MONGODB_URL'),
+                                               db=CONFIG.get('api_gateway', 'MONGODB_NAME'),
+                                               username=None,
+                                               password=None,
+                                               auth_source="admin",
+                                               collection="conversations",
+                                               event_broker=None)
+            self.agent = Agent.load(unpacked, tracker_store=_tracker_store)
+            await sio.emit('chatResponse', {"status": "Success", "message": "Ready to chat"}, namespace='/trynow', room=sid)
+        except:
+            await sio.emit('chatResponse', {"status": "Error", "message": "Model Training failed "}, namespace='/trynow', room=sid)
 
     async def on_chatNow(self, sid, message):
 
