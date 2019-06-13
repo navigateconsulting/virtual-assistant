@@ -551,6 +551,7 @@ class ModelPublish(socketio.AsyncNamespace):
     async def on_getDashboard(self, sid):
 
         result = await ProjectsModel.get_projects()
+        #TODO On Dashboard page load , check models on disk and mark them on Projects collection
         await sio.emit('respModelPublish', result, namespace='/modelpublish')
 
     async def on_trainModel(self, sid, project_id):
