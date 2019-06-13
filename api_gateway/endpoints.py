@@ -4,6 +4,7 @@ from export_project import ExportProject
 from config import CONFIG
 import os
 import json
+import sys
 
 
 EntityModel = EntityModel()
@@ -528,7 +529,7 @@ class TryNow(socketio.AsyncNamespace):
             self.agent = Agent.load(unpacked, tracker_store=_tracker_store)
             await sio.emit('chatResponse', {"status": "Success", "message": "Ready to chat"}, namespace='/trynow', room=sid)
         except:
-            await sio.emit('chatResponse', {"status": "Error", "message": "Model Training failed "}, namespace='/trynow', room=sid)
+            await sio.emit('chatResponse', {"status": "Error", "message": str(sys.exc_info())}, namespace='/trynow', room=sid)
 
     async def on_chatNow(self, sid, message):
 
