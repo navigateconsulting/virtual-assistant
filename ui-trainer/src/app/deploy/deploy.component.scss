@@ -1,7 +1,16 @@
 .models-container {
-    padding: 2%;
+    padding: 1%;
+    overflow-x: hidden;
+    height: 100%;
+}
+.add-model {
+    height: 10%;
+    padding: 0.5%;
+}
+.projects-model-table-container {
+    height: 80%;
+    padding: 0.5%;
     overflow-y: auto;
-    height: 600px;
 }
 table {
     width: 100%;
