@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
+import { ModelErrorService } from '../common/services/model-error.service';
 
 declare var adjustTryNowScroll: Function;
 declare var changeRowBackgroundColor: Function;
@@ -33,7 +34,8 @@ export class TryNowComponent implements OnInit, OnDestroy {
   slots: any;
 
   constructor(public webSocketService: WebSocketService,
-              public sharedDataService: SharedDataService) { }
+              public sharedDataService: SharedDataService,
+              public modelErrorService: ModelErrorService) { }
 
   ngOnInit() {
     this.projectObjectId = this.sharedDataService.getSharedData('projectObjectId', constant.MODULE_COMMON);
@@ -51,6 +53,10 @@ export class TryNowComponent implements OnInit, OnDestroy {
         this.chats = new Array<object>();
         this.chats_backup = new Array<object>();
         this.chats.push({event: 'action', name: 'action_listen'});
+      } else if (response.status === 'Error') {
+        this.showSpinner = false;
+        this.sharedDataService.setSharedData('showErrorText', response.message, constant.MODULE_MODEL);
+        this.modelErrorService.modelError$.next(true);
       }
     },
     err => console.error('Observer got an error: ' + err),
