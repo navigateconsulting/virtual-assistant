@@ -528,7 +528,8 @@ class TryNow(socketio.AsyncNamespace):
                                                event_broker=None)
             self.agent = Agent.load(unpacked, tracker_store=_tracker_store)
             await sio.emit('chatResponse', {"status": "Success", "message": "Ready to chat"}, namespace='/trynow', room=sid)
-        except:
+        except Exception as e:
+            print("Exception while try Now ---  "+str(e))
             await sio.emit('chatResponse', {"status": "Error", "message": str(sys.exc_info())}, namespace='/trynow', room=sid)
 
     async def on_chatNow(self, sid, message):
@@ -584,25 +585,29 @@ class ModelPublish(socketio.AsyncNamespace):
 
         # Upload model to Rasa Server
 
-        model_name = os.path.basename(model_path)
-        load_model_path = "/app/models/"+project_id+"/models/"+model_name
-        print(load_model_path)
+        if model_path is not None:
 
-        async with aiohttp.ClientSession() as session:
-            async with session.put(CONFIG.get('api_gateway', 'RASA_URL'),
-                                   data=json.dumps({'model_file': str(load_model_path)}),
-                                   headers={'content-type': 'application/json'}
-                                   ) as resp:
-                json_resp = await resp.json()
-                print("Response from Rasa {}".format(resp.status))
+            model_name = os.path.basename(model_path)
+            load_model_path = "/app/models/"+project_id+"/models/"+model_name
+            print(load_model_path)
 
-        result = await ProjectsModel.update_project_model({"object_id": str(project_id),
-                                                           "model_name": model_name,
-                                                           "state": "Published"})
+            async with aiohttp.ClientSession() as session:
+                async with session.put(CONFIG.get('api_gateway', 'RASA_URL'),
+                                       data=json.dumps({'model_file': str(load_model_path)}),
+                                       headers={'content-type': 'application/json'}
+                                       ) as resp:
+                    json_resp = await resp.json()
+                    print("Response from Rasa {}".format(resp.status))
 
-        await sio.emit('publishMessage', {"status": "Success", "message": "Model Published successfully"}, namespace='/modelpublish')
-        result = await ProjectsModel.get_projects()
-        await sio.emit('respModelPublish', result, namespace='/modelpublish')
+            result = await ProjectsModel.update_project_model({"object_id": str(project_id),
+                                                               "model_name": model_name,
+                                                               "state": "Published"})
+
+            await sio.emit('publishMessage', {"status": "Success", "message": "Model Published successfully"}, namespace='/modelpublish')
+            result = await ProjectsModel.get_projects()
+            await sio.emit('respModelPublish', result, namespace='/modelpublish')
+        else:
+            await sio.emit('publishMessage', {"status": "Error", "message": "Error while training model"}, namespace='/modelpublish')
 
 
 sio.register_namespace(ModelPublish('/modelpublish'))

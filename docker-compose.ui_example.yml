@@ -4,25 +4,7 @@ version: '3.0'
 
 services:
 
-  ui_trainer:
-    container_name: ui_trainer
-    build: './ui-trainer'
-    ports:
-      - "8080:80"
-
-  mongodb:
-    image: mongo:latest
-    container_name: "mongodb"
-    environment:
-      - MONGO_DATA_DIR=/data/db
-      - MONGO_LOG_DIR=/dev/null
-      - MONGODB_USER="eva"
-      - MONGODB_PASS="evapass"
-    volumes:
-      - ./vol_chatbot_data/database/db:/data/db
-    ports:
-      - 27017:27017
-    command: mongod --smallfiles --logpath=/dev/null # --quiet
+  # Server Stack
 
   rasa:
     image: rasa/rasa:latest-full
@@ -45,7 +27,30 @@ services:
     - "5055:5055"
     volumes:
     - "./vol_chatbot_data/rasa/server/actions:/app/actions"
+    depends_on:
+      - rasa
 
+  skype_connector:
+    container_name: skype_connector
+    build: './conn-skype'
+    depends_on:
+      - rasa
+
+  ## Trainer stack
+
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+      - MONGODB_USER="eva"
+      - MONGODB_PASS="evapass"
+    volumes:
+      - ./vol_chatbot_data/database/db:/data/db
+    ports:
+      - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
 
   api_gateway:
     container_name: api_gateway
@@ -54,10 +59,17 @@ services:
     build: './api_gateway'
     ports:
       - "8089:8089"
+    depends_on:
+      - mongodb
 
-  skype_connector:
-    container_name: skype_connector
-    build: './conn-skype'
+  ui_trainer:
+    container_name: ui_trainer
+    build: './ui-trainer'
+    ports:
+      - "8080:80"
+    depends_on:
+      - api_gateway
+
 
 volumes:
   skype_keys_vol:
