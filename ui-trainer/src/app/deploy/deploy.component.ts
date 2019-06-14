@@ -52,13 +52,9 @@ export class DeployComponent implements OnInit {
     () => console.log('Observer got a complete notification'));
 
     this.webSocketService.getModelDeployAlerts().subscribe(response => {
-      if (response.status === 'Success') {
+      if (response) {
         this.overlayService.spin$.next(false);
         this.notificationsService.showToast(response);
-      } else if (response.status === 'Error') {
-        this.overlayService.spin$.next(false);
-        this.sharedDataService.setSharedData('showErrorText', response.message, constant.MODULE_MODEL);
-        this.modelErrorService.modelError$.next(true);
       }
     },
     err => console.error('Observer got an error: ' + err),
