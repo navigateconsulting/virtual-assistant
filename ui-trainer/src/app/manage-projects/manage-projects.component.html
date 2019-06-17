@@ -11,10 +11,9 @@
       </button>
     </div>
   </div>
-  <br />
-  <div class="row">
+  <div class="row projects-table-container">
     <div class="col-md-12">
-      <div class="projects-table-container mat-elevation-z8">
+      <div class="mat-elevation-z8">
         <table mat-table [dataSource]="projectsDataSource">
 
           <ng-container matColumnDef="icon">
@@ -67,10 +66,10 @@
             <td mat-cell *matCellDef="let project" class="edit_remove"><button mat-icon-button color="primary"><mat-icon (click)="tryNowProject(project)">play_circle_filled</mat-icon></button></td>
           </ng-container>
         
-          <tr mat-header-row *matHeaderRowDef="projectsDisplayedColumns; sticky: true"></tr>
+          <tr mat-header-row *matHeaderRowDef="projectsDisplayedColumns;"></tr>
           <tr mat-row *matRowDef="let row; columns: projectsDisplayedColumns;"></tr>
         </table>
-        <mat-paginator class="mat-paginator-sticky" [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+        <mat-paginator class="" [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
       </div>
     </div>
   </div>

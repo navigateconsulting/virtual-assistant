@@ -1,10 +1,15 @@
 .projects-container {
     padding: 1%;
-    overflow-y: auto;
     overflow-x: hidden;
+    height: 100%;
+}
+.add-project {
+    height: 10%;
+    padding: 0.5%;
 }
 .projects-table-container {
-    height: 450px;
+    height: 75%;
+    padding: 0.5%;
     overflow-y: auto;
 }
 table {
