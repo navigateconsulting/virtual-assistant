@@ -3,12 +3,23 @@
 }
 .irs-container {
     padding: 1%;
-    overflow-y: hidden;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.add-irs {
+    padding: 0.5%;
+    height: 60px;
 }
 .irs-table-container {
-    height: 400px;
+    flex: 1;
+    padding: 0.5%;
     overflow-y: auto;
+}
+.irs-footer {
+    padding: 0.5%;
+    height: 10px;
 }
 table {
     width: 100%;
