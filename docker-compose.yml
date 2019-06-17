@@ -1,129 +1,42 @@
 version: '3.0'
 
-## Docker compose main file
+## Docker compose test file for UI Appdcmer
 
 services:
 
-  ##  Rasa Core main Container for PROD , This is an image downloaded from dockerhub , local files are mapped.
+  # Server Stack
 
-  rasa_core:
-    image: rasa/rasa_core:latest
+  rasa:
+    image: rasa/rasa:latest-full
     ports:
       - 5005:5005
     volumes:
-      - ./vol_chatbot_data/rasa/100/models/core:/app/models
-      - ./vol_chatbot_data/rasa/100/config:/app/config
+    - "./vol_chatbot_data/rasa/server/models:/app/models"
+    - "./vol_chatbot_data/rasa/server/config:/app/config"
+    - "./vol_chatbot_data/rasa/server/logs:/app/logs"
+    - "./vol_chatbot_data/rasa/server/data:/app/data"
     command:
-      - start
-      - --core
-      - models
-      - -c
-      - rest
-      - --endpoints
-      - config/endpoints.yml
-      - -u
-      - current/
-
-  ## Rasa NLU image from Dockerhub , linked with the volume via bind mount
-
-  rasa_nlu:
-    image: rasa/rasa_nlu:latest-tensorflow
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./vol_chatbot_data/rasa/100/models/nlu:/app/models
-      - ./vol_chatbot_data/rasa/100/config:/app/config
-    command:
-      - start
-      - --path
-      - models
-      - -c
-      - config/nlu_config.yml
-
-
-  ##  Rasa core actions server from dockerhub linked to local bind mount
+    - run
+    - -m
+    - ./models
+    - --enable-api
 
   action_server:
-    image: rasa/rasa_core_sdk:latest
+    image: rasa/rasa-sdk:latest
     ports:
-      - "5055:5055"
+    - "5055:5055"
     volumes:
-      - ./vol_chatbot_data/rasa/100/actions:/app/actions
-
-  ## Redis conatiner for session manaegement for chatbot
-
-  redis:
-    image: redis:latest
-
-  ## starting container for Angular Rasa Trainer
-
-## Issue with launching this container hence committed
-  ui_trainer:
-    container_name: ui-trainer
-    build: './ui-trainer'
-    ports:
-      - "8080:80"
-
-  ## Skype master container , it connects to Azure and starts skype channel
-
-  skype:
-    build: './con-skype-master'
-    volumes:
-      - skype_keys_vol:/data
-    environment:
-      PYTHONUNBUFFERED: 1
-
-  ## Skype Events processor Processes any incomming events
-
-  skype_events:
-    build: './con-skype-events'
+    - "./vol_chatbot_data/rasa/server/actions:/app/actions"
     depends_on:
-      - skype
-      - kafka
-      - zookeeper
-    volumes:
-      - skype_keys_vol:/data
-    environment:
-      PYTHONUNBUFFERED: 1
+      - rasa
 
-  ## Skype send message this one sends outbound messages
-
-  skype_send_msg:
-    build: './con-skype-message'
+  skype_connector:
+    container_name: skype_connector
+    build: './conn-skype'
     depends_on:
-      - skype
-      - kafka
-      - zookeeper
-    volumes:
-      - skype_keys_vol:/data
-    environment:
-      PYTHONUNBUFFERED: 1
+      - rasa
 
-  ## Zookeper instance
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-
-  ## Kafka instance
-
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    depends_on:
-      - zookeeper
-    ports:
-      - 9092:9092
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
-  ## Mongo DB Instance
+  ## Trainer stack
 
   mongodb:
     image: mongo:latest
@@ -139,11 +52,24 @@ services:
       - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
 
-  backend-trainer:
+  api_gateway:
     container_name: api_gateway
+    volumes:
+      - ./vol_chatbot_data:/vol_chatbot_data
     build: './api_gateway'
     ports:
       - "8089:8089"
+    depends_on:
+      - mongodb
+
+  ui_trainer:
+    container_name: ui_trainer
+    build: './ui-trainer'
+    ports:
+      - "8080:80"
+    depends_on:
+      - api_gateway
+
 
 volumes:
   skype_keys_vol:
