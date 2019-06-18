@@ -1,0 +1,64 @@
+.full-height {
+    height: 100%;
+    overflow-y: hidden;
+}
+.trainer-container {
+    width: 100%;
+    background-color: inherit;
+    height: 100%;
+} 
+.main-container {
+    overflow-y: hidden;
+}
+.mat-toolbar-row, .mat-toolbar-single-row {
+    height: 60px;
+    background-color: inherit;
+}
+span.breadcrumb_path {
+    font-size: 18px;
+}
+.toolbar-div {
+    // background-color: #E8E8E8;
+    // box-shadow: 2px 5px #EEEEEE;
+    max-height: 50px;
+    padding: 0;
+}
+.breadcrumb-div {
+    padding: 0;
+}
+.breadcrumb {
+    background-color: #FFFFFF;
+    height: 50px;
+}
+/* Style to change separator  */
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+}
+.breadcrumb-item a {
+    color: #383838;
+    font-family: "Lato Semibold";
+    font-size: 20px;
+    line-height: 24px;
+}
+.breadcrumb-element {
+    cursor: pointer;
+}
+.show-entities-div {
+    background-color: #E8E8E8;
+    margin-top: -1.2%;
+}
+.property-panel-container {
+    width: 350px;
+}
+.property-panel-row {
+    padding: 0;
+    margin: 0;
+}
+.property-panel {
+    margin: 0;
+    padding: 0;
+}
+.property-panel-components {
+    margin: 0;
+    padding: 5%;
+}

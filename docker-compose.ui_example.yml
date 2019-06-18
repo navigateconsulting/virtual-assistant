@@ -4,12 +4,39 @@ version: '3.0'
 
 services:
 
+  # Server Stack
 
-#  ui_trainer:
-#    container_name: ui-trainer
-##    build: './ui-trainer'
-#    ports:
-#      - "8080:80"
+  rasa:
+    image: rasa/rasa:latest-full
+    ports:
+      - 5005:5005
+    volumes:
+    - "./vol_chatbot_data/rasa/server/models:/app/models"
+    - "./vol_chatbot_data/rasa/server/config:/app/config"
+    - "./vol_chatbot_data/rasa/server/logs:/app/logs"
+    - "./vol_chatbot_data/rasa/server/data:/app/data"
+    command:
+    - run
+    - -m
+    - ./models
+    - --enable-api
+
+  action_server:
+    image: rasa/rasa-sdk:latest
+    ports:
+    - "5055:5055"
+    volumes:
+    - "./vol_chatbot_data/rasa/server/actions:/app/actions"
+    depends_on:
+      - rasa
+
+  skype_connector:
+    container_name: skype_connector
+    build: './conn-skype'
+    depends_on:
+      - rasa
+
+  ## Trainer stack
 
   mongodb:
     image: mongo:latest
@@ -25,12 +52,23 @@ services:
       - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
 
-
-  backend-trainer:
-    container_name: backend-trainer
-    build: './backend-trainer'
+  api_gateway:
+    container_name: api_gateway
+    volumes:
+      - ./vol_chatbot_data:/vol_chatbot_data
+    build: './api_gateway'
     ports:
       - "8089:8089"
+    depends_on:
+      - mongodb
+
+  ui_trainer:
+    container_name: ui_trainer
+    build: './ui-trainer'
+    ports:
+      - "8080:80"
+    depends_on:
+      - api_gateway
 
 
 volumes:

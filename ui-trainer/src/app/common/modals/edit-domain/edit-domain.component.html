@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Edit Domain</h1>
+
+<form [formGroup]="editDomainForm" (ngSubmit)="closeDialog()">
+<mat-dialog-content>
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Domain Name</mat-label>
+    <input matInput (keydown.space)="$event.preventDefault()" formControlName="domainName">
+  </mat-form-field>
+  <br />
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Domain Description</mat-label>
+    <textarea matInput maxlength="140" formControlName="domainDescription"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button type="submit" [disabled]="!editDomainForm.valid" color="primary">OK</button>
+</mat-dialog-actions>
+</form>

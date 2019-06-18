@@ -4,14 +4,10 @@
   <div class="column">
     <mat-grid-list cols="3" rowHeight="1:1">
       <mat-grid-tile>
-        <button class="btn btn-link">
-          <img class="side_header_logo_img"  src="/assets/images/eva_logo.png">
-        </button>
+        <button mat-raised-button [routerLink]="'/home/trainer'" color="primary"><b>Trainer</b></button>
       </mat-grid-tile>
       <mat-grid-tile>
-        <button class="btn btn-link">
-          <mat-icon>looks_two</mat-icon>
-        </button>
+        <button mat-raised-button [routerLink]="'/home/deploy'" color="primary"><b>Deploy</b></button>
       </mat-grid-tile>
       <mat-grid-tile>
         <button class="btn btn-link">

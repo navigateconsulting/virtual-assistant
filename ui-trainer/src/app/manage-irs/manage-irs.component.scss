@@ -1,0 +1,80 @@
+.example-stretched-tabs {
+    width: 100%;
+}
+.irs-container {
+    padding: 1%;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.add-irs {
+    padding: 0.5%;
+    height: 60px;
+}
+.irs-table-container {
+    flex: 1;
+    padding: 0.5%;
+    overflow-y: auto;
+}
+.irs-footer {
+    padding: 0.5%;
+    height: 10px;
+}
+table {
+    width: 100%;
+}
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+.mat-column-icon{
+    width: 5%;
+}
+.mat-column-intent_name{
+    width: 25%;
+}
+.mat-column-intent_description {
+    width: 65%;
+}
+.mat-column-response_name{
+    width: 25%;
+}
+.mat-column-response_description {
+    width: 65%;
+}
+.mat-column-story_name{
+    width: 25%;
+}
+.mat-column-story_description {
+    width: 65%;
+}
+.mat-column-edit {
+    width: 5%;
+}
+.mat-column-delete {
+    width: 5%;
+}
+.mat-row:hover {
+    background-color: #eee;
+}
+.intent_name_text:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.response_name_text:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.story_name_text:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.edit_remove {
+    cursor: pointer;
+}
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}

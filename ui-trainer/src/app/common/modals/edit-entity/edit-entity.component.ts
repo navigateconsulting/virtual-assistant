@@ -8,19 +8,23 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 })
 export class EditEntityComponent implements OnInit {
 
-  entity_name: string;
-  entity_desc: string;
+  entity: any;
+  entityName: string;
+  entityDescription: string;
   entitySlotType: string;
   categorical_values: string;
   min_value: number;
   max_value: number;
+  entityObjectId: string;
 
   constructor(public dialogRef: MatDialogRef<EditEntityComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    this.entity_name = this.data.entity.entity;
-    this.entity_desc = this.data.entity.entity_desc;
+    this.entity = this.data.entity;
+    this.entityObjectId = this.data.entity._id.$oid;
+    this.entityName = this.data.entity.entity_name;
+    this.entityDescription = this.data.entity.entity_description;
     this.entitySlotType = this.data.entity.entity_slot.type;
     if (this.entitySlotType === 'categorical') {
       this.categorical_values = this.data.entity.entity_slot.values.join(',');
@@ -35,21 +39,20 @@ export class EditEntityComponent implements OnInit {
   }
 
   saveEntitySlotDetails() {
-    let entity_details = {};
+    this.entity.entity_name = this.entityName;
+    this.entity.entity_description = this.entityDescription;
     if (this.entitySlotType === 'categorical') {
-      // tslint:disable-next-line:max-line-length
-      entity_details = {entity: this.entity_name, entity_desc: this.entity_desc, entity_slot: {type: this.entitySlotType, values: this.categorical_values.split(',')}};
+      this.entity.entity_slot = {type: this.entitySlotType, values: this.categorical_values.split(',')};
     } else if (this.entitySlotType === 'float') {
-      // tslint:disable-next-line:max-line-length
-      entity_details = {entity: this.entity_name, entity_desc: this.entity_desc, entity_slot: {type: this.entitySlotType, values: {min_value: this.min_value, max_value: this.max_value}}};
+      this.entity.entity_slot = {type: this.entitySlotType, values: {min_value: this.min_value, max_value: this.max_value}};
     } else {
-      entity_details = {entity: this.entity_name, entity_desc: this.entity_desc, entity_slot: {type: this.entitySlotType, values: []}};
+      this.entity.entity_slot = {type: this.entitySlotType, values: [""]};
     }
-    this.dialogRef.close(entity_details);
+    this.dialogRef.close(this.entity);
   }
 
   removeEntity() {
-    this.dialogRef.close('0');
+    this.dialogRef.close(this.entityObjectId);
   }
 
 }

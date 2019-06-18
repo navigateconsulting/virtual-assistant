@@ -1,2 +1,0 @@
-model_checkpoint_path: "/app/models/current/model_20190411-171944/intent_classifier_tensorflow_embedding.ckpt"
-all_model_checkpoint_paths: "/app/models/current/model_20190411-171944/intent_classifier_tensorflow_embedding.ckpt"

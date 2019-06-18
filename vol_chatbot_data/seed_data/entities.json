@@ -1,2 +1,1 @@
-[{"project_id":1,"entity_name":"user_name","entity_description":"name of the Entityt Etc","entity_slot":{"type":"text","values":[""]}},
-{"project_id":1,"entity_name":"user_name","entity_description":"name of the Entityt Etc","entity_slot":{"type":"categorical","values":["india","us","uk"]}}]
+[{"project_id":"5cee4f33177b9568551dde67","entity_description":"stores location value","entity_slot":{"type":"text","values":[]},"entity_name":"location_value"}]

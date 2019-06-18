@@ -1,20 +1,63 @@
-@media ( min-width: 768px ) {
-    .grid-divider {
-        padding: 0;
-    }
-    .grid-divider>[class*='col-'] {
-        position: static;
-    }
-    .grid-divider>[class*='col-']:nth-child(n+2):before {
-        content: "";
-        border-left: 1px solid #DDD;
-        position: absolute;
-        top: 8.25%;
-        bottom: 0;
-    }
-    .col-padding {
-        padding: 0 10px;
-    }
+.projects-container {
+    padding: 1%;
+    overflow-x: hidden;
+    height: 100%;
+}
+.add-project {
+    height: 10%;
+    padding: 0.5%;
+}
+.projects-table-container {
+    height: 75%;
+    padding: 0.5%;
+    overflow-y: auto;
+}
+table {
+    width: 100%;
+}
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+.mat-column-icon{
+    width: 5%;
+}
+.mat-column-project_name{
+    width: 10%;
+}
+.mat-column-project_description {
+    width: 35%;
+}
+.mat-column-created_by {
+    width: 10%;
+}
+.mat-column-state {
+    width: 10%;
+}
+.mat-column-source {
+    width: 8%;
+}
+.mat-column-edit {
+    width: 5%;
+}
+.mat-column-delete {
+    width: 5%;
+}
+.mat-column-copy {
+    width: 5%;
+}
+.mat-column-try_now {
+    width: 7%;
+}
+.mat-row:hover {
+    background-color: #eee;
+}
+.project_name_text:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.edit_remove {
+    cursor: pointer;
 }
 .modify_content {
     position: fixed;
@@ -28,4 +71,13 @@
 .property-panel-components {
     margin: 0;
     padding: 5%;
+}
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}
+.add-project-button {
+    // background-color: #19D2CC;
+    background-image: linear-gradient(to right, #19D2CC, #0968B5);
 }

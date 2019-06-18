@@ -1,58 +1,33 @@
-<div class="row grid-divider" style="padding: 5px; height: 100%; box-sizing: border-box;">
-  <div class="col-md-9">
-    <div class="col-padding">
-      <mat-card style="height: 100%; box-sizing: border-box; padding:0">
-        <app-file-explorer [fileElements]="fileElements | async" [path]="currentPath" [showAddFolderFile]="showAddFolderFile" [canNavigateUp]="canNavigateUp" (folderAdded)="addFolder($event)"
-          (fileAdded)="addFile($event)" (elementRemoved)="removeElement($event)" (navigatedDown)="navigateToFolder($event)" (navigatedUp)="navigateUp($event)" (elementRenamed)="renameElement($event)"
-          (elementMoved)="moveElement($event)">
-        </app-file-explorer>
-      </mat-card>
+<div class="domains-container">
+  <div class="row add-domain">
+    <div class="col-md-11">
+      <mat-form-field>
+        <input matInput (keyup)="applyDomainsFilter($event.target.value)" placeholder="Filter Domains">
+      </mat-form-field>
     </div>
-    <div *ngIf="openIntentORStoryORResponseFile==='intent'" class="col-padding">
-      <app-manage-intents [currentIntent]="currentIntent" (saveIntentJSON)="saveIntentJSON($event)" (saveIntentEntityValue)="saveIntentEntityValue($event)"></app-manage-intents>
-    </div>
-    <div *ngIf="openIntentORStoryORResponseFile==='story'" class="col-padding">
-      <app-manage-stories [currentStory]="currentStory" (saveStoryJSON)="saveStoryJSON($event)"></app-manage-stories>
-    </div>
-    <div *ngIf="openIntentORStoryORResponseFile==='response'" class="col-padding">
-      <app-manage-responses [currentResponse]="currentResponse" (saveResponseJSON)="saveResponseJSON($event)"></app-manage-responses>
+    <div class="col-md-1 text-right">
+      <button mat-mini-fab matTooltip="Add Domain" color="primary" (click)="addNewDomain()">
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
   </div>
-  <div class="col-md-3">
-    <div class="col-padding text-center">
-      <h4 class="mat-body-strong">Property Panel</h4>
-    </div>
-    <div class="row property-panel">
-      <div class="col-md-4 text-center">
-        <button mat-flat-button color="primary" (click)="openPropertyPanelComponent('entities')">Entities</button>
-      </div>
-      <div class="col-md-4 text-center">
-        <button mat-flat-button (click)="openPropertyPanelComponent('actions')">Actions</button>
-      </div>
-      <div class="col-md-4 text-center">
-        <button mat-flat-button color="accent" (click)="openPropertyPanelComponent('app-prop')">AppProp</button>
-      </div>
-    </div>
-    <div class="row property-panel-components">
-      <div style="width: 100%;" *ngIf="propertyPanel === 'entities'">
-       <app-manage-entities></app-manage-entities>
-      </div>
-      <div style="width: 100%;" *ngIf="propertyPanel === 'actions'">
-        Manage Actions
-      </div>
-      <div style="width: 100%;" *ngIf="propertyPanel === 'app-prop'">
-        Manage App Properties
+  <br />
+  <div class="row domains-card-container">
+    <div class="col-md-12">
+      <div class="domains-card">
+        <mat-grid-list cols="6">
+          <mat-grid-tile *ngFor="let domain of domains_json; let i = index">
+            <div class="card domain-card">
+              <div class="card-header" (click)="selectDomain(domain)"><span class="mat-subheading-1">{{domain.domain_name}}</span></div>
+              <div class="card-body" (click)="selectDomain(domain)"><span class="mat-body-1">{{domain.domain_description}}</span></div> 
+              <div class="card-footer">
+                <button mat-button (click)="editDomain(domain._id.$oid, domain.domain_name, domain.domain_description)">Edit</button>
+                <button mat-flat-button color="warn" (click)="deleteDomain(domain._id.$oid)">Delete</button>
+              </div>
+            </div>
+          </mat-grid-tile>
+        </mat-grid-list>
       </div>
     </div>
-  </div>      
+  </div>
 </div>
-
-<!-- <div class="row modify_content text-right">
-  <div class="col-md-9">
-    <button mat-raised-button color="primary" (click)="saveJSONChanges()"> 
-      <span class="mat-caption">Save Changes</span>
-    </button>
-  </div>
-  <div class="col-md-3">
-  </div>
-</div> -->

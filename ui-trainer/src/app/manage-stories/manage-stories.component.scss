@@ -2,20 +2,10 @@
     padding: 1%;
     overflow-y: hidden;
     overflow-x: hidden;
+    height: 100vh;
 }
-.ui-form {
-    height: 450px;
-    overflow-y: auto;
-}
-.example-list {
-    width: 100%;
-    max-width: 100%;
-    border: solid 1px #ccc;
-    min-height: 60px;
-    display: block;
-    background: white;
-    border-radius: 4px;
-    overflow: hidden;
+.story-description-box {
+    height: 5vh;
 }
 .mat-exp-panel-element {
     width: 100%;
@@ -82,22 +72,19 @@
 
 .story-main-box {
 	width: 100%;
-	height: 480px;
-    background-color: #DDD;
-    
+	height: 95vh;
+    background-color: #FFF;
     border-radius: 1%;
-	
 	margin: auto;
 }
 
 .story-box {
-    height: 400px;
+    height: 64%;
     overflow-y: auto;
 }
 
 .inside-story-box {
     width: 100%;
-    padding: 3%;
 }
 
 .story-table {
@@ -105,12 +92,12 @@
 }
 
 .story-buttons-box {
-    height: 80px;
+    height: 10vh;
 }
 
 .add-intent-button, .add-response-button {
     padding:3%;
-    margin-top: -30px;
+    margin-top: -40px;
 }
 
 .intent-textbox {
@@ -148,7 +135,7 @@
 }
 
 .intent-buttons .material-icons {
-    margin-top: -20px;
+    margin-top: -22px;
     margin-left: -2px;
 }
 
@@ -158,13 +145,12 @@
 }
 
 .response-buttons .material-icons {
-    margin-top: -20px;
+    margin-top: -22px;
     margin-left: -2px;
 }
 
 .accordion-intent-class, .accordion-response-class {
     width: 100%;
-    overflow-y: auto;
 }
 
 .card-header {

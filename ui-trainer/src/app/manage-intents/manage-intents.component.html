@@ -1,81 +1,83 @@
-<div class="row manage-map-intent-row">
-  <div class="col-md-6">
-    <span class="mat-subheading-2"><b>Intent Description:</b></span> {{currentIntent.intent_desc}}
-  </div>
-  <div class="col-md-6">
-    <form>
+<div class="intent-container">
+  <div class="row manage-map-intent-row">
+    <div class="col-md-6">
+      <span class="mat-subheading-2"><b>Intent Description: </b></span>
+      <span *ngIf="currentIntent">{{currentIntent.intent_description}}</span>
+    </div>
+    <div class="col-md-6">
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Select Entity</mat-label>
         <input type="text" class="entity-auto-complete" aria-label="Entity" matInput [formControl]="entitiesControl" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)='getEntityValue($event.option.value)'>
-          <mat-option *ngFor="let option of entityfilteredOptions | async" [value]="option.entity">
-            {{option.entity}}
+          <mat-option *ngFor="let option of entityfilteredOptions | async" [value]="option.entity_name">
+            {{option.entity_name}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-    </form>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-md-6">
-    <mat-form-field class="example-form-field" appearance="outline">
-      <mat-label>New Intent Text</mat-label>
-      <input matInput type="text" [(ngModel)]="new_intent_text" (keydown.enter)="addIntentTextElement()">
-    </mat-form-field>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field class="example-form-field" appearance="outline">
+        <mat-label>New Intent Text</mat-label>
+        <input matInput type="text" [(ngModel)]="new_intent_text" (keydown.enter)="addIntentTextElement()">
+      </mat-form-field>
+    </div>
+    <div class="col-md-6">
+      <mat-form-field class="intent-text-filter" appearance="outline">
+        <mat-label>Filter Intent Text</mat-label>
+        <input matInput (keyup)="applyMapFilter($event.target.value)">
+      </mat-form-field>
+    </div>
   </div>
-  <div class="col-md-6">
-    <mat-form-field class="intent-text-filter" appearance="outline">
-      <mat-label>Filter Intent Text</mat-label>
-      <input matInput (keyup)="applyMapFilter($event.target.value)">
-    </mat-form-field>
-  </div>
-</div>
-<div class="row" style="width: 100%;">
-  <div id="accordion">
-    <div class="card" *ngFor="let text_entity of text_entities; let i = index;">
-      <div class="card-header" id="intentText_heading_{{i}}">
-        <div class="row">
-          <div class="col-md-10">
-            <span class="intent-text" id="intent_text_{{i}}" (mouseup)="mouseUpFunction($event)">{{text_entity.text}}</span>
-            <span matBadge="{{text_entity.entities.length}}" matBadgeOverlap="false" class="mat-body-strong"></span>
+  <div class="row" style="width: 100%;">
+    <div id="accordion">
+      <div *ngIf="currentIntent">
+        <div class="card" *ngFor="let text_entity of text_entities; let i = index;">
+          <div class="card-header" id="intentText_heading_{{i}}">
+            <div class="row">
+              <div class="col-md-10">
+                <span class="intent-text" id="intent_text_{{i}}" (mouseup)="mouseUpFunction($event, i, text_entity.text, text_entity.entities)">{{text_entity.text}}</span>
+                <span matBadge="{{text_entity.entities.length}}" matBadgeOverlap="false" class="mat-body-strong"></span>
+              </div>
+              <div class="col-md-1 text-right">
+                <button class="btn btn-link" data-toggle="collapse" aria-expanded="false" attr.data-target="#intentText_{{i}}" aria-expanded="true" attr.aria-controls="intentText_{{i}}">
+                  <mat-icon>keyboard_arrow_down</mat-icon>
+                </button>
+              </div>
+              <div class="col-md-1 text-right">
+                <button class="btn btn-link" (click)="removeIntentTextElement(text_entity.text, text_entity.entities)">
+                  <mat-icon>remove_circle_outline</mat-icon>
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="col-md-1 text-right">
-            <button class="btn btn-link" data-toggle="collapse" aria-expanded="false" attr.data-target="#intentText_{{i}}" aria-expanded="true" attr.aria-controls="intentText_{{i}}">
-              <mat-icon>keyboard_arrow_down</mat-icon>
-            </button>
+          <div id="intentText_{{i}}" class="collapse" attr.aria-labelledby="intentText_heading_{{i}}" data-parent="#accordion">
+            <div class="card-body">
+              <table class="table table-striped" id="intent_text_table_{{i}}">
+                <thead>
+                  <tr>
+                    <th class="mat-body-strong" scope="col">Parameter Name</th>
+                    <th class="mat-body-strong" scope="col">Entity</th>
+                    <th class="mat-body-strong" scope="col">Resolved Value</th>
+                    <th class="mat-body-strong" scope="col">Remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let entity of text_entity.entities; let j = index;" (mouseenter)="highlightTextEntity(entity.start,entity.end,i)" (mouseleave)="unhighlightTextEntity(i)">
+                    <td>{{text_entity.text.substring(entity.start,entity.end)}}</td>
+                    <td>{{entity.entity}}</td>
+                    <td>{{entity.value}}</td>
+                    <td>
+                      <button mat-mini-fab color="warn" (mouseenter)="unhighlightTextEntity(i)" (mouseleave)="highlightTextEntity(entity.start,entity.end,i)" (click)="removeEntityElement(i, text_entity.text, text_entity.entities, j)">
+                        <span class="mat-small"><mat-icon>clear</mat-icon></span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="col-md-1 text-right">
-            <button class="btn btn-link" (click)="removeIntentTextElement(i)">
-              <mat-icon>remove_circle_outline</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-  
-      <div id="intentText_{{i}}" class="collapse" attr.aria-labelledby="intentText_heading_{{i}}" data-parent="#accordion">
-        <div class="card-body">
-          <table class="table table-striped" id="intent_text_table_{{i}}">
-            <thead>
-              <tr>
-                <th class="mat-body-strong" scope="col">Parameter Name</th>
-                <th class="mat-body-strong" scope="col">Entity</th>
-                <th class="mat-body-strong" scope="col">Resolved Value</th>
-                <th class="mat-body-strong" scope="col">Remove</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let entity of text_entity.entities; let j = index;" (mouseenter)="highlightTextEntity(entity.start,entity.end,i)" (mouseleave)="unhighlightTextEntity(i)">
-                <td>{{text_entity.text.substring(entity.start,entity.end)}}</td>
-                <td>{{entity.entity}}</td>
-                <td>{{entity.value}}</td>
-                <td>
-                  <button mat-mini-fab color="warn" (mouseenter)="unhighlightTextEntity(i)" (mouseleave)="highlightTextEntity(entity.start,entity.end,i)" (click)="removeEntityElement(i, j)">
-                    <span class="mat-small"><mat-icon>clear</mat-icon></span>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>

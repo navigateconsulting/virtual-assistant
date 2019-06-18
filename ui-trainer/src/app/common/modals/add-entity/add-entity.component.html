@@ -4,7 +4,7 @@
   <div class="row entity-values">
     <mat-form-field appearance="outline">
       <mat-label>Entity Description</mat-label>
-      <textarea matInput [(ngModel)]="entity_desc"></textarea>
+      <textarea matInput maxlength="140" [(ngModel)]="entity_desc"></textarea>
     </mat-form-field>
   </div>
   <div class="row">
@@ -26,6 +26,7 @@
       <textarea matInput [(ngModel)]="categorical_values"></textarea>
     </mat-form-field>
     <span class="mat-caption">Values separated by a comma, ie: New York,NYC,NY</span>
+    <div *ngIf="show_cat_error" class="error">Entity slot values cannot end with a comma.</div>
   </div>
   <div *ngIf="entitySlotType==='float'" class="row">
     <div class="col-md-6">

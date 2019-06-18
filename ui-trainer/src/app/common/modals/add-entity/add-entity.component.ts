@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
@@ -13,10 +13,13 @@ export class AddEntityComponent implements OnInit {
   categorical_values: string;
   min_value: number;
   max_value: number;
+  show_cat_error: boolean;
 
-  constructor(public dialogRef: MatDialogRef<AddEntityComponent>) { }
+  constructor(public dialogRef: MatDialogRef<AddEntityComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
+    this.show_cat_error = false;
   }
 
   setEntitySlotType(event: any) {
@@ -26,13 +29,19 @@ export class AddEntityComponent implements OnInit {
   saveEntitySlotDetails() {
     let entity_slot_details = {};
     if (this.entitySlotType === 'categorical') {
+      if (this.categorical_values[this.categorical_values.length - 1] === ',') {
+        this.show_cat_error = true;
+        return;
+      } else {
+        this.show_cat_error = false;
+      }
       entity_slot_details = {type: this.entitySlotType, values: this.categorical_values.split(',')};
     } else if (this.entitySlotType === 'float') {
       entity_slot_details = {type: this.entitySlotType, values: {min_value: this.min_value, max_value: this.max_value}};
     } else {
       entity_slot_details = {type: this.entitySlotType, values: []};
     }
-    this.dialogRef.close({entity_desc: this.entity_desc, entity_slot_details: entity_slot_details});
+    this.dialogRef.close({project_id: this.data.project_id, entity_description: this.entity_desc, entity_slot: entity_slot_details});
   }
 
 }

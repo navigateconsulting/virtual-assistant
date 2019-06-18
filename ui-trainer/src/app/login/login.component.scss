@@ -1,15 +1,21 @@
 @import '../../scss/styles';
 
 .content {
-    margin: 0 auto;
-    max-width: 500px;
+    width: 500px;
+	height: 403px;	
+	position: absolute;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
 }
 .login-card {
     width: 500px;
 }
 .login-header-image {
     background-size: cover;
-    border: 1px solid blue;
+    border: 1px solid #173962;
 }
 .login-card-content {
     padding: 15px;
@@ -29,7 +35,7 @@
 .error {
     color: #E34256;
     opacity: 0.8;
-    font-family: $base_font_family;
+    font-family: 'Lato Semibold';
     font-size: 12px;
     margin-top: 1%;
 }

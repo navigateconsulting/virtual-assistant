@@ -1,52 +1,7 @@
 <div class="header">
-  <div class="side_header_logo_div">
-    <span class="side_header_logo" >
-      <div class="text-center">
-        <img class="side_header_logo_img"  src="/assets/images/eva_logo.png">
-      </div>
-    </span>
-  </div>
-  <div class="header-right">
-    <div class="side_header_nlogos" style="float:left;">
-      <p><i [matMenuTriggerFor]="menu" class="material-icons side_account_logos">apps</i></p>
-      <mat-menu class="eva-menu" #menu="matMenu">
-        <button mat-menu-item class="eva-menu-item nofocus" routerLink="/home">
-          <mat-icon>home</mat-icon>
-          <span class="mat-body-1">Home</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item class="eva-menu-item nofocus">
-          <mat-icon>settings</mat-icon>
-          <span class="mat-body-1">Site Administrator</span>
-        </button>
-        <mat-divider></mat-divider>
-        <span class="mat-caption agents_heading" style="padding: 0 16px;">Agents</span>
-        <div *ngFor="let agent of agents">
-          <button mat-menu-item class="eva-menu-item nofocus" (click)="setAgentId(agent.agent_id)">
-            <mat-icon>{{agent.agent_icon}}</mat-icon>
-            <span class="mat-body-1" id="id_{{agent.agent_id}}">{{agent.agent_name}}</span>
-          </button>
-        </div>
-      </mat-menu>
-    </div>
-    <div class="side_header_nlogos" style="float:left;">
-      <p><i class="material-icons side_account_logos">help</i></p>
-    </div>
-    <div class="side_header_nlogos" style="float:left;">
-      <p><i class="material-icons side_account_logos">account_circle</i></p>
+  <div class="eva-logo-div">
+    <div class="logo-div">
+      <img class="side_header_logo_img"  src="/assets/images/logo.png">
     </div>
   </div>
 </div>
-<!-- <div class="sample-div">
-  <div *ngIf="sideDrawerService.drawerIconState === 'open'" class="side_header_logo_div_open">
-    <i (click)="openSideDrawer()" class="material-icons side_account_logos_open">chevron_right</i>
-  </div>
-</div> -->
-<!-- 2nd Nav Drawer Start-->
-<!-- <div *ngIf="role === 'Admin'" style="height: 100%;">
-  <app-admin-sidenavigation></app-admin-sidenavigation>
-</div>
-<div *ngIf="role === 'Agent'" style="height: 100%;">
-  <app-sidenavigation [agent_details]="agent_no"></app-sidenavigation>
-</div> -->
-<app-manage-projects></app-manage-projects>

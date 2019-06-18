@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CheckUserService } from '../common/services/check-user.service';
-
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -10,29 +9,27 @@ import {Router} from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  email: string;
-  password: string;
+  loginForm: FormGroup;
   checkCredentials: number;
 
-  constructor(private router: Router,
-    private checkUserService: CheckUserService) { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+    this.loginForm = new FormGroup({
+      username: new FormControl('', Validators.required),
+      password: new FormControl('', Validators.required)
+    });
   }
 
   login(): void {
-    const login_details = {email: this.email, password: this.password};
-    this.checkUserService.checkUserCredentials(login_details)
-      .subscribe(
-        response => {
-          if (response === 1) {
-            this.checkCredentials = 1;
-            this.router.navigate(['admin']);
-          } else {
-            this.checkCredentials = 0;
-          }
-        },
-      );
+    if (this.loginForm.valid) {
+      if (this.loginForm.value['username'].trim() === this.loginForm.value['password'].trim()) {
+        this.checkCredentials = 1;
+        this.router.navigate(['applications']);
+      } else {
+        this.checkCredentials = 0;
+      }
+    }
   }
 
 }

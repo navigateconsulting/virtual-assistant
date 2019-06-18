@@ -1,0 +1,5 @@
+motor
+aiohttp
+python-socketio
+rasa==1.0
+aiofiles

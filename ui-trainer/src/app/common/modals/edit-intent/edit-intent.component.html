@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Edit Intent</h1>
+
+<form [formGroup]="editIntentForm" (ngSubmit)="closeDialog()">
+<mat-dialog-content>
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Intent Name</mat-label>
+    <input matInput (keydown.space)="$event.preventDefault()" maxlength="30" formControlName="intentName">
+  </mat-form-field>
+  <br />
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Intent Description</mat-label>
+    <textarea matInput maxlength="140" formControlName="intentDescription"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button type="submit" [disabled]="!editIntentForm.valid" color="primary">OK</button>
+</mat-dialog-actions>
+</form>

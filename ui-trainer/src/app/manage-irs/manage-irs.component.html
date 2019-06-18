@@ -1,0 +1,166 @@
+<mat-tab-group mat-stretch-tabs class="example-stretched-tabs">
+  <mat-tab label="Intents">
+    <div class="irs-container">
+      <div class="row add-irs">
+        <div class="col-md-11">
+          <mat-form-field>
+            <input matInput (keyup)="applyIntentsFilter($event.target.value)" placeholder="Filter Intents">
+          </mat-form-field>
+        </div>
+        <div class="col-md-1 text-right">
+          <button mat-mini-fab matTooltip="Add Intent" color="primary" (click)="addNewIntent()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+      <br />
+      <div class="row irs-table-container">
+        <div class="col-md-12">
+          <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="intentsDataSource">
+    
+              <ng-container matColumnDef="icon">
+                <th mat-header-cell *matHeaderCellDef> <mat-icon>insert_drive_file</mat-icon> </th>
+                <td mat-cell *matCellDef="let intent"> <mat-icon color="primary">insert_drive_file</mat-icon> </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="intent_name">
+                <th mat-header-cell *matHeaderCellDef> Intent Name </th>
+                <td mat-cell *matCellDef="let intent" class="intent_name_text"><span (click)="selectIntent(intent)">{{intent.intent_name}}</span></td>
+              </ng-container>
+            
+              <ng-container matColumnDef="intent_description">
+                <th mat-header-cell *matHeaderCellDef> Intent Description </th>
+                <td mat-cell *matCellDef="let intent"> {{intent.intent_description}} </td>
+              </ng-container>
+    
+              <ng-container matColumnDef="edit">
+                <th mat-header-cell *matHeaderCellDef> Edit </th>
+                <td mat-cell *matCellDef="let intent" class="edit_remove"><mat-icon (click)="editIntent(intent._id.$oid, intent.intent_name, intent.intent_description)">edit</mat-icon></td>
+              </ng-container>
+    
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef> Delete </th>
+                <td mat-cell *matCellDef="let intent" class="edit_remove"><mat-icon color="warn" (click)="deleteIntent(intent._id.$oid)">remove_circle</mat-icon></td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="intentsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: intentsDisplayedColumns;"></tr>
+            </table>
+            <mat-paginator #intentsPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </div>
+      <div class="row irs-footer">
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Responses">
+    <div class="irs-container">
+      <div class="row add-irs">
+        <div class="col-md-11">
+          <mat-form-field>
+            <input matInput (keyup)="applyResponsesFilter($event.target.value)" placeholder="Filter Responses">
+          </mat-form-field>
+        </div>
+        <div class="col-md-1 text-right">
+          <button mat-mini-fab matTooltip="Add Response" color="primary" (click)="addNewResponse()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+      <br />
+      <div class="row irs-table-container">
+        <div class="col-md-12">
+          <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="responsesDataSource">
+    
+              <ng-container matColumnDef="icon">
+                <th mat-header-cell *matHeaderCellDef> <mat-icon>insert_drive_file</mat-icon> </th>
+                <td mat-cell *matCellDef="let response"> <mat-icon color="primary">insert_drive_file</mat-icon> </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="response_name">
+                <th mat-header-cell *matHeaderCellDef> Response Name </th>
+                <td mat-cell *matCellDef="let response" class="response_name_text"><span (click)="selectResponse(response)">{{response.response_name}}</span></td>
+              </ng-container>
+            
+              <ng-container matColumnDef="response_description">
+                <th mat-header-cell *matHeaderCellDef> Response Description </th>
+                <td mat-cell *matCellDef="let response"> {{response.response_description}} </td>
+              </ng-container>
+    
+              <ng-container matColumnDef="edit">
+                <th mat-header-cell *matHeaderCellDef> Edit </th>
+                <td mat-cell *matCellDef="let response" class="edit_remove"><mat-icon (click)="editResponse(response._id.$oid, response.response_name, response.response_description)">edit</mat-icon></td>
+              </ng-container>
+    
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef> Delete </th>
+                <td mat-cell *matCellDef="let response" class="edit_remove"><mat-icon color="warn" (click)="deleteResponse(response._id.$oid)">remove_circle</mat-icon></td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="responsesDisplayedColumns;"></tr>
+              <tr mat-row *matRowDef="let row; columns: responsesDisplayedColumns;"></tr>
+            </table>
+            <mat-paginator #responsesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Stories">
+    <div class="irs-container">
+      <div class="row add-irs">
+        <div class="col-md-11">
+          <mat-form-field>
+            <input matInput (keyup)="applyStoriesFilter($event.target.value)" placeholder="Filter Stories">
+          </mat-form-field>
+        </div>
+        <div class="col-md-1 text-right">
+          <button mat-mini-fab matTooltip="Add Story" color="primary" (click)="addNewStory()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+      <br />
+      <div class="row irs-table-container">
+        <div class="col-md-12">
+          <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="storiesDataSource">
+    
+              <ng-container matColumnDef="icon">
+                <th mat-header-cell *matHeaderCellDef> <mat-icon>insert_drive_file</mat-icon> </th>
+                <td mat-cell *matCellDef="let story"> <mat-icon color="primary">insert_drive_file</mat-icon> </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="story_name">
+                <th mat-header-cell *matHeaderCellDef> Story Name </th>
+                <td mat-cell *matCellDef="let story" class="story_name_text"><span (click)="selectStory(story)">{{story.story_name}}</span></td>
+              </ng-container>
+            
+              <ng-container matColumnDef="story_description">
+                <th mat-header-cell *matHeaderCellDef> Story Description </th>
+                <td mat-cell *matCellDef="let story"> {{story.story_description}} </td>
+              </ng-container>
+    
+              <ng-container matColumnDef="edit">
+                <th mat-header-cell *matHeaderCellDef> Edit </th>
+                <td mat-cell *matCellDef="let story" class="edit_remove"><mat-icon (click)="editStory(story._id.$oid, story.story_name, story.story_description)">edit</mat-icon></td>
+              </ng-container>
+    
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef> Delete </th>
+                <td mat-cell *matCellDef="let story" class="edit_remove"><mat-icon color="warn" (click)="deleteStory(story._id.$oid)">remove_circle</mat-icon></td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="storiesDisplayedColumns;"></tr>
+              <tr mat-row *matRowDef="let row; columns: storiesDisplayedColumns;"></tr>
+            </table>
+            <mat-paginator #storiesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

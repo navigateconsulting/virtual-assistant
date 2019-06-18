@@ -1,48 +1,76 @@
-<div class="row grid-divider" style="padding: 5px; height: 100%; box-sizing: border-box;">
-  <div class="col-md-9">
-    <div class="col-padding">
-      <mat-card style="height: 100%; box-sizing: border-box; padding:0">
-        <app-file-explorer [fileElements]="fileElements | async" [path]="currentPath" [showAddFolderFile]="showAddFolderFile" [canNavigateUp]="canNavigateUp" (folderAdded)="addFolder($event)"
-          (fileAdded)="addFile($event)" (elementRemoved)="removeElement($event)" (navigatedDown)="navigateToFolder($event)" (navigatedUp)="navigateUp($event)" (elementRenamed)="renameElement($event)"
-          (elementMoved)="moveElement($event)">
-        </app-file-explorer>
-      </mat-card>
+<div class="projects-container">
+  <div class="row add-project">
+    <div class="col-md-11">
+      <mat-form-field>
+        <input matInput (keyup)="applyProjectsFilter($event.target.value)" placeholder="Filter Projects">
+      </mat-form-field>
     </div>
-    <div *ngIf="openIntentORStoryORResponseFile==='intent'" class="col-padding">
-      <app-manage-intents [currentIntent]="currentIntent" (saveIntentJSON)="saveIntentJSON($event)" (saveIntentEntityValue)="saveIntentEntityValue($event)"></app-manage-intents>
-    </div>
-    <div *ngIf="openIntentORStoryORResponseFile==='story'" class="col-padding">
-      <app-manage-stories [currentStory]="currentStory" (saveStoryJSON)="saveStoryJSON($event)"></app-manage-stories>
-    </div>
-    <div *ngIf="openIntentORStoryORResponseFile==='response'" class="col-padding">
-      <app-manage-responses [currentResponse]="currentResponse" (saveResponseJSON)="saveResponseJSON($event)"></app-manage-responses>
+    <div class="col-md-1 text-right">
+      <button mat-mini-fab matTooltip="Add Project" class="add-project-button" (click)="addNewProject()">
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
   </div>
-  <div class="col-md-3">
-    <div class="col-padding text-center">
-      <h4 class="mat-body-strong">Property Panel</h4>
+  <div class="row projects-table-container">
+    <div class="col-md-12">
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="projectsDataSource">
+
+          <ng-container matColumnDef="icon">
+            <th mat-header-cell *matHeaderCellDef> <mat-icon>insert_drive_file</mat-icon> </th>
+            <td mat-cell *matCellDef="let project"> <mat-icon color="primary">folder</mat-icon> </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="project_name">
+            <th mat-header-cell *matHeaderCellDef> Project Name </th>
+            <td mat-cell *matCellDef="let project"><span *ngIf="project.state === ''" class="project_name_text" (click)="selectProject(project)">{{project.project_name}}</span> <span *ngIf="project.state !== ''" (click)="showErrorOnProject()">{{project.project_name}}</span></td>
+          </ng-container>
+        
+          <ng-container matColumnDef="project_description">
+            <th mat-header-cell *matHeaderCellDef> Project Description </th>
+            <td mat-cell *matCellDef="let project"> {{project.project_description}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="created_by">
+            <th mat-header-cell *matHeaderCellDef> Created By </th>
+            <td mat-cell *matCellDef="let project"> {{project.created_by}} </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="state">
+            <th mat-header-cell *matHeaderCellDef> State </th>
+            <td mat-cell *matCellDef="let project"> {{project.state}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="source">
+            <th mat-header-cell *matHeaderCellDef> Source </th>
+            <td mat-cell *matCellDef="let project"> {{project.source}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef> Edit </th>
+            <td mat-cell *matCellDef="let project" class="edit_remove"><button mat-icon-button [disabled]="project.state === 'Published' || project.state === 'Archived'" (click)="editProject(project._id.$oid, project.project_name, project.project_description)"><mat-icon>edit</mat-icon></button></td>
+          </ng-container>
+
+          <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef> Delete </th>
+            <td mat-cell *matCellDef="let project" class="edit_remove"><button mat-icon-button [disabled]="project.state === 'Published' || project.state === 'Archived'" color="warn" (click)="deleteProject(project._id.$oid)"><mat-icon>remove_circle</mat-icon></button></td>
+          </ng-container>
+
+          <ng-container matColumnDef="copy">
+            <th mat-header-cell *matHeaderCellDef> Copy </th>
+            <td mat-cell *matCellDef="let project" class="edit_remove"><button mat-icon-button color="accent"><mat-icon (click)="copyProject(project._id.$oid, project.project_name)">file_copy</mat-icon></button></td>
+          </ng-container>
+
+          <ng-container matColumnDef="try_now">
+            <th mat-header-cell *matHeaderCellDef> Try Now </th>
+            <td mat-cell *matCellDef="let project" class="edit_remove"><button mat-icon-button color="primary"><mat-icon (click)="tryNowProject(project)">play_circle_filled</mat-icon></button></td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="projectsDisplayedColumns;"></tr>
+          <tr mat-row *matRowDef="let row; columns: projectsDisplayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+      </div>
     </div>
-    <div class="row property-panel">
-      <div class="col-md-4 text-center">
-        <button mat-flat-button color="primary" (click)="openPropertyPanelComponent('entities')">Entities</button>
-      </div>
-      <div class="col-md-4 text-center">
-        <button mat-flat-button (click)="openPropertyPanelComponent('actions')">Actions</button>
-      </div>
-      <div class="col-md-4 text-center">
-        <button mat-flat-button color="accent" (click)="openPropertyPanelComponent('app-prop')">AppProp</button>
-      </div>
-    </div>
-    <div class="row property-panel-components">
-      <div style="width: 100%;" *ngIf="propertyPanel === 'entities'">
-       <app-manage-entities></app-manage-entities>
-      </div>
-      <div style="width: 100%;" *ngIf="propertyPanel === 'actions'">
-        Manage Actions
-      </div>
-      <div style="width: 100%;" *ngIf="propertyPanel === 'app-prop'">
-        Manage App Properties
-      </div>
-    </div>
-  </div>      
+  </div>
 </div>

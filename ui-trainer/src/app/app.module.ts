@@ -13,19 +13,10 @@ import { MaterialModule } from './material.module';
 import { LoginComponent } from './login/login.component';
 import { FooterComponent } from './common/footer/footer.component';
 import { HeaderComponent } from './common/header/header.component';
-import { SidenavigationComponent } from './sidenavigation/sidenavigation.component';
 import { HomeComponent } from './home/home.component';
-import { AdminSidenavigationComponent } from './admin-sidenavigation/admin-sidenavigation.component';
-import { QueryUserComponent } from './manage-users/query-user/query-user.component';
-import { CreateUserComponent } from './manage-users/create-user/create-user.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
-import { DeleteUserComponent } from './manage-users/delete-user/delete-user.component';
-import { UpdateUserComponent } from './manage-users/update-user/update-user.component';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { ManageDomainsComponent } from './manage-domains/manage-domains.component';
-import { FileExplorerModule } from './file-explorer/file-explorer.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FileService } from './common/services/file.service';
 import { ManageEntitiesComponent } from './manage-entities/manage-entities.component';
 import { ManageIntentsComponent } from './manage-intents/manage-intents.component';
 import { AddEntityComponent } from './common/modals/add-entity/add-entity.component';
@@ -38,7 +29,32 @@ import { AddEntityValueComponent } from './common/modals/add-entity-value/add-en
 import { ApplicationsComponent } from './applications/applications.component';
 import { SocketIoComponent } from './socket-io/socket-io.component';
 import { ManageProjectsComponent } from './manage-projects/manage-projects.component';
-
+import { ManageTrainerComponent } from './manage-trainer/manage-trainer.component';
+import { AddProjectComponent } from './common/modals/add-project/add-project.component';
+import { EditProjectComponent } from './common/modals/edit-project/edit-project.component';
+import { DeleteProjectComponent } from './common/modals/delete-project/delete-project.component';
+import { CopyProjectComponent } from './common/modals/copy-project/copy-project.component';
+import { AddDomainComponent } from './common/modals/add-domain/add-domain.component';
+import { DeleteDomainComponent } from './common/modals/delete-domain/delete-domain.component';
+import { EditDomainComponent } from './common/modals/edit-domain/edit-domain.component';
+import { ManageIrsComponent } from './manage-irs/manage-irs.component';
+import { AddIntentComponent } from './common/modals/add-intent/add-intent.component';
+import { DeleteIntentComponent } from './common/modals/delete-intent/delete-intent.component';
+import { EditIntentComponent } from './common/modals/edit-intent/edit-intent.component';
+import { AddResponseComponent } from './common/modals/add-response/add-response.component';
+import { EditResponseComponent } from './common/modals/edit-response/edit-response.component';
+import { DeleteResponseComponent } from './common/modals/delete-response/delete-response.component';
+import { AddStoryComponent } from './common/modals/add-story/add-story.component';
+import { EditStoryComponent } from './common/modals/edit-story/edit-story.component';
+import { DeleteStoryComponent } from './common/modals/delete-story/delete-story.component';
+import { ToastrModule } from 'ng6-toastr-notifications';
+import { TryNowComponent } from './try-now/try-now.component';
+import { DeployComponent } from './deploy/deploy.component';
+import { DeployModelComponent } from './common/modals/deploy-model/deploy-model.component';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { MatSpinner } from '@angular/material';
+import { SpinnerComponent } from './spinner/spinner.component';
+import { ModelErrorComponent } from './common/modals/model-error/model-error.component';
 
 @NgModule({
   declarations: [
@@ -46,13 +62,7 @@ import { ManageProjectsComponent } from './manage-projects/manage-projects.compo
     LoginComponent,
     FooterComponent,
     HeaderComponent,
-    SidenavigationComponent,
     HomeComponent,
-    AdminSidenavigationComponent,
-    QueryUserComponent,
-    CreateUserComponent,
-    DeleteUserComponent,
-    UpdateUserComponent,
     ManageDomainsComponent,
     ManageEntitiesComponent,
     ManageIntentsComponent,
@@ -65,15 +75,54 @@ import { ManageProjectsComponent } from './manage-projects/manage-projects.compo
     ApplicationsComponent,
     SocketIoComponent,
     ManageProjectsComponent,
+    ManageTrainerComponent,
+    AddProjectComponent,
+    EditProjectComponent,
+    DeleteProjectComponent,
+    CopyProjectComponent,
+    AddDomainComponent,
+    DeleteDomainComponent,
+    EditDomainComponent,
+    ManageIrsComponent,
+    AddIntentComponent,
+    DeleteIntentComponent,
+    EditIntentComponent,
+    AddResponseComponent,
+    EditResponseComponent,
+    DeleteResponseComponent,
+    AddStoryComponent,
+    EditStoryComponent,
+    DeleteStoryComponent,
+    TryNowComponent,
+    DeployComponent,
+    DeployModelComponent,
+    SpinnerComponent,
+    ModelErrorComponent,
   ],
   entryComponents: [
-    CreateUserComponent,
-    DeleteUserComponent,
-    UpdateUserComponent,
     AddEntityComponent,
     EditEntityComponent,
     ChooseEntityComponent,
-    AddEntityValueComponent
+    AddEntityValueComponent,
+    AddProjectComponent,
+    EditProjectComponent,
+    DeleteProjectComponent,
+    CopyProjectComponent,
+    AddDomainComponent,
+    DeleteDomainComponent,
+    EditDomainComponent,
+    AddIntentComponent,
+    DeleteIntentComponent,
+    EditIntentComponent,
+    AddResponseComponent,
+    EditResponseComponent,
+    DeleteResponseComponent,
+    AddStoryComponent,
+    EditStoryComponent,
+    DeleteStoryComponent,
+    DeployModelComponent,
+    SpinnerComponent,
+    ModelErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -84,11 +133,11 @@ import { ManageProjectsComponent } from './manage-projects/manage-projects.compo
     ReactiveFormsModule,
     HttpClientModule,
     DragDropModule,
-    FileExplorerModule,
     FlexLayoutModule,
-    NgMultiSelectDropDownModule.forRoot(),
+    OverlayModule,
+    ToastrModule.forRoot()
   ],
-  providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}, FileService, EntitiesDataService],
+  providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}, EntitiesDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

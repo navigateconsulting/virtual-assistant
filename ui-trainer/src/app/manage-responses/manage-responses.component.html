@@ -1,48 +1,51 @@
-<div class="row manage-response-row">
-  <div class="col-md-12">
-    <span class="mat-subheading-2"><b>Response Description:</b></span> {{currentResponse.response_desc}}
-  </div>
-</div>
-<div class="row manage-response-row">
-  <div class="col-md-6">
-    <mat-form-field class="example-form-field" appearance="outline">
-      <mat-label>New Response Text</mat-label>
-      <input matInput type="text" [(ngModel)]="new_response_text" (keyup)="populateEntities($event)" [readonly]="readonly" (keydown.enter)="addResponseTextElement()">
-    </mat-form-field>
-    <div *ngIf="showEntityDropdown===true" class="relative">
-      <mat-card>
-        <mat-form-field class="example-full-width">
-          <input matInput placeholder="Filter Entities" (keyup)="applyEntityFilter($event.target.value)">
-        </mat-form-field>
-        <div  *ngFor="let entity of entities; let i = index;">
-          <button mat-button class="entities-button" (click)="selectEntity(entity.entity)">{{entity.entity}}</button>
-        </div>
-      </mat-card>
+<div class="intent-container">
+  <div class="row manage-response-row">
+    <div class="col-md-12">
+      <span class="mat-subheading-2"><b>Response Description: </b></span> 
+      <span *ngIf="currentResponse">{{currentResponse.response_description}}</span>
     </div>
   </div>
-  <div class="col-md-6">
-    <mat-form-field class="intent-response-filter" appearance="outline">
-      <mat-label>Filter Response Text</mat-label>
-      <input matInput (keyup)="applyMapFilter($event.target.value)">
-    </mat-form-field>
-  </div>
-</div>
-<div class="accordion">
-  <div class="row" style="width: 100%;">
-    <div class="col-md-12">
-      <div class="card" *ngFor="let text_entity of text_entities; let i = index;">
+  <div class="row manage-response-row">
+    <div class="col-md-6">
+      <mat-form-field class="example-form-field" appearance="outline">
+        <mat-label>New Response Text</mat-label>
+        <input matInput type="text" [(ngModel)]="new_response_text" (keyup)="populateEntities($event)" [readonly]="readonly" (keydown.enter)="addResponseTextElement()">
+      </mat-form-field>
+      <div *ngIf="showEntityDropdown===true" class="relative">
         <mat-card>
-          <div class="row" id="responseText_heading_{{i}}">
-            <div class="col-md-11">
-              <span class="response-text" id="response_text_{{i}}">{{text_entity}}</span>
-            </div>
-            <div class="col-md-1 text-right">
-              <button class="btn btn-link" (click)="removeResponseTextElement(i)">
-                <mat-icon>remove_circle_outline</mat-icon>
-              </button>
-            </div>
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Filter Entities" (keyup)="applyEntityFilter($event.target.value)">
+          </mat-form-field>
+          <div  *ngFor="let entity of entities; let i = index;">
+            <button mat-button class="entities-button" (click)="selectEntity(entity.entity_name)">{{entity.entity_name}}</button>
           </div>
         </mat-card>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <mat-form-field class="intent-response-filter" appearance="outline">
+        <mat-label>Filter Response Text</mat-label>
+        <input matInput (keyup)="applyMapFilter($event.target.value)">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="accordion">
+    <div class="row" style="width: 100%;">
+      <div class="col-md-12">
+        <div class="card" *ngFor="let text_entity of text_entities; let i = index;">
+          <mat-card>
+            <div class="row" id="responseText_heading_{{i}}">
+              <div class="col-md-11">
+                <span class="response-text" id="response_text_{{i}}">{{text_entity}}</span>
+              </div>
+              <div class="col-md-1 text-right">
+                <button class="btn btn-link" (click)="removeResponseTextElement(i, text_entity)">
+                  <mat-icon>remove_circle_outline</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card>
+        </div>
       </div>
     </div>
   </div>
