@@ -6,7 +6,7 @@
       </mat-form-field>
     </div>
     <div class="col-md-1 text-right">
-      <button mat-mini-fab matTooltip="Add Project" color="primary" (click)="addNewProject()">
+      <button mat-mini-fab matTooltip="Add Project" class="add-project-button" (click)="addNewProject()">
         <mat-icon>add</mat-icon>
       </button>
     </div>
@@ -69,7 +69,7 @@
           <tr mat-header-row *matHeaderRowDef="projectsDisplayedColumns;"></tr>
           <tr mat-row *matRowDef="let row; columns: projectsDisplayedColumns;"></tr>
         </table>
-        <mat-paginator class="" [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
       </div>
     </div>
   </div>

@@ -35,7 +35,7 @@ table {
     width: 10%;
 }
 .mat-column-source {
-    width: 10%;
+    width: 8%;
 }
 .mat-column-edit {
     width: 5%;
@@ -47,7 +47,7 @@ table {
     width: 5%;
 }
 .mat-column-try_now {
-    width: 5%;
+    width: 7%;
 }
 .mat-row:hover {
     background-color: #eee;
@@ -76,4 +76,8 @@ table {
     bottom: 0px;
     position: sticky;
     z-index: 10;
+}
+.add-project-button {
+    // background-color: #19D2CC;
+    background-image: linear-gradient(to right, #19D2CC, #0968B5);
 }
