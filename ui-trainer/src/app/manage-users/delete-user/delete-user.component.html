@@ -1,0 +1,54 @@
+<div class="create-user-popup">
+  <div class="row">
+    <div class="col-md-10">
+      <h2 class="mat-title">Delete User {{username}}</h2>
+    </div>
+    <div class="col-md-2 text-right">
+      <button class="mat-button close-dialog" (click)="closeDialog()"><h2 class="mat-title">X</h2></button>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <br>
+  <form [formGroup]="deleteUserForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-5">
+        <h3 class="mat-subheading-2">Enter the username you want to delete:</h3>
+      </div>
+      <div class="col-md-5 form-group">
+        <mat-form-field class="example-full-width" appearance=outline>
+          <input matInput formControlName="inp_username" [(ngModel)]="input_username" placeholder="Username">
+        </mat-form-field>
+        <div *ngIf="deleteUserForm.controls['inp_username'].invalid && (deleteUserForm.controls['inp_username'].dirty || deleteUserForm.controls['inp_username'].touched)" class="error-msg">
+          <div *ngIf="deleteUserForm.controls['inp_username'].errors.required">
+            Username is required.
+          </div>
+        </div>
+        <div *ngIf="validate_username === false" class="error-msg">
+          Username is invalid.
+        </div>
+      </div>
+      <div class="col-md-1">
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <br>
+    <div class="row">
+      <div class="col-md-4">
+      </div>
+      <div class="col-md-4">
+      </div>
+      <div class="col-md-4">
+        <div mat-dialog-actions>
+          <div class="col-md-6">
+              <button mat-raised-button color="warn" (click)="closeDialog()">Cancel</button>
+          </div>
+          <div class="col-md-6 text-right">
+              <button mat-raised-button type="submit" color="primary">Delete User</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

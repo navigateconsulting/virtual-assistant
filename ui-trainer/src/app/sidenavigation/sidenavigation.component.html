@@ -1,0 +1,37 @@
+<!-- 2nd Nav Drawer Start-->
+<mat-drawer-container class="example-container">
+  <mat-drawer #sidedraw_agent class="side_header_2" mode="side" opened>
+    <div class="eva_accordion">
+      <div style="width: 85%; float: left;">
+        <h1 class="mat-title" style="margin: 0;">Nobleia {{agent_details}}</h1>
+        <h2 class="mat-subheading-2">Software Project</h2>
+      </div>
+      <div style="width: 15%; float: left;">
+        <div *ngIf="sideDrawerService.drawerIconState === 'close'"  class="side_header_logo_div_2">
+          <i (click)="closeSideDrawer()" class="material-icons side_account_logos_close">chevron_left</i>
+        </div>
+      </div>
+      <div style="clear: both;"></div>
+      <div class="row" class="list_below_expand">
+          <mat-icon style="float: left;">vertical_split</mat-icon>
+          <span class="mat-body-1 item_name_below_expand">{{agent_details}} Roadmap</span>
+      </div>
+      <div class="row" class="list_below_expand">
+          <mat-icon style="float: left;">view_agenda</mat-icon>
+          <span class="mat-body-1 item_name_below_expand">{{agent_details}} Backlog</span>
+      </div>
+      <div class="row" class="list_below_expand">
+          <mat-icon style="float: left;">dashboard</mat-icon>
+          <span class="mat-body-1 item_name_below_expand">{{agent_details}} Board</span>
+      </div>
+      <div class="row" class="list_below_expand">
+          <mat-icon style="float: left;">trending_up</mat-icon>
+          <span class="mat-body-1 item_name_below_expand">{{agent_details}} Reports</span>
+      </div>
+    </div>
+  </mat-drawer>
+  <mat-drawer-content>
+    {{agent_details}} Dashboard
+  </mat-drawer-content>
+</mat-drawer-container>
+<!-- 2nd Nav Drawer Start-->

@@ -1,0 +1,47 @@
+<!-- 2nd Nav Drawer Start-->
+<mat-drawer-container class="example-container">
+  <mat-drawer #sidedraw_admin class="side_header_2" mode="side" opened>
+    <div class="eva_accordion">
+      <div style="width: 85%; float: left;">
+        <h1 class="mat-title" style="margin: 0;">EVA MENU</h1>
+      </div>
+      <div style="width: 15%; float: left;">
+        <div *ngIf="sideDrawerService.drawerIconState === 'close'"  class="side_header_logo_div_2">
+          <i (click)="closeSideDrawer()" class="material-icons side_account_logos_close">chevron_left</i>
+        </div>
+      </div>
+      <div style="clear: both;"></div><br>
+      <h2 class="mat-subheading-2">Admin Actions</h2>
+      <div class="row" class="list_below_expand">
+        <button mat-button (click)="openMatDrawerContent('manage-users')" class="eva-menu-item">
+          <mat-icon>vertical_split</mat-icon>
+          <span class="mat-body-1 item_name_below_expand">Manage Users</span>
+        </button>
+      </div>
+      <div class="row" class="list_below_expand">
+        <button mat-button (click)="openMatDrawerContent('manage-entities')" class="eva-menu-item">
+          <mat-icon>view_agenda</mat-icon>
+          <span class="mat-body-1 item_name_below_expand">Manage Entities</span>
+        </button>
+      </div>
+      <div class="row" class="list_below_expand">
+        <button mat-button (click)="openMatDrawerContent('manage-domains')" class="eva-menu-item">
+          <mat-icon>domain</mat-icon>
+          <span class="mat-body-1 item_name_below_expand">Manage Domains</span>
+        </button>
+      </div>
+    </div>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div *ngIf="setComponent === 'manage-users'">
+      <app-query-user></app-query-user>
+    </div>
+    <div *ngIf="setComponent === 'manage-entities'">
+      <app-manage-entities></app-manage-entities>
+    </div>
+    <div *ngIf="setComponent === 'manage-projects'">
+      <app-manage-projects></app-manage-projects>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
+<!-- 2nd Nav Drawer Start-->

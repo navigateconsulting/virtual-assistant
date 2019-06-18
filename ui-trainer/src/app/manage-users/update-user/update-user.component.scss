@@ -1,0 +1,17 @@
+@import '../../../scss/styles';
+
+.example-full-width {
+    width: 100%;
+}
+.mat-form-field {
+    font-size: 12px;
+}
+.custom_checkboxes .mat-checkbox-inner-container {
+    width: 30px !important;
+    height: 30px !important;
+}
+.fake-link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
