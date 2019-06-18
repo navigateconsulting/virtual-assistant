@@ -23,6 +23,8 @@ class SkypeBot:
         self.user_token = None
         self.app_token = None
         self.rasa_url = None
+        self.refresh_token = None
+        self.context = None
 
         # Communication Variables
         self.meTasks = None
@@ -33,7 +35,7 @@ class SkypeBot:
         self.reportMyActivity = None
         self.applicationURL = None
         self.hub_address = None
-        self.events_timeout = "&timeout=90"
+        self.events_timeout = "&timeout=300"
 
         self.post_headers = None
         self.get_headers = None
@@ -91,16 +93,17 @@ class SkypeBot:
         hub_address = re.search(self.matchString, url).group(0)
 
         # get Access token using tenant specific login URL
-        context = adal.AuthenticationContext(
+        self.context = adal.AuthenticationContext(
             'https://login.microsoftonline.com/' + self.tenant_id, validate_authority=self.domain
         )
 
-        token = context.acquire_token_with_username_password(
+        token = self.context.acquire_token_with_username_password(
             hub_address,
             self.username,
             self.password,
             self.client_id
         )
+        self.refresh_token = token['refreshToken']
         return 'Bearer ' + token['accessToken']
 
     async def make_me_available(self, application_url, me_tasks):
@@ -226,6 +229,8 @@ class SkypeBot:
 
         async with self._session.post(url=self.hub_address+self.reportMyActivity, headers=self.post_headers) as res:
             print("Reporting Activity Status {}".format(res.status))
+            print("Log of Status request {}".format(res))
+        return res.status
 
     async def set_my_presence(self, value):
 
@@ -269,11 +274,28 @@ class SkypeBot:
             json_res = await res.json()
         return json_res['location']
 
+    async def get_refreshed_token(self):
+        print("Refresh Token from Previous Connection {}".format(self.refresh_token))
+        token = self.context.acquire_token_with_refresh_token(
+            self.refresh_token,
+            self.client_id,
+            self.hub_address
+        )
+        self.app_token = token['accessToken']
+        self.refresh_token = token['refreshToken']
+        return token
+
     async def task_report_my_activity(self):
         while True:
             print("Sleeping for 5 seconds")
             await asyncio.sleep(60)
-            await self.report_my_activity()
+            status = await self.report_my_activity()
+            print("Status of Reporting Activity {}".format(status))
+            if status != 204:
+                print("Refreshing Token ")
+                token = await self.get_refreshed_token()
+                status = await self.report_my_activity()
+                print("Status {}".format(status))
 
     def sigterm_handler(self,signal, frame):
         # save the state here or do whatever you want
@@ -287,9 +309,11 @@ class SkypeBot:
 
         while True:
 
-            async with self._session.get(url=self.hub_address+self.eventsURL, headers=self.get_headers) as res:
+            async with self._session.get(url=self.hub_address+self.eventsURL+self.events_timeout, headers=self.get_headers, timeout=6000) as res:
                 json_resp = await res.json()
                 status = res.status
+
+            print("Status of Events URL ".format(res.status))
 
             if status == 401:
                 print("Error in Events URL {}".format(json_resp))
