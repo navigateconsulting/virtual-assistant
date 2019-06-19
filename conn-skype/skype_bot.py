@@ -25,6 +25,7 @@ class SkypeBot:
         self.rasa_url = None
         self.refresh_token = None
         self.context = None
+        self.applications_endpoint = None
 
         # Communication Variables
         self.meTasks = None
@@ -35,7 +36,7 @@ class SkypeBot:
         self.reportMyActivity = None
         self.applicationURL = None
         self.hub_address = None
-        self.events_timeout = "&timeout=300"
+        self.events_timeout = "&timeout=180"
 
         self.post_headers = None
         self.get_headers = None
@@ -69,7 +70,8 @@ class SkypeBot:
         self.domain = self.username[self.username.index("@")+1:]
         self.rasa_url = rasa_url
 
-        await self.init_application()
+        await self.init_user()
+        await self.init_application(mode='INITIAL')
 
         # Test Calls
 
@@ -103,8 +105,23 @@ class SkypeBot:
             self.password,
             self.client_id
         )
-        self.refresh_token = token['refreshToken']
-        return 'Bearer ' + token['accessToken']
+        print("hub Address during Aquiring token {}".format(hub_address))
+        return 'Bearer ' + token['accessToken'], token['refreshToken']
+
+    async def get_refreshed_token(self):
+        print("Refresh Token from Previous Connection {}".format(self.refresh_token))
+        print("Access Token from Previous connection {}".format(self.app_token))
+        token = self.context.acquire_token_with_refresh_token(
+            self.refresh_token,
+            self.client_id,
+            self.hub_address
+        )
+
+        print("hub Address during refresh token {}".format(self.hub_address))
+        print("New Access token {}".format('Bearer ' + token['accessToken']))
+        print("New refresh token {}".format(token['refreshToken']))
+
+        return 'Bearer ' + token['accessToken'], token['refreshToken']
 
     async def make_me_available(self, application_url, me_tasks):
 
@@ -124,13 +141,13 @@ class SkypeBot:
             return 'NA'
         return res.status
 
-    async def init_application(self):
+    async def init_user(self):
 
         # Step 1 - get Access token for User URL and perform a get on User URL , this gives us Application URL
 
         # Get User Access Token and get application resource via USER token
 
-        self.user_token = await self.get_adal_token(self.user_url)
+        self.user_token, refresh_token = await self.get_adal_token(self.user_url)
         print("User Token {}".format(self.user_token))
 
         header_val = {"Authorization" : self.user_token,
@@ -145,14 +162,41 @@ class SkypeBot:
         async with self._session.get(self.user_url, headers=header_val) as res:
             json_resp = await res.json()
 
-        applications_url = json_resp['_links']['applications']['href']
+        self.applications_endpoint = json_resp['_links']['applications']['href']
+
+    async def init_application(self, mode):
+
+        # # Step 1 - get Access token for User URL and perform a get on User URL , this gives us Application URL
+        #
+        # # Get User Access Token and get application resource via USER token
+        #
+        # self.user_token = await self.get_adal_token(self.user_url)
+        # print("User Token {}".format(self.user_token))
+        #
+        # header_val = {"Authorization" : self.user_token,
+        #               "Accept" : "application/json",
+        #               "X-Requested-With": "XMLHttpRequest",
+        #               #"Referer": user_xframe,
+        #               "Accept-Encoding" : "gzip, deflate",
+        #               "User-Agent" : "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)",
+        #               "Host": self.domain,
+        #               "Connection": "Keep-Alive"}
+        #
+        # async with self._session.get(self.user_url, headers=header_val) as res:
+        #     json_resp = await res.json()
+        #
+        # applications_endpoint = json_resp['_links']['applications']['href']
 
         # Step 2 - From the applications URL Obtained , get a access token for the applications URL , and perform a POST on application
         # URL to get resources within that application Here we use Application token and obtain Skype Resources
 
         # Getting application token and authenticating to the application resource to get further resources
-        self.app_token = await self.get_adal_token(applications_url)
-        print(self.app_token)
+
+        if mode == 'INITIAL':
+            self.app_token, self.refresh_token = await self.get_adal_token(self.applications_endpoint)
+            print(self.app_token)
+        else:
+            self.app_token, self.refresh_token = await self.get_refreshed_token()
 
         post_header_val = {
             "Accept": "application/json",
@@ -173,18 +217,18 @@ class SkypeBot:
             'EndpointId': 'xxxxxxxx-xxxx-8xxx-yxxx-xxxxxxxxxxxx'
         }
 
-        async with self._session.post(applications_url, data=json.dumps(post_body_val), headers=post_header_val) as res:
+        async with self._session.post(self.applications_endpoint, data=json.dumps(post_body_val), headers=post_header_val) as res:
             json_resp = await res.json()
 
         # Step 3 Initial Post on application URL would not give all endpoints , Hence we need to make the user available
         # and then post again on application URL to get all endpoints
 
-        result = await self.make_me_available(applications_url, json_resp['_embedded']['me']['_links'])
+        result = await self.make_me_available(self.applications_endpoint, json_resp['_embedded']['me']['_links'])
         print("Making BOT Available {}".format(result))
 
         # Step 4 Performing POST on application resource again to get all Endpoints set.
 
-        async with self._session.post(applications_url, data=json.dumps(post_body_val), headers=post_header_val) as res:
+        async with self._session.post(self.applications_endpoint, data=json.dumps(post_body_val), headers=post_header_val) as res:
             json_resp = await res.json()
 
         # Finally all resources are available setting variables to there values
@@ -196,7 +240,7 @@ class SkypeBot:
         self.eventsURL = json_resp["_links"]["events"]["href"]
         self.reportMyActivity = self.meTasks['reportMyActivity']['href']
         self.applicationURL = json_resp['_links']['self']['href']
-        self.hub_address = re.search(self.matchString, applications_url).group(0)
+        self.hub_address = re.search(self.matchString, self.applications_endpoint).group(0)
 
         # Setting generic Headers
 
@@ -218,6 +262,7 @@ class SkypeBot:
 
         print("ApplicationURL var {}".format(self.applicationURL))
         print("Hub Address var {}".format(self.hub_address))
+        print("Applications URL Varibale value {}".format(self.applications_endpoint))
 
     async def terminate_application(self):
 
@@ -274,17 +319,6 @@ class SkypeBot:
             json_res = await res.json()
         return json_res['location']
 
-    async def get_refreshed_token(self):
-        print("Refresh Token from Previous Connection {}".format(self.refresh_token))
-        token = self.context.acquire_token_with_refresh_token(
-            self.refresh_token,
-            self.client_id,
-            self.hub_address
-        )
-        self.app_token = token['accessToken']
-        self.refresh_token = token['refreshToken']
-        return token
-
     async def task_report_my_activity(self):
         while True:
             print("Sleeping for 5 seconds")
@@ -293,7 +327,27 @@ class SkypeBot:
             print("Status of Reporting Activity {}".format(status))
             if status != 204:
                 print("Refreshing Token ")
-                token = await self.get_refreshed_token()
+                #await self.init_application(mode='REFRESH')
+                self.app_token, self.refresh_token = await self.get_refreshed_token()
+
+                # Re Setting generic Headers
+
+                self.post_headers = {'Accept': 'application/json',
+                                     'Content-Type': 'application/json',
+                                     'Authorization': self.app_token
+                                     }
+
+                self.get_headers = {'Accept': "application/json",
+                                    'Connection': "keep-alive",
+                                    'Accept-Encoding': "gzip, deflate",
+                                    'Authorization': self.app_token
+                                    }
+
+                self.post_headers_plain = {'Accept': 'application/json',
+                                           'Content-Type': 'text/plain',
+                                           'Authorization': self.app_token
+                                           }
+
                 status = await self.report_my_activity()
                 print("Status {}".format(status))
 
@@ -308,20 +362,23 @@ class SkypeBot:
         # Perform a Post on the events URL and check for any inbound messages
 
         while True:
-
-            async with self._session.get(url=self.hub_address+self.eventsURL+self.events_timeout, headers=self.get_headers, timeout=6000) as res:
-                json_resp = await res.json()
+            async with self._session.get(url=self.hub_address+self.eventsURL+self.events_timeout, headers=self.get_headers) as res:
+                try:
+                    json_resp = await res.json()
+                except:
+                    json_resp = res
                 status = res.status
 
-            print("Status of Events URL ".format(res.status))
+            print("Events URL Status {}".format(status))
 
-            if status == 401:
-                print("Error in Events URL {}".format(json_resp))
-            else:
+            if status == 200:
                 print("Got events {}".format(json_resp))
 
                 # Setting events URL to next value
                 self.eventsURL = json_resp['_links']['next']['href']
+                print("Got Next URL of the response {}".format(self.eventsURL))
+            else:
+                print("Error in Events URL {}".format(json_resp))
 
             for sender in json_resp['sender']:
                 if sender['rel'] == "communication":
