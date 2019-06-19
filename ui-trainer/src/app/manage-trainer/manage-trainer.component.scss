@@ -1,3 +1,5 @@
+@import '../../scss/styles';
+
 .full-height {
     height: 100%;
     overflow-y: hidden;
@@ -10,16 +12,7 @@
 .main-container {
     overflow-y: hidden;
 }
-.mat-toolbar-row, .mat-toolbar-single-row {
-    height: 60px;
-    background-color: inherit;
-}
-span.breadcrumb_path {
-    font-size: 18px;
-}
 .toolbar-div {
-    // background-color: #E8E8E8;
-    // box-shadow: 2px 5px #EEEEEE;
     max-height: 50px;
     padding: 0;
 }
@@ -27,24 +20,25 @@ span.breadcrumb_path {
     padding: 0;
 }
 .breadcrumb {
-    background-color: #FFFFFF;
+    background-color: inherit;
     height: 50px;
 }
 /* Style to change separator  */
 .breadcrumb-item + .breadcrumb-item::before {
     content: ">";
+    padding-left: $breadcrumb-padding;
+    padding-right: $breadcrumb-padding;
 }
 .breadcrumb-item a {
-    color: #383838;
-    font-family: "Lato Semibold";
-    font-size: 20px;
-    line-height: 24px;
+    color: $breadcrumb-font-color;
+    font-size: $breadcrumb-font-size;
+    line-height: $breadcrumb-line-height;
 }
 .breadcrumb-element {
     cursor: pointer;
 }
 .show-entities-div {
-    background-color: #E8E8E8;
+    background-color: inherit;
     margin-top: -1.2%;
 }
 .property-panel-container {

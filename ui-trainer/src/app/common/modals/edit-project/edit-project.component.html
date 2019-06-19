@@ -1,20 +1,32 @@
-<h1 mat-dialog-title>Edit Project</h1>
-
+<div class="row">
+  <div class="col-md-9">
+    <h1 mat-dialog-title>Edit Project</h1>
+  </div>
+  <div class="col-md-3 text-right">
+    <mat-icon class="dialog-icon" svgIcon="project"></mat-icon>
+  </div>
+</div>
 <form [formGroup]="editProjectForm" (ngSubmit)="closeDialog()">
 <mat-dialog-content>
-  <mat-form-field class="full-width" appearance="outline">
+  <mat-form-field class="dialog-full-width" appearance="outline">
     <mat-label>Project Name</mat-label>
     <input matInput (keydown.space)="$event.preventDefault()" maxlength="30" formControlName="projectName">
   </mat-form-field>
   <br />
-  <mat-form-field class="full-width" appearance="outline">
+  <mat-form-field class="dialog-full-width" appearance="outline">
     <mat-label>Project Description</mat-label>
     <textarea matInput maxlength="140" formControlName="projectDescription"></textarea>
   </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button type="submit" [disabled]="!editProjectForm.valid" color="primary">OK</button>
+  <div class="row" style="width: 100%;">
+    <div class="col-md-6 text-center">
+      <button mat-raised-button type="submit" class="submit-button" [disabled]="!editProjectForm.valid">OK</button>
+    </div>
+    <div class="col-md-6 text-center">
+      <button mat-raised-button mat-dialog-close class="cancel-button">Cancel</button>
+    </div>
+  </div>
 </mat-dialog-actions>
 </form>
