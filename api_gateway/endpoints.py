@@ -394,10 +394,11 @@ async def get_story_details(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room  ----------  ".format(sid, data))
 
-    story_detail, intents_list, response_list = await StoryModel.get_story_details(data)
+    story_detail, intents_list, response_list, action_list = await StoryModel.get_story_details(data)
     await sio.emit('storyDetail', story_detail, namespace='/story', room=room_name)
     await sio.emit('allIntents', intents_list, namespace='/story', room=room_name)
     await sio.emit('allResponses', response_list, namespace='/story', room=room_name)
+    await sio.emit('allActions', action_list, namespace='/story', room=room_name)
 
 
 @sio.on('insertStoryDetails', namespace='/story')
@@ -405,11 +406,12 @@ async def insert_story_details(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room  ----------  ".format(sid, data))
 
-    message, story_detail, intents_list, response_list = await StoryModel.insert_story_details(data)
+    message, story_detail, intents_list, response_list, action_list = await StoryModel.insert_story_details(data)
     await sio.emit('respStoryDetail', message, namespace='/story', room=sid)
     await sio.emit('storyDetail', story_detail, namespace='/story', room=room_name)
     await sio.emit('allIntents', intents_list, namespace='/story', room=room_name)
     await sio.emit('allResponses', response_list, namespace='/story', room=room_name)
+    await sio.emit('allResponses', action_list, namespace='/story', room=room_name)
 
 
 @sio.on('deleteStoryDetails', namespace='/story')
@@ -534,15 +536,20 @@ class TryNow(socketio.AsyncNamespace):
 
     async def on_chatNow(self, sid, message):
 
+        out_message = {}
         print("inside chat now")
         responses = await self.agent.handle_text(message, sender_id=sid)
 
         result = await RasaConversations.get_conversations(sid)
 
-        for response in responses:
-            print("--------- BOT Response {}".format(response))
-            response['tracker-store'] = result
-            await sio.emit('chatResponse', response, namespace='/trynow', room=sid)
+        if 'message' not in responses:
+            out_message['tracker-store'] = result
+            await sio.emit('chatResponse', out_message, namespace='/trynow', room=sid)
+        else:
+            for response in responses:
+                print("--------- BOT Response {}".format(response))
+                response['tracker-store'] = result
+                await sio.emit('chatResponse', response, namespace='/trynow', room=sid)
 
 
 sio.register_namespace(TryNow('/trynow'))

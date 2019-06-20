@@ -39,6 +39,7 @@ class RefreshDb:
         await db.responses.delete_many({})
         await db.stories.delete_many({})
         await db.conversations.delete_many({})
+        await db.actions.delete_many({})
 
         # Inserting Data in collection
 
@@ -82,6 +83,10 @@ class RefreshDb:
             await db.stories.insert_many(data)
 
         await db.stories.update_many({}, {'$set': {'project_id': str(project_id), 'domain_id': str(domain_id.get('_id'))}})
+
+        with open(seed_data_path+'actions.json') as json_file:
+            data = json.load(json_file)
+            await db.actions.insert_many(data)
 
         return "Success"
 
@@ -731,7 +736,12 @@ class StoryModel:
         result_response = await cursor.to_list(length=1000)
         response_list = json.loads(dumps(result_response))
 
-        return json.loads(dumps(result)), intents_list, response_list
+        # get actions
+        cursor = db.actions.find({})
+        result_action = await cursor.to_list(length=1000)
+        action_list = json.loads(dumps(result_action))
+
+        return json.loads(dumps(result)), intents_list, response_list, action_list
 
     async def insert_story_details(self, data):
 
