@@ -534,15 +534,20 @@ class TryNow(socketio.AsyncNamespace):
 
     async def on_chatNow(self, sid, message):
 
+        out_message = {}
         print("inside chat now")
         responses = await self.agent.handle_text(message, sender_id=sid)
 
         result = await RasaConversations.get_conversations(sid)
 
-        for response in responses:
-            print("--------- BOT Response {}".format(response))
-            response['tracker-store'] = result
-            await sio.emit('chatResponse', response, namespace='/trynow', room=sid)
+        if 'message' not in responses:
+            out_message['tracker-store'] = result
+            await sio.emit('chatResponse', out_message, namespace='/trynow', room=sid)
+        else:
+            for response in responses:
+                print("--------- BOT Response {}".format(response))
+                response['tracker-store'] = result
+                await sio.emit('chatResponse', response, namespace='/trynow', room=sid)
 
 
 sio.register_namespace(TryNow('/trynow'))
