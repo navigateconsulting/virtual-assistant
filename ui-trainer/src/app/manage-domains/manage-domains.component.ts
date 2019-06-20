@@ -69,7 +69,8 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
 
   addNewDomain() {
     const dialogRef = this.dialog.open(AddDomainComponent, {
-      width: '400px',
+      height: '300px',
+      width: '345px',
       data: {projectObjectId: this.projectObjectId}
     });
     dialogRef.afterClosed().subscribe(response => {
@@ -81,7 +82,8 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
 
   editDomain(domainObjectId: string, domainName: string, domainDescription: string) {
     const dialogRef = this.dialog.open(EditDomainComponent, {
-      width: '400px',
+      height: '300px',
+      width: '345px',
       data: {
         projectObjectId: this.projectObjectId,
         domainObjectId: domainObjectId,

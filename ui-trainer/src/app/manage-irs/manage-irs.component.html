@@ -8,7 +8,7 @@
           </mat-form-field>
         </div>
         <div class="col-md-1 text-right">
-          <button mat-mini-fab matTooltip="Add Intent" color="primary" (click)="addNewIntent()">
+          <button mat-mini-fab matTooltip="Add Intent" class="add-irs-button" (click)="addNewIntent()">
             <mat-icon>add</mat-icon>
           </button>
         </div>
@@ -20,8 +20,8 @@
             <table mat-table [dataSource]="intentsDataSource">
     
               <ng-container matColumnDef="icon">
-                <th mat-header-cell *matHeaderCellDef> <mat-icon>insert_drive_file</mat-icon> </th>
-                <td mat-cell *matCellDef="let intent"> <mat-icon color="primary">insert_drive_file</mat-icon> </td>
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let intent"> <mat-icon svgIcon="intent"></mat-icon> </td>
               </ng-container>
             
               <ng-container matColumnDef="intent_name">
@@ -36,12 +36,12 @@
     
               <ng-container matColumnDef="edit">
                 <th mat-header-cell *matHeaderCellDef> Edit </th>
-                <td mat-cell *matCellDef="let intent" class="edit_remove"><mat-icon (click)="editIntent(intent._id.$oid, intent.intent_name, intent.intent_description)">edit</mat-icon></td>
+                <td mat-cell *matCellDef="let intent" class="edit_remove"><mat-icon svgIcon="edit" (click)="editIntent(intent._id.$oid, intent.intent_name, intent.intent_description)"></mat-icon></td>
               </ng-container>
     
               <ng-container matColumnDef="delete">
                 <th mat-header-cell *matHeaderCellDef> Delete </th>
-                <td mat-cell *matCellDef="let intent" class="edit_remove"><mat-icon color="warn" (click)="deleteIntent(intent._id.$oid)">remove_circle</mat-icon></td>
+                <td mat-cell *matCellDef="let intent" class="edit_remove"><mat-icon svgIcon="delete" (click)="deleteIntent(intent._id.$oid)">remove_circle</mat-icon></td>
               </ng-container>
             
               <tr mat-header-row *matHeaderRowDef="intentsDisplayedColumns"></tr>
@@ -64,7 +64,7 @@
           </mat-form-field>
         </div>
         <div class="col-md-1 text-right">
-          <button mat-mini-fab matTooltip="Add Response" color="primary" (click)="addNewResponse()">
+          <button mat-mini-fab matTooltip="Add Response" class="add-irs-button" (click)="addNewResponse()">
             <mat-icon>add</mat-icon>
           </button>
         </div>
@@ -76,8 +76,8 @@
             <table mat-table [dataSource]="responsesDataSource">
     
               <ng-container matColumnDef="icon">
-                <th mat-header-cell *matHeaderCellDef> <mat-icon>insert_drive_file</mat-icon> </th>
-                <td mat-cell *matCellDef="let response"> <mat-icon color="primary">insert_drive_file</mat-icon> </td>
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let response"> <mat-icon svgIcon="response"></mat-icon> </td>
               </ng-container>
             
               <ng-container matColumnDef="response_name">
@@ -92,12 +92,12 @@
     
               <ng-container matColumnDef="edit">
                 <th mat-header-cell *matHeaderCellDef> Edit </th>
-                <td mat-cell *matCellDef="let response" class="edit_remove"><mat-icon (click)="editResponse(response._id.$oid, response.response_name, response.response_description)">edit</mat-icon></td>
+                <td mat-cell *matCellDef="let response" class="edit_remove"><mat-icon svgIcon="edit" (click)="editResponse(response._id.$oid, response.response_name, response.response_description)"></mat-icon></td>
               </ng-container>
     
               <ng-container matColumnDef="delete">
                 <th mat-header-cell *matHeaderCellDef> Delete </th>
-                <td mat-cell *matCellDef="let response" class="edit_remove"><mat-icon color="warn" (click)="deleteResponse(response._id.$oid)">remove_circle</mat-icon></td>
+                <td mat-cell *matCellDef="let response" class="edit_remove"><mat-icon svgIcon="delete" (click)="deleteResponse(response._id.$oid)"></mat-icon></td>
               </ng-container>
             
               <tr mat-header-row *matHeaderRowDef="responsesDisplayedColumns;"></tr>
@@ -118,7 +118,7 @@
           </mat-form-field>
         </div>
         <div class="col-md-1 text-right">
-          <button mat-mini-fab matTooltip="Add Story" color="primary" (click)="addNewStory()">
+          <button mat-mini-fab matTooltip="Add Story" class="add-irs-button" (click)="addNewStory()">
             <mat-icon>add</mat-icon>
           </button>
         </div>
@@ -130,8 +130,8 @@
             <table mat-table [dataSource]="storiesDataSource">
     
               <ng-container matColumnDef="icon">
-                <th mat-header-cell *matHeaderCellDef> <mat-icon>insert_drive_file</mat-icon> </th>
-                <td mat-cell *matCellDef="let story"> <mat-icon color="primary">insert_drive_file</mat-icon> </td>
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let story"> <mat-icon svgIcon="story"></mat-icon> </td>
               </ng-container>
             
               <ng-container matColumnDef="story_name">
@@ -146,12 +146,12 @@
     
               <ng-container matColumnDef="edit">
                 <th mat-header-cell *matHeaderCellDef> Edit </th>
-                <td mat-cell *matCellDef="let story" class="edit_remove"><mat-icon (click)="editStory(story._id.$oid, story.story_name, story.story_description)">edit</mat-icon></td>
+                <td mat-cell *matCellDef="let story" class="edit_remove"><mat-icon svgIcon="edit" (click)="editStory(story._id.$oid, story.story_name, story.story_description)"></mat-icon></td>
               </ng-container>
     
               <ng-container matColumnDef="delete">
                 <th mat-header-cell *matHeaderCellDef> Delete </th>
-                <td mat-cell *matCellDef="let story" class="edit_remove"><mat-icon color="warn" (click)="deleteStory(story._id.$oid)">remove_circle</mat-icon></td>
+                <td mat-cell *matCellDef="let story" class="edit_remove"><mat-icon svgIcon="delete" (click)="deleteStory(story._id.$oid)"></mat-icon></td>
               </ng-container>
             
               <tr mat-header-row *matHeaderRowDef="storiesDisplayedColumns;"></tr>

@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 @import '~@angular/cdk/overlay-prebuilt.css';
+@import './scss/styles';
 
 html, body { 
     height: 100%; 
@@ -10,11 +11,4 @@ body {
     overflow-y: hidden; 
     overflow-x: hidden; 
     background-color: #FFF; 
-}
-.cdk-global-scrollblock {
-    overflow-y: hidden;
-}
-.cdk-overlay-backdrop.cdk-overlay-backdrop-showing.dark-backdrop {
-    background: #000;
-    opacity: 0.8 !important;
 }

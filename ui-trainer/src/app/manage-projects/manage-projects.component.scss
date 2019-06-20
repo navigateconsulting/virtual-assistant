@@ -1,3 +1,5 @@
+@import '../../scss/styles';
+
 .projects-container {
     padding: 1%;
     overflow-x: hidden;
@@ -79,5 +81,5 @@ table {
 }
 .add-project-button {
     // background-color: #19D2CC;
-    background-image: linear-gradient(to right, #19D2CC, #0968B5);
+    background-image: $global_gradient;
 }

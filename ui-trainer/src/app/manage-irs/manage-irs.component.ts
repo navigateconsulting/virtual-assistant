@@ -98,7 +98,8 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
 
   addNewIntent() {
     const dialogRef = this.dialog.open(AddIntentComponent, {
-      width: '400px',
+      height: '300px',
+      width: '345px',
       data: {projectObjectId: this.projectObjectId, domainObjectId: this.domainObjectId}
     });
     dialogRef.afterClosed().subscribe(response => {
@@ -110,7 +111,8 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
 
   editIntent(intentObjectId: string, intentName: string, intentDescription: string) {
     const dialogRef = this.dialog.open(EditIntentComponent, {
-      width: '400px',
+      height: '300px',
+      width: '345px',
       data: {
         projectObjectId: this.projectObjectId,
         domainObjectId: this.domainObjectId,
@@ -151,7 +153,8 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
 
   addNewResponse() {
     const dialogRef = this.dialog.open(AddResponseComponent, {
-      width: '400px',
+      height: '300px',
+      width: '345px',
       data: {projectObjectId: this.projectObjectId, domainObjectId: this.domainObjectId}
     });
     dialogRef.afterClosed().subscribe(response => {
@@ -163,7 +166,8 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
 
   editResponse(responseObjectId: string, responseName: string, responseDescription: string) {
     const dialogRef = this.dialog.open(EditResponseComponent, {
-      width: '400px',
+      height: '300px',
+      width: '345px',
       data: {
         projectObjectId: this.projectObjectId,
         domainObjectId: this.domainObjectId,
@@ -204,7 +208,8 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
 
   addNewStory() {
     const dialogRef = this.dialog.open(AddStoryComponent, {
-      width: '400px',
+      height: '300px',
+      width: '345px',
       data: {projectObjectId: this.projectObjectId, domainObjectId: this.domainObjectId}
     });
     dialogRef.afterClosed().subscribe(response => {
@@ -216,7 +221,8 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
 
   editStory(storyObjectId: string, storyName: string, storyDescription: string) {
     const dialogRef = this.dialog.open(EditStoryComponent, {
-      width: '400px',
+      height: '300px',
+      width: '345px',
       data: {
         projectObjectId: this.projectObjectId,
         domainObjectId: this.domainObjectId,

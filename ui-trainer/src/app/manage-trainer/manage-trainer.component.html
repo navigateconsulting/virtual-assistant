@@ -9,15 +9,10 @@
             </ol>
           </nav>
         </div>
-        <!-- <div class="col-md-1 text-right">
-          <button *ngIf="showPropertyPanel === false" mat-button color="primary" matTooltip="Deploy Models" (click)="deployModels()">
-            <mat-icon>backup</mat-icon>
-          </button>
-        </div> -->
         <div class="col-md-1 show-entities-div text-right">
-          <button *ngIf="showPropertyPanel === true" mat-button matTooltip="Show Entities" (click)="toggleEntities()">
-            <mat-icon>reply</mat-icon>
-          </button>
+          <mat-chip-list *ngIf="showPropertyPanel === true">
+            <mat-chip class="show-entity-chip" matTooltip="Show Property Panel" (click)="toggleEntities()"><mat-icon>navigate_before</mat-icon></mat-chip>
+          </mat-chip-list>
         </div>
       </mat-toolbar>
       <div *ngIf="setComponent === 'manage-projects'" class="full-height">
@@ -43,17 +38,17 @@
       <div class="row property-panel-row">
         <div class="col-md-12">
           <div class="text-center">
-            <h4 class="mat-body-strong">Property Panel</h4>
+            <h4 class="prop-panel-text">Property Panel</h4>
           </div>
           <div class="row property-panel">
             <div class="col-md-4 text-center">
-              <button mat-flat-button color="primary" (click)="openPropertyPanelComponent('entities')">Entities</button>
+              <button mat-flat-button class="entities-button" (click)="openPropertyPanelComponent('entities')">Entities</button>
             </div>
             <div class="col-md-4 text-center">
-              <button mat-flat-button (click)="openPropertyPanelComponent('actions')">Actions</button>
+              <button mat-flat-button class="actions-button" (click)="openPropertyPanelComponent('actions')">Actions</button>
             </div>
             <div class="col-md-4 text-center">
-              <button mat-flat-button color="accent" (click)="openPropertyPanelComponent('app-prop')">AppProp</button>
+              <button mat-flat-button class="app-prop-button" (click)="openPropertyPanelComponent('app-prop')">AppProp</button>
             </div>
           </div>
           <div class="row property-panel-components">

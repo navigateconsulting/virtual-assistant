@@ -1,3 +1,5 @@
+@import '../../scss/styles';
+
 .example-stretched-tabs {
     width: 100%;
 }
@@ -77,4 +79,7 @@ table {
     bottom: 0px;
     position: sticky;
     z-index: 10;
+}
+.add-irs-button {
+    background-image: $global_gradient;
 }

@@ -73,7 +73,8 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   addNewProject() {
     const dialogRef = this.dialog.open(AddProjectComponent, {
-      width: '400px',
+      height: '300px',
+      width: '345px',
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
@@ -84,7 +85,8 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   editProject(projectObjectId: string, projectName: string, projectDescription: string) {
     const dialogRef = this.dialog.open(EditProjectComponent, {
-      width: '400px',
+      height: '300px',
+      width: '345px',
       data: {projectObjectId: projectObjectId, projectName: projectName, projectDescription: projectDescription}
     });
     dialogRef.afterClosed().subscribe(response => {
@@ -105,7 +107,8 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   copyProject(projectObjectId: string, projectName: string) {
     const dialogRef = this.dialog.open(CopyProjectComponent, {
-      width: '400px',
+      height: '300px',
+      width: '345px',
       data: {projectObjectId: projectObjectId, projectName: projectName}
     });
     dialogRef.afterClosed().subscribe(response => {
