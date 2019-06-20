@@ -736,7 +736,12 @@ class StoryModel:
         result_response = await cursor.to_list(length=1000)
         response_list = json.loads(dumps(result_response))
 
-        return json.loads(dumps(result)), intents_list, response_list
+        # get actions
+        cursor = db.actions.find({})
+        result_action = await cursor.to_list(length=1000)
+        action_list = json.loads(dumps(result_action))
+
+        return json.loads(dumps(result)), intents_list, response_list, action_list
 
     async def insert_story_details(self, data):
 
