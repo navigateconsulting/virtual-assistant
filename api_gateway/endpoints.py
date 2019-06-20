@@ -394,10 +394,11 @@ async def get_story_details(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room  ----------  ".format(sid, data))
 
-    story_detail, intents_list, response_list = await StoryModel.get_story_details(data)
+    story_detail, intents_list, response_list, action_list = await StoryModel.get_story_details(data)
     await sio.emit('storyDetail', story_detail, namespace='/story', room=room_name)
     await sio.emit('allIntents', intents_list, namespace='/story', room=room_name)
     await sio.emit('allResponses', response_list, namespace='/story', room=room_name)
+    await sio.emit('allActions', action_list, namespace='/story', room=room_name)
 
 
 @sio.on('insertStoryDetails', namespace='/story')
