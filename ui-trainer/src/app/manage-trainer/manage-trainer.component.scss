@@ -56,3 +56,29 @@
     margin: 0;
     padding: 5%;
 }
+.prop-panel-text {
+    padding: 2%;
+    color: $breadcrumb-font-color;
+    font-size: $breadcrumb-font-size;
+    line-height: $breadcrumb-line-height;
+}
+.show-entity-chip {
+    background-color: $primary-color-4;
+    color: white;
+    font-weight: bold;
+}
+.entities-button {
+    background-color: $primary-color-3;
+    color: white;
+    font-weight: bold;
+}
+.actions-button {
+    background-color: $primary-color-1;
+    color: white;
+    font-weight: bold;
+}
+.app-prop-button {
+    background-color: $primary-color-4;
+    color: white;
+    font-weight: bold;
+}

@@ -1,20 +1,32 @@
-<h1 mat-dialog-title>Create New Intent</h1>
-
+<div class="row">
+  <div class="col-md-9">
+    <h1 mat-dialog-title>Create New Intent</h1>
+  </div>
+  <div class="col-md-3 text-right">
+    <mat-icon class="dialog-icon" svgIcon="intent"></mat-icon>
+  </div>
+</div>
 <form [formGroup]="newIntentForm" (ngSubmit)="closeDialog()">
 <mat-dialog-content>
-  <mat-form-field class="full-width" appearance="outline">
+  <mat-form-field class="dialog-full-width" appearance="outline">
     <mat-label>Intent Name</mat-label>
     <input matInput (keydown.space)="$event.preventDefault()" maxlength="30" formControlName="intentName">
   </mat-form-field>
   <br />
-  <mat-form-field class="full-width" appearance="outline">
+  <mat-form-field class="dialog-full-width" appearance="outline">
     <mat-label>Intent Description</mat-label>
     <textarea matInput maxlength="140" formControlName="intentDescription"></textarea>
   </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button type="submit" [disabled]="!newIntentForm.valid" color="primary">OK</button>
+  <div class="row" style="width: 100%;">
+    <div class="col-md-6 text-right">
+      <button mat-raised-button type="submit" class="submit-button" [disabled]="!newIntentForm.valid">Confirm</button>
+    </div>
+    <div class="col-md-6 text-center">
+      <button mat-raised-button mat-dialog-close class="cancel-button">Cancel</button>
+    </div>
+  </div>
 </mat-dialog-actions>
 </form>

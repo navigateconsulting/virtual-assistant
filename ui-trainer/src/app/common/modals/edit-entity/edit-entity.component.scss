@@ -1,5 +1,25 @@
+@import '../../../../scss/styles';
+
 .mat-radio-button {
     padding: 1%;
+}
+/deep/ .mat-radio-outer-circle {
+.mat-radio-checked & {
+        border-color: $primary-color-1 !important;
+    }
+}
+
+/deep/ .mat-radio-inner-circle {
+    background-color: $primary-color-1 !important;
+}
+
+/deep/ .mat-radio-ripple .mat-ripple-element {
+    background-color: $primary-color-1 !important;
+}
+.remove-entity-button {
+    color: white;
+    font-weight: bold;
+    background-color: $primary-color-1;
 }
 .mat-dialog-content {
     margin-left: -2% !important;
@@ -17,4 +37,9 @@ mat-form-field {
 }
 .example-full-width {
     width: 100%;
+}
+.entity-save-button{
+    background-color: $primary-color-3;
+    color: white;
+    font-weight: bold;
 }

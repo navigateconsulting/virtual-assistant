@@ -1,3 +1,22 @@
 * {
     font-family: $font-family;
 }
+.mat-header-cell {
+    font-size: 14px !important;
+    font-weight: bold;
+    color: #383838;
+}
+.mat-tab-label .mat-tab-label-content {
+    color: #383838;
+    font-weight: bold;
+}
+.mat-icon{
+    font-family: 'Material Icons' !important;
+}
+.cdk-global-scrollblock {
+    overflow-y: hidden;
+}
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing.dark-backdrop {
+    background: #000;
+    opacity: 0.8 !important;
+}

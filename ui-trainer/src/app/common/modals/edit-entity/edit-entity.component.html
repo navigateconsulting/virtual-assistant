@@ -3,7 +3,7 @@
     <h1 mat-dialog-title>Edit Entity Details</h1>
   </div>
   <div class="col-md-4 text-right">
-    <button mat-button color="warn" (click)="removeEntity()">Delete Entity</button>
+    <button mat-raised-button class="remove-entity-button" (click)="removeEntity()">Delete Entity</button>
   </div>
 </div>
 <mat-divider></mat-divider>
@@ -63,10 +63,10 @@
   <div class="col-md-5">
     <div mat-dialog-actions>
       <div class="col-md-6">
-        <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
+        <button mat-raised-button mat-dialog-close>Cancel</button>
       </div>
       <div class="col-md-6 text-right">
-        <button mat-raised-button color="primary" (click)="saveEntitySlotDetails()">Save</button>
+        <button mat-raised-button class="entity-save-button" (click)="saveEntitySlotDetails()">Save</button>
       </div>
     </div>
   </div>

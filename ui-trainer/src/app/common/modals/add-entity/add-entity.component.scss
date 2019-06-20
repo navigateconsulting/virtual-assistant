@@ -1,5 +1,20 @@
+@import '../../../../scss/styles';
+
 .mat-radio-button {
     padding: 1%;
+}
+/deep/ .mat-radio-outer-circle {
+.mat-radio-checked & {
+        border-color: $primary-color-1 !important;
+    }
+}
+
+/deep/ .mat-radio-inner-circle {
+    background-color: $primary-color-1 !important;
+}
+
+/deep/ .mat-radio-ripple .mat-ripple-element {
+    background-color: $primary-color-1 !important;
 }
 .mat-dialog-content {
     margin-left: -2% !important;
@@ -15,13 +30,17 @@ mat-form-field {
 .entity-values > * {
     width: 100%;
 }
+.entity-save-button{
+    background-color: $primary-color-3;
+    color: white;
+    font-weight: bold;
+}
 .example-full-width {
     width: 100%;
 }
 .error {
     color: #E34256;
     opacity: 0.8;
-    font-family: 'Lato Semibold';
     font-size: 12px;
     margin-top: 1%;
 }
