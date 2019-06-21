@@ -354,6 +354,18 @@ export class WebSocketService {
           observer.error('Unable To Reach Server');
         }
       });
+    });
+  }
+
+  getActionsForStory() {
+    return Observable.create((observer) => {
+      this.socket.on(constant.IRS_ACTIONS_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
       return () => {
         this.socket.disconnect();
       };
@@ -369,9 +381,6 @@ export class WebSocketService {
           observer.error('Unable To Reach Server');
         }
       });
-      return () => {
-        this.socket.disconnect();
-      };
     });
   }
 

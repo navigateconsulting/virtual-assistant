@@ -46,6 +46,7 @@ export const constant = {
     IRS_STORIES_CREATE: 'createStory',
     IRS_STORIES_UPDATE: 'updateStory',
     IRS_STORIES_DELETE: 'deleteStory',
+    IRS_ACTIONS_LISTEN: 'allActions',
 
     INTENT_NSP: '/intent',
     INTENT_DETAILS_URL: 'getIntentDetails',
