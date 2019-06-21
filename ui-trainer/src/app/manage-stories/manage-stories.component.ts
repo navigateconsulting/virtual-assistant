@@ -1,7 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild, OnDestroy } from '@angular/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { IntentsDataService } from '../common/services/intents-data.service';
-import { ResponsesDataService } from '../common/services/responses-data.service';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable, of, Subscription } from 'rxjs';
@@ -13,7 +10,6 @@ import { Entity } from '../common/models/entity';
 import { IntentResponse } from '../common/models/intent_response';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEntityValueComponent } from '../common/modals/add-entity-value/add-entity-value.component';
-import { MatSnackBar } from '@angular/material';
 import { WebSocketService } from '../common/services/web-socket.service';
 
 declare var collapseClose: Function;
@@ -46,6 +42,8 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
   entitiesfilteredOptions: Observable<string[]>;
   entityControl = new FormControl();
 
+  actions: any;
+
   intent_response_entity_arr = new Array<object[]>();
 
   intents_responses: any;
@@ -70,10 +68,7 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
               public dialog: MatDialog,
-              private snackBar: MatSnackBar,
               private webSocketService: WebSocketService,
-              private intents_data: IntentsDataService,
-              private responses_data: ResponsesDataService,
               private entities_service: EntitiesDataService) { }
 
   ngOnInit() {
@@ -86,6 +81,8 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
     this.getEntities();
 
     this.getStory();
+
+    this.getActions();
 
     this.getIntents();
 
@@ -109,6 +106,15 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification')));
+  }
+
+  getActions() {
+    this.webSocketService.getActionsForStory().subscribe(actions => {
+      this.actions = actions;
+      console.log(this.actions);
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   getIntents() {
@@ -164,6 +170,14 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
         }
       }
     });
+    if (this.actions !== undefined) {
+      this.actions.forEach(function (action) {
+        if (action !== undefined) {
+          // tslint:disable-next-line: max-line-length
+          responses_text_arr.push({'response_id': action._id.$oid, 'response_name': action.action_name, 'response_text': action.action_description});
+        }
+      });
+    }
     this.responses_text_arr = responses_text_arr;
   }
 

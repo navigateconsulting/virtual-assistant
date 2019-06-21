@@ -35,7 +35,7 @@
                                     <mat-autocomplete #intent_auto="matAutocomplete" id="intent_auto_complete">
                                       <mat-option *ngFor="let option of intentsfilteredOptions" (mousedown)="onIntentResponseEntityChange($event, ind, option.intent_name, option.intent_text, 'intent', intent_response_entity_arr[ind])" [value]="option.intent_text">
                                         <span>{{option.intent_text}}</span> |
-                                        <small>Intent: {{option.intent_name}}</small>
+                                        <small>{{option.intent_name}}</small>
                                       </mat-option>
                                     </mat-autocomplete>
                                     <mat-error *ngIf="intent_response.get('value').hasError('invalid')">
@@ -124,7 +124,7 @@
                                     <mat-autocomplete #response_auto="matAutocomplete" id="response_auto_complete">
                                       <mat-option *ngFor="let option of responsesfilteredOptions" (mousedown)="onIntentResponseEntityChange($event, ind, option.response_name, option.response_text, 'response', intent_response_entity_arr[ind])" [value]="option.response_text">
                                         <span>{{option.response_text}}</span> |
-                                        <small>Response: {{option.response_name}}</small>
+                                        <small>{{option.response_name}}</small>
                                       </mat-option>
                                     </mat-autocomplete>
                                     <mat-error *ngIf="intent_response.get('value').hasError('invalid')">
