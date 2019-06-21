@@ -133,8 +133,16 @@ class ExportProject:
 
             await out.write("# Configuration for Rasa Core." + "\n\n")
             await out.write("policies:" + "\n")
-            await out.write("  - name: MemoizationPolicy" + "\n")
             await out.write("  - name: KerasPolicy" + "\n")
+            await out.write("    epochs: 200" + "\n")
+            await out.write("    max_history: 6" + "\n")
+            await out.write("  - name: MemoizationPolicy" + "\n")
+            await out.write("  - name: TwoStageFallbackPolicy" + "\n")
+            await out.write("    nlu_threshold: 0.3" + "\n")
+            await out.write("    core_threshold: 0.3" + "\n")
+            await out.write("    fallback_core_action_name: ""action_default_fallback""" + "\n")
+            await out.write("    fallback_nlu_action_name: ""action_default_fallback""" + "\n")
+            await out.write("    deny_suggestion_intent_name: ""negative""" + "\n")
             await out.write("  - name: MappingPolicy" + "\n")
             await out.flush()
 
