@@ -758,11 +758,11 @@ class StoryModel:
 
         print("Story Details Updated {}".format(result))
 
-        story_details, intents_list, response_list = await self.get_story_details({"object_id": json_record['object_id'],
+        story_details, intents_list, response_list, actions_list = await self.get_story_details({"object_id": json_record['object_id'],
                                                                                    "project_id": json_record['project_id'],
                                                                                    "domain_id": json_record['domain_id']})
 
-        return {"status": "Success", "message": "Story created"}, story_details, intents_list, response_list
+        return {"status": "Success", "message": "Story created"}, story_details, intents_list, response_list, actions_list
 
     async def delete_story_detail(self, data):
 
@@ -776,10 +776,10 @@ class StoryModel:
         result = await db.stories.update_one(query, {"$pull": {"story": json_record['story'][0]}})
         print("Removed row from Story {}".format(result))
 
-        story_detail,  intents_list, response_list = await self.get_story_details({"object_id": json_record['object_id'],
+        story_detail,  intents_list, response_list,actions_list = await self.get_story_details({"object_id": json_record['object_id'],
                                                                                    "project_id": json_record['project_id'],
                                                                                    "domain_id": json_record['domain_id']})
-        return {"status": "Success", "message": "Story element Removed "}, story_detail, intents_list, response_list
+        return {"status": "Success", "message": "Story element Removed "}, story_detail, intents_list, response_list, actions_list
 
     async def update_story_detail(self, data):
 
@@ -791,10 +791,10 @@ class StoryModel:
         result = await db.stories.update_one(query, {"$set": {"story."+str(index): json_record['story']}})
         print("Record updated {}".format(result))
 
-        story_detail,  intents_list, response_list = await self.get_story_details({"object_id": json_record['object_id'],
+        story_detail,  intents_list, response_list, actions_list = await self.get_story_details({"object_id": json_record['object_id'],
                                                                                    "project_id": json_record['project_id'],
                                                                                    "domain_id": json_record['domain_id']})
-        return {"status": "Success", "message": "Story Updated successfully"}, story_detail, intents_list, response_list
+        return {"status": "Success", "message": "Story Updated successfully"}, story_detail, intents_list, response_list, actions_list
 
 
 # noinspection PyMethodMayBeStatic

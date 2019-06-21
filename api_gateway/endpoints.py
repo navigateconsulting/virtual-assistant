@@ -396,9 +396,9 @@ async def get_story_details(sid, data, room_name):
 
     story_detail, intents_list, response_list, action_list = await StoryModel.get_story_details(data)
     await sio.emit('storyDetail', story_detail, namespace='/story', room=room_name)
+    await sio.emit('allActions', action_list, namespace='/story', room=room_name)
     await sio.emit('allIntents', intents_list, namespace='/story', room=room_name)
     await sio.emit('allResponses', response_list, namespace='/story', room=room_name)
-    await sio.emit('allActions', action_list, namespace='/story', room=room_name)
 
 
 @sio.on('insertStoryDetails', namespace='/story')
@@ -409,9 +409,9 @@ async def insert_story_details(sid, data, room_name):
     message, story_detail, intents_list, response_list, action_list = await StoryModel.insert_story_details(data)
     await sio.emit('respStoryDetail', message, namespace='/story', room=sid)
     await sio.emit('storyDetail', story_detail, namespace='/story', room=room_name)
+    await sio.emit('allActions', action_list, namespace='/story', room=room_name)
     await sio.emit('allIntents', intents_list, namespace='/story', room=room_name)
     await sio.emit('allResponses', response_list, namespace='/story', room=room_name)
-    await sio.emit('allResponses', action_list, namespace='/story', room=room_name)
 
 
 @sio.on('deleteStoryDetails', namespace='/story')
@@ -419,9 +419,10 @@ async def delete_story_details(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    message, story_detail, intents_list, response_list = await StoryModel.delete_story_detail(data)
+    message, story_detail, intents_list, response_list, action_list = await StoryModel.delete_story_detail(data)
     await sio.emit('respStoryDetail', message, namespace='/story', room=sid)
     await sio.emit('storyDetail', story_detail, namespace='/story', room=room_name)
+    await sio.emit('allActions', action_list, namespace='/story', room=room_name)
     await sio.emit('allIntents', intents_list, namespace='/story', room=room_name)
     await sio.emit('allResponses', response_list, namespace='/story', room=room_name)
 
@@ -431,9 +432,10 @@ async def update_story_details(sid, data, room_name):
 
     print("---------- Request from Session {} -- with record {} -- and room {} ----------  ".format(sid, data, room_name))
 
-    message, story_detail, intents_list, response_list = await StoryModel.update_story_detail(data)
+    message, story_detail, intents_list, response_list, action_list = await StoryModel.update_story_detail(data)
     await sio.emit('respStoryDetail', message, namespace='/story', room=sid)
     await sio.emit('storyDetail', story_detail, namespace='/story', room=room_name)
+    await sio.emit('allActions', action_list, namespace='/story', room=room_name)
     await sio.emit('allIntents', intents_list, namespace='/story', room=room_name)
     await sio.emit('allResponses', response_list, namespace='/story', room=room_name)
 
