@@ -47,17 +47,17 @@
                                 <div class="col-md-4">
                                   <div class="row intent-buttons-box">
                                     <div class="col-md-3">
-                                      <button class="intent-buttons" mat-mini-fab color="accent" matTooltip="Add Intent" (click)="addIntentResponseDetailsToStory('intent', ind+1)">
+                                      <button class="intent-buttons intent-color-button" mat-mini-fab color="accent" matTooltip="Add Intent" (click)="addIntentResponseDetailsToStory('intent', ind+1)">
                                         <mat-icon>add</mat-icon>
                                       </button>
                                     </div>
                                     <div class="col-md-4">
-                                      <button class="intent-buttons" mat-mini-fab color="accent" matTooltip="Remove Intent" (click)="removeIntentResponseFromStory(intent_response, intent_response_entity_arr[ind])">
+                                      <button class="intent-buttons intent-color-button" mat-mini-fab color="accent" matTooltip="Remove Intent" (click)="removeIntentResponseFromStory(intent_response, intent_response_entity_arr[ind])">
                                         <mat-icon>remove</mat-icon>
                                       </button>
                                     </div>
                                     <div class="col-md-3">
-                                      <button class="intent-buttons" mat-mini-fab color="primary" (focusout)="collapse_close('intent', ind)" data-toggle="collapse" attr.data-target="#collapseIntent_{{ind}}" aria-expanded="false" attr.aria-controls="collapseIntent_{{ind}}" matTooltip="Show Entities">
+                                      <button class="intent-buttons ir-color-button" mat-mini-fab color="primary" (focusout)="collapse_close('intent', ind)" data-toggle="collapse" attr.data-target="#collapseIntent_{{ind}}" aria-expanded="false" attr.aria-controls="collapseIntent_{{ind}}" matTooltip="Show Entities">
                                         <mat-icon>keyboard_arrow_down</mat-icon>
                                       </button>
                                     </div>
@@ -102,17 +102,17 @@
                                 <div class="col-md-4">
                                   <div class="row response-buttons-box">
                                     <div class="col-md-4">
-                                      <button class="response-buttons" mat-mini-fab color="primary" (focusout)="collapse_close('response', ind)" data-toggle="collapse" attr.data-target="#collapseResponse_{{ind}}" aria-expanded="false" attr.aria-controls="collapseResponse_{{ind}}" matTooltip="Show Entities">
+                                      <button class="response-buttons ir-color-button" mat-mini-fab color="primary" (focusout)="collapse_close('response', ind)" data-toggle="collapse" attr.data-target="#collapseResponse_{{ind}}" aria-expanded="false" attr.aria-controls="collapseResponse_{{ind}}" matTooltip="Show Entities">
                                         <mat-icon>keyboard_arrow_down</mat-icon>
                                       </button>
                                     </div>
                                     <div class="col-md-3">
-                                      <button class="response-buttons" mat-mini-fab color="warn" matTooltip="Remove Response" (click)="removeIntentResponseFromStory(intent_response)">
+                                      <button class="response-buttons response-color-button" mat-mini-fab color="warn" matTooltip="Remove Response" (click)="removeIntentResponseFromStory(intent_response)">
                                         <mat-icon>remove</mat-icon>
                                       </button>
                                     </div>
                                     <div class="col-md-3">
-                                      <button class="response-buttons" mat-mini-fab color="warn" matTooltip="Add Response" (click)="addIntentResponseDetailsToStory('response', ind+1)">
+                                      <button class="response-buttons response-color-button" mat-mini-fab color="warn" matTooltip="Add Response" (click)="addIntentResponseDetailsToStory('response', ind+1)">
                                         <mat-icon>add</mat-icon>
                                       </button>
                                     </div>
@@ -158,12 +158,12 @@
             <hr />
             <div class="row story-buttons-box">
               <div class="col-md-6 text-left add-intent-button">
-                <button  mat-mini-fab color="primary" matTooltip="Add Intent" (click)="addIntentResponseDetailsToStory('intent')">
+                <button  mat-mini-fab class="add-intent" matTooltip="Add Intent" (click)="addIntentResponseDetailsToStory('intent')">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
               <div class="col-md-6 text-right add-response-button">
-                <button  mat-mini-fab color="accent" [disabled]="disable_response" matTooltip="Add Response" (click)="addIntentResponseDetailsToStory('response')">
+                <button  mat-mini-fab class="add-response" [disabled]="disable_response" matTooltip="Add Response" (click)="addIntentResponseDetailsToStory('response')">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>

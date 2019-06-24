@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-edit-domain',
@@ -10,6 +11,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 export class EditDomainComponent implements OnInit {
 
   editDomainForm: FormGroup;
+  @ViewChild('domainName') domainNameInput: MatInput;
 
   constructor(public dialogRef: MatDialogRef<EditDomainComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
@@ -19,6 +21,7 @@ export class EditDomainComponent implements OnInit {
       domainName: new FormControl(this.data.domainName, Validators.required),
       domainDescription: new FormControl(this.data.domainDescription, Validators.required)
     });
+    this.domainNameInput.focus();
   }
 
   closeDialog() {

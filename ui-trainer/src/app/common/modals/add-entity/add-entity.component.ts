@@ -1,5 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-add-entity',
@@ -14,12 +15,14 @@ export class AddEntityComponent implements OnInit {
   min_value: number;
   max_value: number;
   show_cat_error: boolean;
+  @ViewChild('entityDescription') entityDescriptionInput: MatInput;
 
   constructor(public dialogRef: MatDialogRef<AddEntityComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
     this.show_cat_error = false;
+    this.entityDescriptionInput.focus();
   }
 
   setEntitySlotType(event: any) {

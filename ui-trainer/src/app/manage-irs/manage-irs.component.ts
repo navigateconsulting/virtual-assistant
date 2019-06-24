@@ -13,6 +13,8 @@ import { EditStoryComponent } from '../common/modals/edit-story/edit-story.compo
 import { DeleteStoryComponent } from '../common/modals/delete-story/delete-story.component';
 import { NotificationsService } from '../common/services/notifications.service';
 import { Subscription } from 'rxjs';
+import { SharedDataService } from '../common/services/shared-data.service';
+import { constant } from '../../environments/constants';
 
 @Component({
   selector: 'app-manage-irs',
@@ -25,7 +27,8 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
 
   constructor(public webSocketService: WebSocketService,
               public notificationsService: NotificationsService,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              public sharedDataService: SharedDataService) { }
 
   @Input() projectObjectId: string;
   @Input() domainObjectId: string;
@@ -40,8 +43,13 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   responsesDataSource: any;
   storiesDisplayedColumns: string[] = ['icon', 'story_name', 'story_description', 'edit', 'delete'];
   storiesDataSource: any;
+  activeTabIndex: any;
 
   ngOnInit() {
+    this.activeTabIndex = this.sharedDataService.getSharedData('activeTabIndex', constant.MODULE_COMMON);
+    if (this.activeTabIndex === undefined) {
+      this.activeTabIndex = '0';
+    }
     this.webSocketService.createIRSRoom('domain_' + this.domainObjectId);
     this.getIntents();
     this.getResponses();

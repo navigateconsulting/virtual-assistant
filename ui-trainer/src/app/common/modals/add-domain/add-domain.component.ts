@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-add-domain',
@@ -10,6 +11,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 export class AddDomainComponent implements OnInit {
 
   newDomainForm: FormGroup;
+  @ViewChild('domainName') domainNameInput: MatInput;
 
   constructor(public dialogRef: MatDialogRef<AddDomainComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
@@ -19,6 +21,7 @@ export class AddDomainComponent implements OnInit {
       domainName: new FormControl('', Validators.required),
       domainDescription: new FormControl('', Validators.required)
     });
+    this.domainNameInput.focus();
   }
 
   closeDialog() {

@@ -1,3 +1,5 @@
+@import '../../scss/styles';
+
 .place_div_center {
     padding: 1%;
     overflow-y: hidden;
@@ -100,6 +102,14 @@
     margin-top: -40px;
 }
 
+.add-intent {
+    background-color: $primary-color-1;
+}
+
+.add-response {
+    background-color: $primary-color-4;
+}
+
 .intent-textbox {
     font-size: 14px;
     width: 100%;
@@ -149,6 +159,15 @@
     margin-left: -2px;
 }
 
+.intent-color-button {
+    background-color: $primary-color-1;
+}
+.response-color-button {
+    background-color: $primary-color-4;
+}
+.ir-color-button {
+    background-color: $primary-color-3;
+}
 .accordion-intent-class, .accordion-response-class {
     width: 100%;
 }

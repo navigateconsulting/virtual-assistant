@@ -7,6 +7,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ChooseEntityComponent } from '../common/modals/choose-entity/choose-entity.component';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { WebSocketService } from '../common/services/web-socket.service';
+import { SharedDataService } from '../common/services/shared-data.service';
+import { constant } from '../../environments/constants';
 
 declare var selectText: Function;
 declare var highlightText: Function;
@@ -32,7 +34,8 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
 
   constructor(public dialog: MatDialog,
               private entities_service: EntitiesDataService,
-              private webSocketService: WebSocketService) {}
+              private webSocketService: WebSocketService,
+              public sharedDataService: SharedDataService) {}
 
   currentIntent: any;
   text_entities: any;
@@ -43,6 +46,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getEntities();
     this.getIntentDetails();
+    this.sharedDataService.setSharedData('activeTabIndex', '0', constant.MODULE_COMMON);
   }
 
   getEntities() {

@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-edit-project',
@@ -10,6 +11,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 export class EditProjectComponent implements OnInit {
 
   editProjectForm: FormGroup;
+  @ViewChild('projectName') projectNameInput: MatInput;
 
   constructor(public dialogRef: MatDialogRef<EditProjectComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
@@ -19,6 +21,7 @@ export class EditProjectComponent implements OnInit {
       projectName: new FormControl(this.data.projectName, Validators.required),
       projectDescription: new FormControl(this.data.projectDescription, Validators.required)
     });
+    this.projectNameInput.focus();
   }
 
   closeDialog() {

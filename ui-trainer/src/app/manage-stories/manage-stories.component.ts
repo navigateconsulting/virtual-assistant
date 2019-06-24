@@ -11,6 +11,8 @@ import { IntentResponse } from '../common/models/intent_response';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEntityValueComponent } from '../common/modals/add-entity-value/add-entity-value.component';
 import { WebSocketService } from '../common/services/web-socket.service';
+import { SharedDataService } from '../common/services/shared-data.service';
+import { constant } from '../../environments/constants';
 
 declare var collapseClose: Function;
 declare var adjustScroll: Function;
@@ -69,7 +71,8 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
               public dialog: MatDialog,
               private webSocketService: WebSocketService,
-              private entities_service: EntitiesDataService) { }
+              private entities_service: EntitiesDataService,
+              public sharedDataService: SharedDataService) { }
 
   ngOnInit() {
     const intents_responses: FormArray = new FormArray([]);
@@ -90,6 +93,8 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
 
     this.show_ir_error = false;
     this.on_intent_response_entity = false;
+
+    this.sharedDataService.setSharedData('activeTabIndex', '2', constant.MODULE_COMMON);
   }
 
   getStory() {
@@ -448,8 +453,8 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
   }
 
   onEntityChange(event: any, intent_response_index: number, intent_response: any) {
-    if (event.source.selected) {
-      const entity_name_value = event.source._element.nativeElement.innerText.split(':');
+    if (event.type === 'mousedown') {
+      const entity_name_value = event.srcElement.innerText.split(':');
       if (entity_name_value[1] === '') {
         const dialogRef = this.dialog.open(AddEntityValueComponent);
         dialogRef.afterClosed().subscribe(res => {
@@ -467,7 +472,6 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
         // tslint:disable-next-line: max-line-length
         this.onIntentResponseEntityChange(event, intent_response_index, intent_response.value.key, intent_response.value.value, intent_response.value.type, this.intent_response_entity_arr[intent_response_index]);
       }
-      event.source.value = '';
     }
   }
 

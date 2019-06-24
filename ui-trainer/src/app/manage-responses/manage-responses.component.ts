@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { EntitiesDataService } from '../common/services/entities-data.service';
+import { SharedDataService } from '../common/services/shared-data.service';
+import { constant } from '../../environments/constants';
 
 @Component({
   selector: 'app-manage-responses',
@@ -22,11 +24,13 @@ export class ManageResponsesComponent implements OnInit {
   @Input() projectObjectId: string;
 
   constructor(private entities_service: EntitiesDataService,
-              private webSocketService: WebSocketService) { }
+              private webSocketService: WebSocketService,
+              public sharedDataService: SharedDataService) { }
 
   ngOnInit() {
     this.getEntities();
     this.getResponseDetails();
+    this.sharedDataService.setSharedData('activeTabIndex', '1', constant.MODULE_COMMON);
   }
 
   getEntities() {
