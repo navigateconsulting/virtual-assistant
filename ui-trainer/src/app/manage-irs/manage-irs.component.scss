@@ -4,25 +4,17 @@
     width: 100%;
 }
 .irs-container {
-    padding: 1%;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-.add-irs {
-    padding: 0.5%;
-    height: 60px;
-}
-.irs-table-container {
-    flex: 1;
-    padding: 0.5%;
+    padding: 1.5%;
+    height: 480px;
+    width: 100%;
     overflow-y: auto;
 }
-.irs-footer {
-    padding: 0.5%;
-    height: 10px;
-}
+// .irs-table-container {
+//     padding: 0.5%;
+//     width:100%;
+//     height:auto;
+//     overflow-y: auto;
+// }
 table {
     width: 100%;
 }
@@ -82,4 +74,11 @@ table {
 }
 .add-irs-button {
     background-image: $global_gradient;
+}
+
+@media screen and (min-height: 900px) and (max-height: 1080px) {
+    .irs-container {
+        height: 850px;
+        overflow-y: auto;
+    }
 }

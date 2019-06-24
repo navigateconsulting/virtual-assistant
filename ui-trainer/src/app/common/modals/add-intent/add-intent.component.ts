@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-add-intent',
@@ -10,6 +11,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 export class AddIntentComponent implements OnInit {
 
   newIntentForm: FormGroup;
+  @ViewChild('intentName') intentNameInput: MatInput;
 
   constructor(public dialogRef: MatDialogRef<AddIntentComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
@@ -19,6 +21,7 @@ export class AddIntentComponent implements OnInit {
       intentName: new FormControl('', Validators.required),
       intentDescription: new FormControl('', Validators.required)
     });
+    this.intentNameInput.focus();
   }
 
   closeDialog() {

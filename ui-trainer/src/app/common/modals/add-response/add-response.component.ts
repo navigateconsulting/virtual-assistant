@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-add-response',
@@ -10,6 +11,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 export class AddResponseComponent implements OnInit {
 
   newResponseForm: FormGroup;
+  @ViewChild('responseName') responseNameInput: MatInput;
 
   constructor(public dialogRef: MatDialogRef<AddResponseComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
@@ -19,6 +21,7 @@ export class AddResponseComponent implements OnInit {
       responseName: new FormControl('', Validators.required),
       responseDescription: new FormControl('', Validators.required)
     });
+    this.responseNameInput.focus();
   }
 
   closeDialog() {

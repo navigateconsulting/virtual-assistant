@@ -64,6 +64,7 @@ export class TryNowComponent implements OnInit, OnDestroy {
   }
 
   sendChat(send_message?: string) {
+    this.showUserBotCardDetails = false;
     if (send_message !== undefined) {
       this.userChatMessage = send_message;
     }

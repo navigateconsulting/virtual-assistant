@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-copy-project',
@@ -10,6 +11,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 export class CopyProjectComponent implements OnInit {
 
   copyProjectForm: FormGroup;
+  @ViewChild('projectName') projectNameInput: MatInput;
 
   constructor(public dialogRef: MatDialogRef<CopyProjectComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
@@ -19,6 +21,7 @@ export class CopyProjectComponent implements OnInit {
       projectName: new FormControl('', Validators.required),
       projectDescription: new FormControl('', Validators.required)
     });
+    this.projectNameInput.focus();
   }
 
   closeDialog() {

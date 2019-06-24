@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-add-project',
@@ -10,6 +11,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 export class AddProjectComponent implements OnInit {
 
   newProjectForm: FormGroup;
+  @ViewChild('projectName') projectNameInput: MatInput;
 
   constructor(public dialogRef: MatDialogRef<AddProjectComponent>) { }
 
@@ -18,6 +20,7 @@ export class AddProjectComponent implements OnInit {
       projectName: new FormControl('', Validators.required),
       projectDescription: new FormControl('', Validators.required)
     });
+    this.projectNameInput.focus();
   }
 
   closeDialog() {
