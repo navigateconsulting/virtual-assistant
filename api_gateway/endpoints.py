@@ -518,8 +518,9 @@ class TryNow(socketio.AsyncNamespace):
         training_files = base_path + training_files
         domain = base_path + domain
         output = base_path + output
+        #sio.sleep(60)
         try:
-            model_path = await train_async(domain, config, [training_files], output)
+            model_path = await train_async(domain, config, [training_files], output, kwargs={"augmentation_factor": 10})
             unpacked = model.get_model(model_path)
             domain = Domain.load(domain)
             _tracker_store = MongoTrackerStore(domain=domain,

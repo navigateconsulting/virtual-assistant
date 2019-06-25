@@ -172,6 +172,7 @@ class ExportProject:
 
         async with aiofiles.open(self.project_home+'/skills/'+domain_name+'/data/stories.md', "w") as out:
             print("Writing files ")
+            entity_list = None
             for stories in stories_list:
                 story_detail = await self.StoryModel.get_only_story_details({'object_id': stories['_id']['$oid']})
                 await out.write("##"+stories['story_name']+"\n")
@@ -179,7 +180,13 @@ class ExportProject:
                 for story_rec in story_detail['story']:
                     if story_rec['type'] == 'intent':
                         await out.write("* "+story_rec['key']+"\n")
-                        self.master_stories = self.master_stories + "* "+story_rec['key']+"\n"
+                        for entities in story_rec['entities']:
+                            entity_list = f'"'+entities['entity_name']+f'"'+":"+f'"'+entities['entity_value']+f'"' + ","
+                            print("Entity value ".format(entities['entity_name']))
+                        if entity_list is None:
+                            self.master_stories = self.master_stories + "* "+story_rec['key']+"\n"
+                        else:
+                            self.master_stories = self.master_stories + "* " + story_rec['key'] + "{" + entity_list[:-1] + "}" + "\n"
                     else:
                         await out.write("  - "+story_rec['key']+"\n")
                         self.master_stories = self.master_stories + "  - "+story_rec['key']+"\n"
