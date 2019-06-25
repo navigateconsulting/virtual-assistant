@@ -19,7 +19,7 @@ table {
 }
 #accordion {
   width: 100%;
-  height: 380px;
+  height: 360px;
   padding: 1%;
   overflow-y: auto;
 }
@@ -34,4 +34,10 @@ table {
 }
 .card-header {
   background-color: white;
+}
+@media screen and (min-height: 900px) and (max-height: 1080px) {
+  #accordion {
+      height: 720px;
+      overflow-y: auto;
+  }
 }

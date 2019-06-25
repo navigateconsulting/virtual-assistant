@@ -12,8 +12,8 @@
         <table mat-table [dataSource]="projectsModelDataSource">
 
           <ng-container matColumnDef="icon">
-            <th mat-header-cell *matHeaderCellDef> <mat-icon>insert_drive_file</mat-icon> </th>
-            <td mat-cell *matCellDef="let project"> <mat-icon color="primary">folder</mat-icon> </td>
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let project"> <mat-icon svgIcon="project">folder</mat-icon> </td>
           </ng-container>
         
           <ng-container matColumnDef="project_name">
@@ -38,7 +38,7 @@
 
           <ng-container matColumnDef="deploy">
             <th mat-header-cell *matHeaderCellDef> Deploy </th>
-            <td mat-cell *matCellDef="let project" class="deploy"> <mat-icon color="primary" (click)="deployModel(project._id.$oid)">cloud_upload</mat-icon> </td>
+            <td mat-cell *matCellDef="let project" class="deploy"> <mat-icon svgIcon="deploy" (click)="deployModel(project._id.$oid)"></mat-icon> </td>
           </ng-container>
         
           <tr mat-header-row *matHeaderRowDef="projectsModelDisplayedColumns; sticky: true"></tr>

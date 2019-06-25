@@ -11,18 +11,32 @@
       </button>
     </div>
   </div>
-  <br />
   <div class="row domains-card-container">
     <div class="col-md-12">
       <div class="domains-card">
         <mat-grid-list cols="6">
           <mat-grid-tile *ngFor="let domain of domains_json; let i = index">
             <div class="card domain-card">
-              <div class="card-header" (click)="selectDomain(domain)"><span class="mat-subheading-1">{{domain.domain_name}}</span></div>
+              <div class="card-header" (click)="selectDomain(domain)">
+                <div class="row">
+                  <div class="col-md-2">
+                    <mat-icon svgIcon="domain"></mat-icon>
+                  </div>
+                  <div class="col-md-10">
+                    <span class="mat-subheading-1">{{domain.domain_name}}</span>
+                  </div>
+                </div>
+              </div>
               <div class="card-body" (click)="selectDomain(domain)"><span class="mat-body-1">{{domain.domain_description}}</span></div> 
               <div class="card-footer">
-                <button mat-button (click)="editDomain(domain._id.$oid, domain.domain_name, domain.domain_description)">Edit</button>
-                <button mat-flat-button color="warn" (click)="deleteDomain(domain._id.$oid)">Delete</button>
+                <div class="row">
+                  <div class="col-md-6 text-center">
+                    <button mat-icon-button (click)="editDomain(domain._id.$oid, domain.domain_name, domain.domain_description)"><mat-icon svgIcon="edit"></mat-icon></button>
+                  </div>
+                  <div class="col-md-6 text-center">
+                    <button mat-icon-button color="warn" (click)="deleteDomain(domain._id.$oid)"><mat-icon svgIcon="delete"></mat-icon></button>
+                  </div>
+                </div>
               </div>
             </div>
           </mat-grid-tile>

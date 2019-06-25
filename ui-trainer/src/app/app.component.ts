@@ -47,5 +47,13 @@ export class AppComponent {
       'story',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/story.svg')
     );
+    this.matIconRegistry.addSvgIcon(
+      'deploy',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/deploy.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
+      'error',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/error.svg')
+    );
   }
 }
