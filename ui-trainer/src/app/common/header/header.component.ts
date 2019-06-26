@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { HeaderService } from '../services/header.service';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -10,10 +12,17 @@ export class HeaderComponent implements OnInit {
 
   showTrainerOrDeploy: string;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+              private headerService: HeaderService) { }
 
   ngOnInit() {
-    this.changeApplication();
+    this.headerService.invokeEvent.subscribe(value => {
+      if (value) {
+        this.showTrainerOrDeploy = value;
+      } else {
+        this.showTrainerOrDeploy = 'both';
+      }
+    });
   }
 
   changeApplication() {

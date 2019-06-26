@@ -6,35 +6,35 @@ services:
 
   # Server Stack
 
-  rasa:
-    image: rasa/rasa:latest-full
-    ports:
-      - 5005:5005
-    volumes:
-    - "./vol_chatbot_data/rasa/server/models:/app/models"
-    - "./vol_chatbot_data/rasa/server/config:/app/config"
-    - "./vol_chatbot_data/rasa/server/logs:/app/logs"
-    - "./vol_chatbot_data/rasa/server/data:/app/data"
-    command:
-    - run
-    - -m
-    - ./models
-    - --enable-api
+  # rasa:
+  #   image: rasa/rasa:latest-full
+  #   ports:
+  #     - 5005:5005
+  #   volumes:
+  #   - "./vol_chatbot_data/rasa/server/models:/app/models"
+  #   - "./vol_chatbot_data/rasa/server/config:/app/config"
+  #   - "./vol_chatbot_data/rasa/server/logs:/app/logs"
+  #   - "./vol_chatbot_data/rasa/server/data:/app/data"
+  #   command:
+  #   - run
+  #   - -m
+  #   - ./models
+  #   - --enable-api
 
-  action_server:
-    image: rasa/rasa-sdk:latest
-    ports:
-    - "5055:5055"
-    volumes:
-    - "./vol_chatbot_data/rasa/server/actions:/app/actions"
-    depends_on:
-      - rasa
+  # action_server:
+  #   image: rasa/rasa-sdk:latest
+  #   ports:
+  #   - "5055:5055"
+  #   volumes:
+  #   - "./vol_chatbot_data/rasa/server/actions:/app/actions"
+  #   depends_on:
+  #     - rasa
 
-  skype_connector:
-    container_name: skype_connector
-    build: './conn-skype'
-    depends_on:
-      - rasa
+  # skype_connector:
+  #   container_name: skype_connector
+  #   build: './conn-skype'
+  #   depends_on:
+  #     - rasa
 
   ## Trainer stack
 

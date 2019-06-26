@@ -27,7 +27,7 @@ export class ManageTrainerComponent implements OnInit {
               private headerService: HeaderService) { }
 
   ngOnInit() {
-    // this.headerService.changeHeaderApplication();
+    this.headerService.changeHeaderApplication('deploy');
     this.breadcrumb_arr = new Array<Breadcrumb>();
     this.breadcrumb_arr.push({breadcrumb_name: 'Projects', breadcrumb_stub: {}, breadcrumb_type: 'root'});
     this.setComponent = 'manage-projects';

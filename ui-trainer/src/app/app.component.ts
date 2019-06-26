@@ -71,5 +71,13 @@ export class AppComponent {
       'trainer',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/trainer.svg')
     );
+    this.matIconRegistry.addSvgIcon(
+      'deleteDis',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/delete-disabled.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
+      'editDis',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/edit-disabled.svg')
+    );
   }
 }
