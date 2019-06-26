@@ -231,7 +231,7 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
     if (!story) {
       // Creating a new story
       this.addIntentToStory();
-      this.addResponseToStory();
+      // this.addResponseToStory();
     } else {
       // Editing a story
       story.story.forEach((intent_response, intentresponseIndex) => {
@@ -370,11 +370,12 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
     }
   }
 
-  removeIntentResponseFromStory(intent_response: any, entities?: any) {
+  removeIntentResponseFromStory(intent_response_index: number, intent_response: any, entities?: any) {
     const delete_ir_to_story = {
       project_id: this.projectObjectId,
       domain_id: this.domainObjectId,
       object_id: this.storyObjectId,
+      doc_index: intent_response_index,
       story: [{
         key: intent_response.value.key,
         value: intent_response.value.value,

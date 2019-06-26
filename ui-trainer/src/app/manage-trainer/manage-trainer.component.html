@@ -3,13 +3,11 @@
     <mat-sidenav-content class="main-container">
       <mat-toolbar class="row toolbar-div">
         <div class="col-md-11 breadcrumb-div">
-          <nav>
-            <ol class="breadcrumb">
-                <li *ngFor="let breadcrumb of breadcrumb_arr; let i = index;" class="breadcrumb-item" (click)="updateBreadcrumb(breadcrumb, i)"><span class="breadcrumb-element">{{breadcrumb.breadcrumb_name}}</span></li>
-            </ol>
-          </nav>
+          <ol class="breadcrumb">
+              <li *ngFor="let breadcrumb of breadcrumb_arr; let i = index;" class="breadcrumb-item" (click)="updateBreadcrumb(breadcrumb, i)"><span class="breadcrumb-element">{{breadcrumb.breadcrumb_name}}</span></li>
+          </ol>
         </div>
-        <div class="col-md-1 show-entities-div text-right">
+        <div class="col-md-1 show-entities-div">
           <mat-chip-list *ngIf="showPropertyPanel === true">
             <mat-chip class="show-entity-chip" matTooltip="Show Property Panel" (click)="toggleEntities()"><mat-icon>navigate_before</mat-icon></mat-chip>
           </mat-chip-list>

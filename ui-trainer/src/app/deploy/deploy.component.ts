@@ -12,6 +12,8 @@ import { ModelErrorService } from '../common/services/model-error.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 
 import { DeployModelComponent } from '../common/modals/deploy-model/deploy-model.component';
+import { HeaderService } from '../common/services/header.service';
+
 
 @Component({
   selector: 'app-deploy',
@@ -23,6 +25,7 @@ export class DeployComponent implements OnInit {
   projectModels: any;
 
   constructor(public dialog: MatDialog,
+              public headerService: HeaderService,
               public overlayService: OverlayService,
               public webSocketService: WebSocketService,
               public modelErrorService: ModelErrorService,
@@ -35,6 +38,7 @@ export class DeployComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
+    // this.headerService.changeHeaderApplication();
     this.getProjectsForDeploy();
   }
 

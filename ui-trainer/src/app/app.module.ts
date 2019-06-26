@@ -125,7 +125,7 @@ import { TryNowLoadComponent } from './try-now-load/try-now-load.component';
     DeployModelComponent,
     SpinnerComponent,
     ModelErrorComponent,
-    TryNowLoadComponent
+    TryNowLoadComponent,
   ],
   imports: [
     BrowserModule,
