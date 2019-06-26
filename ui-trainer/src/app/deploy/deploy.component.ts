@@ -38,7 +38,7 @@ export class DeployComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
-    // this.headerService.changeHeaderApplication();
+    this.headerService.changeHeaderApplication('trainer');
     this.getProjectsForDeploy();
   }
 

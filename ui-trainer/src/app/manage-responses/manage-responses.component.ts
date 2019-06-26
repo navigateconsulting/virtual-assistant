@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-manage-responses',
@@ -22,6 +23,8 @@ export class ManageResponsesComponent implements OnInit {
 
   @Input() responseObjectId: string;
   @Input() projectObjectId: string;
+
+  @ViewChild('responseText') responseTextInput: MatInput;
 
   constructor(private entities_service: EntitiesDataService,
               private webSocketService: WebSocketService,
@@ -103,6 +106,7 @@ export class ManageResponsesComponent implements OnInit {
     this.new_response_text = this.new_response_text + entity + ' ';
     this.showEntityDropdown = false;
     this.readonly = false;
+    this.responseTextInput.focus();
   }
 
   @HostListener('document:keyup', ['$event'])

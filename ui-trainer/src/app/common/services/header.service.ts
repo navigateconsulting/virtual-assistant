@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-// import { HeaderComponent } from '../header/header.component';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HeaderService {
 
-  constructor(/* private headerComponent: HeaderComponent */) { }
+  invokeEvent: Subject<any> = new Subject();
 
-  changeHeaderApplication() {
-    // this.headerComponent.changeApplication();
+  constructor() { }
+
+  changeHeaderApplication(app: string) {
+    this.invokeEvent.next(app);
   }
 }
