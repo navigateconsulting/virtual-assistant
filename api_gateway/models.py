@@ -457,11 +457,15 @@ class IntentsModel:
         object_id = json_record['object_id']
         del json_record['object_id']
 
-        result = await db.intents.update_one(query, {"$push": {"text_entities": json_record}}, upsert=True)
+        result = await db.intents.update_one(query, {"$addToSet": {"text_entities": json_record}})
         print("Inserted new row in Intent {}".format(result))
 
         intent_detail = await self.get_intent_details({"object_id": object_id})
-        return {"status": "Success", "message": "Intent text added "}, intent_detail
+
+        if result is None:
+            return {"status": "Error", "message": "Intent already exists "}, intent_detail
+        else:
+            return {"status": "Success", "message": "Intent text added "}, intent_detail
 
     async def update_intent_detail(self, data):
 
@@ -602,11 +606,18 @@ class ResponseModel:
         object_id = json_record['object_id']
         del json_record['object_id']
 
-        result = await db.responses.update_one(query, {"$push": {"text_entities": json_record['text_entities']}}, upsert=True)
+        # to Prevent Duplicates
+
+        result = await db.responses.update_one(query, {"$addToSet": {"text_entities": json_record['text_entities']}})
+
         print("Inserted new row in Intent {}".format(result))
 
         intent_detail = await self.get_response_details({"object_id": object_id})
-        return {"status": "Success", "message": "Response text added "}, intent_detail
+
+        if result is None:
+            return {"status": "Error", "message": "Response Already exists "}, intent_detail
+        else:
+            return {"status": "Success", "message": "Response added "}, intent_detail
 
     async def delete_response_detail(self, data):
 
@@ -766,20 +777,16 @@ class StoryModel:
 
     async def delete_story_detail(self, data):
 
-        # {"object_id": "", "text":"I am in india ","story":[{"start":8,"end":13,"value":"india","entity":"timezone"}] }
-
         json_record = json.loads(json.dumps(data))
         object_id = json_record['object_id']
         index = json_record['doc_index']
 
         query = {"_id": ObjectId("{}".format(object_id))}
 
-        #result = await db.stories.update_one(query, {"$pull": {"story": json_record['story'][0]}})
-
         # Unset the record at  position provided and then pull it to properly remove the element
-        result = await db.stories.update_one({"story_name": "sotry5"}, {"$unset": {"story."+str(index): 1}})
+        result1 = await db.stories.update_one(query, {"$unset": {"story."+str(index): 1}})
 
-        result = await db.stories.update_one({"story_name": "sotry5"}, {"$pull": {"story": None}})
+        result = await db.stories.update_one(query, {"$pull": {"story": None}})
 
         print("Removed row from Story {}".format(result))
 
