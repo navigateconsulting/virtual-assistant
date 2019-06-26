@@ -770,10 +770,17 @@ class StoryModel:
 
         json_record = json.loads(json.dumps(data))
         object_id = json_record['object_id']
+        index = json_record['doc_index']
 
         query = {"_id": ObjectId("{}".format(object_id))}
 
-        result = await db.stories.update_one(query, {"$pull": {"story": json_record['story'][0]}})
+        #result = await db.stories.update_one(query, {"$pull": {"story": json_record['story'][0]}})
+
+        # Unset the record at  position provided and then pull it to properly remove the element
+        result = await db.stories.update_one({"story_name": "sotry5"}, {"$unset": {"story."+str(index): 1}})
+
+        result = await db.stories.update_one({"story_name": "sotry5"}, {"$pull": {"story": None}})
+
         print("Removed row from Story {}".format(result))
 
         story_detail,  intents_list, response_list,actions_list = await self.get_story_details({"object_id": json_record['object_id'],
