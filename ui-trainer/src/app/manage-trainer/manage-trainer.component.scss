@@ -29,7 +29,7 @@
     padding-left: $breadcrumb-padding;
     padding-right: $breadcrumb-padding;
 }
-.breadcrumb-item a {
+.breadcrumb-element {
     color: $breadcrumb-font-color;
     font-size: $breadcrumb-font-size;
     line-height: $breadcrumb-line-height;
@@ -39,7 +39,10 @@
 }
 .show-entities-div {
     background-color: inherit;
-    margin-top: -1.2%;
+    position: relative;
+    height: 50px;
+    padding: 0;
+    margin-top: -16px;
 }
 .property-panel-container {
     width: 350px;
@@ -66,6 +69,10 @@
     background-color: $primary-color-4;
     color: white;
     font-weight: bold;
+    position: absolute;
+    top: 41%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .entities-button {
     background-color: $primary-color-3;

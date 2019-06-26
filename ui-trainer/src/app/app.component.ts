@@ -55,5 +55,21 @@ export class AppComponent {
       'error',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/error.svg')
     );
+    this.matIconRegistry.addSvgIcon(
+      'menu',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/menu.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
+      'help',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/help.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
+      'profile',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/profile.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
+      'trainer',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/trainer.svg')
+    );
   }
 }

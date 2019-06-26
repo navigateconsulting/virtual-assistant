@@ -3,6 +3,8 @@ import { MatSidenav } from '@angular/material';
 import { Router } from '@angular/router';
 import { Breadcrumb } from '../common/models/breadcrumb';
 
+import { HeaderService } from '../common/services/header.service';
+
 @Component({
   selector: 'app-manage-trainer',
   templateUrl: './manage-trainer.component.html',
@@ -21,9 +23,11 @@ export class ManageTrainerComponent implements OnInit {
 
   @ViewChild('entitiesSidenav') public entitiesSidenav: MatSidenav;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+              private headerService: HeaderService) { }
 
   ngOnInit() {
+    // this.headerService.changeHeaderApplication();
     this.breadcrumb_arr = new Array<Breadcrumb>();
     this.breadcrumb_arr.push({breadcrumb_name: 'Projects', breadcrumb_stub: {}, breadcrumb_type: 'root'});
     this.setComponent = 'manage-projects';

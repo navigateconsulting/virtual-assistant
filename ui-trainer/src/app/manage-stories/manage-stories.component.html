@@ -52,7 +52,7 @@
                                       </button>
                                     </div>
                                     <div class="col-md-4">
-                                      <button class="intent-buttons intent-color-button" mat-mini-fab color="accent" matTooltip="Remove Intent" (click)="removeIntentResponseFromStory(intent_response, intent_response_entity_arr[ind])">
+                                      <button class="intent-buttons intent-color-button" mat-mini-fab color="accent" matTooltip="Remove Intent" (click)="removeIntentResponseFromStory(ind, intent_response, intent_response_entity_arr[ind])">
                                         <mat-icon>remove</mat-icon>
                                       </button>
                                     </div>
@@ -107,7 +107,7 @@
                                       </button>
                                     </div>
                                     <div class="col-md-3">
-                                      <button class="response-buttons response-color-button" mat-mini-fab color="warn" matTooltip="Remove Response" (click)="removeIntentResponseFromStory(intent_response)">
+                                      <button class="response-buttons response-color-button" mat-mini-fab color="warn" matTooltip="Remove Response" (click)="removeIntentResponseFromStory(ind, intent_response)">
                                         <mat-icon>remove</mat-icon>
                                       </button>
                                     </div>

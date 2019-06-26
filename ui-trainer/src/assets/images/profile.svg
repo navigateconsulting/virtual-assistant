@@ -2,14 +2,12 @@
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="55px" height="55px" viewBox="-2 -2 55 55" enable-background="new -2 -2 55 55" xml:space="preserve">
-<circle fill="none" stroke="#0968B5" stroke-width="2.2588" stroke-miterlimit="10" cx="25.696" cy="26.358" r="24"/>
-<g>
-	<path fill="none" stroke="#0968B5" stroke-width="2" stroke-miterlimit="10" d="M33,19.861c0,3.652-3.141,6.614-7,6.614l0,0
-		c-3.86,0-7-2.961-7-6.614v-3.857c0-3.652,3.14-6.613,7-6.613l0,0c3.859,0,7,2.961,7,6.613V19.861z"/>
-	<path fill="none" stroke="#0968B5" stroke-width="2.2588" stroke-miterlimit="10" d="M12.515,38.531
-		c0-4.74,5.97-8.584,13.334-8.584c7.364,0,13.334,3.844,13.334,8.584"/>
-	<line fill="none" stroke="#19D2CC" stroke-width="2" stroke-miterlimit="10" x1="22" y1="17" x2="25" y2="17"/>
-	<line fill="none" stroke="#19D2CC" stroke-width="2" stroke-miterlimit="10" x1="27" y1="17" x2="30" y2="17"/>
-</g>
+	 width="55px" height="55px" viewBox="0 0 55 55" enable-background="new 0 0 55 55" xml:space="preserve">
+<circle fill="none" stroke="#FFFFFF" stroke-width="2.2588" stroke-miterlimit="10" cx="27.5" cy="26.475" r="24"/>
+<path fill="none" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" d="M34.805,19.978c0,3.652-3.141,6.614-7,6.614l0,0
+	c-3.86,0-7-2.961-7-6.614v-3.857c0-3.652,3.14-6.613,7-6.613l0,0c3.859,0,7,2.961,7,6.613V19.978z"/>
+<path fill="none" stroke="#FFFFFF" stroke-width="2.2588" stroke-miterlimit="10" d="M14.32,38.648c0-4.74,5.97-8.584,13.334-8.584
+	c7.364,0,13.334,3.844,13.334,8.584"/>
+<line fill="none" stroke="#19D2CC" stroke-width="2" stroke-miterlimit="10" x1="23.805" y1="17.117" x2="26.805" y2="17.117"/>
+<line fill="none" stroke="#19D2CC" stroke-width="2" stroke-miterlimit="10" x1="28.805" y1="17.117" x2="31.805" y2="17.117"/>
 </svg>
