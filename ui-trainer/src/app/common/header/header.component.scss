@@ -4,8 +4,7 @@
     cursor: pointer;
 }
 .header {
-    // background-color: #173962;
-    background-image: linear-gradient(to right, #19D2CC, #0968B5);
+    background-image: $global_gradient;
     overflow: hidden;
     height: 50px;
 }
