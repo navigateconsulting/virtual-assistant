@@ -1,6 +1,6 @@
 import aiofiles
 import json
-from models import db, DomainsModel, IntentsModel, StoryModel, ResponseModel, EntityModel
+from models import db, DomainsModel, IntentsModel, StoryModel, ResponseModel, EntityModel, CustomActionsModel
 import asyncio
 import os
 import shutil
@@ -18,6 +18,7 @@ class ExportProject:
         self.StoryModel = StoryModel()
         self.ResponseModel = ResponseModel()
         self.EntityModel = EntityModel()
+        self.CustomActionsModel = CustomActionsModel()
         self.project_home = ''
         #self.project_base_path = '../vol_chatbot_data/temp/trainer-sessions/'
         self.project_base_path = ''
@@ -223,6 +224,25 @@ class ExportProject:
             for resp in response_list:
                 await out.write("- "+resp['response_name']+"\n")
                 self.master_domain_actions = self.master_domain_actions + "- "+resp['response_name']+"\n"
+
+            # Import custom actions from Actions collection
+
+            default_actions = ['action_listen',
+                               'action_restart',
+                               'action_default_fallback',
+                               'action_deactivate_form',
+                               'action_revert_fallback_events',
+                               'action_default_ask_affirmation',
+                               'action_default_ask_rephrase',
+                               'action_back']
+
+            custom_actions = await self.CustomActionsModel.get_custom_actions()
+
+            for record in custom_actions:
+                if record['action_name'] not in default_actions:
+                    await out.write("- "+record['action_name']+"\n")
+                    self.master_domain_actions = self.master_domain_actions + "- " + record['action_name'] + "\n"
+
             await out.write("\n")
             await out.write("\n")
 
