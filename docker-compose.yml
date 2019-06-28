@@ -6,6 +6,14 @@ services:
 
   # Server Stack
 
+  action_server:
+    image: rasa/rasa-sdk:latest
+    ports:
+      - 5055:5055
+    container_name: "action_server"
+    volumes:
+    - "./vol_chatbot_data/rasa/server/actions:/app/actions"
+
   rasa:
     image: rasa/rasa:latest-full
     ports:
@@ -17,18 +25,14 @@ services:
     - "./vol_chatbot_data/rasa/server/data:/app/data"
     command:
     - run
-    - -m
-    - ./models
+#    - -m
+#    - ./models
+    - --endpoints
+    - config/endpoints.yml
+    - --debug
     - --enable-api
-
-  action_server:
-    image: rasa/rasa-sdk:latest
-    ports:
-    - "5055:5055"
-    volumes:
-    - "./vol_chatbot_data/rasa/server/actions:/app/actions"
     depends_on:
-      - rasa
+      - action_server
 
   skype_connector:
     container_name: skype_connector
