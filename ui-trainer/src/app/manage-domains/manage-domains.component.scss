@@ -15,9 +15,20 @@
   height: 85%;
 }
 .domain-card {
-  width: 200px;
-  height: 200px;
+  width: 245px;
+  height: 150px;
   cursor: pointer;
+  box-shadow: 0 2px 15px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+}
+.domain_text {
+  color: $text-color-1;
+  font-size: $breadcrumb-font-size;
+  line-height: $dialog-h1-line-height;
+}
+.domain_desc_text {
+  font-size: $dialog-input-font-size;
+  line-height: $breadcrumb-font-size;
+  color: $domain-description-color;
 }
 .add-domain-button {
   background-image: $global_gradient;

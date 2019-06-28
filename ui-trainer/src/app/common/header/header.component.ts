@@ -12,10 +12,10 @@ export class HeaderComponent implements OnInit {
 
   showTrainerOrDeploy: string;
 
-  constructor(private router: Router,
-              private headerService: HeaderService) { }
+  constructor(private headerService: HeaderService) { }
 
   ngOnInit() {
+    this.showTrainerOrDeploy = 'both';
     this.headerService.invokeEvent.subscribe(value => {
       if (value) {
         this.showTrainerOrDeploy = value;
@@ -23,15 +23,5 @@ export class HeaderComponent implements OnInit {
         this.showTrainerOrDeploy = 'both';
       }
     });
-  }
-
-  changeApplication() {
-    if (this.router.url.includes('trainer')) {
-      this.showTrainerOrDeploy = 'deploy';
-    } else if (this.router.url.includes('deploy')) {
-      this.showTrainerOrDeploy = 'trainer';
-    } else {
-      this.showTrainerOrDeploy = 'both';
-    }
   }
 }
