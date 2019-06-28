@@ -897,3 +897,14 @@ class EntityModel:
 
         else:
             return {"status": "Error", "message": "Entity Name already exists"}, None
+
+
+class CustomActionsModel:
+    def __init__(self):
+        pass
+
+    async def get_custom_actions(self):
+        cursor = db.actions.find({})
+        result = await cursor.to_list(length=1000)
+        print("Custom Actions  {}".format(json.loads(dumps(result))))
+        return json.loads(dumps(result))
