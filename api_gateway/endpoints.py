@@ -505,6 +505,7 @@ class TryNow(socketio.AsyncNamespace):
         from rasa.core.tracker_store import MongoTrackerStore
         from rasa.core.domain import Domain
         from rasa.train import train_async
+        from rasa.core.utils import AvailableEndpoints
 
         base_path = CONFIG.get('api_gateway', 'SESSION_MODEL_PATH')
         config = "config.yml"
@@ -512,13 +513,14 @@ class TryNow(socketio.AsyncNamespace):
         domain = "domain.yml"
         output = "models/"
 
+        _endpoints = AvailableEndpoints(action="http://action_server:5055/webhook")
+
         base_path = base_path + sid + "/"
 
         config = base_path + config
         training_files = base_path + training_files
         domain = base_path + domain
         output = base_path + output
-        #sio.sleep(60)
         try:
             model_path = await train_async(domain, config, [training_files], output, kwargs={"augmentation_factor": 10})
             unpacked = model.get_model(model_path)
@@ -531,7 +533,8 @@ class TryNow(socketio.AsyncNamespace):
                                                auth_source="admin",
                                                collection="conversations",
                                                event_broker=None)
-            self.agent = Agent.load(unpacked, tracker_store=_tracker_store)
+            print("***************  Actions Endpoint as per data ********** {}".format(_endpoints.action))
+            self.agent = Agent.load(unpacked, tracker_store=_tracker_store, action_endpoint=_endpoints.action)
             await sio.emit('chatResponse', {"status": "Success", "message": "Ready to chat"}, namespace='/trynow', room=sid)
         except Exception as e:
             print("Exception while try Now ---  "+str(e))
