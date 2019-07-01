@@ -343,6 +343,9 @@ class SkypeBot:
                 self.eventsURL = json_resp['_links']['next']['href']
             else:
                 print("******************* Error in Events URL {} **********************************".format(json_resp))
+                self.app_token, self.refresh_token = await self.get_refreshed_token()
+                status = await self.report_my_activity()
+                print("Refreshed Tokens Reporting Activity to Skype Server - Status  {}".format(status))
 
             if status == 200:
                 for sender in json_resp['sender']:
