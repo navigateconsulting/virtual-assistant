@@ -12,4 +12,4 @@ WORKDIR /api_gateway
 
 ENTRYPOINT ["python"]
 
-CMD ["app.py"]
+CMD ["-u","app.py"]

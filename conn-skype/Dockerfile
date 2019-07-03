@@ -12,4 +12,4 @@ WORKDIR /conn_skype
 
 ENTRYPOINT ["python"]
 
-CMD ["app.py"]
+CMD ["-u","app.py"]

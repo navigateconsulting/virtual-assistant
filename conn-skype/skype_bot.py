@@ -111,6 +111,19 @@ class SkypeBot:
     async def get_refreshed_token(self):
 
         print("______________  Refreshing Authentication token ______________________________")
+
+        print("Token value before refresing {}".format(self.app_token))
+
+        #import concurrent.futures
+        ## Need to invoke this in threadpool ?
+        #loop = asyncio.get_event_loop()
+        #with concurrent.futures.ThreadPoolExecutor() as pool:
+        #    token = await loop.run_in_executor(pool, self.context.acquire_token_with_refresh_token, self.refresh_token,
+        #                                        self.client_id,
+        #                                        self.hub_address
+        #                                        )
+        #    print('custom thread pool', result)
+
         token = self.context.acquire_token_with_refresh_token(
             self.refresh_token,
             self.client_id,
@@ -123,20 +136,20 @@ class SkypeBot:
 
         self.post_headers = {'Accept': 'application/json',
                              'Content-Type': 'application/json',
-                             'Authorization': token['accessToken']
+                             'Authorization': 'Bearer ' + token['accessToken']
                              }
 
         self.get_headers = {'Accept': "application/json",
                             'Connection': "keep-alive",
                             'Accept-Encoding': "gzip, deflate",
-                            'Authorization': token['accessToken']
+                            'Authorization': 'Bearer ' + token['accessToken']
                             }
 
         self.post_headers_plain = {'Accept': 'application/json',
                                    'Content-Type': 'text/plain',
-                                   'Authorization': token['accessToken']
+                                   'Authorization': 'Bearer ' + token['accessToken']
                                    }
-
+        print("new refresh Token {}".format(token['accessToken']))
         return 'Bearer ' + token['accessToken'], token['refreshToken']
 
     async def make_me_available(self, application_url, me_tasks):
@@ -343,9 +356,13 @@ class SkypeBot:
                 self.eventsURL = json_resp['_links']['next']['href']
             else:
                 print("******************* Error in Events URL {} **********************************".format(json_resp))
-                self.app_token, self.refresh_token = await self.get_refreshed_token()
-                status = await self.report_my_activity()
+                #self.app_token, self.refresh_token = await self.get_refreshed_token()
+                await asyncio.sleep(60)
                 print("Refreshed Tokens Reporting Activity to Skype Server - Status  {}".format(status))
+
+            if status == 401:
+                print("Error While refresing token ")
+                break
 
             if status == 200:
                 for sender in json_resp['sender']:
