@@ -190,6 +190,11 @@
     min-height: 40px;
 }
 
+.response_text {
+    overflow: auto;
+    height: auto;
+}
+
 @media screen and (min-height: 900px) and (max-height: 1080px) {
     .story-box {
         height: 690px;

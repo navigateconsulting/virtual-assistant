@@ -13,6 +13,13 @@
           </button>
         </div>
       </div>
+      <div *ngIf="intents_json.length===0" class="row empty-intents">
+        <div class="col-md-12">
+          <div class="alert alert-info">
+            <strong>Info!</strong> Currently there are no intents.
+          </div>
+        </div>
+      </div>
       <br />
       <div class="row irs-table-container">
         <div class="col-md-12">
@@ -47,7 +54,7 @@
               <tr mat-header-row *matHeaderRowDef="intentsDisplayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: intentsDisplayedColumns;"></tr>
             </table>
-            <mat-paginator #intentsPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+            <mat-paginator #intentsPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons (page)="pageEvent = getIntentsPaginatorData($event)"></mat-paginator>
           </div>
         </div>
       </div>
@@ -67,6 +74,13 @@
           <button mat-mini-fab matTooltip="Add Response" class="add-irs-button" (click)="addNewResponse()">
             <mat-icon>add</mat-icon>
           </button>
+        </div>
+      </div>
+      <div *ngIf="responses_json.length===0" class="row empty-responses">
+        <div class="col-md-12">
+          <div class="alert alert-info">
+            <strong>Info!</strong> Currently there are no responses.
+          </div>
         </div>
       </div>
       <br />
@@ -103,7 +117,7 @@
               <tr mat-header-row *matHeaderRowDef="responsesDisplayedColumns;"></tr>
               <tr mat-row *matRowDef="let row; columns: responsesDisplayedColumns;"></tr>
             </table>
-            <mat-paginator #responsesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+            <mat-paginator #responsesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons (page)="pageEvent = getResponsesPaginatorData($event)"></mat-paginator>
           </div>
         </div>
       </div>
@@ -121,6 +135,13 @@
           <button mat-mini-fab matTooltip="Add Story" class="add-irs-button" (click)="addNewStory()">
             <mat-icon>add</mat-icon>
           </button>
+        </div>
+      </div>
+      <div *ngIf="stories_json.length===0" class="row empty-stories">
+        <div class="col-md-12">
+          <div class="alert alert-info">
+            <strong>Info!</strong> Currently there are no stories.
+          </div>
         </div>
       </div>
       <br />
@@ -157,7 +178,7 @@
               <tr mat-header-row *matHeaderRowDef="storiesDisplayedColumns;"></tr>
               <tr mat-row *matRowDef="let row; columns: storiesDisplayedColumns;"></tr>
             </table>
-            <mat-paginator #storiesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+            <mat-paginator #storiesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons (page)="pageEvent = getStoriesPaginatorData($event)"></mat-paginator>
           </div>
         </div>
       </div>

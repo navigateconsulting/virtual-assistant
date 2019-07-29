@@ -12,12 +12,13 @@ import { MatInput } from '@angular/material/input';
 })
 export class ManageResponsesComponent implements OnInit {
 
-  text_entities: any;
+  text_entities: Array<string>;
   text_entities_backup: any;
   entities: any;
   entities_backup: any;
   new_response_text: string;
   showEntityDropdown = false;
+  show_empty_entity_error = false;
   readonly = false;
   currentResponse: any;
 
@@ -31,6 +32,7 @@ export class ManageResponsesComponent implements OnInit {
               public sharedDataService: SharedDataService) { }
 
   ngOnInit() {
+    this.text_entities = new Array<string>();
     this.getEntities();
     this.getResponseDetails();
     this.sharedDataService.setSharedData('activeTabIndex', '1', constant.MODULE_COMMON);
@@ -97,8 +99,12 @@ export class ManageResponsesComponent implements OnInit {
 
   populateEntities(event: any) {
     if (event.which === 50 && event.key === '@') {
-      this.showEntityDropdown = true;
-      this.readonly = true;
+      if (this.entities.length > 0) {
+        this.showEntityDropdown = true;
+      } else {
+        this.show_empty_entity_error = true;
+        this.readonly = true;
+      }
     }
   }
 
@@ -115,6 +121,7 @@ export class ManageResponsesComponent implements OnInit {
       this.new_response_text = this.new_response_text.slice(0, -1);
       this.showEntityDropdown = false;
       this.readonly = false;
+      this.show_empty_entity_error = false;
     }
   }
 

@@ -27,8 +27,14 @@ table {
 .mat-column-project_name{
     width: 10%;
 }
+.mat-column-padding1{
+    width: 1%;
+}
 .mat-column-project_description {
     width: 35%;
+}
+.mat-column-padding2{
+    width: 1%;
 }
 .mat-column-created_by {
     width: 10%;
@@ -37,7 +43,7 @@ table {
     width: 10%;
 }
 .mat-column-source {
-    width: 8%;
+    width: 6%;
 }
 .mat-column-edit {
     width: 5%;

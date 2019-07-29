@@ -20,6 +20,18 @@
   cursor: pointer;
   box-shadow: 0 2px 15px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
 }
+.domain-name {
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+.domain_desc_div {
+  height: 68px;
+  padding-right: 0;
+  overflow: hidden;
+  width: 100%;
+}
 .domain_text {
   color: $text-color-1;
   font-size: $breadcrumb-font-size;
@@ -29,6 +41,33 @@
   font-size: $dialog-input-font-size;
   line-height: $breadcrumb-font-size;
   color: $domain-description-color;
+  height: 68px;
+  word-break: break-word;
+}
+.overflow {
+  --max-lines: 3;
+  position: relative;
+  max-height: calc(var(--lh) * var(--max-lines));
+  overflow: hidden;
+  padding-right: 0.5rem; /* space for ellipsis */
+}
+.overflow::before {
+  position: absolute;
+  font-size: $dialog-input-font-size;
+  line-height: $breadcrumb-font-size;
+  color: $domain-description-color;
+  content: "....";
+  bottom: 0;
+  right: 0;
+}
+.overflow::after {
+  content: "";
+  position: absolute;
+/*   inset-inline-end: 0; */
+  right: 0;
+  width: 1rem;
+  height: 1rem;
+  background: white;
 }
 .add-domain-button {
   background-image: $global_gradient;

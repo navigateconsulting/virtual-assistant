@@ -41,7 +41,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   rootFoldersArray: Array<string> = ['Intents', 'Stories', 'Responses'];
 
   connection: any;
-  domains_json: any;
+  domains_json: Array<object>;
   domains_json_backup: any;
 
   @Input() projectObjectId: string;
@@ -49,6 +49,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   @Output() selectedDomain = new EventEmitter<string>();
 
   ngOnInit() {
+    this.domains_json = new Array<object>();
     this.getDomains();
   }
 
@@ -69,7 +70,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
 
   addNewDomain() {
     const dialogRef = this.dialog.open(AddDomainComponent, {
-      height: '300px',
+      height: '320px',
       width: '345px',
       data: {projectObjectId: this.projectObjectId}
     });
@@ -82,7 +83,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
 
   editDomain(domainObjectId: string, domainName: string, domainDescription: string) {
     const dialogRef = this.dialog.open(EditDomainComponent, {
-      height: '300px',
+      height: '320px',
       width: '345px',
       data: {
         projectObjectId: this.projectObjectId,
@@ -111,7 +112,8 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   applyDomainsFilter(filterValue: string) {
     this.domains_json = this.domains_json_backup;
     this.domains_json = this.domains_json.filter((value) => {
-      if (value.domain_name.toLowerCase().includes(filterValue.trim())) {
+      // tslint:disable-next-line: max-line-length
+      if (value['domain_name'].toLowerCase().includes(filterValue.trim()) || value['domain_description'].toLowerCase().includes(filterValue.trim())) {
         return value;
       }
     });

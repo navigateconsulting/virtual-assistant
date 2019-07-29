@@ -1,0 +1,60 @@
+{
+    "rasa_nlu_data": {
+        "common_examples": [
+            {
+                "text": "My name is Nishant",
+                "intent": "test_intent",
+                "entities": [
+                    {
+                        "start": 11,
+                        "end": 18,
+                        "value": "Nishant",
+                        "entity": "name"
+                    }
+                ]
+            },
+            {
+                "text": "Nishant is my name",
+                "intent": "test_intent",
+                "entities": [
+                    {
+                        "start": 0,
+                        "end": 7,
+                        "value": "Nishant",
+                        "entity": "name"
+                    }
+                ]
+            },
+            {
+                "text": "nope",
+                "intent": "negative",
+                "entities": []
+            },
+            {
+                "text": "no",
+                "intent": "negative",
+                "entities": []
+            },
+            {
+                "text": "nopes",
+                "intent": "negative",
+                "entities": []
+            },
+            {
+                "text": "not now",
+                "intent": "negative",
+                "entities": []
+            },
+            {
+                "text": "not this time",
+                "intent": "negative",
+                "entities": []
+            },
+            {
+                "text": "not today",
+                "intent": "negative",
+                "entities": []
+            }
+        ]
+    }
+}

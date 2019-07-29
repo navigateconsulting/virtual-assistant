@@ -25,13 +25,13 @@
     <span class="mat-body-strong">Select Entity Slot Type</span>
   </div>
   <div class="row">
-    <mat-radio-group (click)="setEntitySlotType($event)" [(ngModel)]="entitySlotType">
-      <mat-radio-button value="text">text</mat-radio-button>
-      <mat-radio-button value="bool">bool</mat-radio-button>
-      <mat-radio-button value="categorical">categorical</mat-radio-button>
-      <mat-radio-button value="float">float</mat-radio-button>
-      <mat-radio-button value="list">list</mat-radio-button>
-      <mat-radio-button value="unfeaturized">unfeaturized</mat-radio-button>
+    <mat-radio-group [(ngModel)]="entitySlotType">
+      <mat-radio-button value="text" (change)="setEntitySlotType($event)">text</mat-radio-button>
+      <mat-radio-button value="bool" (change)="setEntitySlotType($event)">bool</mat-radio-button>
+      <mat-radio-button value="categorical" (change)="setEntitySlotType($event)">categorical</mat-radio-button>
+      <mat-radio-button value="float" (change)="setEntitySlotType($event)">float</mat-radio-button>
+      <mat-radio-button value="list" (change)="setEntitySlotType($event)">list</mat-radio-button>
+      <mat-radio-button value="unfeaturized" (change)="setEntitySlotType($event)">unfeaturized</mat-radio-button>
     </mat-radio-group>
   </div>
   <div *ngIf="entitySlotType==='categorical'" class="row entity-values">

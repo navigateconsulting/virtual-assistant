@@ -27,7 +27,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
               public dialog: MatDialog) {}
 
   // tslint:disable-next-line: max-line-length
-  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'project_description', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'try_now'];
+  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'padding1', 'project_description', 'padding2', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'try_now'];
   projectsDataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -39,26 +39,22 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   showAddFolderFile = true;
   openIntentORStoryORResponseFile: string;
   propertyPanel: string;
-
-  rootFoldersArray: Array<string> = ['Intents', 'Stories', 'Responses'];
-
-  projectsJSON: any;
-  domainsJSON: any;
+  projects_json: Array<object>;
 
   @Output() selectedProject = new EventEmitter<object>();
 
   ngOnInit() {
+    this.projects_json = new Array<object>();
     this.getProjects();
+    this.paginator.pageIndex = +localStorage.getItem('projects_pageIndex');
+    this.paginator.pageSize = +localStorage.getItem('projects_pageSize');
   }
 
   getProjects() {
     this.webSocketService.createProjectsRoom('root');
     this.webSocketService.getProjects('root').subscribe(projects => {
-      this.projectsJSON = (projects !== '' && projects !== null) ? projects : [];
-      if (this.projectsJSON.length === 0) {
-        this.projectsJSON = new Array<object>();
-      }
-      this.projectsDataSource = new MatTableDataSource(this.projectsJSON);
+      this.projects_json = projects;
+      this.projectsDataSource = new MatTableDataSource(this.projects_json);
       this.projectsDataSource.paginator = this.paginator;
     },
     err => console.error('Observer got an error: ' + err),
@@ -73,7 +69,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   addNewProject() {
     const dialogRef = this.dialog.open(AddProjectComponent, {
-      height: '300px',
+      height: '320px',
       width: '345px',
     });
     dialogRef.afterClosed().subscribe(response => {
@@ -85,7 +81,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   editProject(projectObjectId: string, projectName: string, projectDescription: string) {
     const dialogRef = this.dialog.open(EditProjectComponent, {
-      height: '300px',
+      height: '320px',
       width: '345px',
       data: {projectObjectId: projectObjectId, projectName: projectName, projectDescription: projectDescription}
     });
@@ -107,7 +103,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   copyProject(projectObjectId: string, projectName: string) {
     const dialogRef = this.dialog.open(CopyProjectComponent, {
-      height: '300px',
+      height: '320px',
       width: '345px',
       data: {projectObjectId: projectObjectId, projectName: projectName}
     });
@@ -135,6 +131,11 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   showErrorOnProject() {
     this.notificationsService.showToast({status: 'Error', message: 'No changes can be made to a project in published / archived state'});
+  }
+
+  getProjectsPaginatorData(event: any) {
+    localStorage.setItem('projects_pageIndex', event.pageIndex);
+    localStorage.setItem('projects_pageSize', event.pageSize);
   }
 
   ngOnDestroy(): void {

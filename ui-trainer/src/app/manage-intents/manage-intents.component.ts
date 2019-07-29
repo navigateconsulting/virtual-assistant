@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, ViewEncapsulation, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { MatTableDataSource, MatAutocompleteModule, MatAutocomplete } from '@angular/material';
 import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, observable } from 'rxjs';
 import { map, startWith, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ChooseEntityComponent } from '../common/modals/choose-entity/choose-entity.component';
@@ -31,6 +31,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   entitiesControl = new FormControl();
   entityfilteredOptions: Observable<string[]>;
   new_intent_text: string;
+  show_invalid_entity_error = false;
 
   constructor(public dialog: MatDialog,
               private entities_service: EntitiesDataService,
@@ -38,12 +39,13 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
               public sharedDataService: SharedDataService) {}
 
   currentIntent: any;
-  text_entities: any;
+  text_entities: Array<object>;
   text_entities_backup: any;
   @Input() intentObjectId: string;
   @Input() projectObjectId: string;
 
   ngOnInit() {
+    this.text_entities = new Array<object>();
     this.getEntities();
     this.getIntentDetails();
     this.sharedDataService.setSharedData('activeTabIndex', '0', constant.MODULE_COMMON);
@@ -75,7 +77,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   applyMapFilter(filterValue: string) {
     this.text_entities = this.text_entities_backup;
     this.text_entities = this.text_entities.filter((value) => {
-      if (value.text.includes(filterValue.trim())) {
+      if (value['text'].includes(filterValue.trim())) {
         return value;
       }
     });
@@ -99,13 +101,17 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     this.webSocketService.deleteIntentText({object_id: this.intentObjectId, text: index_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
   }
 
-  getEntityValue(entity_value: string) {
-    this.entity_value = entity_value;
+  getEntityValue(entity_string: string) {
+    if (this.checkEntityValue(entity_string)) {
+      this.show_invalid_entity_error = false;
+    }
   }
 
   mouseUpFunction(event: any, intent_text_index: number, intent_text: string, intent_text_entities: Array<string>) {
     this.entityValue = selectText(event);
-    if (this.entity_value !== '') {
+    const checkEntityValue = this.checkEntityValue(this.entity_value);
+    if (this.entity_value !== '' && checkEntityValue) {
+      this.show_invalid_entity_error = false;
       if (this.entityValue !== 0) {
         const selected_entity = this.entities.filter((value) => {
           if (value.entity_name === this.entity_value) {
@@ -137,24 +143,42 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
           toggleIntentEntity(event);
         }
       }
-    } else {
-      const dialogRef = this.dialog.open(ChooseEntityComponent, {
-        width: '300px',
-        data: {selected_entity: '', entities: this.entities}
-      });
-      dialogRef.afterClosed().subscribe(entity_value => {
-        if (entity_value !== '') {
-          if (entity_value.chosen_entity_value !== '') {
-            this.entityValue['value'] = entity_value.chosen_entity_value;
+    } else if (this.entityValue !== 0) {
+      if (this.entity_value === '') {
+        this.show_invalid_entity_error = false;
+        const dialogRef = this.dialog.open(ChooseEntityComponent, {
+          width: '300px',
+          data: {selected_entity: '', entities: this.entities}
+        });
+        dialogRef.afterClosed().subscribe(entity_value => {
+          if (entity_value !== '') {
+            if (entity_value.chosen_entity_value !== '') {
+              this.entityValue['value'] = entity_value.chosen_entity_value;
+            }
+            delete this.entityValue['text_id'];
+            this.entityValue['entity'] = entity_value.chosen_entity;
+            intent_text_entities.push(this.entityValue);
+            // tslint:disable-next-line: max-line-length
+            this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
+            toggleIntentEntity(event);
           }
-          delete this.entityValue['text_id'];
-          this.entityValue['entity'] = entity_value.chosen_entity;
-          intent_text_entities.push(this.entityValue);
-          // tslint:disable-next-line: max-line-length
-          this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
-          toggleIntentEntity(event);
-        }
-      });
+        });
+      } else if (!checkEntityValue) {
+        this.show_invalid_entity_error = true;
+      }
+    }
+  }
+
+  checkEntityValue(entity_value: string) {
+    const selected_entity = this.entities.filter((value) => {
+      if (value.entity_name === entity_value) {
+        return value;
+      }
+    })[0];
+    if (selected_entity === undefined) {
+      return false;
+    } else {
+      return true;
     }
   }
 

@@ -5,6 +5,7 @@ import { AddEntityComponent } from '../common/modals/add-entity/add-entity.compo
 import { EditEntityComponent } from '../common/modals/edit-entity/edit-entity.component';
 import { MatDialog } from '@angular/material';
 import { EntitiesDataService } from '../common/services/entities-data.service';
+import { NotificationsService } from '../common/services/notifications.service';
 
 @Component({
   selector: 'app-manage-entities',
@@ -27,7 +28,8 @@ export class ManageEntitiesComponent implements OnInit {
   @Input() projectObjectId: string;
 
   constructor(public dialog: MatDialog,
-              private entities_service: EntitiesDataService) { }
+              private entities_service: EntitiesDataService,
+              public notificationsService: NotificationsService) { }
 
   ngOnInit() {
     this.getEntities();
@@ -55,13 +57,18 @@ export class ManageEntitiesComponent implements OnInit {
     if ((value || '').trim()) {
       const dialogRef = this.dialog.open(AddEntityComponent, {
         width: '500px',
-        data: {project_id: this.projectObjectId}
+        data: {
+          project_id: this.projectObjectId,
+          entity_name: value,
+        }
       });
       dialogRef.afterClosed().subscribe(entity_details => {
         if (entity_details) {
           if (Object.keys(entity_details).length !== 0) {
             entity_details['entity_name'] = value.trim();
             this.entities_service.createEntity(entity_details);
+            this.notificationsService.showToast({status: 'Success', message: 'Entity Created Successfully'});
+            input.focus();
           }
         }
       });
@@ -83,8 +90,10 @@ export class ManageEntitiesComponent implements OnInit {
         if (typeof entity_details === 'string') {
           entity_details = {project_id: this.projectObjectId, object_id: entity_details};
           this.entities_service.deleteEntity(entity_details);
+          this.notificationsService.showToast({status: 'Success', message: 'Entity Deleted Successfully'});
         } else {
           this.entities_service.editEntity(entity_details);
+          this.notificationsService.showToast({status: 'Success', message: 'Entity Updated Successfully'});
         }
       }
     });

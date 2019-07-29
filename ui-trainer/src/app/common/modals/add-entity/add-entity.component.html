@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Add Entity Details</h1>
+<h1 mat-dialog-title>Add Entity Details For: {{entity_name}}</h1>
 <mat-divider></mat-divider>
 <div mat-dialog-content>
   <div class="row entity-values">
@@ -11,15 +11,16 @@
     <span class="mat-body-strong">Select Entity Slot Type</span>
   </div>
   <div class="row">
-    <mat-radio-group (click)="setEntitySlotType($event)">
-      <mat-radio-button value="text">text</mat-radio-button>
-      <mat-radio-button value="bool">bool</mat-radio-button>
-      <mat-radio-button value="categorical">categorical</mat-radio-button>
-      <mat-radio-button value="float">float</mat-radio-button>
-      <mat-radio-button value="list">list</mat-radio-button>
-      <mat-radio-button value="unfeaturized">unfeaturized</mat-radio-button>
+    <mat-radio-group>
+      <mat-radio-button value="text" (change)="setEntitySlotType($event)">text</mat-radio-button>
+      <mat-radio-button value="bool" (change)="setEntitySlotType($event)">bool</mat-radio-button>
+      <mat-radio-button value="categorical" (change)="setEntitySlotType($event)">categorical</mat-radio-button>
+      <mat-radio-button value="float" (change)="setEntitySlotType($event)">float</mat-radio-button>
+      <mat-radio-button value="list" (change)="setEntitySlotType($event)">list</mat-radio-button>
+      <mat-radio-button value="unfeaturized" (change)="setEntitySlotType($event)">unfeaturized</mat-radio-button>
     </mat-radio-group>
   </div>
+  <div *ngIf="show_entity_error" class="error">Kindly select an entity slot type.</div>
   <div *ngIf="entitySlotType==='categorical'" class="row entity-values">
     <mat-form-field appearance="outline">
       <mat-label>Entity Slot Value</mat-label>

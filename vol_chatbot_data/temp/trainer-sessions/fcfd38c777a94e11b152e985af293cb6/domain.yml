@@ -1,0 +1,19 @@
+intents:
+- test_intent
+- negative
+
+
+slots:
+  name:
+    type: text
+
+
+actions:
+- utter_test_res
+
+
+templates:
+  utter_test_res:
+  - text: "How are you, {name} ?"
+
+

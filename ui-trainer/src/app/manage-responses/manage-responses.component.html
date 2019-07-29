@@ -9,7 +9,7 @@
     <div class="col-md-6">
       <mat-form-field class="example-form-field" appearance="outline">
         <mat-label>New Response Text</mat-label>
-        <input matInput type="text" [(ngModel)]="new_response_text" (keyup)="populateEntities($event)" [readonly]="readonly" (keydown.enter)="addResponseTextElement()" #responseText="matInput">
+        <textarea matInput type="text" [(ngModel)]="new_response_text" (keyup)="populateEntities($event)" [readonly]="readonly" (keydown.enter)="addResponseTextElement()" #responseText="matInput"></textarea>
       </mat-form-field>
       <div *ngIf="showEntityDropdown===true" class="relative">
         <mat-card>
@@ -21,6 +21,7 @@
           </div>
         </mat-card>
       </div>
+      <div *ngIf="show_empty_entity_error" class="error">Kindly add entity first to access them.</div>
     </div>
     <div class="col-md-6">
       <mat-form-field class="intent-response-filter" appearance="outline">
@@ -29,8 +30,15 @@
       </mat-form-field>
     </div>
   </div>
+  <div *ngIf="text_entities.length===0" class="row empty-response-text">
+    <div class="col-md-12">
+      <div class="alert alert-info">
+        <strong>Info!</strong> Currently there are no response texts added.
+      </div>
+    </div>
+  </div>
   <div class="accordion">
-    <div class="row" style="width: 100%;">
+    <div class="row">
       <div class="col-md-12">
         <div class="card" *ngFor="let text_entity of text_entities; let i = index;">
           <mat-card>
@@ -39,8 +47,8 @@
                 <span class="response-text" id="response_text_{{i}}">{{text_entity}}</span>
               </div>
               <div class="col-md-1 text-right">
-                <button class="btn btn-link" (click)="removeResponseTextElement(i, text_entity)">
-                  <mat-icon>remove_circle_outline</mat-icon>
+                <button mat-icon-button (click)="removeResponseTextElement(i, text_entity)">
+                  <mat-icon svgIcon="delete"></mat-icon>
                 </button>
               </div>
             </div>

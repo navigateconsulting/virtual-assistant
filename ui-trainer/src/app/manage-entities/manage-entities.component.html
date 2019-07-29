@@ -4,7 +4,8 @@
             <mat-chip *ngFor="let entity of entities" [selectable]="selectable" (click)="editEntity(entity)">
             {{entity.entity_name}}
             </mat-chip>
-            <input placeholder="New Entity..."
+            <input  matInput
+                    placeholder="New Entity..."
                     maxlength="30"
                     (keydown.space)="$event.preventDefault()"
                     [matChipInputFor]="chipList"

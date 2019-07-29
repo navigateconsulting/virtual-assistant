@@ -10,7 +10,7 @@
 <mat-dialog-content>
   <mat-form-field class="dialog-full-width" appearance="outline">
     <mat-label>Intent Name</mat-label>
-    <input matInput (keydown.space)="$event.preventDefault()" maxlength="30" formControlName="intentName" #intentName="matInput">
+    <input matInput (keydown.space)="$event.preventDefault()" maxlength="30" onPaste="return false" autocomplete="off" formControlName="intentName" #intentName="matInput">
   </mat-form-field>
   <br />
   <mat-form-field class="dialog-full-width" appearance="outline">

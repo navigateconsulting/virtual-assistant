@@ -11,6 +11,13 @@
       </button>
     </div>
   </div>
+  <div *ngIf="domains_json.length===0" class="row empty-domains">
+    <div class="col-md-12">
+      <div class="alert alert-info">
+        <strong>Info!</strong> Currently there are no domains.
+      </div>
+    </div>
+  </div>
   <div class="row domains-card-container">
     <div class="col-md-12">
       <div class="domains-card">
@@ -21,14 +28,14 @@
                 <div class="col-md-2">
                   <mat-icon svgIcon="domain"></mat-icon>
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-10 domain-name" matTooltip="{{domain.domain_name}}">
                   <span class="domain_text">{{domain.domain_name}}</span>
                 </div>
               </div>
               <div style="height: 10px;"></div>
               <div class="row" style="width: 100%; height: 100%;">
-                <div class="col-md-10" (click)="selectDomain(domain)">
-                  <span class="domain_desc_text">{{domain.domain_description}}</span>
+                <div class="col-md-10 domain_desc_div overflow" matTooltip="{{domain.domain_description}}" (click)="selectDomain(domain)">
+                  <div class="domain_desc_text">{{domain.domain_description}}</div>
                 </div>
                 <div class="col-md-2">
                   <div class="row">
@@ -44,29 +51,6 @@
                 </div>
               </div>
             </mat-card>
-            <!-- <div class="domain-card">
-              <div class="card-header" (click)="selectDomain(domain)">
-                <div class="row">
-                  <div class="col-md-2">
-                    <mat-icon svgIcon="domain"></mat-icon>
-                  </div>
-                  <div class="col-md-10">
-                    <span class="mat-subheading-1">{{domain.domain_name}}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body" (click)="selectDomain(domain)"><span class="mat-body-1">{{domain.domain_description}}</span></div> 
-              <div class="card-footer">
-                <div class="row">
-                  <div class="col-md-6 text-center">
-                    <button mat-icon-button (click)="editDomain(domain._id.$oid, domain.domain_name, domain.domain_description)"><mat-icon svgIcon="edit"></mat-icon></button>
-                  </div>
-                  <div class="col-md-6 text-center">
-                    <button mat-icon-button color="warn" (click)="deleteDomain(domain._id.$oid)"><mat-icon svgIcon="delete"></mat-icon></button>
-                  </div>
-                </div>
-              </div>
-            </div> -->
           </mat-grid-tile>
         </mat-grid-list>
       </div>

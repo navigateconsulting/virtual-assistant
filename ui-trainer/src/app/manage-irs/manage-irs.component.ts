@@ -38,14 +38,20 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   @ViewChild('storiesPaginator', {read: MatPaginator}) storiesPaginator: MatPaginator;
 
   intentsDisplayedColumns: string[] = ['icon', 'intent_name', 'intent_description', 'edit', 'delete'];
+  intents_json: Array<object>;
   intentsDataSource: any;
   responsesDisplayedColumns: string[] = ['icon', 'response_name', 'response_description', 'edit', 'delete'];
+  responses_json: Array<object>;
   responsesDataSource: any;
   storiesDisplayedColumns: string[] = ['icon', 'story_name', 'story_description', 'edit', 'delete'];
+  stories_json: Array<object>;
   storiesDataSource: any;
   activeTabIndex: any;
 
   ngOnInit() {
+    this.intents_json = new Array<object>();
+    this.responses_json = new Array<object>();
+    this.stories_json = new Array<object>();
     this.activeTabIndex = this.sharedDataService.getSharedData('activeTabIndex', constant.MODULE_COMMON);
     if (this.activeTabIndex === undefined) {
       this.activeTabIndex = '0';
@@ -54,11 +60,18 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     this.getIntents();
     this.getResponses();
     this.getStories();
+    this.intentsPaginator.pageIndex = +localStorage.getItem('intents_pageIndex');
+    this.intentsPaginator.pageSize = +localStorage.getItem('intents_pageSize');
+    this.responsesPaginator.pageIndex = +localStorage.getItem('responses_pageIndex');
+    this.responsesPaginator.pageSize = +localStorage.getItem('responses_pageSize');
+    this.storiesPaginator.pageIndex = +localStorage.getItem('stories_pageIndex');
+    this.storiesPaginator.pageSize = +localStorage.getItem('stories_pageSize');
   }
 
   getIntents() {
     const project_domain_ids = {project_id: this.projectObjectId, domain_id: this.domainObjectId};
     this.webSocketService.getIntents(project_domain_ids, 'domain_' + this.domainObjectId).subscribe(intents => {
+      this.intents_json = intents;
       this.intentsDataSource = new MatTableDataSource(intents);
       this.intentsDataSource.paginator = this.intentsPaginator;
     },
@@ -75,6 +88,7 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   getResponses() {
     const project_domain_ids = {project_id: this.projectObjectId, domain_id: this.domainObjectId};
     this.webSocketService.getResponses(project_domain_ids, 'domain_' + this.domainObjectId).subscribe(responses => {
+      this.responses_json = responses;
       this.responsesDataSource = new MatTableDataSource(responses);
       this.responsesDataSource.paginator = this.responsesPaginator;
     },
@@ -91,6 +105,7 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   getStories() {
     const project_domain_ids = {project_id: this.projectObjectId, domain_id: this.domainObjectId};
     this.webSocketService.getStories(project_domain_ids, 'domain_' + this.domainObjectId).subscribe(stories => {
+      this.stories_json = stories;
       this.storiesDataSource = new MatTableDataSource(stories);
       this.storiesDataSource.paginator = this.storiesPaginator;
     },
@@ -106,7 +121,7 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
 
   addNewIntent() {
     const dialogRef = this.dialog.open(AddIntentComponent, {
-      height: '300px',
+      height: '320px',
       width: '345px',
       data: {projectObjectId: this.projectObjectId, domainObjectId: this.domainObjectId}
     });
@@ -119,7 +134,7 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
 
   editIntent(intentObjectId: string, intentName: string, intentDescription: string) {
     const dialogRef = this.dialog.open(EditIntentComponent, {
-      height: '300px',
+      height: '320px',
       width: '345px',
       data: {
         projectObjectId: this.projectObjectId,
@@ -159,9 +174,14 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     this.selectedIRS.emit({irs_object: intentObject, type: 'intent'});
   }
 
+  getIntentsPaginatorData(event: any) {
+    localStorage.setItem('intents_pageIndex', event.pageIndex);
+    localStorage.setItem('intents_pageSize', event.pageSize);
+  }
+
   addNewResponse() {
     const dialogRef = this.dialog.open(AddResponseComponent, {
-      height: '300px',
+      height: '320px',
       width: '345px',
       data: {projectObjectId: this.projectObjectId, domainObjectId: this.domainObjectId}
     });
@@ -174,7 +194,7 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
 
   editResponse(responseObjectId: string, responseName: string, responseDescription: string) {
     const dialogRef = this.dialog.open(EditResponseComponent, {
-      height: '300px',
+      height: '320px',
       width: '345px',
       data: {
         projectObjectId: this.projectObjectId,
@@ -214,9 +234,14 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     this.selectedIRS.emit({irs_object: responseObject, type: 'response'});
   }
 
+  getResponsesPaginatorData(event: any) {
+    localStorage.setItem('responses_pageIndex', event.pageIndex);
+    localStorage.setItem('responses_pageSize', event.pageSize);
+  }
+
   addNewStory() {
     const dialogRef = this.dialog.open(AddStoryComponent, {
-      height: '300px',
+      height: '320px',
       width: '345px',
       data: {projectObjectId: this.projectObjectId, domainObjectId: this.domainObjectId}
     });
@@ -229,7 +254,7 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
 
   editStory(storyObjectId: string, storyName: string, storyDescription: string) {
     const dialogRef = this.dialog.open(EditStoryComponent, {
-      height: '300px',
+      height: '320px',
       width: '345px',
       data: {
         projectObjectId: this.projectObjectId,
@@ -267,6 +292,11 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   selectStory(storyObject: any) {
     this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
     this.selectedIRS.emit({irs_object: storyObject, type: 'story'});
+  }
+
+  getStoriesPaginatorData(event: any) {
+    localStorage.setItem('stories_pageIndex', event.pageIndex);
+    localStorage.setItem('stories_pageSize', event.pageSize);
   }
 
   ngOnDestroy(): void {
