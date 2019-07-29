@@ -85,18 +85,10 @@ class ExportProject:
             domains_list.append([domain_id, domain['domain_name']])
             if not os.path.exists(self.project_home+'/skills/'+domain['domain_name']+'/data'):
                 os.makedirs(self.project_home+'/skills/'+domain['domain_name']+'/data')
+            result = await self.write_domain_file(project_id, domain_id, domain['domain_name'])
 
-        # Starting export of each Domain in Parallel
-        result = await asyncio.gather(*(self.write_domain_file(project_id, domain[0], domain[1]) for domain in domains_list))
-        return result
-
-    async def write_domain_file(self, project_id, domain_id, domain_name):
-        print("writing domain File for id {} {}".format(domain_id, domain_name))
-
-        # Starting with export for NLU , Stories and Domains files
-        result = await asyncio.gather(self.export_nlu_data(project_id, domain_id, domain_name),
-                                      self.export_domain_yml_data(project_id, domain_id, domain_name),
-                                      self.export_stories(project_id, domain_id, domain_name))
+        # Starting export of each Domain in Parallel - This is disabled till multi skills is proven
+        #result = await asyncio.gather(*(self.write_domain_file(project_id, domain[0], domain[1]) for domain in domains_list))
 
         # Write master consolidated NLU file to disk
         print("Writing Consolidated files to Disk")
@@ -146,6 +138,16 @@ class ExportProject:
             await out.write("    deny_suggestion_intent_name: ""negative""" + "\n")
             await out.write("  - name: MappingPolicy" + "\n")
             await out.flush()
+
+        return result
+
+    async def write_domain_file(self, project_id, domain_id, domain_name):
+        print("writing domain File for id {} {}".format(domain_id, domain_name))
+
+        # Starting with export for NLU , Stories and Domains files
+        result = await asyncio.gather(self.export_nlu_data(project_id, domain_id, domain_name),
+                                      self.export_domain_yml_data(project_id, domain_id, domain_name),
+                                      self.export_stories(project_id, domain_id, domain_name))
 
         return result
 
@@ -215,8 +217,11 @@ class ExportProject:
             slots_list = await self.EntityModel.get_entities({"project_id": project_id})
 
             for slots in slots_list:
-                self.master_domain_entities = self.master_domain_entities+"  "+slots['entity_name']+":"+"\n"
-                self.master_domain_entities = self.master_domain_entities+"    "+"type: "+slots['entity_slot']['type']+"\n"
+                if slots['entity_name'] not in self.master_domain_entities:
+                    self.master_domain_entities = self.master_domain_entities+"  "+slots['entity_name']+":"+"\n"
+                    self.master_domain_entities = self.master_domain_entities+"    "+"type: "+slots['entity_slot']['type']+"\n"
+                else:
+                    print("Entity Already exists ")
 
             response_list = await self.ResponseModel.get_responses({"project_id": project_id, "domain_id": domain_id})
 
