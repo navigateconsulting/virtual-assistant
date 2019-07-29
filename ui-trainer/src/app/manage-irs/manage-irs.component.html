@@ -54,7 +54,7 @@
               <tr mat-header-row *matHeaderRowDef="intentsDisplayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: intentsDisplayedColumns;"></tr>
             </table>
-            <mat-paginator #intentsPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons (page)="pageEvent = getIntentsPaginatorData($event)"></mat-paginator>
+            <mat-paginator #intentsPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons (page)="getIntentsPaginatorData($event)"></mat-paginator>
           </div>
         </div>
       </div>
@@ -117,7 +117,7 @@
               <tr mat-header-row *matHeaderRowDef="responsesDisplayedColumns;"></tr>
               <tr mat-row *matRowDef="let row; columns: responsesDisplayedColumns;"></tr>
             </table>
-            <mat-paginator #responsesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons (page)="pageEvent = getResponsesPaginatorData($event)"></mat-paginator>
+            <mat-paginator #responsesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons (page)="getResponsesPaginatorData($event)"></mat-paginator>
           </div>
         </div>
       </div>
@@ -178,7 +178,7 @@
               <tr mat-header-row *matHeaderRowDef="storiesDisplayedColumns;"></tr>
               <tr mat-row *matRowDef="let row; columns: storiesDisplayedColumns;"></tr>
             </table>
-            <mat-paginator #storiesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons (page)="pageEvent = getStoriesPaginatorData($event)"></mat-paginator>
+            <mat-paginator #storiesPaginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons (page)="getStoriesPaginatorData($event)"></mat-paginator>
           </div>
         </div>
       </div>
