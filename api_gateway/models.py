@@ -373,7 +373,7 @@ class IntentsModel:
                          "intent_description": json_record['intent_description'], "text_entities": []}
 
         val_res = await db.intents.find_one({"project_id": json_record['project_id'],
-                                             "domain_id": json_record['domain_id'],
+                                             #"domain_id": json_record['domain_id'],
                                              "intent_name": json_record['intent_name']})
 
         if val_res is not None:
@@ -427,7 +427,7 @@ class IntentsModel:
 
         # Check if intent already exists
         val_res = await db.intents.find_one({"project_id": json_record['project_id'],
-                                             "domain_id": json_record['domain_id'],
+                                             #"domain_id": json_record['domain_id'],
                                              "intent_name": json_record['intent_name']})
 
         if val_res is None or val_res['intent_name'] == json_record['intent_name']:
@@ -496,6 +496,14 @@ class IntentsModel:
         object_id = json_record['object_id']
         del json_record['object_id']
 
+        intent_detail = await self.get_intent_details({"object_id": object_id})
+        print("Intent Details count {}".format(intent_detail['text_entities'][0]))
+
+        try:
+            res = intent_detail['text_entities'][1]
+        except IndexError:
+            return {"status": "Error", "message": "Atleast one record should be present for an Intent"}, intent_detail
+
         query = {"_id": ObjectId("{}".format(object_id))}
 
         result = await db.intents.update_one(query, {"$pull": {"text_entities": json_record}})
@@ -530,7 +538,7 @@ class ResponseModel:
                          "response_description": json_record['response_description'], "text_entities": []}
 
         val_res = await db.responses.find_one({"project_id": json_record['project_id'],
-                                               "domain_id": json_record['domain_id'],
+                                               #"domain_id": json_record['domain_id'],
                                                "response_name": json_record['response_name']})
 
         if val_res is not None:
@@ -580,7 +588,7 @@ class ResponseModel:
 
         # Check if Response already exists
         val_res = await db.responses.find_one({"project_id": json_record['project_id'],
-                                               "domain_id": json_record['domain_id'],
+                                               #"domain_id": json_record['domain_id'],
                                                "response_name": json_record['response_name']})
 
         if val_res is None or val_res['response_name'] == json_record['response_name']:
@@ -633,13 +641,19 @@ class ResponseModel:
         object_id = json_record['object_id']
         del json_record['object_id']
 
+        response_detail = await self.get_response_details({"object_id": object_id})
+        try:
+            res = response_detail['text_entities'][1]
+        except IndexError:
+            return {"status": "Error", "message": "Atleast one record should be present for an Response"}, response_detail
+
         query = {"_id": ObjectId("{}".format(object_id))}
 
         result = await db.responses.update_one(query, {"$pull": {"text_entities": json_record['text_entities']}})
         print("Removed row from Intent {}".format(result))
 
-        intent_detail = await self.get_response_details({"object_id": object_id})
-        return {"status": "Success", "message": "Response text Removed "}, intent_detail
+        response_detail = await self.get_response_details({"object_id": object_id})
+        return {"status": "Success", "message": "Response text Removed "}, response_detail
 
 
 # noinspection PyMethodMayBeStatic
@@ -743,13 +757,15 @@ class StoryModel:
 
         # Get intents
 
-        cursor = db.intents.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
+        #cursor = db.intents.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
+        cursor = db.intents.find({"project_id": json_record['project_id']})
         result_intents = await cursor.to_list(length=1000)
         intents_list = json.loads(dumps(result_intents))
 
         # Get Responses
 
-        cursor = db.responses.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
+        #cursor = db.responses.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
+        cursor = db.responses.find({"project_id": json_record['project_id']})
         result_response = await cursor.to_list(length=1000)
         response_list = json.loads(dumps(result_response))
 
