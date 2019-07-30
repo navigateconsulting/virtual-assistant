@@ -116,3 +116,16 @@ async def leave_room(sid, room_name):
     sio.leave_room(sid, room=room_name, namespace='/trynow')
     sio.leave_room(sid, room=sid, namespace='/trynow')
 
+
+@sio.on('join_room', namespace='/modelpublish')
+async def join_room(sid, room_name):
+    print("________________________ User {} joined room {} with namespace /modelpublish _______________________".format(sid, room_name))
+    sio.enter_room(sid, room=room_name, namespace='/modelpublish')
+    sio.enter_room(sid, room=sid, namespace='/modelpublish')
+
+
+@sio.on('leave_room', namespace='/modelpublish')
+async def leave_room(sid, room_name):
+    print("________________________ User {} Left room {} with namespace /modelpublish _______________________".format(sid, room_name))
+    sio.leave_room(sid, room=room_name, namespace='/modelpublish')
+    sio.leave_room(sid, room=sid, namespace='/modelpublish')

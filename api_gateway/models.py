@@ -148,19 +148,25 @@ class ProjectsModel:
 
         json_record = json.loads(json.dumps(record))
 
-        val_res = await db.projects.find_one({"project_name": json_record['project_name']})
-
+        #val_res = await db.projects.find_one({"project_name": json_record['project_name']})
+        '''
         if val_res is not None:
             print('Project already exists')
             return {"status": "Error", "message": "Project name already exists"}
         else:
             query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-            update_field = {"$set": {"project_name": json_record['project_name'],
-                                     "project_description": json_record['project_description']
+            update_field = {"$set": {"project_description": json_record['project_description']
                                      }}
             result = await db.projects.update_one(query, update_field)
             print("Project Updated , rows modified {}".format(result))
             return {"status": "Success", "message": "Project details updated successfully "}
+        '''
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"project_description": json_record['project_description']
+                                 }}
+        result = await db.projects.update_one(query, update_field)
+        print("Project Updated , rows modified {}".format(result))
+        return {"status": "Success", "message": "Project details updated successfully "}
 
     async def update_project_model(self, record):
         json_record = json.loads(json.dumps(record))
@@ -461,11 +467,11 @@ class IntentsModel:
         print("Inserted new row in Intent {}".format(result))
 
         intent_detail = await self.get_intent_details({"object_id": object_id})
-
-        if result is None:
-            return {"status": "Error", "message": "Intent already exists "}, intent_detail
-        else:
+        print("Result of Intent Addition {}".format(result.modified_count))
+        if result.modified_count == 1:
             return {"status": "Success", "message": "Intent text added "}, intent_detail
+        else:
+            return {"status": "Error", "message": "Intent already exists "}, intent_detail
 
     async def update_intent_detail(self, data):
 
@@ -610,14 +616,14 @@ class ResponseModel:
 
         result = await db.responses.update_one(query, {"$addToSet": {"text_entities": json_record['text_entities']}})
 
-        print("Inserted new row in Intent {}".format(result))
+        print("Inserted new row in Intent {}".format(result.modified_count))
 
         intent_detail = await self.get_response_details({"object_id": object_id})
 
-        if result is None:
-            return {"status": "Error", "message": "Response Already exists "}, intent_detail
-        else:
+        if result.modified_count == 1:
             return {"status": "Success", "message": "Response added "}, intent_detail
+        else:
+            return {"status": "Error", "message": "Response Already exists "}, intent_detail
 
     async def delete_response_detail(self, data):
 
@@ -870,9 +876,9 @@ class EntityModel:
 
             return {"status": "Success", "message": "Entity deleted successfully"}, entities_list
         elif res is None:
-            return {"status": "Success", "message": "Unable to delete entity , its used in an Response"}, None
+            return {"status": "Error", "message": "Unable to delete entity , its used in an Response"}, None
         else:
-            return {"status": "Success", "message": "Unable to delete entity , its used in an Intent"}, None
+            return {"status": "Error", "message": "Unable to delete entity , its used in an Intent"}, None
 
     async def update_entity(self, record):
 

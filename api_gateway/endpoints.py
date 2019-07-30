@@ -538,7 +538,7 @@ class TryNow(socketio.AsyncNamespace):
             await sio.emit('chatResponse', {"status": "Success", "message": "Ready to chat"}, namespace='/trynow', room=sid)
         except Exception as e:
             print("Exception while try Now ---  "+str(e))
-            await sio.emit('chatResponse', {"status": "Error", "message": str(sys.exc_info())}, namespace='/trynow', room=sid)
+            await sio.emit('chatResponse', {"status": "Error", "message": repr(e)}, namespace='/trynow', room=sid)
 
     async def on_chatNow(self, sid, message):
 
@@ -565,11 +565,11 @@ sio.register_namespace(TryNow('/trynow'))
 
 class ModelPublish(socketio.AsyncNamespace):
 
-    async def on_getDashboard(self, sid):
+    async def on_getDashboard(self, sid, room_name):
 
         result = await ProjectsModel.get_projects()
         #TODO On Dashboard page load , check models on disk and mark them on Projects collection
-        await sio.emit('respModelPublish', result, namespace='/modelpublish')
+        await sio.emit('respModelPublish', result, namespace='/modelpublish', room=room_name)
 
     async def on_trainModel(self, sid, project_id):
 
