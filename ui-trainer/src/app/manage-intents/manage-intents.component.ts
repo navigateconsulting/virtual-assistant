@@ -9,6 +9,7 @@ import { EntitiesDataService } from '../common/services/entities-data.service';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
+import { NotificationsService } from '../common/services/notifications.service';
 
 declare var selectText: Function;
 declare var highlightText: Function;
@@ -36,7 +37,8 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   constructor(public dialog: MatDialog,
               private entities_service: EntitiesDataService,
               private webSocketService: WebSocketService,
-              public sharedDataService: SharedDataService) {}
+              public sharedDataService: SharedDataService,
+              public notificationsService: NotificationsService) {}
 
   currentIntent: any;
   text_entities: Array<object>;
@@ -72,6 +74,12 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
+
+    this.webSocketService.getIntentDetailsAlerts().subscribe(intent_details => {
+      this.notificationsService.showToast(intent_details);
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   applyMapFilter(filterValue: string) {
@@ -88,11 +96,14 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     return this.entities.filter(option => option.entity_name.toLowerCase().includes(filterValue));
   }
 
-  addIntentTextElement() {
+  addIntentTextElement(event: any) {
     if (this.new_intent_text.trim() !== '') {
       // tslint:disable-next-line: max-line-length
       this.webSocketService.createIntentText({object_id: this.intentObjectId, text: this.new_intent_text, entities: []}, 'intent_' + this.intentObjectId);
       this.new_intent_text = '';
+      if (event.which === 13) {
+        event.preventDefault();
+      }
     }
   }
 
@@ -109,63 +120,70 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
 
   mouseUpFunction(event: any, intent_text_index: number, intent_text: string, intent_text_entities: Array<string>) {
     this.entityValue = selectText(event);
+    console.log(this.text_entities);
     const checkEntityValue = this.checkEntityValue(this.entity_value);
-    if (this.entity_value !== '' && checkEntityValue) {
-      this.show_invalid_entity_error = false;
-      if (this.entityValue !== 0) {
-        const selected_entity = this.entities.filter((value) => {
-          if (value.entity_name === this.entity_value) {
-            return value;
+    const checkPrevEntityValue = this.checkPrevEntityValue(intent_text_index, this.entityValue);
+    console.log(checkPrevEntityValue);
+    if (!checkPrevEntityValue) {
+      if (this.entity_value !== '' && checkEntityValue) {
+        this.show_invalid_entity_error = false;
+        if (this.entityValue !== 0 && this.entityValue['value'].trim() !== '') {
+          const selected_entity = this.entities.filter((value) => {
+            if (value.entity_name === this.entity_value) {
+              return value;
+            }
+          })[0];
+          if (selected_entity['entity_slot']['type'] === 'categorical') {
+            const dialogRef = this.dialog.open(ChooseEntityComponent, {
+              width: '300px',
+              data: {selected_entity: selected_entity}
+            });
+            dialogRef.afterClosed().subscribe(entity_value => {
+              if (entity_value !== '') {
+                delete this.entityValue['text_id'];
+                this.entityValue['value'] = entity_value.chosen_entity_value;
+                this.entityValue['entity'] = this.entity_value;
+                intent_text_entities.push(this.entityValue);
+                // tslint:disable-next-line: max-line-length
+                this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
+                toggleIntentEntity(event);
+              }
+            });
+          } else {
+            delete this.entityValue['text_id'];
+            this.entityValue['entity'] = this.entity_value;
+            intent_text_entities.push(this.entityValue);
+            // tslint:disable-next-line: max-line-length
+            this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
+            toggleIntentEntity(event);
           }
-        })[0];
-        if (selected_entity['entity_slot']['type'] === 'categorical') {
+        }
+      } else if (this.entityValue !== 0 && this.entityValue['value'].trim() !== '') {
+        if (this.entity_value === '') {
+          this.show_invalid_entity_error = false;
           const dialogRef = this.dialog.open(ChooseEntityComponent, {
             width: '300px',
-            data: {selected_entity: selected_entity}
+            data: {selected_entity: '', entities: this.entities}
           });
           dialogRef.afterClosed().subscribe(entity_value => {
             if (entity_value !== '') {
+              if (entity_value.chosen_entity_value !== '') {
+                this.entityValue['value'] = entity_value.chosen_entity_value;
+              }
               delete this.entityValue['text_id'];
-              this.entityValue['value'] = entity_value.chosen_entity_value;
-              this.entityValue['entity'] = this.entity_value;
+              this.entityValue['entity'] = entity_value.chosen_entity;
               intent_text_entities.push(this.entityValue);
               // tslint:disable-next-line: max-line-length
               this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
               toggleIntentEntity(event);
             }
           });
-        } else {
-          delete this.entityValue['text_id'];
-          this.entityValue['entity'] = this.entity_value;
-          intent_text_entities.push(this.entityValue);
-          // tslint:disable-next-line: max-line-length
-          this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
-          toggleIntentEntity(event);
+        } else if (!checkEntityValue) {
+          this.show_invalid_entity_error = true;
         }
       }
-    } else if (this.entityValue !== 0) {
-      if (this.entity_value === '') {
-        this.show_invalid_entity_error = false;
-        const dialogRef = this.dialog.open(ChooseEntityComponent, {
-          width: '300px',
-          data: {selected_entity: '', entities: this.entities}
-        });
-        dialogRef.afterClosed().subscribe(entity_value => {
-          if (entity_value !== '') {
-            if (entity_value.chosen_entity_value !== '') {
-              this.entityValue['value'] = entity_value.chosen_entity_value;
-            }
-            delete this.entityValue['text_id'];
-            this.entityValue['entity'] = entity_value.chosen_entity;
-            intent_text_entities.push(this.entityValue);
-            // tslint:disable-next-line: max-line-length
-            this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
-            toggleIntentEntity(event);
-          }
-        });
-      } else if (!checkEntityValue) {
-        this.show_invalid_entity_error = true;
-      }
+    } else {
+      this.notificationsService.showToast({status: 'Error', message: 'Text Entity Already Exists'});
     }
   }
 
@@ -176,6 +194,19 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
       }
     })[0];
     if (selected_entity === undefined) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  checkPrevEntityValue(intent_text_index: number, entity_value: object) {
+    const check_prev_entity_value = this.text_entities[intent_text_index]['entities'].filter((value) => {
+      if (value['start'] === entity_value['start'] && value['end'] === entity_value['end'] && value['value'] === entity_value['value']) {
+        return value;
+      }
+    })[0];
+    if (check_prev_entity_value === undefined) {
       return false;
     } else {
       return true;

@@ -271,6 +271,18 @@ export class WebSocketService {
     });
   }
 
+  getIntentDetailsAlerts() {
+    return Observable.create((observer) => {
+      this.socket.on(constant.INTENT_DETAILS_RESPONSE, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable to reach the server');
+        }
+      });
+    });
+  }
+
   createIntentText(new_intent_text_stub: any, intent_room: string) {
     this.socket.emit(constant.INTENT_TEXT_CREATE, new_intent_text_stub, intent_room);
   }
@@ -301,6 +313,18 @@ export class WebSocketService {
       return () => {
         this.socket.disconnect();
       };
+    });
+  }
+
+  getResponseDetailsAlerts() {
+    return Observable.create((observer) => {
+      this.socket.on(constant.RESPONSE_DETAILS_RESPONSE, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable to reach the server');
+        }
+      });
     });
   }
 
@@ -434,12 +458,13 @@ export class WebSocketService {
     });
   }
 
-  createProjectDeployNSP() {
+  createProjectDeployNSP(deploy_room: string) {
     this.socket.nsp = constant.PROJECT_DEPLOY_NSP;
+    this.socket.emit('join_room', deploy_room);
   }
 
-  getProjectsForDeploy() {
-    this.socket.emit(constant.PROJECT_DEPLOY_URL);
+  getProjectsForDeploy(deploy_room: string) {
+    this.socket.emit(constant.PROJECT_DEPLOY_URL, deploy_room);
     return Observable.create((observer) => {
       this.socket.on(constant.PROJECT_DEPLOY_LISTEN, (data) => {
         if (data) {

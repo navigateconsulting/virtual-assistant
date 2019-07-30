@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material';
 import { AddEntityComponent } from '../common/modals/add-entity/add-entity.component';
@@ -12,14 +12,14 @@ import { NotificationsService } from '../common/services/notifications.service';
   templateUrl: './manage-entities.component.html',
   styleUrls: ['./manage-entities.component.scss']
 })
-export class ManageEntitiesComponent implements OnInit {
+export class ManageEntitiesComponent implements OnInit, OnDestroy {
 
   visible = true;
   selectable = true;
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  entities: any;
+  entities: Array<object>;
   show_success_error: boolean;
   success_error_class: string;
   success_error_type: string;
@@ -32,6 +32,7 @@ export class ManageEntitiesComponent implements OnInit {
               public notificationsService: NotificationsService) { }
 
   ngOnInit() {
+    this.entities = [];
     this.getEntities();
   }
 
@@ -44,7 +45,7 @@ export class ManageEntitiesComponent implements OnInit {
     () => console.log('Observer got a complete notification'));
 
     this.entities_service.getEntityAlerts().subscribe(entities => {
-      this.showEntityAlerts(entities);
+      this.notificationsService.showToast(entities);
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
@@ -53,29 +54,38 @@ export class ManageEntitiesComponent implements OnInit {
   addEntity(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
-    // Add our entity
-    if ((value || '').trim()) {
-      const dialogRef = this.dialog.open(AddEntityComponent, {
-        width: '500px',
-        data: {
-          project_id: this.projectObjectId,
-          entity_name: value,
-        }
-      });
-      dialogRef.afterClosed().subscribe(entity_details => {
-        if (entity_details) {
-          if (Object.keys(entity_details).length !== 0) {
-            entity_details['entity_name'] = value.trim();
-            this.entities_service.createEntity(entity_details);
-            this.notificationsService.showToast({status: 'Success', message: 'Entity Created Successfully'});
-            input.focus();
+    // tslint:disable-next-line: no-shadowed-variable
+    const checkPrevEntity = this.entities.filter((entity) => {
+      if (entity['entity_name'] === value) {
+        return entity;
+      }
+    });
+    if (checkPrevEntity.length === 0) {
+      // Add our entity
+      if ((value || '').trim()) {
+        const dialogRef = this.dialog.open(AddEntityComponent, {
+          width: '500px',
+          data: {
+            project_id: this.projectObjectId,
+            entity_name: value,
           }
-        }
-      });
-    }
-    // Reset the input value
-    if (input) {
-      input.value = '';
+        });
+        dialogRef.afterClosed().subscribe(entity_details => {
+          if (entity_details) {
+            if (Object.keys(entity_details).length !== 0) {
+              entity_details['entity_name'] = value.trim();
+              this.entities_service.createEntity(entity_details);
+              input.focus();
+            }
+          }
+        });
+      }
+      // Reset the input value
+      if (input) {
+        input.value = '';
+      }
+    } else {
+      this.notificationsService.showToast({status: 'Error', message: 'Entity Already Exists'});
     }
   }
 
@@ -90,26 +100,14 @@ export class ManageEntitiesComponent implements OnInit {
         if (typeof entity_details === 'string') {
           entity_details = {project_id: this.projectObjectId, object_id: entity_details};
           this.entities_service.deleteEntity(entity_details);
-          this.notificationsService.showToast({status: 'Success', message: 'Entity Deleted Successfully'});
         } else {
           this.entities_service.editEntity(entity_details);
-          this.notificationsService.showToast({status: 'Success', message: 'Entity Updated Successfully'});
         }
       }
     });
   }
 
-  showEntityAlerts(res: any) {
-    if (res.status === 'Error') {
-      this.success_error_class = 'danger';
-    } else if (res.status === 'Success') {
-      this.success_error_class = 'success';
-    }
-    this.success_error_type = res.status;
-    this.success_error_message = res.message;
-    this.show_success_error = true;
-    setTimeout(() => {
-      this.show_success_error = false;
-    }, 2000);
+  ngOnDestroy(): void {
+    throw new Error('Method not implemented.');
   }
 }

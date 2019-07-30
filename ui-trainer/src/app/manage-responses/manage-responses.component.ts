@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core
 import { WebSocketService } from '../common/services/web-socket.service';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { SharedDataService } from '../common/services/shared-data.service';
+import { NotificationsService } from '../common/services/notifications.service';
 import { constant } from '../../environments/constants';
 import { MatInput } from '@angular/material/input';
 
@@ -29,7 +30,8 @@ export class ManageResponsesComponent implements OnInit {
 
   constructor(private entities_service: EntitiesDataService,
               private webSocketService: WebSocketService,
-              public sharedDataService: SharedDataService) { }
+              public sharedDataService: SharedDataService,
+              public notificationsService: NotificationsService) { }
 
   ngOnInit() {
     this.text_entities = new Array<string>();
@@ -56,9 +58,15 @@ export class ManageResponsesComponent implements OnInit {
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
+
+    this.webSocketService.getResponseDetailsAlerts().subscribe(intent_details => {
+      this.notificationsService.showToast(intent_details);
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
-  addResponseTextElement() {
+  addResponseTextElement(event: any) {
     if (this.new_response_text.trim() !== '') {
       const new_response_text_arr = this.new_response_text.split(' ');
       for (let i = 0; i < new_response_text_arr.length; i++) {
@@ -71,6 +79,9 @@ export class ManageResponsesComponent implements OnInit {
       // tslint:disable-next-line: max-line-length
       this.webSocketService.createResponseText({object_id: this.responseObjectId, text_entities: this.new_response_text}, 'response_' + this.responseObjectId);
       this.new_response_text = '';
+      if (event.which === 13) {
+        event.preventDefault();
+      }
     }
   }
 

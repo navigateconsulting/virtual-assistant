@@ -50,6 +50,7 @@ export const constant = {
 
     INTENT_NSP: '/intent',
     INTENT_DETAILS_URL: 'getIntentDetails',
+    INTENT_DETAILS_RESPONSE: 'respIntentDetail',
     INTENT_DETAILS_LISTEN: 'intentDetail',
     INTENT_TEXT_CREATE: 'insertIntentDetails',
     INTENT_TEXT_UPDATE: 'updateIntentDetails',
@@ -57,6 +58,7 @@ export const constant = {
 
     RESPONSE_NSP: '/response',
     RESPONSE_DETAILS_URL: 'getResponseDetails',
+    RESPONSE_DETAILS_RESPONSE: 'respResponseDetail',
     RESPONSE_DETAILS_LISTEN: 'responseDetail',
     RESPONSE_TEXT_CREATE: 'insertResponseDetails',
     RESPONSE_TEXT_DELETE: 'deleteResponseDetails',

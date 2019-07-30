@@ -43,8 +43,8 @@ export class DeployComponent implements OnInit {
   }
 
   getProjectsForDeploy() {
-    this.webSocketService.createProjectDeployNSP();
-    this.webSocketService.getProjectsForDeploy().subscribe(projects => {
+    this.webSocketService.createProjectDeployNSP('deploy_model');
+    this.webSocketService.getProjectsForDeploy('deploy_model').subscribe(projects => {
       this.projectModels = (projects !== '' && projects !== null) ? projects : [];
       if (this.projectModels.length === 0) {
         this.projectModels = new Array<object>();

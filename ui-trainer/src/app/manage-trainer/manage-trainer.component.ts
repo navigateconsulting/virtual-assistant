@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Router } from '@angular/router';
 import { Breadcrumb } from '../common/models/breadcrumb';
+import { ManageEntitiesComponent } from '../manage-entities/manage-entities.component';
 
 import { HeaderService } from '../common/services/header.service';
 
@@ -22,6 +23,7 @@ export class ManageTrainerComponent implements OnInit {
   loadTryNow: boolean;
 
   @ViewChild('entitiesSidenav') public entitiesSidenav: MatSidenav;
+  @ViewChild('entityComponent') private entityComponent: ManageEntitiesComponent;
 
   constructor(private router: Router,
               private headerService: HeaderService) { }
@@ -74,6 +76,9 @@ export class ManageTrainerComponent implements OnInit {
   toggleEntities() {
     this.propertyPanel = 'entities';
     this.entitiesSidenav.toggle();
+    if (this.entityComponent !== undefined) {
+      this.entityComponent.ngOnInit();
+    }
   }
 
   openPropertyPanelComponent(propertyPanelComponent: string) {

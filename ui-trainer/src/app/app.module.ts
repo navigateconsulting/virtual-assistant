@@ -27,7 +27,6 @@ import { ManageResponsesComponent } from './manage-responses/manage-responses.co
 import { ManageStoriesComponent } from './manage-stories/manage-stories.component';
 import { AddEntityValueComponent } from './common/modals/add-entity-value/add-entity-value.component';
 import { ApplicationsComponent } from './applications/applications.component';
-import { SocketIoComponent } from './socket-io/socket-io.component';
 import { ManageProjectsComponent } from './manage-projects/manage-projects.component';
 import { ManageTrainerComponent } from './manage-trainer/manage-trainer.component';
 import { AddProjectComponent } from './common/modals/add-project/add-project.component';
@@ -74,7 +73,6 @@ import { TryNowLoadComponent } from './try-now-load/try-now-load.component';
     ManageStoriesComponent,
     AddEntityValueComponent,
     ApplicationsComponent,
-    SocketIoComponent,
     ManageProjectsComponent,
     ManageTrainerComponent,
     AddProjectComponent,

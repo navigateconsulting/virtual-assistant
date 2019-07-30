@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { ManageTrainerComponent } from '../app/manage-trainer/manage-trainer.component';
-import { SocketIoComponent } from './socket-io/socket-io.component';
 import { ApplicationsComponent } from '../app/applications/applications.component';
 import { TryNowComponent } from '../app/try-now/try-now.component';
 import { DeployComponent } from '../app/deploy/deploy.component';
@@ -19,7 +18,6 @@ const routes: Routes = [
     ] },
     { path: 'deploy', component: DeployComponent },
   ] },
-  { path: 'socket', component: SocketIoComponent },
 ];
 
 @NgModule({

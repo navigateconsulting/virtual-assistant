@@ -51,13 +51,13 @@
           </div>
           <div class="row property-panel-components">
             <div style="width: 100%;" *ngIf="propertyPanel === 'entities'">
-              <app-manage-entities [projectObjectId]="projectObjectId"></app-manage-entities>
+              <app-manage-entities #entityComponent [projectObjectId]="projectObjectId"></app-manage-entities>
             </div>
             <div style="width: 100%;" *ngIf="propertyPanel === 'actions'">
-              Manage Actions
+              Manage Actions Coming Soon
             </div>
             <div style="width: 100%;" *ngIf="propertyPanel === 'app-prop'">
-              Manage App Properties
+              Manage App Properties Coming Soon
             </div>
           </div>
         </div>
