@@ -500,6 +500,10 @@ class TryNow(socketio.AsyncNamespace):
         result = await ExportProject.main(sid, data, 'SESSION')
         print(result)
 
+        if result is not None:
+            await sio.emit('chatResponse', {"status": "Error", "message": result}, namespace='/trynow', room=sid)
+            return 1
+
         import rasa.model as model
         from rasa.core.agent import Agent
         from rasa.core.tracker_store import MongoTrackerStore
