@@ -959,6 +959,12 @@ class ValidateData:
 
         if len(result) < 1:
             ret_val = ret_val + "Atleast one Story should be defined in the Project \n"
+        else:
+            # get the first story
+            try:
+                print("First story from the result {}".format(result[0]['story'][0]))
+            except IndexError:
+                ret_val = ret_val + "Story {} should have atleast one Intent and Response ".format(result[0]['story_name'])
 
         # Check for count of Entity in project
 
