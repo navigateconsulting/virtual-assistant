@@ -245,6 +245,12 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     unhighlightText('intent_text_' + index);
   }
 
+  disableQuotes(event: any) {
+    if (event.which === 222) {
+      this.new_intent_text = this.new_intent_text.slice(0, -1);
+    }
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
