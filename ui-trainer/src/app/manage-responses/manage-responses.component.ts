@@ -114,8 +114,8 @@ export class ManageResponsesComponent implements OnInit {
         this.showEntityDropdown = true;
       } else {
         this.show_empty_entity_error = true;
-        this.readonly = true;
       }
+      this.readonly = true;
     }
   }
 
