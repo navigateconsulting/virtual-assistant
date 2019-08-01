@@ -1,6 +1,6 @@
 import aiofiles
 import json
-from models import db, DomainsModel, IntentsModel, StoryModel, ResponseModel, EntityModel, CustomActionsModel
+from models import db, DomainsModel, IntentsModel, StoryModel, ResponseModel, EntityModel, CustomActionsModel, ValidateData
 import asyncio
 import os
 import shutil
@@ -19,6 +19,7 @@ class ExportProject:
         self.ResponseModel = ResponseModel()
         self.EntityModel = EntityModel()
         self.CustomActionsModel = CustomActionsModel()
+        self.ValidateData = ValidateData()
         self.project_home = ''
         #self.project_base_path = '../vol_chatbot_data/temp/trainer-sessions/'
         self.project_base_path = ''
@@ -46,8 +47,22 @@ class ExportProject:
             shutil.rmtree(self.project_base_path + sid)
         return 1
 
+    async def validate_project(self, project_id):
+
+        # Check 1
+        # Project should have atleast 1 Intent Response Entity and Story defined.
+        result = await self.ValidateData.validate_data(project_id)
+        return result
+
     async def main(self, sid, project_id, model_path):
         # Invoke Method to start parallel activity
+
+        print("Validating the project data for any issues for project ID {}".format(project_id))
+
+        result = await self.validate_project(project_id)
+
+        if result is not '':
+            return result
         print("Starting export for project  ID {}".format(project_id))
 
         if model_path == 'SESSION':

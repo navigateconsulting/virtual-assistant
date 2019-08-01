@@ -373,7 +373,7 @@ class IntentsModel:
                          "intent_description": json_record['intent_description'], "text_entities": []}
 
         val_res = await db.intents.find_one({"project_id": json_record['project_id'],
-                                             "domain_id": json_record['domain_id'],
+                                             #"domain_id": json_record['domain_id'],
                                              "intent_name": json_record['intent_name']})
 
         if val_res is not None:
@@ -427,7 +427,7 @@ class IntentsModel:
 
         # Check if intent already exists
         val_res = await db.intents.find_one({"project_id": json_record['project_id'],
-                                             "domain_id": json_record['domain_id'],
+                                             #"domain_id": json_record['domain_id'],
                                              "intent_name": json_record['intent_name']})
 
         if val_res is None or val_res['intent_name'] == json_record['intent_name']:
@@ -496,6 +496,14 @@ class IntentsModel:
         object_id = json_record['object_id']
         del json_record['object_id']
 
+        intent_detail = await self.get_intent_details({"object_id": object_id})
+        print("Intent Details count {}".format(intent_detail['text_entities'][0]))
+
+        try:
+            res = intent_detail['text_entities'][1]
+        except IndexError:
+            return {"status": "Error", "message": "Atleast one record should be present for an Intent"}, intent_detail
+
         query = {"_id": ObjectId("{}".format(object_id))}
 
         result = await db.intents.update_one(query, {"$pull": {"text_entities": json_record}})
@@ -530,7 +538,7 @@ class ResponseModel:
                          "response_description": json_record['response_description'], "text_entities": []}
 
         val_res = await db.responses.find_one({"project_id": json_record['project_id'],
-                                               "domain_id": json_record['domain_id'],
+                                               #"domain_id": json_record['domain_id'],
                                                "response_name": json_record['response_name']})
 
         if val_res is not None:
@@ -580,7 +588,7 @@ class ResponseModel:
 
         # Check if Response already exists
         val_res = await db.responses.find_one({"project_id": json_record['project_id'],
-                                               "domain_id": json_record['domain_id'],
+                                               #"domain_id": json_record['domain_id'],
                                                "response_name": json_record['response_name']})
 
         if val_res is None or val_res['response_name'] == json_record['response_name']:
@@ -633,13 +641,19 @@ class ResponseModel:
         object_id = json_record['object_id']
         del json_record['object_id']
 
+        response_detail = await self.get_response_details({"object_id": object_id})
+        try:
+            res = response_detail['text_entities'][1]
+        except IndexError:
+            return {"status": "Error", "message": "Atleast one record should be present for an Response"}, response_detail
+
         query = {"_id": ObjectId("{}".format(object_id))}
 
         result = await db.responses.update_one(query, {"$pull": {"text_entities": json_record['text_entities']}})
         print("Removed row from Intent {}".format(result))
 
-        intent_detail = await self.get_response_details({"object_id": object_id})
-        return {"status": "Success", "message": "Response text Removed "}, intent_detail
+        response_detail = await self.get_response_details({"object_id": object_id})
+        return {"status": "Success", "message": "Response text Removed "}, response_detail
 
 
 # noinspection PyMethodMayBeStatic
@@ -742,14 +756,16 @@ class StoryModel:
         #  broadcast to this room as well
 
         # Get intents
+        # cursor = db.intents.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
 
-        cursor = db.intents.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
+        cursor = db.intents.find({"project_id": json_record['project_id']})
         result_intents = await cursor.to_list(length=1000)
         intents_list = json.loads(dumps(result_intents))
 
         # Get Responses
+        # cursor = db.responses.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
 
-        cursor = db.responses.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
+        cursor = db.responses.find({"project_id": json_record['project_id']})
         result_response = await cursor.to_list(length=1000)
         response_list = json.loads(dumps(result_response))
 
@@ -903,6 +919,89 @@ class EntityModel:
 
         else:
             return {"status": "Error", "message": "Entity Name already exists"}, None
+
+
+class ValidateData:
+    def __int__(self):
+        pass
+
+    async def validate_data(self, project_id):
+        ret_val = ''
+        query = {"project_id": project_id}
+
+        # TODO
+        #  Intent 'intent1' has only 1 training examples! Minimum is 2, training may fail
+        #  Story must have valid data in it
+
+        # Check for count of Intents in project
+
+        cursor = db.intents.find(query)
+        result = await cursor.to_list(length=10)
+        print("Count of intents in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Atleast one Intent should be defined in the Project \n"
+
+        # Check for count of Responses in project
+
+        cursor = db.responses.find(query)
+        result = await cursor.to_list(length=10)
+        print("Count of Responses in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Atleast one Response should be defined in the Project \n"
+
+        # Check for count of Story in project
+
+        cursor = db.stories.find(query)
+        result = await cursor.to_list(length=10)
+        print("Count of Stories in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Atleast one Story should be defined in the Project \n"
+        else:
+            # get the first story
+            try:
+                print("First story from the result {}".format(result[0]['story'][0]))
+            except IndexError:
+                ret_val = ret_val + "Story {} should have atleast one Intent and Response ".format(result[0]['story_name'])
+
+        # Check for count of Entity in project
+
+        cursor = db.entities.find(query)
+        result = await cursor.to_list(length=10)
+        print("Count of entities in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Atleast one Entity should be defined in the Project \n"
+
+        # checks for two stage fallback policy
+        # Check for Negative Intent if its present.
+
+        cursor = db.intents.find({"project_id": project_id, "intent_name": "negative"})
+        result = await cursor.to_list(length=10)
+        print("Count of negative intents in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Intent 'negative' should be defined in the Project \n"
+
+        # check for utter_default
+        cursor = db.responses.find({"project_id": project_id, "response_name": "utter_default"})
+        result = await cursor.to_list(length=10)
+        print("Count of Responses in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Response utter_default should be defined in the Project \n"
+
+        # check for utter_ask_rephrase
+        cursor = db.responses.find({"project_id": project_id, "response_name": "utter_ask_rephrase"})
+        result = await cursor.to_list(length=10)
+        print("Count of Responses in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Response utter_ask_rephrase should be defined in the Project \n"
+
+        return ret_val
 
 
 class CustomActionsModel:
