@@ -29,7 +29,7 @@ export class EditDomainComponent implements OnInit {
       this.dialogRef.close({
         project_id: this.data.projectObjectId,
         object_id: this.data.domainObjectId,
-        domain_name: this.editDomainForm.value.domainName,
+        domain_name: this.data.domainName,
         domain_description: this.editDomainForm.value.domainDescription
       });
     }

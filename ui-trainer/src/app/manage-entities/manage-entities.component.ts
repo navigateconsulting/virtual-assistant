@@ -6,6 +6,7 @@ import { EditEntityComponent } from '../common/modals/edit-entity/edit-entity.co
 import { MatDialog } from '@angular/material';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { NotificationsService } from '../common/services/notifications.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-manage-entities',
@@ -27,6 +28,8 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
 
   @Input() projectObjectId: string;
 
+  private subscription: Subscription = new Subscription();
+
   constructor(public dialog: MatDialog,
               private entities_service: EntitiesDataService,
               public notificationsService: NotificationsService) { }
@@ -44,11 +47,11 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
 
-    this.entities_service.getEntityAlerts().subscribe(entities => {
+    this.subscription.add(this.entities_service.getEntityAlerts().subscribe(entities => {
       this.notificationsService.showToast(entities);
     },
     err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
+    () => console.log('Observer got a complete notification')));
   }
 
   addEntity(event: MatChipInputEvent): void {
@@ -108,6 +111,6 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+    this.subscription.unsubscribe();
   }
 }

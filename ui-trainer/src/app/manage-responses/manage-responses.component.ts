@@ -1,17 +1,18 @@
-import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, HostListener, OnDestroy } from '@angular/core';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { NotificationsService } from '../common/services/notifications.service';
 import { constant } from '../../environments/constants';
 import { MatInput } from '@angular/material/input';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-manage-responses',
   templateUrl: './manage-responses.component.html',
   styleUrls: ['./manage-responses.component.scss']
 })
-export class ManageResponsesComponent implements OnInit {
+export class ManageResponsesComponent implements OnInit, OnDestroy {
 
   text_entities: Array<string>;
   text_entities_backup: any;
@@ -22,6 +23,8 @@ export class ManageResponsesComponent implements OnInit {
   show_empty_entity_error = false;
   readonly = false;
   currentResponse: any;
+
+  private subscription: Subscription = new Subscription();
 
   @Input() responseObjectId: string;
   @Input() projectObjectId: string;
@@ -59,11 +62,11 @@ export class ManageResponsesComponent implements OnInit {
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
 
-    this.webSocketService.getResponseDetailsAlerts().subscribe(intent_details => {
+    this.subscription.add(this.webSocketService.getResponseDetailsAlerts().subscribe(intent_details => {
       this.notificationsService.showToast(intent_details);
     },
     err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
+    () => console.log('Observer got a complete notification')));
   }
 
   addResponseTextElement(event: any) {
@@ -134,6 +137,10 @@ export class ManageResponsesComponent implements OnInit {
       this.readonly = false;
       this.show_empty_entity_error = false;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
 }
