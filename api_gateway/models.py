@@ -991,7 +991,7 @@ class ValidateData:
         print("Count of Responses in Project {}".format(len(result)))
 
         if len(result) < 1:
-            ret_val = ret_val + "Response utter_default should be defined in the Project \n"
+            ret_val = ret_val + "Response default should be defined in the Project \n"
 
         # check for utter_ask_rephrase
         cursor = db.responses.find({"project_id": project_id, "response_name": "utter_ask_rephrase"})
@@ -999,7 +999,7 @@ class ValidateData:
         print("Count of Responses in Project {}".format(len(result)))
 
         if len(result) < 1:
-            ret_val = ret_val + "Response utter_ask_rephrase should be defined in the Project \n"
+            ret_val = ret_val + "Response ask_rephrase should be defined in the Project \n"
 
         return ret_val
 
