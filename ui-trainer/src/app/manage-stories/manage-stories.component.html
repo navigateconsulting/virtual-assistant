@@ -158,12 +158,12 @@
             <hr />
             <div class="row story-buttons-box">
               <div class="col-md-6 text-left add-intent-button">
-                <button  mat-mini-fab class="add-intent" matTooltip="Add Intent" (click)="addIntentResponseDetailsToStory('intent')">
+                <button  mat-mini-fab class="add-intent" matTooltip="Add Intent" (click)="addIntentToStory()">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
               <div class="col-md-6 text-right add-response-button">
-                <button  mat-mini-fab class="add-response" [disabled]="disable_response" matTooltip="Add Response" (click)="addIntentResponseDetailsToStory('response')">
+                <button  mat-mini-fab class="add-response" [disabled]="disable_response" matTooltip="Add Response" (click)="addResponseToStory()">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>

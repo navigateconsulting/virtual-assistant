@@ -495,6 +495,11 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    for (let i = 0; i < this.currentStory['story'].length; i++) {
+      if (this.currentStory['story'][i]['key'] === '') {
+        this.removeIntentResponseFromStory(i, this.currentStory['story'][i]);
+      }
+    }
     this.currentStory = undefined;
   }
 }

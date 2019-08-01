@@ -98,8 +98,13 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
 
   addIntentTextElement(event: any) {
     if (this.new_intent_text.trim() !== '') {
-      // tslint:disable-next-line: max-line-length
-      this.webSocketService.createIntentText({object_id: this.intentObjectId, text: this.new_intent_text, entities: []}, 'intent_' + this.intentObjectId);
+      const checkPrevEntityValue = this.checkDuplicateIntentTextValue(this.new_intent_text);
+      if (!checkPrevEntityValue) {
+        // tslint:disable-next-line: max-line-length
+        this.webSocketService.createIntentText({object_id: this.intentObjectId, text: this.new_intent_text, entities: []}, 'intent_' + this.intentObjectId);
+      } else {
+        this.notificationsService.showToast({status: 'Error', message: 'Intent Text Already Exists'});
+      }
       this.new_intent_text = '';
       if (event.which === 13) {
         event.preventDefault();
@@ -120,10 +125,8 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
 
   mouseUpFunction(event: any, intent_text_index: number, intent_text: string, intent_text_entities: Array<string>) {
     this.entityValue = selectText(event);
-    console.log(this.text_entities);
     const checkEntityValue = this.checkEntityValue(this.entity_value);
     const checkPrevEntityValue = this.checkPrevEntityValue(intent_text_index, this.entityValue);
-    console.log(checkPrevEntityValue);
     if (!checkPrevEntityValue) {
       if (this.entity_value !== '' && checkEntityValue) {
         this.show_invalid_entity_error = false;
@@ -207,6 +210,19 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
       }
     })[0];
     if (check_prev_entity_value === undefined) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  checkDuplicateIntentTextValue(intent_text: string) {
+    const check_duplicate_intent_text_value = this.text_entities.filter((value) => {
+      if (value['text'] === intent_text) {
+        return value;
+      }
+    })[0];
+    if (check_duplicate_intent_text_value === undefined) {
       return false;
     } else {
       return true;
