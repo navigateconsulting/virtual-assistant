@@ -41,7 +41,7 @@
           <div class="col-md-9 no-padding">
             <span>
               <mat-form-field class="input-full-width">
-                <input matInput [(ngModel)]="userChatMessage" placeholder="Start typing a message" (keydown.enter)="sendChat()">
+                <input matInput [(ngModel)]="userChatMessage" placeholder="Start typing a message" autocomplete="off" (keydown.enter)="sendChat()">
               </mat-form-field>
             </span>
           </div>
