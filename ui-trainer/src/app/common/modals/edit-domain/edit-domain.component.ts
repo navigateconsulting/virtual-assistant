@@ -18,7 +18,7 @@ export class EditDomainComponent implements OnInit {
 
   ngOnInit() {
     this.editDomainForm = new FormGroup({
-      domainName: new FormControl(this.data.domainName, Validators.required),
+      domainName: new FormControl({value: this.data.domainName, disabled: true}, Validators.required),
       domainDescription: new FormControl(this.data.domainDescription, Validators.required)
     });
     this.domainNameInput.focus();
