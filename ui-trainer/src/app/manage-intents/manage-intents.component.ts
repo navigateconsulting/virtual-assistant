@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, ViewEncapsulation, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { MatTableDataSource, MatAutocompleteModule, MatAutocomplete } from '@angular/material';
 import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
-import { Observable, observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ChooseEntityComponent } from '../common/modals/choose-entity/choose-entity.component';
@@ -33,6 +33,8 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   entityfilteredOptions: Observable<string[]>;
   new_intent_text: string;
   show_invalid_entity_error = false;
+
+  private subscription: Subscription = new Subscription();
 
   constructor(public dialog: MatDialog,
               private entities_service: EntitiesDataService,
@@ -75,11 +77,11 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
 
-    this.webSocketService.getIntentDetailsAlerts().subscribe(intent_details => {
+    this.subscription.add(this.webSocketService.getIntentDetailsAlerts().subscribe(intent_details => {
       this.notificationsService.showToast(intent_details);
     },
     err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
+    () => console.log('Observer got a complete notification')));
   }
 
   applyMapFilter(filterValue: string) {
@@ -243,5 +245,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     unhighlightText('intent_text_' + index);
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 }
