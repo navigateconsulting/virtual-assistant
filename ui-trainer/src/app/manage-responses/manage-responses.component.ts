@@ -119,6 +119,8 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
         this.show_empty_entity_error = true;
       }
       this.readonly = true;
+    } else if (event.which === 222) {
+      this.new_response_text = this.new_response_text.slice(0, -1);
     }
   }
 

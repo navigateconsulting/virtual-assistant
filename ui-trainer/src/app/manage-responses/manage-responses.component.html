@@ -9,7 +9,7 @@
     <div class="col-md-6">
       <mat-form-field class="example-form-field" appearance="outline">
         <mat-label>New Response Text</mat-label>
-        <textarea matInput type="text" [(ngModel)]="new_response_text" (keyup)="populateEntities($event)" [readonly]="readonly" (keydown.enter)="addResponseTextElement($event)" #responseText="matInput"></textarea>
+        <textarea matInput type="text" [(ngModel)]="new_response_text" (keyup)="populateEntities($event)" onPaste="return false" [readonly]="readonly" (keydown.enter)="addResponseTextElement($event)" #responseText="matInput"></textarea>
       </mat-form-field>
       <div *ngIf="showEntityDropdown===true" class="relative">
         <mat-card>
