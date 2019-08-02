@@ -5,9 +5,9 @@ from config import CONFIG
 
 if CONFIG.get('api_gateway', 'LOGGING') == 'TRUE':
     print("--------------------Starting Socketio Connection in Debug Mode --------------------------")
-    sio = socketio.AsyncServer(async_mode='aiohttp', logger=True, engineio_logger=True, ping_timeout=600000, ping_interval=60000 )
+    sio = socketio.AsyncServer(async_mode='aiohttp', logger=True, engineio_logger=True, ping_timeout=60000000, ping_interval=6000000 )
 else:
-    sio = socketio.AsyncServer(async_mode='aiohttp', logger=False, engineio_logger=False, ping_timeout=600000, ping_interval= 60000)
+    sio = socketio.AsyncServer(async_mode='aiohttp', logger=False, engineio_logger=False, ping_timeout=60000000, ping_interval= 6000000)
 
 app = web.Application()
 sio.attach(app)
