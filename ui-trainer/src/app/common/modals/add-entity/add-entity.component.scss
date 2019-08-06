@@ -30,8 +30,13 @@ mat-form-field {
 .entity-values > * {
     width: 100%;
 }
-.entity-save-button{
+.entity-save-button {
     background-color: $primary-color-3;
+    color: white;
+    font-weight: bold;
+}
+.entity-save-button-black {
+    background-color: $primary-color-8;
     color: white;
     font-weight: bold;
 }

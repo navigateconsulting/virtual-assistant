@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-edit-entity',
@@ -16,11 +17,13 @@ export class EditEntityComponent implements OnInit {
   min_value: number;
   max_value: number;
   entityObjectId: string;
+  appSource: string;
 
   constructor(public dialogRef: MatDialogRef<EditEntityComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
+    this.appSource = environment.app_source;
     this.entity = this.data.entity;
     this.entityObjectId = this.data.entity._id.$oid;
     this.entityName = this.data.entity.entity_name;

@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-copy-project',
@@ -12,11 +13,13 @@ export class CopyProjectComponent implements OnInit {
 
   copyProjectForm: FormGroup;
   @ViewChild('projectName') projectNameInput: MatInput;
+  appSource: string;
 
   constructor(public dialogRef: MatDialogRef<CopyProjectComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
+    this.appSource = environment.app_source;
     this.copyProjectForm = new FormGroup({
       projectName: new FormControl('', Validators.required),
       projectDescription: new FormControl('', Validators.required)

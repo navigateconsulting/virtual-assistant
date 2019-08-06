@@ -66,13 +66,18 @@
     line-height: $breadcrumb-line-height;
 }
 .show-entity-chip {
-    background-color: $primary-color-4;
     color: white;
     font-weight: bold;
     position: absolute;
     top: 41%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+.show-entity-chip-color {
+    background-color: $primary-color-4;
+}
+.show-entity-chip-black {
+    background-image: $global_gradient_black;
 }
 .entities-button {
     background-color: $primary-color-3;

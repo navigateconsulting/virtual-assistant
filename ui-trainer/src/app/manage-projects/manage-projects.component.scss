@@ -85,7 +85,9 @@ table {
     position: sticky;
     z-index: 10;
 }
-.add-project-button {
-    // background-color: #19D2CC;
+.add-project-button-color {
     background-image: $global_gradient;
+}
+.add-project-button-black {
+    background-image: $global_gradient_black;
 }

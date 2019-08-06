@@ -1,4 +1,4 @@
-<div class="row header">
+<div class="row header" [ngClass]="(appSource==='open')?'header-black':'header-color'">
   <div class="col-md-10">
     <div class="eva-logo-div">
       <div class="logo-div" [routerLink]="'/home/trainer'">
@@ -7,7 +7,7 @@
     </div>
   </div>
   <div class="col-md-2">
-    <div class="row">
+    <div *ngIf="appSource==='enterprise'" class="row">
       <div class="col-md-3 header-buttons"></div>
       <div class="col-md-3 header-buttons">
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
@@ -19,6 +19,16 @@
       </div>
       <div class="col-md-3 header-buttons">
         <mat-icon class="header-icons" svgIcon="profile"></mat-icon>
+      </div>
+    </div>
+    <div *ngIf="appSource==='open'" class="row">
+      <div class="col-md-3 header-buttons"></div>
+      <div class="col-md-3 header-buttons"></div>
+      <div class="col-md-3 header-buttons"></div>
+      <div class="col-md-3 header-buttons">
+        <button mat-icon-button [matMenuTriggerFor]="menuBlack">
+          <mat-icon class="header-icons" svgIcon="menu-black"></mat-icon>
+        </button>
       </div>
     </div>
   </div>
@@ -39,6 +49,26 @@
     </button>
     <button mat-menu-item [routerLink]="'/home/deploy'">
       <mat-icon svgIcon="deploy"></mat-icon>
+      <span>Deploy</span>
+    </button>
+  </div> 
+</mat-menu>
+<mat-menu #menuBlack="matMenu" xPosition="before">
+  <button *ngIf="showTrainerOrDeploy==='trainer'" [routerLink]="'/home/trainer'" mat-menu-item>
+    <mat-icon svgIcon="trainer-black"></mat-icon>
+    <span>Trainer</span>
+  </button>
+  <button *ngIf="showTrainerOrDeploy==='deploy'" [routerLink]="'/home/deploy'" mat-menu-item>
+    <mat-icon svgIcon="deploy-black"></mat-icon>
+    <span>Deploy</span>
+  </button>
+  <div *ngIf="showTrainerOrDeploy==='both'">
+    <button mat-menu-item [routerLink]="'/home/trainer'">
+      <mat-icon svgIcon="trainer-black"></mat-icon>
+      <span>Trainer</span>
+    </button>
+    <button mat-menu-item [routerLink]="'/home/deploy'">
+      <mat-icon svgIcon="deploy-black"></mat-icon>
       <span>Deploy</span>
     </button>
   </div> 

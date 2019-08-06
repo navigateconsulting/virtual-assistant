@@ -66,10 +66,15 @@ table {
     position: sticky;
     z-index: 10;
 }
-.add-irs-button {
+.add-irs-button-color {
     background-image: $global_gradient;
 }
-
+.add-irs-button-black {
+    background-image: $global_gradient_black;
+}
+.tabs-black md-ink-bar {
+    background-color: $primary-color-5;
+}
 @media screen and (min-height: 900px) and (max-height: 1080px) {
     .irs-container {
         height: 850px;

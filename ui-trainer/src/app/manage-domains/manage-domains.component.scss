@@ -69,6 +69,9 @@
   height: 1rem;
   background: white;
 }
-.add-domain-button {
+.add-domain-button-color {
   background-image: $global_gradient;
+}
+.add-domain-button-black {
+  background-image: $global_gradient_black;
 }

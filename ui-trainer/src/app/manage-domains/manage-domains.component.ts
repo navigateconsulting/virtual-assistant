@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDomainComponent } from '../common/modals/add-domain/add-domain.component';
 import { DeleteDomainComponent } from '../common/modals/delete-domain/delete-domain.component';
 import { EditDomainComponent } from '../common/modals/edit-domain/edit-domain.component';
 import { NotificationsService } from '../common/services/notifications.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-manage-domains',
@@ -43,12 +44,14 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   connection: any;
   domains_json: Array<object>;
   domains_json_backup: any;
+  appSource: string;
 
   @Input() projectObjectId: string;
 
   @Output() selectedDomain = new EventEmitter<string>();
 
   ngOnInit() {
+    this.appSource = environment.app_source;
     this.domains_json = new Array<object>();
     this.getDomains();
   }

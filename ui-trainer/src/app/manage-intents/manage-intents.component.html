@@ -46,16 +46,18 @@
             <div class="row">
               <div class="col-md-10">
                 <span class="intent-text" id="intent_text_{{i}}" (mouseup)="mouseUpFunction($event, i, text_entity.text, text_entity.entities)">{{text_entity.text}}</span>
-                <span matBadge="{{text_entity.entities.length}}" matBadgeColor="#0968B5" matBadgeOverlap="false" class="mat-body-strong"></span>
+                <span matBadge="{{text_entity.entities.length}}" matBadgeColor="#FFFFFF" matBadgeOverlap="false" class="mat-body-strong"></span>
               </div>
               <div class="col-md-1 text-right">
                 <button mat-icon-button (click)="removeIntentTextElement(text_entity.text, text_entity.entities)">
-                  <mat-icon svgIcon="delete"></mat-icon>
+                  <mat-icon *ngIf="appSource==='enterprise'" svgIcon="delete"></mat-icon>
+                  <mat-icon *ngIf="appSource==='open'" svgIcon="delete-black"></mat-icon>
                 </button>
               </div>
               <div class="col-md-1 text-right">
                 <button class="btn btn-link" data-toggle="collapse" aria-expanded="false" attr.data-target="#intentText_{{i}}" aria-expanded="true" attr.aria-controls="intentText_{{i}}">
-                  <mat-icon>keyboard_arrow_down</mat-icon>
+                  <mat-icon *ngIf="appSource==='enterprise'" class="key_arrow_down">keyboard_arrow_down</mat-icon>
+                  <mat-icon *ngIf="appSource==='open'" class="key_arrow_down_black">keyboard_arrow_down</mat-icon>
                 </button>
               </div>
             </div>
@@ -78,7 +80,8 @@
                     <td>{{entity.value}}</td>
                     <td>
                       <button mat-icon-button (mouseenter)="unhighlightTextEntity(i)" (mouseleave)="highlightTextEntity(entity.start,entity.end,i)" (click)="removeEntityElement(i, text_entity.text, text_entity.entities, j)">
-                        <mat-icon svgIcon="delete"></mat-icon>
+                        <mat-icon *ngIf="appSource==='enterprise'" svgIcon="delete"></mat-icon>
+                        <mat-icon *ngIf="appSource==='open'" svgIcon="delete-black"></mat-icon>
                       </button>
                     </td>
                   </tr>

@@ -6,6 +6,7 @@ import { NotificationsService } from '../common/services/notifications.service';
 import { constant } from '../../environments/constants';
 import { MatInput } from '@angular/material/input';
 import { Subscription } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-manage-responses',
@@ -23,6 +24,7 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
   show_empty_entity_error = false;
   readonly = false;
   currentResponse: any;
+  appSource: string;
 
   private subscription: Subscription = new Subscription();
 
@@ -37,6 +39,7 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
               public notificationsService: NotificationsService) { }
 
   ngOnInit() {
+    this.appSource = environment.app_source;
     this.text_entities = new Array<string>();
     this.getEntities();
     this.getResponseDetails();

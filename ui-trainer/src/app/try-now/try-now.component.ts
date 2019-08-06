@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
+import { environment } from '../../environments/environment';
 import { TryNowLoadService } from '../common/services/try-now-load.service';
 import { ModelErrorService } from '../common/services/model-error.service';
 
@@ -33,6 +34,7 @@ export class TryNowComponent implements OnInit, OnDestroy {
   predictions: any;
   showUserPredictionsDetails: boolean;
   slots: any;
+  appSource: string;
 
   constructor(public webSocketService: WebSocketService,
               public sharedDataService: SharedDataService,
@@ -40,6 +42,7 @@ export class TryNowComponent implements OnInit, OnDestroy {
               public tryNowLoadService: TryNowLoadService) { }
 
   ngOnInit() {
+    this.appSource = environment.app_source;
     this.projectObjectId = this.sharedDataService.getSharedData('projectObjectId', constant.MODULE_COMMON);
     this.tryNowLoadService.spin$.next(true);
     this.showUserBotCardDetails = false;

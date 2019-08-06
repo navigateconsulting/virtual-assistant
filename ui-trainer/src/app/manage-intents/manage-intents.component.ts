@@ -8,6 +8,7 @@ import { ChooseEntityComponent } from '../common/modals/choose-entity/choose-ent
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { SharedDataService } from '../common/services/shared-data.service';
+import { environment } from '../../environments/environment';
 import { constant } from '../../environments/constants';
 import { NotificationsService } from '../common/services/notifications.service';
 
@@ -33,6 +34,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   entityfilteredOptions: Observable<string[]>;
   new_intent_text: string;
   show_invalid_entity_error = false;
+  appSource: string;
 
   private subscription: Subscription = new Subscription();
 
@@ -49,6 +51,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   @Input() projectObjectId: string;
 
   ngOnInit() {
+    this.appSource = environment.app_source;
     this.text_entities = new Array<object>();
     this.getEntities();
     this.getIntentDetails();
