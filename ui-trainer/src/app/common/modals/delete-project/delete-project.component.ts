@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-delete-project',
@@ -8,9 +9,12 @@ import { MatDialogRef } from '@angular/material';
 })
 export class DeleteProjectComponent implements OnInit {
 
+  appSource: string;
+
   constructor(public dialogRef: MatDialogRef<DeleteProjectComponent>) { }
 
   ngOnInit() {
+    this.appSource = environment.app_source;
   }
 
   confirmDelete() {

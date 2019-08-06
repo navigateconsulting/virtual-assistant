@@ -4,9 +4,14 @@
     cursor: pointer;
 }
 .header {
-    background-image: $global_gradient;
     overflow: hidden;
     height: 50px;
+}
+.header-black {
+    background-image: $global_gradient_black;
+}
+.header-color {
+    background-image: $global_gradient;
 }
 .eva-logo-div {
     width: 10.5%;

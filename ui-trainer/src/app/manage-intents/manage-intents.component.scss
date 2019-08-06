@@ -35,6 +35,12 @@ table {
 .card-header {
   background-color: white;
 }
+.key_arrow_down {
+  color: $primary-color-3;
+}
+.key_arrow_down_black {
+  color: $primary-color-5;
+}
 @media screen and (min-height: 900px) and (max-height: 1080px) {
   #accordion {
       height: 720px;

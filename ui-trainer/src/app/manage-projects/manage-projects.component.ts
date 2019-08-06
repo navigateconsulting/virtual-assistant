@@ -9,7 +9,7 @@ import { DeleteProjectComponent } from '../common/modals/delete-project/delete-p
 import { CopyProjectComponent } from '../common/modals/copy-project/copy-project.component';
 import { NotificationsService } from '../common/services/notifications.service';
 import { SharedDataService } from '../common/services/shared-data.service';
-import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 import { constant } from '../../environments/constants';
 
 @Component({
@@ -40,10 +40,12 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   openIntentORStoryORResponseFile: string;
   propertyPanel: string;
   projects_json: Array<object>;
+  appSource: string;
 
   @Output() selectedProject = new EventEmitter<object>();
 
   ngOnInit() {
+    this.appSource = environment.app_source;
     this.projects_json = new Array<object>();
     this.getProjects();
     this.paginator.pageIndex = +localStorage.getItem('projects_pageIndex');

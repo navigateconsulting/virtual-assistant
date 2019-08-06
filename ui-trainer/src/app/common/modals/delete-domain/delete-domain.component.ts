@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-delete-domain',
@@ -8,9 +9,12 @@ import { MatDialogRef } from '@angular/material';
 })
 export class DeleteDomainComponent implements OnInit {
 
+  appSource: string;
+
   constructor(public dialogRef: MatDialogRef<DeleteDomainComponent>) { }
 
   ngOnInit() {
+    this.appSource = environment.app_source;
   }
 
   confirmDelete() {

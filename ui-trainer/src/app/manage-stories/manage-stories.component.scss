@@ -101,12 +101,17 @@
     margin-top: -40px;
 }
 
-.add-intent {
+.add-intent-color {
     background-color: $primary-color-1;
 }
-
-.add-response {
+.add-intent-black {
+    background-color: $primary-color-7;
+}
+.add-response-color {
     background-color: $primary-color-4;
+}
+.add-response-black {
+    background-color: $primary-color-5;
 }
 
 .intent-textbox {
@@ -161,11 +166,24 @@
 .intent-color-button {
     background-color: $primary-color-1;
 }
+.intent-black-button {
+    background-color: #FFFFFF;
+    color: $primary-color-7;
+}
 .response-color-button {
     background-color: $primary-color-4;
 }
+.response-black-button {
+    background-color: #FFFFFF;
+    color: $primary-color-6;
+}
 .ir-color-button {
     background-color: $primary-color-3;
+}
+.ir-black-button {
+    background-color: #FFFFFF;
+    color: $primary-color-7;
+    box-shadow: none;
 }
 .accordion-intent-class, .accordion-response-class {
     width: 100%;

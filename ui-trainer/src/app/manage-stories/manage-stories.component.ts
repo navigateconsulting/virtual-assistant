@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable, of, Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { AddEntityValueComponent } from '../common/modals/add-entity-value/add-e
 import { WebSocketService } from '../common/services/web-socket.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
+import { environment } from '../../environments/environment';
 
 declare var collapseClose: Function;
 declare var adjustScroll: Function;
@@ -62,6 +63,7 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
   on_intent_response_entity: boolean;
 
   currentStory: any;
+  appSource: string;
   @Input() projectObjectId: string;
   @Input() domainObjectId: string;
   @Input() storyObjectId: string;
@@ -75,6 +77,7 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
               public sharedDataService: SharedDataService) { }
 
   ngOnInit() {
+    this.appSource = environment.app_source;
     const intents_responses: FormArray = new FormArray([]);
 
     this.storyForm = this.fb.group({

@@ -1,6 +1,6 @@
 .place_div_center {
 	width: 300px;
-	height: 150px;
+	height: 300px;
 	position: absolute;
 	top:0;
 	bottom: 0;
@@ -8,6 +8,10 @@
 	right: 0;
     margin: auto;
     text-align: -webkit-center;
+}
+.trainer-loader {
+	width: 200px;
+	height: 200px;
 }
 .spinner-text {
     margin-top: 5%;

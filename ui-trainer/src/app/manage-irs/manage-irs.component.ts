@@ -15,6 +15,7 @@ import { NotificationsService } from '../common/services/notifications.service';
 import { Subscription } from 'rxjs';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-manage-irs',
@@ -47,8 +48,10 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   stories_json: Array<object>;
   storiesDataSource: any;
   activeTabIndex: any;
+  appSource: string;
 
   ngOnInit() {
+    this.appSource = environment.app_source;
     this.intents_json = new Array<object>();
     this.responses_json = new Array<object>();
     this.stories_json = new Array<object>();

@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-edit-story',
@@ -10,11 +11,13 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 export class EditStoryComponent implements OnInit {
 
   editStoryForm: FormGroup;
+  appSource: string;
 
   constructor(public dialogRef: MatDialogRef<EditStoryComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
+    this.appSource = environment.app_source;
     this.editStoryForm = new FormGroup({
       storyName: new FormControl({value: this.data.storyName, disabled: true}, Validators.required),
       storyDescription: new FormControl(this.data.storyDescription, Validators.required)
