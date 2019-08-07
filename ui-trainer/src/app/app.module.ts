@@ -98,7 +98,6 @@ import { TryNowLoadComponent } from './try-now-load/try-now-load.component';
     SpinnerComponent,
     ModelErrorComponent,
     TryNowLoadComponent,
-    KaratComponent,
   ],
   entryComponents: [
     AddEntityComponent,
