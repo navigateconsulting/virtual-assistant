@@ -1,8 +1,15 @@
 <div class="row header" [ngClass]="(appSource==='open')?'header-black':'header-color'">
   <div class="col-md-10">
-    <div class="eva-logo-div">
+    <div *ngIf="appSource==='enterprise'" class="eva-logo-div">
       <div class="logo-div" [routerLink]="'/home/trainer'">
-        <img class="side_header_logo_img" src="/assets/images/logo.png">
+        <img class="side_header_logo_img" src="/assets/images/nav-symbol.png">
+        <span class="header-text">Enterprise&nbsp;Virtual&nbsp;Assistant</span>
+      </div>
+    </div>
+    <div *ngIf="appSource==='open'" class="eva-logo-div">
+      <div class="logo-div" [routerLink]="'/home/trainer'">
+        <img class="side_header_logo_img" src="/assets/images/nav-symbol.png">
+        <span class="header-text">Virtual&nbsp;Assistant</span>
       </div>
     </div>
   </div>
