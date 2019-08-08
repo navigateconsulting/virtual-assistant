@@ -10,6 +10,18 @@
 	right: 0;
 	margin: auto;
 }
+
+.try-now-frame {
+    border-top: 1px solid #DDD;
+    height: 92vh;
+}
+.end-try-now {
+    padding: 0.2%;
+    margin-left: -20px;
+}
+.end-try-now mat-icon{
+    cursor: pointer;
+}
   
 /* Control the left side */
 .left {
