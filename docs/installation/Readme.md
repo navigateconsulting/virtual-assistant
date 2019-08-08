@@ -1,5 +1,41 @@
 # Detailed Install Instructions 
 
+## Applications details 
+
+
+![Virtual Assistant](../assets/Virtual%20Assistant%20Arch.jpg)
+ 
+ 
+###UI Component
+ UI Component is developed using Angular 8, and would be supported on all browsers compatible with Angular 8.
+ List of supported browsers at this [link](https://angular.io/guide/browser-support)
+ 
+ Note : As of now IE is not supported although its listed as supported for Angular 8.
+ 
+### api gateway
+ API gateway is a python 3.7 backend, which communicates with UI and database to serve the application. 
+ it uses socketio for realtime data exchange between backend and UI.
+ 
+ Application does not provide any authentication methods or role based access control.
+ 
+### MongoDB 
+ Application would create a new database called 'eva_platform' and create collections in that database to store training data.
+ This database can be accessed at port 27017 to view the database and its collections. 
+ 
+ Note : We do not recommend updating collections directly as this might case data inconsistency
+ 
+### rasa 
+ This is a rasa container, as published by rasa in docker hub. We pull rasa with latest tag 
+ from docker hub this would ensure the platform gets latest version of rasa. Volumes are also bind-mounted to this container
+ so that training data and model can be persisted on the volume.
+ 
+### rasa-sdk 
+this is the rasa actions server. Any connector written for rasa actions server can be 
+deployed in actions server and can be used as documented in rasa. 
+Custom actions needs to be placed in "vol_chatbot_data/rasa/server/actions" folder. If any new 
+code is deployed for that to take effect rasa actions server container would need to be restarted.         
+    
+
 ## Requirements
 
 VA has been built using docker containerization hence docker and docker-compose would be required to launch the application
@@ -63,38 +99,3 @@ Note : We do not recommend to change bind-mount volumes attached to docker conta
 in future releases we would bring in flexibility to define data store locations etc. 
 
 
-## Applications stack details 
-
-
-![Virtual Assistant](../assets/Virtual%20Assistant%20Arch.jpg)
- 
- 
-###UI Component
- UI Component is developed using Angular 8, and would be supported on all browsers compatible with Angular 8.
- List of supported browsers at this [link](https://angular.io/guide/browser-support)
- 
- Note : As of now IE is not supported although its listed as supported for Angular 8.
- 
-### api gateway
- API gateway is a python 3.7 backend, which communicates with UI and database to serve the application. 
- it uses socketio for realtime data exchange between backend and UI.
- 
- Application does not provide any authentication methods or role based access control.
- 
-### MongoDB 
- Application would create a new database called 'eva_platform' and create collections in that database to store training data.
- This database can be accessed at port 27017 to view the database and its collections. 
- 
- Note : We do not recommend updating collections directly as this might case data inconsistency
- 
-### rasa 
- This is a rasa container, as published by rasa in docker hub. We pull rasa with latest tag 
- from docker hub this would ensure the platform gets latest version of rasa. Volumes are also bind-mounted to this container
- so that training data and model can be persisted on the volume.
- 
-### rasa-sdk 
-this is the rasa actions server. Any connector written for rasa actions server can be 
-deployed in actions server and can be used as documented in rasa. 
-Custom actions needs to be placed in "vol_chatbot_data/rasa/server/actions" folder. If any new 
-code is deployed for that to take effect rasa actions server container would need to be restarted.         
-    
