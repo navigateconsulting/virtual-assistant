@@ -8,17 +8,33 @@ import { ApplicationsComponent } from '../app/applications/applications.componen
 import { TryNowComponent } from '../app/try-now/try-now.component';
 import { DeployComponent } from '../app/deploy/deploy.component';
 
-const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'applications', component: ApplicationsComponent },
-  { path: 'home', component: HomeComponent, children: [
-    { path: 'trainer', component: ManageTrainerComponent, children: [
-      { path: 'try-now', component: TryNowComponent },
+import { environment } from '../environments/environment';
+
+let routes: Routes = [];
+
+if (environment.app_source === 'enterprise') {
+  routes = [
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: 'login', component: LoginComponent },
+    { path: 'applications', component: ApplicationsComponent },
+    { path: 'home', component: HomeComponent, children: [
+      { path: 'trainer', component: ManageTrainerComponent, children: [
+        { path: 'try-now', component: TryNowComponent },
+      ] },
+      { path: 'deploy', component: DeployComponent },
     ] },
-    { path: 'deploy', component: DeployComponent },
-  ] },
-];
+  ];
+} else if (environment.app_source === 'open') {
+  routes = [
+    { path: '', redirectTo: 'home/trainer', pathMatch: 'full' },
+    { path: 'home', component: HomeComponent, children: [
+      { path: 'trainer', component: ManageTrainerComponent, children: [
+        { path: 'try-now', component: TryNowComponent },
+      ] },
+      { path: 'deploy', component: DeployComponent },
+    ] },
+  ];
+}
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
