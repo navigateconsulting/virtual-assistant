@@ -1,11 +1,5 @@
-
-<div style="text-align:center; align-content: center; width: 100%;">
-  <img src="https://www.navigateconsulting.se/wp-content/uploads/2018/08/logo.png" height="300" width="500">
-  <p><h2>Navigate's Virtual Assistant Trainer </h2></p>
-</div>
-
-<div align="center">
-  <img src="https://www.navigateconsulting.se/wp-content/uploads/2018/08/logo.png" style="width:300px;height:100px;">
+<div align="center" >
+  <img src="https://www.navigateconsulting.se/wp-content/uploads/2018/08/logo.png">
   <p><h2>Navigate's Virtual Assistant Trainer </h2></p>
 </div>
 
