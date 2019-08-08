@@ -1,0 +1,35 @@
+version: '3.0'
+
+services:
+
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+      - MONGODB_USER="eva"
+      - MONGODB_PASS="evapass"
+    volumes:
+      - ./vol_chatbot_data/database/db:/data/db
+    ports:
+      - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
+
+  api_gateway:
+    container_name: api_gateway
+    volumes:
+      - ./vol_chatbot_data:/vol_chatbot_data
+    build: './api_gateway'
+    ports:
+      - "8089:8089"
+    depends_on:
+      - mongodb
+
+  ui_trainer:
+    container_name: ui_trainer
+    build: './ui-trainer'
+    ports:
+      - "8080:80"
+    depends_on:
+      - api_gateway
