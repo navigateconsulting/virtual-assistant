@@ -8,13 +8,13 @@
     height: 50px;
 }
 .header-black {
-    background-image: $global_gradient_black;
+    background-image: $global_gradient_header;
 }
 .header-color {
     background-image: $global_gradient;
 }
 .eva-logo-div {
-    width: 10.5%;
+    width: 40%;
     height: 100%;
 }
 .logo-div {
@@ -24,11 +24,16 @@
 }
 .logo-div img {
     height: 35px;
-    width: 77px;
+    width: 60px;
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 11%;
     transform: translate(-50%, -50%);
+}
+.header-text {
+    color: white; 
+    font-size: 33px;
+    margin-left: 90px;
 }
 .header-buttons {
     padding: 0;
