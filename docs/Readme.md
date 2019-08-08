@@ -3,8 +3,7 @@
 
 
 ## 1. Installation 
-
+   Installation instructions [click here](installation/Readme.md)
 
 ## 2. Usage
-    Usage instrunctions : [click here](usage/Readme.md)
-    Read here: [Some other wiki page](path/to/some-other-wiki-page)
+   Usage instructions : [click here](usage/Readme.md)
