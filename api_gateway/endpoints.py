@@ -5,6 +5,7 @@ from config import CONFIG
 import os
 import json
 import sys
+import time
 
 
 EntityModel = EntityModel()
@@ -525,8 +526,11 @@ class TryNow(socketio.AsyncNamespace):
         training_files = base_path + training_files
         domain = base_path + domain
         output = base_path + output
+        start_time = time.time()
         try:
             model_path = await train_async(domain, config, [training_files], output, kwargs={"augmentation_factor": 10})
+            end_time = time.time()
+            print("it took this long to run: {}".format(end_time - start_time))
             unpacked = model.get_model(model_path)
             domain = Domain.load(domain)
             _tracker_store = MongoTrackerStore(domain=domain,
