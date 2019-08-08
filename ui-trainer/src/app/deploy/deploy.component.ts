@@ -14,6 +14,7 @@ import { SharedDataService } from '../common/services/shared-data.service';
 import { DeployModelComponent } from '../common/modals/deploy-model/deploy-model.component';
 import { HeaderService } from '../common/services/header.service';
 
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-deploy',
@@ -23,6 +24,7 @@ import { HeaderService } from '../common/services/header.service';
 export class DeployComponent implements OnInit {
 
   projectModels: any;
+  appSource: string;
 
   constructor(public dialog: MatDialog,
               public headerService: HeaderService,
@@ -38,6 +40,7 @@ export class DeployComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
+    this.appSource = environment.app_source;
     this.headerService.changeHeaderApplication('trainer');
     this.getProjectsForDeploy();
   }

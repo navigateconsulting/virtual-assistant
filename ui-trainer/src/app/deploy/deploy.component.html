@@ -13,7 +13,10 @@
 
           <ng-container matColumnDef="icon">
             <th mat-header-cell *matHeaderCellDef> </th>
-            <td mat-cell *matCellDef="let project"> <mat-icon svgIcon="project">folder</mat-icon> </td>
+            <td mat-cell *matCellDef="let project">
+              <mat-icon *ngIf="appSource==='enterprise'" svgIcon="project"></mat-icon>
+              <mat-icon *ngIf="appSource==='open'" svgIcon="project-black"></mat-icon>
+            </td>
           </ng-container>
         
           <ng-container matColumnDef="project_name">
@@ -38,10 +41,13 @@
 
           <ng-container matColumnDef="deploy">
             <th mat-header-cell *matHeaderCellDef> Deploy </th>
-            <td mat-cell *matCellDef="let project" class="deploy"> <mat-icon svgIcon="deploy" (click)="deployModel(project._id.$oid)"></mat-icon> </td>
+            <td mat-cell *matCellDef="let project" class="deploy">
+              <mat-icon *ngIf="appSource==='enterprise'" svgIcon="deploy" (click)="deployModel(project._id.$oid)"></mat-icon>
+              <mat-icon *ngIf="appSource==='open'" svgIcon="deploy-black" (click)="deployModel(project._id.$oid)"></mat-icon>
+            </td>
           </ng-container>
         
-          <tr mat-header-row *matHeaderRowDef="projectsModelDisplayedColumns; sticky: true"></tr>
+          <tr mat-header-row *matHeaderRowDef="projectsModelDisplayedColumns;"></tr>
           <tr mat-row *matRowDef="let row; columns: projectsModelDisplayedColumns;"></tr>
         </table>
         <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
