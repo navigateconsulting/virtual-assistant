@@ -38,6 +38,7 @@ Clone the repo on local machine and build the docker containers as shown below.
     docker-compose up  
  
 #### Detailed Installation 
+
    For detailed installation instructions please follow [this link](docs/installation/Readme.md)
 
 ## Usage
