@@ -1,7 +1,5 @@
 version: '3.0'
 
-## Docker compose test file for UI Appdcmer
-
 services:
 
   # Server Stack
@@ -25,8 +23,6 @@ services:
     - "./vol_chatbot_data/rasa/server/data:/app/data"
     command:
     - run
-#    - -m
-#    - ./models
     - --endpoints
     - config/endpoints.yml
     - --debug
@@ -73,7 +69,3 @@ services:
       - "8080:80"
     depends_on:
       - api_gateway
-
-
-volumes:
-  skype_keys_vol:
