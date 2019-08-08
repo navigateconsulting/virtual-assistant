@@ -66,7 +66,7 @@ in future releases we would bring in flexibility to define data store locations 
 ## Applications stack details 
 
 
- insert Image here 
+![Virtual Assistant](../assets/Virtual%20Assistant%20Arch.jpg)
  
  
 ###UI Component
