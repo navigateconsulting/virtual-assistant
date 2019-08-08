@@ -6,9 +6,9 @@
 
 Virtual Assistant Trainer.
 
-###UI Component
- UI Component is developed using Angular 7, and would be supported on all browsers compatible with Angular 7.
- List of supported browsers at this [link](https://angular.io/guide/browser-support)
+### UI Component
+UI Component is developed using Angular 7, and would be supported on all browsers compatible with Angular 7.
+List of supported browsers at this [link](https://angular.io/guide/browser-support)
  
  Note : As of now IE is not supported although its listed as supported for Angular 7.
  
