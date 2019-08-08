@@ -5,12 +5,13 @@
 
 ![Virtual Assistant](../assets/Virtual%20Assistant%20Arch.jpg)
  
- 
+
+
 ###UI Component
- UI Component is developed using Angular 8, and would be supported on all browsers compatible with Angular 8.
+ UI Component is developed using Angular 7, and would be supported on all browsers compatible with Angular 7.
  List of supported browsers at this [link](https://angular.io/guide/browser-support)
  
- Note : As of now IE is not supported although its listed as supported for Angular 8.
+ Note : As of now IE is not supported although its listed as supported for Angular 7.
  
 ### api gateway
  API gateway is a python 3.7 backend, which communicates with UI and database to serve the application. 
@@ -65,7 +66,7 @@ Docker containers would be using ports 5055, 5005, 27017, 8080 for VA components
 
 ## Docker-compose files 
 
-The repo contains two docker-compose files. docker-compose.yml and docker-compose.ui.yml. 
+The repo contains two docker-compose files. docker-compose.yml and docker-compose.devel.yml. 
 
 docker-compose.yml would start all platform components, including rasa server , rasa actions server and connectors
 this should be used to build the docker containers for server.
@@ -73,12 +74,12 @@ this should be used to build the docker containers for server.
     docker-compose build
     docker-compose up -d
 
-docker-compose.ui.yml would start only the ui application, api gateway and database. 
+docker-compose.devel.yml would start only the ui application, api gateway and database. 
 Serving infrastructure and connectors would not be started by this compose file. This file can be used to 
 create a development environment for any contributions.      
 
-    docker-compose -f docker-compose.ui.yml build
-    docker-compose -f docker-compose.ui.yml up -d
+    docker-compose -f docker-compose.devel.yml build
+    docker-compose -f docker-compose.devel.yml up -d
     
 To check logs of any container use below command 
 
@@ -96,6 +97,6 @@ vol_chatbot_data/database/db folder contains the mongodb database files. This fo
 application data in case of any issues.
 
 Note : We do not recommend to change bind-mount volumes attached to docker containers as this might break the functionality.
-in future releases we would bring in flexibility to define data store locations etc. 
+In future releases we would bring in flexibility to define data store locations etc. 
 
 
