@@ -1,14 +1,8 @@
 
 <div align="center">
-  <img src="https://www.navigateconsulting.se/wp-content/uploads/2018/08/logo.png">
+  <img src="https://www.navigateconsulting.se/wp-content/uploads/2018/08/logo.png" style="width:500px;height:300px;">
+  <p><h2>Navigate's Virtual Assistant Trainer </h2></p>
 </div>
-
-<div align="center">
-  <h2>Navigate's Virtual Assistant Trainer <h2>
-</div>
-
------------------
-
 
 Virtual Assistant trainer is an open source application to train, deploy and maintain chat bots. VA is built using 
 rasa open source machine learning framework and utilizes rasa nlu and core for developing and deploying chat bots.
