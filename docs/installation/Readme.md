@@ -2,10 +2,9 @@
 
 ## Applications details 
 
-
 ![Virtual Assistant](../assets/Virtual%20Assistant%20Arch.jpg)
- 
 
+Virtual Assistant Trainer.
 
 ###UI Component
  UI Component is developed using Angular 7, and would be supported on all browsers compatible with Angular 7.
