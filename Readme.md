@@ -16,8 +16,34 @@ We would keep updating the code base to support latest versions of rasa.
 
 We intent to support all features provided by rasa framework, in case you find any feature missing please report to us.
 
-## 1. Installation 
-   Installation instructions [click here](installation/Readme.md)
 
-## 2. Usage
-   Usage instructions : [click here](usage/Readme.md)
+## Installation
+
+#### Quick Install
+
+VA uses docker containers to build all application components. 
+
+##### Requirements 
+   - Docker version 18.09 onwards. (not tested on previous versions)
+   - Docker Compose version 1.24 onwards (not tested on previous versions)
+   - Linux Distributions (Windows not supported as of now, tested on ubuntu)
+
+##### Installation
+
+Clone the repo on local machine and build the docker containers as shown below.
+
+    git clone https://github.com/evadigital/eva-platform
+    cd eva-platform
+    docker-compose build
+    docker-compose up  
+ 
+#### Detailed Installation 
+   For detailed installation instructions please follow [this link](docs/installation/Readme.md)
+
+## Usage
+   Usage instructions : [click here](docs/usage/Readme.md)
+   
+## Further reading 
+
+TODO 
+link blog posts
