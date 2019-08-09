@@ -1,12 +1,15 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material';
 import { AddEntityComponent } from '../common/modals/add-entity/add-entity.component';
 import { EditEntityComponent } from '../common/modals/edit-entity/edit-entity.component';
 import { MatDialog } from '@angular/material';
+import { MatInput } from '@angular/material/input';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { NotificationsService } from '../common/services/notifications.service';
 import { Subscription } from 'rxjs';
+
+declare var adjustEntityScroll: Function;
 
 @Component({
   selector: 'app-manage-entities',
@@ -27,8 +30,9 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
   success_error_message: string;
 
   @Input() projectObjectId: string;
+  @ViewChild('entityName') entityNameInput: MatInput;
 
-  private subscription: Subscription = new Subscription();
+  private subscription: Subscription;
 
   constructor(public dialog: MatDialog,
               private entities_service: EntitiesDataService,
@@ -36,7 +40,10 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.entities = [];
+    this.subscription = new Subscription();
     this.getEntities();
+    adjustEntityScroll();
+    this.entityNameInput.focus();
   }
 
   getEntities() {
@@ -59,7 +66,7 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
     const value = event.value;
     // tslint:disable-next-line: no-shadowed-variable
     const checkPrevEntity = this.entities.filter((entity) => {
-      if (entity['entity_name'] === value) {
+      if (entity['entity_name'] === value.trim()) {
         return entity;
       }
     });
@@ -78,9 +85,10 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
             if (Object.keys(entity_details).length !== 0) {
               entity_details['entity_name'] = value.trim();
               this.entities_service.createEntity(entity_details);
-              input.focus();
+              adjustEntityScroll();
             }
           }
+          input.focus();
         });
       }
       // Reset the input value

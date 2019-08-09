@@ -50,7 +50,7 @@
           <tr mat-header-row *matHeaderRowDef="projectsModelDisplayedColumns;"></tr>
           <tr mat-row *matRowDef="let row; columns: projectsModelDisplayedColumns;"></tr>
         </table>
-        <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons (page)="getDeployPaginatorData($event)"></mat-paginator>
       </div>
     </div>
   </div>

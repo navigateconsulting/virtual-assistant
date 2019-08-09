@@ -1,5 +1,5 @@
 <div *ngIf="loadTryNow === false" class="full-height">
-  <mat-sidenav-container class="trainer-container">
+  <mat-sidenav-container class="trainer-container"  (backdropClick)="closeEntityPanel()">
     <mat-sidenav-content class="main-container">
       <mat-toolbar class="row toolbar-div">
         <div class="col-md-11 breadcrumb-div">

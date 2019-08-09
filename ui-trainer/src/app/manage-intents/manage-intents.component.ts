@@ -103,8 +103,8 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
 
   addIntentTextElement(event: any) {
     if (this.new_intent_text.trim() !== '') {
-      const checkPrevEntityValue = this.checkDuplicateIntentTextValue(this.new_intent_text);
-      if (!checkPrevEntityValue) {
+      const checkDuplicateIntentTextValue = this.checkDuplicateIntentTextValue(this.new_intent_text.trim());
+      if (!checkDuplicateIntentTextValue) {
         // tslint:disable-next-line: max-line-length
         this.webSocketService.createIntentText({object_id: this.intentObjectId, text: this.new_intent_text, entities: []}, 'intent_' + this.intentObjectId);
       } else {
@@ -154,7 +154,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
                 intent_text_entities.push(this.entityValue);
                 // tslint:disable-next-line: max-line-length
                 this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
-                toggleIntentEntity(event);
+                toggleIntentEntity(intent_text_index);
               }
             });
           } else {
@@ -163,7 +163,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
             intent_text_entities.push(this.entityValue);
             // tslint:disable-next-line: max-line-length
             this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
-            toggleIntentEntity(event);
+            toggleIntentEntity(intent_text_index);
           }
         }
       } else if (this.entityValue !== 0 && this.entityValue['value'].trim() !== '') {
@@ -183,7 +183,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
               intent_text_entities.push(this.entityValue);
               // tslint:disable-next-line: max-line-length
               this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
-              toggleIntentEntity(event);
+              toggleIntentEntity(intent_text_index);
             }
           });
         } else if (!checkEntityValue) {
@@ -238,6 +238,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     intent_text_entities.splice(entity_index, 1);
     // tslint:disable-next-line: max-line-length
     this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
+    toggleIntentEntity(intent_text_index);
   }
 
   highlightTextEntity(entity_start: number, entity_end: number, index: number) {

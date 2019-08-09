@@ -12,7 +12,7 @@
                     [matChipInputFor]="chipList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     [matChipInputAddOnBlur]="addOnBlur"
-                    (matChipInputTokenEnd)="addEntity($event)" appearance="outline">
+                    (matChipInputTokenEnd)="addEntity($event)" #entityName="matInput" appearance="outline">
         </mat-chip-list>
     </mat-form-field>
 </div>

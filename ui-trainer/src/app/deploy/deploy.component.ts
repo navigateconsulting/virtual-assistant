@@ -43,6 +43,8 @@ export class DeployComponent implements OnInit {
     this.appSource = environment.app_source;
     this.headerService.changeHeaderApplication('trainer');
     this.getProjectsForDeploy();
+    this.paginator.pageIndex = +localStorage.getItem('deploy_pageIndex');
+    this.paginator.pageSize = +localStorage.getItem('deploy_pageSize');
   }
 
   getProjectsForDeploy() {
@@ -80,6 +82,11 @@ export class DeployComponent implements OnInit {
         this.webSocketService.deployModel(projectObjectId);
       }
     });
+  }
+
+  getDeployPaginatorData(event: any) {
+    localStorage.setItem('deploy_pageIndex', event.pageIndex);
+    localStorage.setItem('deploy_pageSize', event.pageSize);
   }
 
 }

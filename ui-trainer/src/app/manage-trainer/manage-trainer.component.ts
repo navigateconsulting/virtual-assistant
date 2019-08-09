@@ -24,7 +24,7 @@ export class ManageTrainerComponent implements OnInit {
   appSource: string;
 
   @ViewChild('entitiesSidenav') public entitiesSidenav: MatSidenav;
-  @ViewChild('entityComponent') private entityComponent: ManageEntitiesComponent;
+  @ViewChild('entityComponent') public entityComponent: ManageEntitiesComponent;
 
   constructor(private router: Router,
               private headerService: HeaderService) { }
@@ -80,6 +80,13 @@ export class ManageTrainerComponent implements OnInit {
     this.entitiesSidenav.toggle();
     if (this.entityComponent !== undefined) {
       this.entityComponent.ngOnInit();
+    }
+  }
+
+  closeEntityPanel() {
+    if (this.entityComponent !== undefined) {
+      this.entityComponent.ngOnDestroy();
+      this.entityComponent = undefined;
     }
   }
 

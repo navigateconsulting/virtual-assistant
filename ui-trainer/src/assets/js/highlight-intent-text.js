@@ -24,9 +24,11 @@ function selectText(event) {
     }
 }
 
-function toggleIntentEntity(event) {
-    var id = 'intentText_' + event.target.id.split('_')[2];
-    $('#' + id).collapse();
+function toggleIntentEntity(intent_text_index) {
+    setTimeout(function(){ 
+        var id = 'intentText_' + intent_text_index;
+        $('#' + id).collapse("toggle");
+    }, 100);
 }
 
 function stripHtml(html){

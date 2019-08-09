@@ -15,7 +15,6 @@ import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
 import { environment } from '../../environments/environment';
 
-declare var collapseClose: Function;
 declare var adjustScroll: Function;
 
 @Component({
@@ -119,7 +118,6 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
   getActions() {
     this.webSocketService.getActionsForStory().subscribe(actions => {
       this.actions = actions;
-      console.log(this.actions);
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));

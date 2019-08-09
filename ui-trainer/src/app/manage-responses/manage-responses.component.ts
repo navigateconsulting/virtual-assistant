@@ -74,20 +74,38 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
 
   addResponseTextElement(event: any) {
     if (this.new_response_text.trim() !== '') {
-      const new_response_text_arr = this.new_response_text.split(' ');
-      for (let i = 0; i < new_response_text_arr.length; i++) {
-        if (new_response_text_arr[i].includes('@')) {
-          new_response_text_arr[i] = new_response_text_arr[i].replace('@', '{');
-          new_response_text_arr[i] += '}';
+      const checkPrevResponseTextValue = this.checkDuplicateResponseTextValue(this.new_response_text.trim());
+      if (!checkPrevResponseTextValue) {
+        const new_response_text_arr = this.new_response_text.split(' ');
+        for (let i = 0; i < new_response_text_arr.length; i++) {
+          if (new_response_text_arr[i].includes('@')) {
+            new_response_text_arr[i] = new_response_text_arr[i].replace('@', '{');
+            new_response_text_arr[i] += '}';
+          }
         }
+        this.new_response_text = new_response_text_arr.join(' ');
+        // tslint:disable-next-line: max-line-length
+        this.webSocketService.createResponseText({object_id: this.responseObjectId, text_entities: this.new_response_text}, 'response_' + this.responseObjectId);
+      } else {
+        this.notificationsService.showToast({status: 'Error', message: 'Response Text Already Exists'});
       }
-      this.new_response_text = new_response_text_arr.join(' ');
-      // tslint:disable-next-line: max-line-length
-      this.webSocketService.createResponseText({object_id: this.responseObjectId, text_entities: this.new_response_text}, 'response_' + this.responseObjectId);
       this.new_response_text = '';
       if (event.which === 13) {
         event.preventDefault();
       }
+    }
+  }
+
+  checkDuplicateResponseTextValue(response_text: string) {
+    const check_duplicate_intent_text_value = this.text_entities.filter((value) => {
+      if (value === response_text) {
+        return value;
+      }
+    })[0];
+    if (check_duplicate_intent_text_value === undefined) {
+      return false;
+    } else {
+      return true;
     }
   }
 

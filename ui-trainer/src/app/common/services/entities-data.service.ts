@@ -36,9 +36,6 @@ export class EntitiesDataService {
           observer.error('Unable To Reach Server');
         }
       });
-      return () => {
-        this.socket.disconnect();
-      };
     });
   }
 
@@ -51,9 +48,6 @@ export class EntitiesDataService {
           observer.error('Unable to reach the server');
         }
       });
-      return () => {
-        this.socket.disconnect();
-      };
     });
   }
 

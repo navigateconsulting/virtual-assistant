@@ -116,7 +116,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
     this.domains_json = this.domains_json_backup;
     this.domains_json = this.domains_json.filter((value) => {
       // tslint:disable-next-line: max-line-length
-      if (value['domain_name'].toLowerCase().includes(filterValue.trim()) || value['domain_description'].toLowerCase().includes(filterValue.trim())) {
+      if (value['domain_name'].includes(filterValue.trim()) || value['domain_name'].toLowerCase().includes(filterValue.trim()) || value['domain_name'].toUpperCase().includes(filterValue.trim()) || value['domain_description'].includes(filterValue.trim()) || value['domain_description'].toLowerCase().includes(filterValue.trim()) || value['domain_description'].toUpperCase().includes(filterValue.trim())) {
         return value;
       }
     });
