@@ -6,5 +6,6 @@
 
 <mat-dialog-actions>
   <button mat-raised-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button (click)="confirmDeploy()" color="primary">Confirm</button>
+  <button *ngIf="appSource==='enterprise'" mat-raised-button (click)="confirmDeploy()" class="deploy-button">Confirm</button>
+  <button *ngIf="appSource==='open'" mat-raised-button (click)="confirmDeploy()" class="deploy-button-black">Confirm</button>
 </mat-dialog-actions>

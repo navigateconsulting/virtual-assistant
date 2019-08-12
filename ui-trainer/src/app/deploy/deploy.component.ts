@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,7 +21,7 @@ import { environment } from '../../environments/environment';
   templateUrl: './deploy.component.html',
   styleUrls: ['./deploy.component.scss']
 })
-export class DeployComponent implements OnInit {
+export class DeployComponent implements OnInit, OnDestroy {
 
   projectModels: any;
   appSource: string;
@@ -87,6 +87,10 @@ export class DeployComponent implements OnInit {
   getDeployPaginatorData(event: any) {
     localStorage.setItem('deploy_pageIndex', event.pageIndex);
     localStorage.setItem('deploy_pageSize', event.pageSize);
+  }
+
+  ngOnDestroy(): void {
+    this.overlayService.spin$.next(false);
   }
 
 }
