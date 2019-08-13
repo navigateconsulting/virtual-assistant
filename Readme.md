@@ -1,6 +1,6 @@
 <div align="center" >
   <img src="https://www.navigateconsulting.se/wp-content/uploads/2018/08/logo.png">
-  <p><h2>Navigate's Virtual Assistant Trainer </h2></p>
+  <p><h2>Navigate's Virtual Assistant</h2></p>
 </div>
 
 Virtual Assistant trainer is an open source application to train, deploy and maintain chat bots. VA is built using 
