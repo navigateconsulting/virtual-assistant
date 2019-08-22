@@ -6,7 +6,7 @@ import os
 import shutil
 from config import CONFIG
 
-# TODO Do files need to be split by domain ? or combine them under common files after chcking if domain is to be exported or not
+# TODO Do files need to be split by domain ? or combine them under common files after checking if domain is to be exported or not
 
 
 # noinspection PyMethodMayBeStatic
