@@ -4,6 +4,18 @@
     font-size: 14px;
 }
 .entity-chip {
-    height: 500px;
+    height: 450px;
     overflow-y: auto;
+    overflow-x: hidden;
+}
+.entities-box {
+    width: 100%;
+    height: auto;
+    border: solid 1px #ccc;
+    color: rgba(0, 0, 0, 0.87);
+    box-sizing: border-box;
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
+    border-radius: 4px;
+    min-height: 40px;
 }

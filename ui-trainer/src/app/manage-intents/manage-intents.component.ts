@@ -90,7 +90,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   applyMapFilter(filterValue: string) {
     this.text_entities = this.text_entities_backup;
     this.text_entities = this.text_entities.filter((value) => {
-      if (value['text'].includes(filterValue.trim())) {
+      if (value['text'].includes(filterValue.trim().toLowerCase()) || value['text'].includes(filterValue.trim().toUpperCase())) {
         return value;
       }
     });
@@ -257,5 +257,6 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.dialog.closeAll();
   }
 }

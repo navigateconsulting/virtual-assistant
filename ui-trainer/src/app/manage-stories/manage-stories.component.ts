@@ -502,6 +502,7 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
       }
     }
     this.currentStory = undefined;
+    this.dialog.closeAll();
   }
 }
 

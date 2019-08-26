@@ -1,10 +1,6 @@
-<div class="row entity-chip">
+<div class="row">
     <mat-form-field class="example-chip-list">
-        <mat-chip-list #chipList>
-            <mat-chip *ngFor="let entity of entities" [selectable]="selectable" (click)="editEntity(entity)">
-            {{entity.entity_name}}
-            </mat-chip>
-            <input  matInput
+        <input  matInput
                     placeholder="New Entity..."
                     maxlength="30"
                     onPaste="return false" autocomplete="off"
@@ -13,6 +9,14 @@
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     [matChipInputAddOnBlur]="addOnBlur"
                     (matChipInputTokenEnd)="addEntity($event)" #entityName="matInput" appearance="outline">
-        </mat-chip-list>
     </mat-form-field>
+</div>
+<div class="row entity-chip">
+    <div class="entities-box">
+        <mat-chip-list #chipList>
+            <mat-chip *ngFor="let entity of entities" [selectable]="selectable" (click)="editEntity(entity)">
+            {{entity.entity_name}}
+            </mat-chip>
+        </mat-chip-list>
+    </div>
 </div>

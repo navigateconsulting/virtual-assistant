@@ -97,6 +97,7 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
       }
     } else {
       this.notificationsService.showToast({status: 'Error', message: 'Entity Already Exists'});
+      input.value = '';
     }
   }
 
@@ -120,5 +121,6 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.dialog.closeAll();
   }
 }
