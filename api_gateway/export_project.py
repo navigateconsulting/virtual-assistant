@@ -142,7 +142,7 @@ class ExportProject:
             await out.write("# Configuration for Rasa Core." + "\n\n")
             await out.write("policies:" + "\n")
             await out.write("  - name: KerasPolicy" + "\n")
-            await out.write("    epochs: 500" + "\n")
+            await out.write("    epochs: 200" + "\n")
             await out.write("    max_history: 1" + "\n")
             await out.write("  - name: MemoizationPolicy" + "\n")
             await out.write("  - name: TwoStageFallbackPolicy" + "\n")
@@ -261,7 +261,8 @@ class ExportProject:
             for record in custom_actions:
                 if record['action_name'] not in default_actions:
                     await out.write("- "+record['action_name']+"\n")
-                    self.master_domain_actions = self.master_domain_actions + "- " + record['action_name'] + "\n"
+                    if record['action_name'] not in self.master_domain_actions:
+                        self.master_domain_actions = self.master_domain_actions + "- " + record['action_name'] + "\n"
 
             await out.write("\n")
             await out.write("\n")
