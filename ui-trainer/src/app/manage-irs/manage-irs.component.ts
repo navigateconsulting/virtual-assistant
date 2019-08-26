@@ -305,5 +305,6 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
+    this.dialog.closeAll();
   }
 }

@@ -130,5 +130,6 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.webSocketService.leaveDomainsRoom('project_' + this.projectObjectId);
+    this.dialog.closeAll();
   }
 }

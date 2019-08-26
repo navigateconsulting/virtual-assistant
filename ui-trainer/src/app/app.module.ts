@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
-import { LoginComponent } from './login/login.component';
 import { FooterComponent } from './common/footer/footer.component';
 import { HeaderComponent } from './common/header/header.component';
 import { HomeComponent } from './home/home.component';
@@ -26,7 +25,6 @@ import { EntitiesDataService } from './common/services/entities-data.service';
 import { ManageResponsesComponent } from './manage-responses/manage-responses.component';
 import { ManageStoriesComponent } from './manage-stories/manage-stories.component';
 import { AddEntityValueComponent } from './common/modals/add-entity-value/add-entity-value.component';
-import { ApplicationsComponent } from './applications/applications.component';
 import { ManageProjectsComponent } from './manage-projects/manage-projects.component';
 import { ManageTrainerComponent } from './manage-trainer/manage-trainer.component';
 import { AddProjectComponent } from './common/modals/add-project/add-project.component';
@@ -59,7 +57,6 @@ import { TryNowLoadComponent } from './try-now-load/try-now-load.component';
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     FooterComponent,
     HeaderComponent,
     HomeComponent,
@@ -72,7 +69,6 @@ import { TryNowLoadComponent } from './try-now-load/try-now-load.component';
     ManageResponsesComponent,
     ManageStoriesComponent,
     AddEntityValueComponent,
-    ApplicationsComponent,
     ManageProjectsComponent,
     ManageTrainerComponent,
     AddProjectComponent,

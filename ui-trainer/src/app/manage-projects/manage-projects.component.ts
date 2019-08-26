@@ -143,6 +143,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.webSocketService.leaveProjectsRoom('root');
+    this.dialog.closeAll();
   }
 
 }

@@ -117,7 +117,7 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
   applyMapFilter(filterValue: string) {
     this.text_entities = this.text_entities_backup;
     this.text_entities = this.text_entities.filter((value) => {
-      if (value.includes(filterValue.trim())) {
+      if (value.includes(filterValue.trim().toLowerCase()) || value.includes(filterValue.trim().toUpperCase())) {
         return value;
       }
     });
@@ -126,7 +126,7 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
   applyEntityFilter(filterValue: string) {
     this.entities = this.entities_backup;
     this.entities = this.entities.filter((value) => {
-      if (value.entity_name.includes(filterValue.trim())) {
+      if (value.entity_name.includes(filterValue.trim().toLowerCase()) || value.entity_name.includes(filterValue.trim().toUpperCase())) {
         return value;
       }
     });

@@ -3,8 +3,6 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
 
-import { constant } from '../../environments/constants';
-
 import { WebSocketService } from '../common/services/web-socket.service';
 import { NotificationsService } from '../common/services/notifications.service';
 import { OverlayService } from '../common/services/overlay.service';
@@ -91,6 +89,7 @@ export class DeployComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.overlayService.spin$.next(false);
+    this.dialog.closeAll();
   }
 
 }
