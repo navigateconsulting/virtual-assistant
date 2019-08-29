@@ -4,13 +4,23 @@ services:
 
   # Server Stack
 
+#  action_server_old:
+#    image: rasa/rasa-sdk:latest
+#    ports:
+#      - 5055:5055
+#    container_name: "action_server"
+#    volumes:
+#    - "./vol_chatbot_data/rasa/server/actions:/app/actions"
+
   action_server:
-    image: rasa/rasa-sdk:latest
+    container_name: action_server
+    build: './actions-endpoint'
     ports:
-      - 5055:5055
-    container_name: "action_server"
+      - "5055:5055"
     volumes:
-    - "./vol_chatbot_data/rasa/server/actions:/app/actions"
+      - "./actions-endpoint/actions:/app/actions"
+    depends_on:
+      - api_gateway
 
   rasa:
     image: rasa/rasa:latest-full
