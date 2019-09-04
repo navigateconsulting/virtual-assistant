@@ -703,5 +703,5 @@ WRITTEN OFFER
 The source code for any program binaries or compressed scripts that are
 included with Navigate Virtual Assistant can be freely obtained at the following URL:
 
-
+https://github.com/navigateconsulting/virtual-assistant
 
