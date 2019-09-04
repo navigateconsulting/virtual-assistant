@@ -12,7 +12,8 @@ RUN apt-get update -qq && \
 # installing zip for unzipping oracle instant client drivers
 
 RUN apt-get update -qq && \
-    apt-get install -y zip
+    apt-get install -y zip && \
+    apt-get install libaio1
 
 # Copy instant client zip to container
 
