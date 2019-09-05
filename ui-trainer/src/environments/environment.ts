@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   BASE_URL: 'http://localhost:8089',
-  app_source: 'open'
+  app_source: 'enterprise'
 };
 
 /*
