@@ -1,4 +1,0 @@
-aiohttp
-uvloop
-adal
-lxml

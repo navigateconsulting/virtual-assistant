@@ -42,12 +42,6 @@ services:
 #    depends_on:
 #      - action_server
 
-#  skype_connector:
-#    container_name: skype_connector
-#    build: './conn-skype'
-#    depends_on:
-#      - rasa
-
   ## Trainer stack
 
   mongodb:
