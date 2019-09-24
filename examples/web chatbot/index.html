@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script type="module" src="https://unpkg.com/@assister/rasa@latest/dist/rasa/rasa.esm.js"></script>
+    <link href="https://unpkg.com/@assister/rasa@latest/dist/rasa/rasa.css" rel="stylesheet">
+    <style>
+      :root {
+        /* --header-background-color: gray; */
+        /* --header-text-color: black; */
+      }
+    </style>
+  </head>
+  <body>
+    <rasa-bot server="http://localhost:5005" />
+  </body>
+</html>
+
+<!-- <div id="webchat"/> -->
+<!-- <script src="https://storage.googleapis.com/mrbot-cdn/webchat-0.5.8.js"></script>
+<script>
+  WebChat.default.init({
+    selector: "#webchat",
+    initPayload: "/get_started",
+    interval: 1000, // 1000 ms between each message
+    customData: {"userId": "123"}, // arbitrary custom data. Stay minimal as this will be added to the socket
+    socketUrl: "http://localhost:5005/webhooks",
+    socketPath: "/socket.io/",
+    title: "Title",
+    subtitle: "Subtitle",
+    inputTextFieldHint: "Type a message...",
+    connectingText: "Waiting for server...",
+    hideWhenNotConnected: true,
+    fullScreenMode: false,
+    showFullScreenButton: false,
+    profileAvatar: "http://to.avat.ar",
+    openLauncherImage: 'myCustomOpenImage.png',
+    closeLauncherImage: 'myCustomCloseImage.png',
+    params: {
+      images: {
+        dims: {
+          width: 300,
+          height: 200,
+        }
+      },
+      storage: "local"
+    },
+  })
+</script> -->

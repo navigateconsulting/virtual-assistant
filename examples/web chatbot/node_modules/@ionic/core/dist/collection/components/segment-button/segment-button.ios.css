@@ -1,0 +1,276 @@
+:host {
+  /**
+   * @prop --background: Background of the segment button
+   * @prop --background-hover: Background of the segment button on hover
+   * @prop --background-activated: Background of the segment button when pressed
+   * @prop --background-checked: Background of the checked segment button
+   *
+   * @prop --color: Color of the segment button
+   * @prop --color-activated: Color of the segment button when pressed
+   * @prop --color-checked: Color of the checked segment button
+   * @prop --color-disabled: Color of the disabled segment button
+   * @prop --color-checked-disabled: Color of the checked & disabled segment button
+   *
+   * @prop --border-radius: Radius of the segment button border
+   * @prop --border-color: Color of the segment button border
+   * @prop --border-style: Style of the segment button border
+   * @prop --border-width: Width of the segment button border
+   *
+   * @prop --margin-top: Top margin of the segment button
+   * @prop --margin-end: Right margin if direction is left-to-right, and left margin if direction is right-to-left of the segment button
+   * @prop --margin-bottom: Bottom margin of the segment button
+   * @prop --margin-start: Left margin if direction is left-to-right, and right margin if direction is right-to-left of the segment button
+   *
+   * @prop --padding-top: Top padding of the segment button
+   * @prop --padding-end: Right padding if direction is left-to-right, and left padding if direction is right-to-left of the segment button
+   * @prop --padding-bottom: Bottom padding of the segment button
+   * @prop --padding-start: Left padding if direction is left-to-right, and right padding if direction is right-to-left of the segment button
+   *
+   * @prop --transition: Transition of the segment button
+   *
+   * @prop --indicator-color: Color of the indicator (highlight) under the segment button
+   * @prop --indicator-color-checked: Color of the indicator (highlight) under the checked segment button
+   *
+   */
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  height: auto;
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  border-color: var(--border-color);
+  background: var(--background);
+  color: var(--color);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-kerning: none;
+}
+
+:host(:first-of-type) {
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: var(--border-radius);
+}
+:host-context([dir=rtl]):host(:first-of-type), :host-context([dir=rtl]):first-of-type {
+  border-top-left-radius: 0;
+  border-top-right-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  border-bottom-left-radius: 0;
+}
+
+:host(:not(:first-of-type)) {
+  border-left-width: 0;
+}
+:host-context([dir=rtl]):host(:not(:first-of-type)), :host-context([dir=rtl]):not(:first-of-type) {
+  border-right-width: 0;
+  border-left-width: var(--border-width);
+}
+
+:host(:last-of-type) {
+  border-top-left-radius: 0;
+  border-top-right-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  border-bottom-left-radius: 0;
+}
+:host-context([dir=rtl]):host(:last-of-type), :host-context([dir=rtl]):last-of-type {
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: var(--border-radius);
+}
+
+.button-native {
+  border-radius: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-decoration: inherit;
+  text-overflow: inherit;
+  text-transform: inherit;
+  text-align: inherit;
+  white-space: inherit;
+  color: inherit;
+  margin-left: var(--margin-start);
+  margin-right: var(--margin-end);
+  margin-top: var(--margin-top);
+  margin-bottom: var(--margin-bottom);
+  padding-left: var(--padding-start);
+  padding-right: var(--padding-end);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+  display: flex;
+  position: relative;
+  flex-direction: inherit;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: inherit;
+  max-width: inherit;
+  height: auto;
+  min-height: inherit;
+  max-height: inherit;
+  transition: var(--transition);
+  border: none;
+  outline: none;
+  background: transparent;
+  contain: content;
+  cursor: pointer;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .button-native {
+    margin-left: unset;
+    margin-right: unset;
+    -webkit-margin-start: var(--margin-start);
+    margin-inline-start: var(--margin-start);
+    -webkit-margin-end: var(--margin-end);
+    margin-inline-end: var(--margin-end);
+  }
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .button-native {
+    padding-left: unset;
+    padding-right: unset;
+    -webkit-padding-start: var(--padding-start);
+    padding-inline-start: var(--padding-start);
+    -webkit-padding-end: var(--padding-end);
+    padding-inline-end: var(--padding-end);
+  }
+}
+
+.segment-button-indicator {
+  align-self: flex-end;
+  width: 100%;
+  height: 2px;
+  background-color: var(--indicator-color);
+  opacity: 1;
+}
+
+:host(.segment-button-checked) {
+  background: var(--background-checked);
+  color: var(--color-checked);
+}
+
+:host(.segment-button-checked) .segment-button-indicator {
+  background-color: var(--indicator-color-checked, var(--color-checked));
+}
+
+:host(.activated) {
+  color: var(--color-activated, var(--color));
+}
+
+:host(.segment-button-disabled) {
+  color: var(--color-disabled);
+}
+
+:host(.segment-button-disabled.segment-button-checked) {
+  color: var(--color-checked-disabled);
+}
+
+::slotted(ion-icon) {
+  order: -1;
+}
+
+::slotted(ion-label) {
+  display: block;
+  align-self: center;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+:host(.segment-button-layout-icon-start) .button-native {
+  flex-direction: row;
+}
+
+:host(.segment-button-layout-icon-end) .button-native {
+  flex-direction: row-reverse;
+}
+
+:host(.segment-button-layout-icon-bottom) .button-native {
+  flex-direction: column-reverse;
+}
+
+:host(.segment-button-layout-icon-hide) ::slotted(ion-icon) {
+  display: none;
+}
+
+:host(.segment-button-layout-label-hide) ::slotted(ion-label) {
+  display: none;
+}
+
+ion-ripple-effect {
+  color: var(--ripple-color, var(--color-checked));
+}
+
+:host {
+  --border-radius: 4px;
+  --border-width: 1px;
+  --border-style: solid;
+  --transition: 100ms all linear;
+  min-height: 24px;
+  font-size: 13px;
+  line-height: 37px;
+}
+
+.segment-button-indicator {
+  display: none;
+}
+
+::slotted(ion-icon) {
+  font-size: 24px;
+}
+
+:host(.segment-button-layout-icon-start) ::slotted(ion-label) {
+  margin-left: 2px;
+  margin-right: 0;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  :host(.segment-button-layout-icon-start) ::slotted(ion-label) {
+    margin-left: unset;
+    margin-right: unset;
+    -webkit-margin-start: 2px;
+    margin-inline-start: 2px;
+    -webkit-margin-end: 0;
+    margin-inline-end: 0;
+  }
+}
+
+:host(.segment-button-layout-icon-end) ::slotted(ion-label) {
+  margin-left: 0;
+  margin-right: 2px;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  :host(.segment-button-layout-icon-end) ::slotted(ion-label) {
+    margin-left: unset;
+    margin-right: unset;
+    -webkit-margin-start: 0;
+    margin-inline-start: 0;
+    -webkit-margin-end: 2px;
+    margin-inline-end: 2px;
+  }
+}
+
+@media (any-hover: hover) {
+  :host(:hover:not(.segment-button-checked)) {
+    background: var(--background-hover);
+  }
+}
+:host(.activated) {
+  background: var(--background-activated);
+}
+
+:host(.segment-button-checked.activated) {
+  background: var(--background-checked);
+  color: var(--color-checked);
+}

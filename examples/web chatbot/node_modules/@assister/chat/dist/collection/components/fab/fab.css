@@ -1,0 +1,31 @@
+.fab {
+  transition: all 0.1s ease-in-out;
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+  width: 60px;
+  height: 60px;
+}
+  
+.fab:hover {
+  transform: scale(1.05);
+}
+
+::slotted(:first-child) {
+  width: 400px;
+  height: 65%;
+  position: fixed;
+  right: 50px;
+  bottom: 130px;
+  box-shadow: 0 0 0.5em 0.2em #666;
+  z-index: 10000;
+}
+
+@media screen and (max-width: 700px) {
+  ::slotted(:first-child) {
+    width: 100%;
+    height: 100%;
+    right: 0;
+    bottom: 0;
+  }
+}

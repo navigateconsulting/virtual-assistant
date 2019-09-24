@@ -1,0 +1,4 @@
+.content {
+  height: calc(100% - 122px);
+  --ion-background-color: var(--conversation-background-color);
+ }

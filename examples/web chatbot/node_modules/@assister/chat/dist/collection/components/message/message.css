@@ -1,0 +1,100 @@
+:host {
+  display: flex;
+}
+
+::slotted(p) {
+  margin: 0;
+}
+
+.item {
+  width: 100%;
+  padding: var(--message-padding-between);
+  --ion-background-color: transparent;
+}
+
+.footer {
+  position: absolute;
+  right: var(--message-padding-content);
+  bottom: 2px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.footer-text {
+  /* margin-bottom: 3px; */
+  color: lightslategray;
+  font-size: 12px;
+  padding-right: 2px;
+}
+
+.outgoing {
+  background-color: var(--message-outgoing-color);
+}
+
+.incoming {
+  background-color: var(--message-incoming-color);
+}
+
+.bubble {
+  margin: 2px 2px 2px 2px;
+  padding: var(--message-padding-content) var(--message-padding-content) 18px var(--message-padding-content);
+  min-width: 100px;
+  position: relative;
+  border-radius: var(--message-round-size);
+  box-shadow: 0 0 1px 0 #666;
+}
+
+.align-left {
+  margin: 0 0 0 var(--message-padding-content);
+  float: left;
+}
+
+.align-right {
+  margin: 0 var(--message-padding-content) 0 0;
+  float: right;
+}
+
+.triangle {
+  content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+  border: var(--message-round-size) solid;
+  background-color: transparent;
+}
+
+.top-right {
+  top: 0;
+	right: var(--message-round-size-negative);
+}
+
+.bottom-right {
+  bottom: 0;
+	right: var(--message-round-size-negative);
+}
+
+.bottom-left {
+  bottom: 0;
+	left: var(--message-round-size-negative);
+}
+
+.top-left {
+  top: 0;
+  left: var(--message-round-size-negative);
+}
+
+.top-right.outgoing {  
+  border-color: var(--message-outgoing-color) transparent transparent transparent;
+}
+
+.bottom-right.outgoing {  
+  border-color: transparent transparent var(--message-outgoing-color) transparent;
+}
+
+.top-left.incoming {  
+  border-color: var(--message-incoming-color) transparent transparent transparent;
+}
+
+.bottom-left.incoming {  
+  border-color: transparent transparent var(--message-incoming-color) transparent;
+}

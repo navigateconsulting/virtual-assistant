@@ -1,0 +1,15 @@
+:host {
+  display: flex;
+  align-items: flex-end;
+  width: 18px;
+  height: 18px;
+}
+
+:host(.none) {
+  display: none;
+}
+
+.pending {
+  width: 14px;
+  height: 14px;
+}
