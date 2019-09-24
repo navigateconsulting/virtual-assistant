@@ -489,7 +489,7 @@ We will now be creating a dialogue system with the available intents & responses
 <hr />
 
 
-#### Entities
+## Entities
 
 Entities are your bot’s memory. They act as a key-value store which can be used to store information the user provided (e.g their home city) as well as information gathered about the outside world (e.g. the result of a database query).
 
@@ -551,7 +551,7 @@ You can delete an entity by clicking on any entity you intend to delete from the
 </div>
 <hr />
 
-#### Try now
+## Try now
 
 Try now is a feature where you are provided with an interface to interact with the bot and test your stories. In our case we will be testing the 'greet_story'
 
