@@ -12,15 +12,15 @@ services:
 #    volumes:
 #    - "./vol_chatbot_data/rasa/server/actions:/app/actions"
 
-#  action_server:
-#    container_name: action_server
-#    build: './actions-endpoint'
-#    ports:
-#      - "5055:5055"
-#    volumes:
-#      - "./actions-endpoint/actions:/app/actions"
-#    depends_on:
-#      - api_gateway
+  action_server:
+    container_name: action_server
+    build: './actions-endpoint'
+    ports:
+      - "5055:5055"
+    volumes:
+      - "./actions-endpoint/actions:/app/actions"
+    depends_on:
+      - api_gateway
 
   rasa:
     image: rasa/rasa:1.3.1-full
@@ -39,8 +39,8 @@ services:
     - --enable-api
     - --cors
     - "*"
-#    depends_on:
-#      - action_server
+    depends_on:
+      - action_server
 
   ## Trainer stack
 
