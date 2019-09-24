@@ -3,7 +3,7 @@
 ## Table of Contents 
 
 1. [Using Chat bot](#using-chat-bot)
-2. [Try Now](#trynow)
+2. [Try Now](#try-now)
 
 
 ## Using Chat bot 
