@@ -1,0 +1,102 @@
+:host {
+  --indicator-color-checked: initial;
+  --ripple-color: currentColor;
+  --color-activated: initial;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+  font-family: var(--ion-font-family, inherit);
+  text-align: center;
+}
+
+:host(.segment-disabled),
+::slotted(.segment-button-disabled) {
+  pointer-events: none;
+}
+
+:host(.segment-scrollable) {
+  justify-content: start;
+  width: auto;
+  overflow-x: scroll;
+}
+
+:host(.segment-scrollable::-webkit-scrollbar) {
+  display: none;
+}
+
+:host {
+  --background: transparent;
+  --background-hover: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.1);
+  --background-activated: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.16);
+  --background-checked: var(--ion-color-primary, #3880ff);
+  --color: var(--ion-color-primary, #3880ff);
+  --color-checked: var(--ion-color-primary-contrast, #fff);
+  --color-disabled: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.3);
+  --color-checked-disabled: rgba(var(--ion-color-primary-contrast-rgb, 255, 255, 255), 0.3);
+  --border-color: var(--ion-color-primary, #3880ff);
+  --indicator-color: transparent;
+}
+
+:host(.segment-disabled) {
+  opacity: 0.3;
+}
+
+:host(.ion-color)::slotted(ion-segment-button) {
+  --border-color: var(--ion-color-base);
+  background: transparent;
+  color: var(--ion-color-base);
+}
+
+:host(.ion-color)::slotted(.activated) {
+  background: rgba(var(--ion-color-base-rgb), 0.16);
+  color: var(--ion-color-base);
+}
+
+:host(.ion-color)::slotted(.segment-button-checked.activated),
+:host(.ion-color)::slotted(.segment-button-checked) {
+  background: var(--ion-color-base);
+  color: var(--ion-color-contrast);
+}
+
+:host(.ion-color)::slotted(.segment-button-disabled) {
+  color: rgba(var(--ion-color-base-rgb), 0.3);
+}
+
+:host(.ion-color)::slotted(.segment-button-checked.segment-button-disabled) {
+  color: rgba(var(--ion-color-contrast-rgb), 0.3);
+}
+
+@media (any-hover: hover) {
+  :host(.ion-color)::slotted(ion-segment-button:hover:not(.segment-button-checked)) {
+    background: rgba(var(--ion-color-base-rgb), 0.1);
+  }
+}
+:host-context(ion-toolbar)::slotted(ion-segment-button) {
+  max-width: 100px;
+  font-size: 12px;
+  line-height: 22px;
+}
+
+:host-context(ion-toolbar:not(.ion-color)):not(.ion-color)::slotted(ion-segment-button) {
+  border-color: var(--ion-toolbar-color-checked, var(--border-color));
+  color: var(--ion-toolbar-color-unchecked, var(--color));
+}
+
+:host-context(ion-toolbar:not(.ion-color)):not(.ion-color)::slotted(.segment-button-checked) {
+  background: var(--ion-toolbar-color-checked, var(--background-checked));
+  color: var(--ion-toolbar-background, var(--color-checked));
+}
+
+:host-context(ion-toolbar.ion-color):not(.ion-color)::slotted(ion-segment-button) {
+  --color: var(--ion-color-contrast);
+  --color-disabled: rgba(var(--ion-color-contrast-rgb), 0.3);
+  --color-checked: var(--ion-color-base);
+  --color-checked-disabled: rgba(var(--ion-color-contrast-rgb), 0.3);
+  --background-hover: rgba(var(--ion-color-contrast-rgb), 0.1);
+  --background-activated: rgba(var(--ion-color-contrast-rgb), 0.16);
+  --background-checked: var(--ion-color-contrast);
+  --border-color: var(--ion-color-contrast);
+}

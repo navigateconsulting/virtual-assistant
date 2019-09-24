@@ -1,0 +1,1 @@
+module.exports = /*#__PURE__*/ require('../../dist/ionicons/svg/logo-html5.svg');

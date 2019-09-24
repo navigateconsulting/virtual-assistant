@@ -1,0 +1,30 @@
+ion-footer {
+  display: block;
+  position: relative;
+  order: 1;
+  width: 100%;
+  z-index: 10;
+}
+
+ion-footer ion-toolbar:last-child {
+  padding-bottom: var(--ion-safe-area-bottom, 0);
+}
+
+.footer-ios ion-toolbar:first-child {
+  --border-width: 0.55px 0 0;
+}
+
+.footer-ios[no-border] ion-toolbar:first-child {
+  --border-width: 0;
+}
+
+@supports (backdrop-filter: blur(0)) {
+  .footer-translucent-ios {
+    backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  .footer-translucent-ios ion-toolbar {
+    --opacity: .8;
+    --backdrop-filter: saturate(180%) blur(20px);
+  }
+}

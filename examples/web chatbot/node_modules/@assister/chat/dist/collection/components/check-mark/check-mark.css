@@ -1,0 +1,51 @@
+.container {
+    display: inline-block;
+    width: 18px;
+    height:18px;
+    transform: translate(-3px, 2px) rotate(45deg);
+}
+
+.check-mark-stem {
+    position: absolute;
+    width: 2px;
+    height: 14px;
+    background-color: var(--message-check-mark-color);
+    right: 0px;
+    bottom: 4px;
+}
+
+.check-mark-kick {
+    position: absolute;
+    width: 5px;
+    height: 2px;
+    background-color: var(--message-check-mark-color);
+    right: 1px;
+    bottom: 4px;
+}
+
+.check-mark-kick-half {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: var(--message-check-mark-color);
+    right: 1px;
+    bottom: 4px;
+}
+
+.check-mark-second-stem {
+    position: absolute;
+    width: 2px;
+    height: 14px;
+    background-color: var(--message-check-mark-color);
+    right: 4px;
+    bottom: 0px;
+}
+
+.check-mark-second-kick {
+    position: absolute;
+    width: 5px;
+    height: 2px;
+    background-color: var(--message-check-mark-color);
+    right: 5px;
+    bottom: 0px;
+}
