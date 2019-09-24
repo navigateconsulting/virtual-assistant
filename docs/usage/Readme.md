@@ -1,5 +1,15 @@
 # How to use Virtual Assistant Trainer.
 
+## Using Chat bot 
+
+You can integrate rasa chat bot to your website , or connect it to any existing end points developed for rasa. 
+Please follow below links to deploy chat bot on your own website 
+
+https://rasa.com/docs/rasa/user-guide/connectors/your-own-website/
+
+You can use existing channels available in rasa, more information on below link 
+
+https://rasa.com/docs/rasa/user-guide/messaging-and-voice-channels/
 
 ## Projects
 
