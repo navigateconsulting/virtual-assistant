@@ -5,11 +5,16 @@
 You can integrate rasa chat bot to your website , or connect it to any existing end points developed for rasa. 
 Please follow below links to deploy chat bot on your own website 
 
-https://rasa.com/docs/rasa/user-guide/connectors/your-own-website/
+[Your own Website](https://rasa.com/docs/rasa/user-guide/connectors/your-own-website/)
 
 You can use existing channels available in rasa, more information on below link 
 
-https://rasa.com/docs/rasa/user-guide/messaging-and-voice-channels/
+[Messaging and Voice Platforms](https://rasa.com/docs/rasa/user-guide/messaging-and-voice-channels/)
+
+### Example Project 
+
+We used [rasa-bot](https://github.com/assister-ai/assister/tree/master/packages/rasa) to build a sample web chat bot
+following instructions given in rasa's documentation.  you can find the sample project [here]() 
 
 ## Projects
 
