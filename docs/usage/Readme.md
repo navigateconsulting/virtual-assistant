@@ -14,7 +14,7 @@ You can use existing channels available in rasa, more information on below link
 ### Example Project 
 
 We used [rasa-bot](https://github.com/assister-ai/assister/tree/master/packages/rasa) to build a sample web chat bot
-following instructions given in rasa's documentation.  you can find the sample project [here]() 
+following instructions given in rasa's documentation.  you can find the sample project [here](https://github.com/navigateconsulting/virtual-assistant/tree/master/examples/web%20chatbot) 
 
 ## Projects
 
