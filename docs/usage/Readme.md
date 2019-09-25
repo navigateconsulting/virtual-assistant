@@ -1,26 +1,32 @@
 # How to use Virtual Assistant Trainer.
 
-## Table of Contents 
+## Table of Contents
 
 1. [Using Chat bot](#using-chat-bot)
-2. [Try Now](#try-now)
+2. [Projects](#projects)
+3. [Domains](#domains)
+4. [Intents](#intents)
+5. [Responses](#responses)
+6. [Stories](#stories)
+7. [Entities](#entities)
+8. [Try Now](#try-now)
 
 
-## Using Chat bot 
+## Using Chat bot
 
-You can integrate rasa chat bot to your website , or connect it to any existing end points developed for rasa. 
-Please follow below links to deploy chat bot on your own website 
+You can integrate rasa chat bot to your website , or connect it to any existing end points developed for rasa.
+Please follow below links to deploy chat bot on your own website
 
 [Your own Website](https://rasa.com/docs/rasa/user-guide/connectors/your-own-website/)
 
-You can use existing channels available in rasa, more information on below link 
+You can use existing channels available in rasa, more information on below link
 
 [Messaging and Voice Platforms](https://rasa.com/docs/rasa/user-guide/messaging-and-voice-channels/)
 
-### Example Project 
+### Example Project
 
 We used [rasa-bot](https://github.com/assister-ai/assister/tree/master/packages/rasa) to build a sample web chat bot
-following instructions given in rasa's documentation.  you can find the sample project [here](https://github.com/navigateconsulting/virtual-assistant/tree/master/examples/web%20chatbot) 
+following instructions given in rasa's documentation.  you can find the sample project [here](https://github.com/navigateconsulting/virtual-assistant/tree/master/examples/web%20chatbot)
 
 ## Projects
 
@@ -483,7 +489,7 @@ We will now be creating a dialogue system with the available intents & responses
 <hr />
 
 
-#### Entities
+## Entities
 
 Entities are your bot’s memory. They act as a key-value store which can be used to store information the user provided (e.g their home city) as well as information gathered about the outside world (e.g. the result of a database query).
 
@@ -545,7 +551,7 @@ You can delete an entity by clicking on any entity you intend to delete from the
 </div>
 <hr />
 
-#### Try now
+## Try now
 
 Try now is a feature where you are provided with an interface to interact with the bot and test your stories. In our case we will be testing the 'greet_story'
 
