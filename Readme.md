@@ -39,7 +39,9 @@ Clone the repo on local machine and build the docker containers as shown below.
     cd virtual-assistant
     docker-compose build
     docker-compose up  
- 
+
+The Trainer application would now be avaliable on port 8080 
+
 #### Detailed Installation 
 
    For detailed installation instructions please follow [this link](docs/installation/Readme.md)
