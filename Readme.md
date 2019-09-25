@@ -48,4 +48,4 @@ Clone the repo on local machine and build the docker containers as shown below.
    Usage instructions : [click here](docs/usage/Readme.md)
    
 ## License 
-[GPL 3.0](LISENCE)
+[GPL 3.0](LICENSE)
