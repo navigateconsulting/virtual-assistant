@@ -35,8 +35,8 @@ VA uses docker containers to build all application components.
 
 Clone the repo on local machine and build the docker containers as shown below.
 
-    git clone https://github.com/evadigital/eva-platform
-    cd eva-platform
+    git clone https://github.com/navigateconsulting/virtual-assistant
+    cd virtual-assistant
     docker-compose build
     docker-compose up  
  
