@@ -47,7 +47,5 @@ Clone the repo on local machine and build the docker containers as shown below.
 ## Usage
    Usage instructions : [click here](docs/usage/Readme.md)
    
-## Further reading 
-
-TODO 
-link blog posts
+## License 
+[GPL 3.0](LISENCE)
