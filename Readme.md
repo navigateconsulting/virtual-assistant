@@ -1,5 +1,4 @@
 <div align="center" >
-  <img src="https://www.navigateconsulting.se/wp-content/uploads/2018/08/logo.png">
   <p><h2>Navigate's Virtual Assistant</h2></p>
 </div>
 
