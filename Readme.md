@@ -1,5 +1,5 @@
 <div align="center" >
-  <p><h2>Navigate's Virtual Assistant</h2></p>
+  <p><h2>Virtual Assistant</h2></p>
 </div>
 
 Virtual Assistant trainer is an open source application to train, deploy and maintain chat bots. VA is built using 
