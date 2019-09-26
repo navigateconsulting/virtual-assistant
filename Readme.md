@@ -51,4 +51,4 @@ The Trainer application would now be avaliable on port 8080
 
 ## License
 
-
+Apache 2.0 [LICENSE]
