@@ -50,4 +50,4 @@ The Trainer application would now be avaliable on port 8080
    Usage instructions : [click here](docs/usage/Readme.md)
    
 ## License 
-(LICENSE)
+
