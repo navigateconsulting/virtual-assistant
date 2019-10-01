@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="virtual-assistant/docs/assets/trainer.svg" width="200" height="200"/>
+  <img src="/docs/assets/trainer.svg" width="200" height="200"/>
 </p>
 
 <div align="center" >
