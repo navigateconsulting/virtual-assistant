@@ -1,6 +1,5 @@
 <div align="center" >
-  <img src="https://www.navigateconsulting.se/wp-content/uploads/2018/08/logo.png">
-  <p><h2>Navigate's Virtual Assistant</h2></p>
+  <p><h2>Virtual Assistant</h2></p>
 </div>
 
 Virtual Assistant trainer is an open source application to train, deploy and maintain chat bots. VA is built using 
@@ -35,19 +34,21 @@ VA uses docker containers to build all application components.
 
 Clone the repo on local machine and build the docker containers as shown below.
 
-    git clone https://github.com/evadigital/eva-platform
-    cd eva-platform
+    git clone https://github.com/navigateconsulting/virtual-assistant
+    cd virtual-assistant
     docker-compose build
     docker-compose up  
- 
+
+The Trainer application would now be avaliable on port 8080 
+
 #### Detailed Installation 
 
    For detailed installation instructions please follow [this link](docs/installation/Readme.md)
 
 ## Usage
    Usage instructions : [click here](docs/usage/Readme.md)
-   
-## Further reading 
 
-TODO 
-link blog posts
+## License
+
+Apache 2.0 : [click here](LICENSE)
+
