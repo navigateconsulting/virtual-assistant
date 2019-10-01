@@ -23,6 +23,7 @@ We would keep updating the code base to support latest versions of rasa.
 
 We intent to support all features provided by rasa framework, in case you find any feature missing please report to us.
 
+
 ### Documentation 
 
 You can find detailed documentation [here](https://navigateconsulting.github.io/virtual-assistant/)
