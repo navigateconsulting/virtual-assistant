@@ -1,6 +1,6 @@
-<div style="width: 100%; height: 200px; text-align:center">
+<p align="center">
   <img src="/docs/assets/trainer.svg" width="200" height="200"/>
-</div>
+</p>
 
 <div align="center" >
   <p><h2>Virtual Assistant</h2></p>
