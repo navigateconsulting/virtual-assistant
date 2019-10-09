@@ -3,7 +3,7 @@
 </p>
 
 <div align="center" >
-  <p><h2>Navigate Digital Assistant</h2></p>
+  <p><h2>Navigate Virtual Assistant</h2></p>
 </div>
 
 Navigate Digital Assistant trainer app is an open source application to train, deploy and maintain chat bots. VA is built using rasa open source machine learning framework and utilizes rasa nlu and core for developing and deploying chat bots.
