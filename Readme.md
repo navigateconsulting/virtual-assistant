@@ -6,10 +6,9 @@
   <p><h2>Navigate Digital Assistant</h2></p>
 </div>
 
-Virtual Assistant trainer is an open source application to train, deploy and maintain chat bots. VA is built using
-rasa open source machine learning framework and utilizes rasa nlu and core for developing and deploying chat bots.
+Navigate Digital Assistant trainer app is an open source application to train, deploy and maintain chat bots. VA is built using rasa open source machine learning framework and utilizes rasa nlu and core for developing and deploying chat bots.
 
-VA provides following open source components for developing chat bot applications.
+Digital Assistant provides following open source components for developing chat bot applications.
 
 - Angular Ui - To build, train and deploy a chat bot project
 - Python API gateway - connecting to rasa for deploying the chat bot and persisting training data
@@ -32,7 +31,7 @@ You can find detailed documentation [here](https://navigateconsulting.github.io/
 
 #### Quick Install
 
-VA uses docker containers to build all application components.
+Digital Assistant uses docker containers to build all application components.
 
 ##### Requirements
    - Docker version 18.09 onwards. (not tested on previous versions)
