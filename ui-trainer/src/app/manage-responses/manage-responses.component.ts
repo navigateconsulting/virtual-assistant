@@ -151,8 +151,19 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
       this.showEntityDropdown = false;
       this.readonly = false;
       this.show_empty_entity_error = false;
+    } else if (event.key === 'Backspace') {
+      const new_response_text_arr = this.new_response_text.split(' ');
+      if (new_response_text_arr[new_response_text_arr.length - 1].includes('{')) {
+        if (!new_response_text_arr[new_response_text_arr.length - 1].includes('}')) {
+          new_response_text_arr.pop();
+          new_response_text_arr.push('');
+        }
+      }
+      this.new_response_text = new_response_text_arr.join(' ');
     }
   }
+
+
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
