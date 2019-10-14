@@ -76,14 +76,6 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
     if (this.new_response_text.trim() !== '') {
       const checkPrevResponseTextValue = this.checkDuplicateResponseTextValue(this.new_response_text.trim());
       if (!checkPrevResponseTextValue) {
-        const new_response_text_arr = this.new_response_text.split(' ');
-        for (let i = 0; i < new_response_text_arr.length; i++) {
-          if (new_response_text_arr[i].includes('@')) {
-            new_response_text_arr[i] = new_response_text_arr[i].replace('@', '{');
-            new_response_text_arr[i] += '}';
-          }
-        }
-        this.new_response_text = new_response_text_arr.join(' ');
         // tslint:disable-next-line: max-line-length
         this.webSocketService.createResponseText({object_id: this.responseObjectId, text_entities: this.new_response_text}, 'response_' + this.responseObjectId);
       } else {
@@ -133,7 +125,7 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
   }
 
   populateEntities(event: any) {
-    if (event.which === 50 && event.key === '@') {
+    if (event.which === 219 && event.key === '{') {
       if (this.entities.length > 0) {
         this.showEntityDropdown = true;
       } else {
@@ -146,7 +138,7 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
   }
 
   selectEntity(entity: string) {
-    this.new_response_text = this.new_response_text + entity + ' ';
+    this.new_response_text = this.new_response_text + entity + '} ';
     this.showEntityDropdown = false;
     this.readonly = false;
     this.responseTextInput.focus();
