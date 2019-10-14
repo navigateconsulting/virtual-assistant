@@ -375,7 +375,7 @@ Once the bot has learned the data, it needs a medium to showcase its learning. S
 
 So let's start with adding the response samples and place entities in it.
 
-##### Step 1: Start writing your response, the moment you wish to place an entity, hit the @ key to render the entities list, select the appropriate entity and hit enter.
+##### Step 1: Start writing your response, the moment you wish to place an entity, hit the '{' key to render the entities list, select the appropriate entity and hit enter.
 
 <div align="center" >
   <img src="../assets/map_response_text_1.png">
