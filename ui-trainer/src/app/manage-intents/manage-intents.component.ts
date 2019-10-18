@@ -105,6 +105,13 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     if (this.new_intent_text.trim() !== '') {
       const checkDuplicateIntentTextValue = this.checkDuplicateIntentTextValue(this.new_intent_text.trim());
       if (!checkDuplicateIntentTextValue) {
+        const new_intent_text_arr = this.new_intent_text.split(' ');
+        for (let i = 0; i < new_intent_text_arr.length; i++) {
+          if (new_intent_text_arr[i].includes('"')) {
+            new_intent_text_arr[i] = new_intent_text_arr[i].split('"').join('\\"');
+          }
+        }
+        this.new_intent_text = new_intent_text_arr.join(' ');
         // tslint:disable-next-line: max-line-length
         this.webSocketService.createIntentText({object_id: this.intentObjectId, text: this.new_intent_text, entities: []}, 'intent_' + this.intentObjectId);
       } else {

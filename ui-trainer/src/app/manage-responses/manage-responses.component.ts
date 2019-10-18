@@ -76,6 +76,13 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
     if (this.new_response_text.trim() !== '') {
       const checkPrevResponseTextValue = this.checkDuplicateResponseTextValue(this.new_response_text.trim());
       if (!checkPrevResponseTextValue) {
+        const new_response_text_arr = this.new_response_text.split(' ');
+        for (let i = 0; i < new_response_text_arr.length; i++) {
+          if (new_response_text_arr[i].includes('"')) {
+            new_response_text_arr[i] = new_response_text_arr[i].split('"').join('\\"');
+          }
+        }
+        this.new_response_text = new_response_text_arr.join(' ');
         // tslint:disable-next-line: max-line-length
         this.webSocketService.createResponseText({object_id: this.responseObjectId, text_entities: this.new_response_text}, 'response_' + this.responseObjectId);
       } else {
@@ -132,8 +139,6 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
         this.show_empty_entity_error = true;
       }
       this.readonly = true;
-    } else if (event.which === 222) {
-      this.new_response_text = this.new_response_text.slice(0, -1);
     }
   }
 
@@ -145,7 +150,7 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('document:keyup', ['$event'])
-  handleDeleteKeyboardEvent(event: KeyboardEvent) {
+  handleDeleteKeyboardEvent(event: any) {
     if (event.key === 'Escape') {
       this.new_response_text = this.new_response_text.slice(0, -1);
       this.showEntityDropdown = false;

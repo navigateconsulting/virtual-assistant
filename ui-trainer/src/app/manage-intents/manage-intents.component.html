@@ -21,7 +21,7 @@
     <div class="col-md-6">
       <mat-form-field class="example-form-field" appearance="outline">
         <mat-label>New Intent Text</mat-label>
-        <textarea matInput type="text" [(ngModel)]="new_intent_text" onPaste="return false" (keyup)="disableQuotes($event)" (keydown.enter)="addIntentTextElement($event)"></textarea>
+        <textarea matInput type="text" [(ngModel)]="new_intent_text" (keyup)="disableQuotes($event)" (keydown.enter)="addIntentTextElement($event)"></textarea>
       </mat-form-field>
     </div>
     <div class="col-md-6">

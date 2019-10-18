@@ -273,3 +273,9 @@
     margin: 0px;
     overflow: hidden;
 }
+
+.mat-card-header-ell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
