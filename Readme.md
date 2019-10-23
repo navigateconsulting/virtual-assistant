@@ -16,7 +16,7 @@ Virtual Assistant skills, powered by Artificial Intelligence (AI), dramatically 
 
 The application makes it simple and easy to build and train your Virtual Assistant without the need for specialist AI skills. Your assistant can then be exposed through many Chat and Voice channels, a custom mobile app or even your web site.
 
-Natural Language Processing backed by RASA nlu and core.
+Natural Language Processing backed by Rasa nlu and core.
 
 
 Virtual Assistant is build using following open source components.
@@ -29,9 +29,9 @@ Virtual Assistant is build using following open source components.
 ### Using Rasa  
 
 We use rasa 1.3 as a ML framework to train and deploy virtual assistant.
-We would keep updating the code base to support latest versions of rasa.
+We would keep updating the code base to support latest versions of Rasa.
 
-We intent to support all features provided by rasa framework, in case you find any feature missing please report to us.
+We intent to support all features provided by Rasa framework, in case you find any feature missing please report to us.
 
 
 ### Documentation 
