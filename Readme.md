@@ -6,7 +6,7 @@
   <p><h2>Virtual Assistant</h2></p>
 </div>
 
-<div style="text-align: left;">
+<div style="text-align:  justify;">
 Billion users around the world are on instant messaging and chat apps at any moment in time. People want and expect the instant engagement that only messaging apps can provide, and they’re rushing to these platforms in droves, at an adoption rate far greater than even social networks saw at their peak. Organisations need a platform to enable them to harness the power of instant messaging and engage intelligently and contextually with customers and employees.
 </div>
 <br />
