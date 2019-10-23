@@ -1,12 +1,9 @@
-# Virtual Assistant Trainer 
+# Virtual Assistant
 
-Virtual Assistant trainer is an open source application to train, deploy and maintain chat bots. VA is built using 
-rasa open source machine learning framework and utilizes rasa nlu and core for developing and deploying chat bots.
-
-VA provides following open source components for developing chat bot applications.
+Virtual Assistant is build using following open source components.
 
 - Angular Ui - To build, train and deploy a chat bot project
-- Python API gateway - connecting to rasa for deploying the chat bot and persisting training data
+- Python API gateway - connecting to rasa for deploying and persisting training data
 - Mongodb - for storing training data and editing training data
 
 ### Using Rasa
