@@ -28,7 +28,7 @@ Virtual Assistant is build using following open source components.
 
 ### Using Rasa  
 
-We use rasa 1.3 as a ML framework to train and deploy virtual assistant.
+We use Rasa 1.3 as a ML framework to train and deploy virtual assistant.
 We would keep updating the code base to support latest versions of Rasa.
 
 We intent to support all features provided by Rasa framework, in case you find any feature missing please report to us.
