@@ -4,7 +4,6 @@
 
 ![Virtual Assistant](../assets/Virtual%20Assistant%20Arch.jpg)
 
-Virtual Assistant Trainer.
 
 ### UI Component
 UI Component is developed using Angular 7, and would be supported on all browsers compatible with Angular 7.
@@ -38,7 +37,7 @@ code is deployed for that to take effect rasa actions server container would nee
 
 ## Requirements
 
-VA has been built using docker containerization hence docker and docker-compose would be required to launch the application
+Virtual Assistant has been built using docker containerization hence docker and docker-compose would be required to launch the application
 
 ### Software requirements 
 

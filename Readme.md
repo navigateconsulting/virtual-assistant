@@ -14,9 +14,9 @@ Unlike a simple chatbot, a Virtual Assistant can be equipped with multiple skill
 
 Virtual Assistant skills, powered by Artificial Intelligence (AI), dramatically improve the conversational experience, providing a very natural conversation between the assistant and the end user. Instead of the end user having to learn a fixed set of keywords that the assistant would respond to, a Virtual Assistant is able to understand the user’s intentions, however they are expressed and respond accordingly. A Virtual Assistant will ensure your users stay engaged and keep coming back to your service.
 
-With Virtual Assistant, you can develop assistants with skills that can benefit from a more natural conversational user interface, through text or speech, to your enterprise systems. By using Artificial Intelligence (AI) and Natural Language Processing (NLP) powered by Neural Networks and Machine Learning, Virtual Assistant can more easily detect what the user is trying to achieve (their intent) and respond appropriately with information or results of transactions from API connections to any of your back-end enterprise applications and information sources. The application makes it simple and easy to build and train your Virtual Assistant without the need for specialist AI skills. Your assistant can then be exposed through many Chat and Voice channels, a custom mobile app or even your web site.
+The application makes it simple and easy to build and train your Virtual Assistant without the need for specialist AI skills. Your assistant can then be exposed through many Chat and Voice channels, a custom mobile app or even your web site.
 
-Natural Language Processing backed by RASA nlu and core.
+Natural Language Processing backed by Rasa nlu and core.
 
 
 Virtual Assistant is build using following open source components.
@@ -28,10 +28,10 @@ Virtual Assistant is build using following open source components.
 
 ### Using Rasa  
 
-We use rasa 1.3 as a ML framework to train and deploy virtual assistant.
-We would keep updating the code base to support latest versions of rasa.
+We use Rasa 1.3 as a ML framework to train and deploy virtual assistant.
+We would keep updating the code base to support latest versions of Rasa.
 
-We intent to support all features provided by rasa framework, in case you find any feature missing please report to us.
+We intent to support all features provided by Rasa framework, in case you find any feature missing please report to us.
 
 
 ### Documentation 
