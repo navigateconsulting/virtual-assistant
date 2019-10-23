@@ -1,0 +1,40 @@
+{
+  "name": "@assister/rasa",
+  "version": "0.0.1-alpha.1",
+  "description": "Web Component for chatbots made with Rasa NLU",
+  "license": "MIT",
+  "keywords": [
+    "chatbot",
+    "rasa",
+    "rasa core",
+    "rasa nlu",
+    "web component",
+    "assistant"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "jsnext:main": "dist/index.mjs",
+  "es2015": "dist/esm/index.mjs",
+  "es2017": "dist/esm/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "unpkg": "dist/rasa/rasa.js",
+  "files": [
+    "dist/",
+    "loader/"
+  ],
+  "scripts": {
+    "build": "stencil build --docs",
+    "start": "stencil build --dev --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll",
+    "link": "npm link @assister/chat"
+  },
+  "devDependencies": {
+    "@stencil/core": "latest"
+  },
+  "dependencies": {
+    "@assister/chat": "latest"
+  }
+}

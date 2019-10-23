@@ -1,0 +1,6 @@
+@import "~@assister/chat/dist/chat/chat.css";
+
+:root {
+  --header-background-color: #3880ff;
+  --header-text-color: white;
+}
