@@ -55,8 +55,8 @@ and after that complete docker-compose installation by following [link](https://
 
 use below commands to clone the github repo to local machine or server.
     
-    git clone https://github.com/evadigital/eva-platform
-    cd eva-platform
+    git clone https://github.com/navigateconsulting/virtual-assistant.git
+    cd virtual-assistant
     docker-compose build
     docker-compose up
     
