@@ -36,7 +36,7 @@ Virtual Assistant is build using following open source components.
 - Python API gateway - connecting to rasa for deploying and persisting training data
 - Mongodb - for storing training data and editing training data
 </div>
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](code-of-conduct.md)
+
 ### Using Rasa  
 
 We use Rasa 1.3 as a ML framework to train and deploy virtual assistant.
