@@ -5,7 +5,7 @@
 <div align="center" >
   <p><h2>Virtual Assistant</h2></p>
 </div>
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](code-of-conduct.md)
+[Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](code-of-conduct.md)
 <div style="text-align: justify; text-justify: inter-word;">
 Billion users around the world are on instant messaging and chat apps at any moment in time. People want and expect the instant engagement that only messaging apps can provide, and they’re rushing to these platforms in droves, at an adoption rate far greater than even social networks saw at their peak. Organisations need a platform to enable them to harness the power of instant messaging and engage intelligently and contextually with customers and employees.
 </div>
