@@ -9,7 +9,7 @@
 5. [Stories](#stories)
 6. [Entities](#entities)
 7. [Try Now](#try-now)
-8. [Deploy](#)
+8. [Deploy](#deploy)
 
 ## Projects
 
@@ -538,6 +538,8 @@ You can delete an entity by clicking on any entity you intend to delete from the
 
 Try now is a feature where you are provided with an interface to interact with the bot and test your stories. In our case we will be testing the 'greet_story'
 
+##### Note: It is mandatory to create an entity of any type (text/categorical/bool etc) before trying out the project.
+
 ##### Step 1: Click on the try now button respective to the project you want to try out. In our case 'example_project'
 
 <div align="center" >
@@ -572,3 +574,45 @@ Try now is a feature where you are provided with an interface to interact with t
 <hr />
 
 ##### Note: To improve your bot's accuracy, try adding some more samples to your intent texts and try builing more stories. (both in terms of count & variety of input)
+
+<hr />
+
+## Deploy
+
+Deploy is a feature where the user can leverage try now functionality of the project created using the trainer application, on any connector (Skype, Slack, etc) or web channel.
+
+##### Note: Any of the above mentioned connector or web channel should be ready before deploying the project.
+
+##### Step 1: Click on the menu button besides the help / support button present on the header. You will get an option of 'Deploy'. Click on that.
+
+<div align="center" >
+  <img src="../assets/deploy_1.png">
+</div>
+<hr />
+<div align="center" >
+  <img src="../assets/deploy_2.png">
+</div>
+<hr />
+
+##### Step 2: Click on the deploy button respective to the project you want to deploy. In our case 'project2'
+
+<div align="center" >
+  <img src="../assets/deploy_3.png">
+</div>
+<hr />
+
+##### Step 3: Let the bot take time to train & deploy itself
+
+<div align="center" >
+  <img src="../assets/deploy_4.png">
+</div>
+<hr />
+
+##### Step 4: Once the the training and deployment part is done, you model gets published. The 'State' column of the respective gets updated to 'Published' state and the models which are already published get updated to 'Archived' state.
+
+##### Note: At a time, only one project can be published and can be tried out on different connectors and channels.
+
+<div align="center" >
+  <img src="../assets/deploy_5.png">
+</div>
+<hr />
