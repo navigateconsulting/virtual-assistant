@@ -6,7 +6,7 @@ function unhighlightText(text_id) {
 }
 function highlightText(text_id, start, end) {
     var inputText = document.getElementById(text_id);
-    var innerHTML = text = inputText.innerHTML;
+    var innerHTML = text = inputText.textContent.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     innerHTML = innerHTML.substring(0,start) + "<span class='highlight'>" + innerHTML.substring(start,end) + "</span>" + innerHTML.substring(end,text.length);
     inputText.innerHTML = innerHTML;
 }
@@ -17,7 +17,9 @@ function selectText(event) {
         return 0
     } else {
         var inputText = document.getElementById(event.target.id);
-        var innerHTML = text = inputText.innerHTML;
+        console.log(inputText)
+        var innerHTML = text = inputText.textContent.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+        console.log(innerHTML)
         selected_text = innerHTML.substring(selection.getRangeAt(0).startOffset,selection.getRangeAt(0).endOffset);
         var entity = {"start": selection.getRangeAt(0).startOffset, "end": selection.getRangeAt(0).endOffset, "value": selected_text, "text_id": event.target.id}
         return entity;
