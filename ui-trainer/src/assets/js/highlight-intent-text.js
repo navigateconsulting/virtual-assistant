@@ -17,9 +17,7 @@ function selectText(event) {
         return 0
     } else {
         var inputText = document.getElementById(event.target.id);
-        console.log(inputText)
         var innerHTML = text = inputText.textContent.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-        console.log(innerHTML)
         selected_text = innerHTML.substring(selection.getRangeAt(0).startOffset,selection.getRangeAt(0).endOffset);
         var entity = {"start": selection.getRangeAt(0).startOffset, "end": selection.getRangeAt(0).endOffset, "value": selected_text, "text_id": event.target.id}
         return entity;
