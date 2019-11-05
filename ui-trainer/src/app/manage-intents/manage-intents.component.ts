@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Output, ViewEncapsulation, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
-import { MatTableDataSource, MatAutocompleteModule, MatAutocomplete } from '@angular/material';
+import { Component, OnInit, Input, Output, ViewEncapsulation, HostListener, ViewChild, OnDestroy } from '@angular/core';
+import { MatTableDataSource, MatAutocompleteModule, MatAutocomplete, MatAutocompleteTrigger } from '@angular/material';
 import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -35,6 +35,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   new_intent_text: string;
   show_invalid_entity_error = false;
   appSource: string;
+  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
 
   private subscription: Subscription = new Subscription();
 

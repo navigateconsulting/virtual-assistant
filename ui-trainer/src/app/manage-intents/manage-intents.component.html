@@ -7,7 +7,7 @@
     <div class="col-md-6">
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Select Entity</mat-label>
-        <input type="text" class="entity-auto-complete" aria-label="Entity" [(ngModel)]="entity_value" matInput [formControl]="entitiesControl" [matAutocomplete]="auto">
+        <input type="text" class="entity-auto-complete" #trigger="matAutocompleteTrigger" (focusout)="trigger.closePanel()" aria-label="Entity" [(ngModel)]="entity_value" matInput [formControl]="entitiesControl" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)='getEntityValue($event.option.value)'>
           <mat-option *ngFor="let option of entityfilteredOptions | async" [value]="option.entity_name">
             {{option.entity_name}}
