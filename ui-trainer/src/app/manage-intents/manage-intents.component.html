@@ -31,10 +31,17 @@
       </mat-form-field>
     </div>
   </div>
-  <div *ngIf="text_entities.length===0" class="row empty-intent-text">
+  <div *ngIf="text_entities.length===0 && text_entities_backup.length===0" class="row empty-intent-text">
     <div class="col-md-12">
-      <div class="alert alert-danger">
-        <strong>Warning!</strong> Atleast one intent should be defined.
+      <div class="alert alert-info">
+        <strong>Info!</strong> Atleast one intent should be defined.
+      </div>
+    </div>
+  </div>
+  <div *ngIf="text_entities.length===0 && text_entities_backup.length!==0" class="row empty-intent-text">
+    <div class="col-md-12">
+      <div class="alert alert-warning">
+        <strong>Warning!</strong> No Matching Intent Texts.
       </div>
     </div>
   </div>

@@ -30,10 +30,17 @@
       </mat-form-field>
     </div>
   </div>
-  <div *ngIf="text_entities.length===0" class="row empty-response-text">
+  <div *ngIf="text_entities.length===0 && text_entities_backup.length===0" class="row empty-response-text">
     <div class="col-md-12">
-      <div class="alert alert-danger">
-        <strong>Warning!</strong> Atleast one response should be defined.
+      <div class="alert alert-info">
+        <strong>Info!</strong> Atleast one response should be defined.
+      </div>
+    </div>
+  </div>
+  <div *ngIf="text_entities.length===0 && text_entities_backup.length!==0" class="row empty-response-text">
+    <div class="col-md-12">
+      <div class="alert alert-warning">
+        <strong>Warning!</strong> No Matching Response Texts.
       </div>
     </div>
   </div>

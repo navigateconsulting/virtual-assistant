@@ -11,10 +11,17 @@
       </button>
     </div>
   </div>
-  <div *ngIf="domains_json.length===0" class="row empty-domains">
+  <div *ngIf="domains_json.length===0 && domains_json_backup.length===0" class="row empty-domains">
     <div class="col-md-12">
       <div class="alert alert-info">
         <strong>Info!</strong> Currently there are no domains.
+      </div>
+    </div>
+  </div>
+  <div *ngIf="domains_json.length===0 && domains_json_backup.length!==0" class="row empty-domains">
+    <div class="col-md-12">
+      <div class="alert alert-warning">
+        <strong>Info!</strong> No Matching Domains.
       </div>
     </div>
   </div>
