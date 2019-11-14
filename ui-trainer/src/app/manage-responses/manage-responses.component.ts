@@ -16,7 +16,7 @@ import { environment } from '../../environments/environment';
 export class ManageResponsesComponent implements OnInit, OnDestroy {
 
   text_entities: Array<string>;
-  text_entities_backup: any;
+  text_entities_backup: Array<string>;
   entities: any;
   entities_backup: any;
   new_response_text: string;
@@ -41,6 +41,7 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.appSource = environment.app_source;
     this.text_entities = new Array<string>();
+    this.text_entities_backup = new Array<string>();
     this.getEntities();
     this.getResponseDetails();
     this.sharedDataService.setSharedData('activeTabIndex', '1', constant.MODULE_COMMON);

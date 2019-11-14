@@ -47,13 +47,14 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
 
   currentIntent: any;
   text_entities: Array<object>;
-  text_entities_backup: any;
+  text_entities_backup: Array<object>;
   @Input() intentObjectId: string;
   @Input() projectObjectId: string;
 
   ngOnInit() {
     this.appSource = environment.app_source;
     this.text_entities = new Array<object>();
+    this.text_entities_backup = new Array<object>();
     this.getEntities();
     this.getIntentDetails();
     this.sharedDataService.setSharedData('activeTabIndex', '0', constant.MODULE_COMMON);
@@ -131,8 +132,12 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   }
 
   getEntityValue(entity_string: string) {
-    if (this.checkEntityValue(entity_string)) {
-      this.show_invalid_entity_error = false;
+    if (entity_string.trim() !== '') {
+      if (this.checkEntityValue(entity_string)) {
+        this.show_invalid_entity_error = false;
+      }
+    } else {
+      this.trigger.closePanel();
     }
   }
 
@@ -261,6 +266,12 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     if (event.which === 222) {
       this.new_intent_text = this.new_intent_text.slice(0, -1);
     }
+  }
+
+  closeAutoCompPanel() {
+    setTimeout(() => {
+      this.trigger.closePanel();
+    }, 100);
   }
 
   ngOnDestroy(): void {
