@@ -1,4 +1,4 @@
-# How to use Navigate Virtual Assistant App.
+# How to use Virtual Assistant Trainer App.
 
 ## Table of Contents
 
