@@ -22,12 +22,15 @@ export class ChooseEntityComponent implements OnInit {
 
   ngOnInit() {
     this.entity = this.data.selected_entity;
+    this.entities = new Array<object>();
     if (this.entity === '') {
       this.entities = this.data.entities;
       this.entityfilteredOptions = this.entitiesControl.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value))
       );
+    } else {
+      this.entities.push(this.entity);
     }
   }
 
