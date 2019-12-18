@@ -90,6 +90,18 @@ export const constant = {
     PROJECT_DEPLOY_LISTEN: 'respModelPublish',
     MODEL_DEPLOY_LISTEN: 'publishMessage',
 
+    REFRESH_DB_NSP: '/refresh',
+    REFRESH_DB_URL: 'refresh_data',
+    REFRESH_DB_LISTEN: 'refresh',
+
+    ACTIONS_URL: 'getActions',
+    ACTIONS_NSP: '/action',
+    ACTIONS_LISTEN: 'allActions',
+    ACTIONS_RESPONSE: 'actionsResponse',
+    ACTIONS_CREATE: 'createAction',
+    ACTIONS_DELETE: 'deleteAction',
+    ACTIONS_UPDATE: 'updateAction',
+
     MODULE_COMMON: 'common',
     MODULE_MODEL: 'model',
 };

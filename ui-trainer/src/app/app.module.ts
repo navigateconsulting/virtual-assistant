@@ -53,6 +53,11 @@ import { MatSpinner } from '@angular/material';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { ModelErrorComponent } from './common/modals/model-error/model-error.component';
 import { TryNowLoadComponent } from './try-now-load/try-now-load.component';
+import { ConfirmRefreshComponent } from './common/modals/confirm-refresh/confirm-refresh.component';
+import { ManageActionsComponent } from './manage-actions/manage-actions.component';
+import { AddActionComponent } from './common/modals/add-action/add-action.component';
+import { EditActionComponent } from './common/modals/edit-action/edit-action.component';
+import { DeleteActionComponent } from './common/modals/delete-action/delete-action.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +99,11 @@ import { TryNowLoadComponent } from './try-now-load/try-now-load.component';
     SpinnerComponent,
     ModelErrorComponent,
     TryNowLoadComponent,
+    ConfirmRefreshComponent,
+    ManageActionsComponent,
+    AddActionComponent,
+    EditActionComponent,
+    DeleteActionComponent,
   ],
   entryComponents: [
     AddEntityComponent,
@@ -120,6 +130,10 @@ import { TryNowLoadComponent } from './try-now-load/try-now-load.component';
     SpinnerComponent,
     ModelErrorComponent,
     TryNowLoadComponent,
+    ConfirmRefreshComponent,
+    AddActionComponent,
+    EditActionComponent,
+    DeleteActionComponent
   ],
   imports: [
     BrowserModule,

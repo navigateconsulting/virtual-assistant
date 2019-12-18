@@ -1013,3 +1013,38 @@ class CustomActionsModel:
         result = await cursor.to_list(length=1000)
         print("Custom Actions  {}".format(json.loads(dumps(result))))
         return json.loads(dumps(result))
+    
+    async def create_action(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        # Validation to check if action already exists
+
+        val_res = await db.actions.find_one({"action_name": json_record['action_name']})
+
+        if val_res is not None:
+            print('Action already exists')
+            return {"status": "Error", "message": "Action already exists"}
+        else:
+            result = await db.actions.insert_one(json_record)
+            print("Action created {}".format(result.inserted_id))
+            return {"status": "Success", "message": "Action Has Been Created"}
+    
+    async def update_action(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"action_description": json_record['action_description']
+                                 }}
+        result = await db.actions.update_one(query, update_field)
+        print("Action Updated , rows modified {}".format(result))
+        return {"status": "Success", "message": "Action details updated successfully "}
+    
+    async def delete_action(self, object_id):
+        query = {"_id": ObjectId("{}".format(object_id))}
+
+        # Delete Action
+        result = await db.actions.delete_one(query)
+        print("Action Deleted count {}".format(result))
+        return {"status": "Success", "message": "Action Deleted Successfully"}

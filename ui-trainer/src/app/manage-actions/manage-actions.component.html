@@ -1,0 +1,80 @@
+<div class="actions-container">
+  <div class="row add-action">
+    <div class="col-md-11">
+      <mat-form-field>
+        <input matInput (keyup)="applyActionsFilter($event.target.value)" placeholder="Filter Actions">
+      </mat-form-field>
+    </div>
+    <div class="col-md-1 text-right">
+      <button mat-mini-fab matTooltip="Add Action" class="add-action-button-color" (click)="addNewAction()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="actions_json.length===0" class="row empty-actions">
+    <div class="col-md-12">
+      <div class="alert alert-info">
+        <strong>Info!</strong> Currently there are no actions.
+      </div>
+    </div>
+  </div>
+  <div class="row actions-table-container">
+    <div class="col-md-12">
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="actionsDataSource">
+
+          <ng-container matColumnDef="icon">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let action"> <mat-icon>gavel</mat-icon> </td>
+          </ng-container>
+        
+          <ng-container matColumnDef="action_name">
+            <th mat-header-cell *matHeaderCellDef> Action Name </th>
+            <td mat-cell *matCellDef="let action"><span class="action_name_text">{{action.action_name}}</span></td>
+          </ng-container>
+        
+          <ng-container matColumnDef="action_description">
+            <th mat-header-cell *matHeaderCellDef> Action Description </th>
+            <td mat-cell *matCellDef="let action"> {{action.action_description}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef> Edit </th>
+            <td mat-cell *matCellDef="let action" class="edit_remove">
+              <div *ngIf="action.status">
+                <button mat-icon-button [disabled]="action.status">
+                  <mat-icon svgIcon="editDis"></mat-icon>
+                </button>
+              </div>
+              <div *ngIf="!action.status">
+                <button mat-icon-button [disabled]="action.status" (click)="editAction(action._id.$oid, action.action_name, action.action_description)">
+                  <mat-icon svgIcon="edit"></mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef> Delete </th>
+            <td mat-cell *matCellDef="let action" class="edit_remove">
+              <div *ngIf="action.status">
+                <button mat-icon-button [disabled]="action.status">
+                  <mat-icon svgIcon="deleteDis"></mat-icon>
+                </button>
+              </div>
+              <div *ngIf="!action.status">
+                <button mat-icon-button [disabled]="action.status" (click)="deleteAction(action._id.$oid)">
+                  <mat-icon svgIcon="delete"></mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="actionsDisplayedColumns;"></tr>
+          <tr mat-row *matRowDef="let row; columns: actionsDisplayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons (page)="getActionsPaginatorData($event)"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
