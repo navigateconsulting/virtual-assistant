@@ -497,4 +497,70 @@ export class WebSocketService {
   deployModel(projectObjectId: string) {
     this.socket.emit(constant.MODEL_DEPLOY_URL, projectObjectId);
   }
+
+  refreshAppDB() {
+    this.socket.nsp = constant.REFRESH_DB_NSP;
+    this.socket.emit(constant.REFRESH_DB_URL);
+    return Observable.create((observer) => {
+      this.socket.on(constant.REFRESH_DB_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable to reach the server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  createActionsRoom(action_room: string) {
+    this.socket.nsp = constant.ACTIONS_NSP;
+    this.socket.emit('join_room', action_room);
+  }
+
+  getActions(action_room: string) {
+    this.socket.emit(constant.ACTIONS_URL, action_room);
+    return Observable.create((observer) => {
+      this.socket.on(constant.ACTIONS_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  getActionAlerts() {
+    return Observable.create((observer) => {
+      this.socket.on(constant.ACTIONS_RESPONSE, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable to reach the server');
+        }
+      });
+    });
+  }
+
+  leaveActionsRoom(action_room: string) {
+    this.socket.emit('leave_room', action_room);
+  }
+
+  createAction(new_action_stub: any, action_room: string) {
+    this.socket.emit(constant.ACTIONS_CREATE, new_action_stub, action_room);
+  }
+
+  deleteAction(action_object_id: string, action_room: string) {
+    this.socket.emit(constant.ACTIONS_DELETE, action_object_id, action_room);
+  }
+
+  editAction(edit_action_stub: any, action_room: string) {
+    this.socket.emit(constant.ACTIONS_UPDATE, edit_action_stub, action_room);
+  }
 }

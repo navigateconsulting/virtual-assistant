@@ -1,0 +1,22 @@
+@import '../../../../scss/styles';
+
+h1 {
+    color: $text-color-1;
+    font-size: $dialog-h1-font-size;
+    line-height: $dialog-h1-line-height;
+}
+.dialog-icon {
+    height: $dialog-icon-height;
+    width: $dialog-icon-width;
+}
+.submit-button {
+    background-color: $primary-color-3;
+    color: $primary-white;
+}
+.submit-button-black {
+    background-color: $primary-color-8;
+    color: $primary-white;
+}
+.cancel-button {
+    color: $text-color-1;
+}

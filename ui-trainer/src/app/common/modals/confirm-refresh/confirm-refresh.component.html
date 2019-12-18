@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1 mat-dialog-title>Confirm Refresh</h1>
+  </div>
+</div>
+<mat-dialog-content>
+  <h4 class="mat-subheading-1">Are you sure you want to refresh? By hitting the confirm button, your previous data will be wiped out and replaced with base data</h4>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="row" style="width: 100%;">
+    <div class="col-md-6 text-right">
+      <button mat-raised-button (click)="confirmDelete()" class="submit-button">Confirm</button>
+    </div>
+    <div class="col-md-6 text-center">
+      <button mat-raised-button mat-dialog-close class="cancel-button">Cancel</button>
+    </div>
+  </div>
+</mat-dialog-actions>
