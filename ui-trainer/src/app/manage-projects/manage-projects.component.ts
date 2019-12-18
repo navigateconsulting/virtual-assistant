@@ -36,7 +36,6 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   currentPathID: string;
   currentType: string;
   canNavigateUp = false;
-  showAddFolderFile = true;
   openIntentORStoryORResponseFile: string;
   propertyPanel: string;
   projects_json: Array<object>;

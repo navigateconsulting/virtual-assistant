@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-md-9">
+    <h1 mat-dialog-title>Edit Action</h1>
+  </div>
+  <div class="col-md-3 text-right">
+    <mat-icon class="dialog-icon">gavel</mat-icon>
+  </div>
+</div>
+<form [formGroup]="editActionForm" (ngSubmit)="closeDialog()">
+<mat-dialog-content>
+  <mat-form-field class="dialog-full-width" appearance="outline">
+    <mat-label>Action Name</mat-label>
+    <input matInput (keydown.space)="$event.preventDefault()" maxlength="30" onPaste="return false" autocomplete="off" formControlName="actionName" #actionName="matInput">
+  </mat-form-field>
+  <br />
+  <mat-form-field class="dialog-full-width" appearance="outline">
+    <mat-label>Action Description</mat-label>
+    <textarea matInput maxlength="140" formControlName="actionDescription"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="row" style="width: 100%;">
+    <div class="col-md-6 text-right">
+      <button mat-raised-button type="submit" class="submit-button" [disabled]="!editActionForm.valid">OK</button>
+    </div>
+    <div class="col-md-6 text-center">
+      <button mat-raised-button mat-dialog-close class="cancel-button">Cancel</button>
+    </div>
+  </div>
+</mat-dialog-actions>
+</form>

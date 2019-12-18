@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, Output, ViewEncapsulation, HostListener, ViewChild, OnDestroy } from '@angular/core';
-import { MatTableDataSource, MatAutocompleteModule, MatAutocomplete, MatAutocompleteTrigger } from '@angular/material';
-import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
+import { Component, OnInit, Input, ViewEncapsulation, ViewChild, OnDestroy } from '@angular/core';
+import { MatAutocompleteTrigger } from '@angular/material';
+import { FormControl, FormArray, FormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { map, startWith } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
 import { ChooseEntityComponent } from '../common/modals/choose-entity/choose-entity.component';
 import { EntitiesDataService } from '../common/services/entities-data.service';
 import { WebSocketService } from '../common/services/web-socket.service';

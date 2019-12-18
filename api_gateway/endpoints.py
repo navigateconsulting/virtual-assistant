@@ -1,5 +1,5 @@
 from __main__ import sio
-from models import ProjectsModel, DomainsModel, IntentsModel, ResponseModel, StoryModel, EntityModel, RefreshDb, RasaConversations
+from models import ProjectsModel, DomainsModel, IntentsModel, ResponseModel, StoryModel, EntityModel, RefreshDb, RasaConversations, CustomActionsModel
 from export_project import ExportProject
 from config import CONFIG
 import os
@@ -17,7 +17,7 @@ StoryModel = StoryModel()
 ExportProject = ExportProject()
 RefreshDb = RefreshDb()
 RasaConversations = RasaConversations()
-
+CustomActionsModel = CustomActionsModel()
 
 @sio.on('connect')
 async def connect(sid, environ):
@@ -45,11 +45,11 @@ This endpoint needs to be used with caution and ensure proper backup is taken be
 
 
 @sio.on('refresh_data', namespace='/refresh')
-async def refresh_data(sid, data):
+async def refresh_data(sid):
     print("##################################User {} Requested to refresh DB  ##########################".format(sid))
-
+    
     result = await RefreshDb.refresh_db()
-    await sio.emit('refresh', result)
+    await sio.emit('refresh', {"Status": "Success"})
 
 
 '''Projects Endpoints 
@@ -484,6 +484,53 @@ async def update_entity(sid, data, room_name):
 
     if entities_list is not None:
         await sio.emit('allEntities', entities_list, namespace='/nav', room=room_name)
+
+
+@sio.on('getActions', namespace='/action')
+async def get_actions(sid, room_name):
+
+    print("---------- Request from Session {} -------------- ".format(sid))
+
+    result = await CustomActionsModel.get_custom_actions()
+    await sio.emit('allActions', result, namespace='/action', room=room_name)
+
+@sio.on('createAction', namespace='/action')
+async def create_actions(sid, record, room_name):
+
+    print("---------- Request from Session {} -- with record {} ------------ ".format(sid, record))
+
+    message = await CustomActionsModel.create_action(record)
+    await sio.emit('actionsResponse', message, namespace='/action', room=sid)
+
+    if message['status'] == 'Success':
+        result = await CustomActionsModel.get_custom_actions()
+        await sio.emit('allActions', result, namespace='/action', room=room_name)
+
+@sio.on('deleteAction', namespace='/action')
+async def delete_action(sid, object_id, room_name):
+
+    print("---------- Request from Session {} --- with record {} ----------- ".format(sid, object_id))
+
+    message = await CustomActionsModel.delete_action(object_id)
+    await sio.emit('actionsResponse', message, namespace='/action', room=sid)
+
+    if message['status'] == 'Success':
+        result = await CustomActionsModel.get_custom_actions()
+        await sio.emit('allActions', result, namespace='/action', room=room_name)
+
+
+@sio.on('updateAction', namespace='/action')
+async def update_action(sid, update_query, room_name):
+
+    print("---------- Request from Session {} - with record {} ------- ".format(sid, update_query))
+
+    message = await CustomActionsModel.update_action(update_query)
+    await sio.emit('actionsResponse', message, namespace='/action', room=sid)
+
+    if message['status'] == 'Success':
+        result = await CustomActionsModel.get_custom_actions()
+        await sio.emit('allActions', result, namespace='/action', room=room_name)
+
 
 # End points for Training
 

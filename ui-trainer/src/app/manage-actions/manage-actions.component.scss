@@ -1,0 +1,57 @@
+@import '../../scss/styles';
+
+.actions-container {
+    padding: 1%;
+    overflow-x: hidden;
+    height: 100%;
+}
+.add-action {
+    height: 10%;
+    padding: 0.5%;
+}
+.actions-table-container {
+    height: 80%;
+    padding: 0.5%;
+    overflow-y: auto;
+}
+table {
+    width: 100%;
+}
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+.mat-column-icon{
+    width: 5%;
+}
+.mat-column-action_name{
+    width: 10%;
+}
+.mat-column-action_description {
+    width: 35%;
+}
+.mat-column-edit {
+    width: 5%;
+}
+.mat-column-delete {
+    width: 5%;
+}
+.mat-row:hover {
+    background-color: #eee;
+}
+.edit_remove {
+    cursor: pointer;
+}
+.modify_content {
+    position: fixed;
+    bottom: 3%;
+    width: 100%;
+}
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}
+.add-action-button-color {
+    background-image: $global_gradient;
+}

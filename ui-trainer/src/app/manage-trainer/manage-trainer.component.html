@@ -35,7 +35,7 @@
     </mat-sidenav-content>
     <mat-sidenav #entitiesSidenav mode="over" position="end" class="property-panel-container">
       <div class="row property-panel-row">
-        <div *ngIf="appSource==='enterprise'" class="col-md-12">
+        <div class="col-md-12">
           <div class="text-center">
             <h4 class="prop-panel-text">Property Panel</h4>
           </div>
@@ -49,22 +49,6 @@
             <div class="col-md-4 text-center">
               <button mat-flat-button class="app-prop-button" (click)="openPropertyPanelComponent('app-prop')">AppProp</button>
             </div>
-          </div>
-          <div class="row property-panel-components">
-            <div style="width: 100%;" *ngIf="propertyPanel === 'entities'">
-              <app-manage-entities #entityComponent [projectObjectId]="projectObjectId"></app-manage-entities>
-            </div>
-            <div style="width: 100%;" *ngIf="propertyPanel === 'actions'">
-              Manage Actions Coming Soon
-            </div>
-            <div style="width: 100%;" *ngIf="propertyPanel === 'app-prop'">
-              Manage App Properties Coming Soon
-            </div>
-          </div>
-        </div>
-        <div *ngIf="appSource==='open'" class="col-md-12">
-          <div class="text-center">
-            <h4 class="prop-panel-text">Entities</h4>
           </div>
           <div class="row property-panel-components">
             <div style="width: 100%;" *ngIf="propertyPanel === 'entities'">
