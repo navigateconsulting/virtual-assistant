@@ -10,13 +10,17 @@ import io from 'socket.io-client';
 export class WebSocketService {
 
   private socket: any;
+  session_id: string;
 
   constructor() {
     if (environment.production === false) {
-      this.socket = io(environment.BASE_URL);
+      this.socket = io.connect(environment.BASE_URL);
     } else {
-      this.socket = io();
+      this.socket = io.connect();
     }
+    this.socket.on('connect', () => {
+      this.session_id = this.socket.id;
+    });
   }
 
   createProjectsRoom(project_room: string) {
@@ -420,43 +424,43 @@ export class WebSocketService {
     this.socket.emit(constant.STORY_DETAILS_UPDATE, update_ir_from_story_stub, story_room);
   }
 
-  createTryNowRoom(try_now_room: string) {
-    this.socket.nsp = constant.TRY_NOW_NSP;
-    this.socket.emit('join_room', try_now_room);
-  }
+  // createTryNowRoom(try_now_room: string) {
+  //   this.socket.nsp = constant.TRY_NOW_NSP;
+  //   this.socket.emit('join_room', try_now_room);
+  // }
 
-  tryNowProject(try_now_project_stub: any) {
-    this.socket.emit(constant.TRY_NOW_URL, try_now_project_stub);
-    return Observable.create((observer) => {
-      this.socket.on(constant.TRY_NOW_LISTEN, (data) => {
-        if (data) {
-          observer.next(data);
-        } else {
-          observer.error('Unable To Reach Server');
-        }
-      });
-      return () => {
-        this.socket.disconnect();
-      };
-    });
-  }
+  // tryNowProject(try_now_project_stub: any) {
+  //   this.socket.emit(constant.TRY_NOW_URL, try_now_project_stub);
+  //   return Observable.create((observer) => {
+  //     this.socket.on(constant.TRY_NOW_LISTEN, (data) => {
+  //       if (data) {
+  //         observer.next(data);
+  //       } else {
+  //         observer.error('Unable To Reach Server');
+  //       }
+  //     });
+  //     return () => {
+  //       this.socket.disconnect();
+  //     };
+  //   });
+  // }
 
-  chatNowProject(chat_now_stub: any) {
-    this.socket.emit(constant.CHAT_NOW_URL, chat_now_stub);
-    return Observable.create((observer) => {
-      this.socket['_callbacks']['$chatResponse'] = [];
-      this.socket.on(constant.TRY_NOW_LISTEN, (data) => {
-        if (data) {
-          observer.next(data);
-        } else {
-          observer.error('Unable To Reach Server');
-        }
-      });
-      return () => {
-        this.socket.disconnect();
-      };
-    });
-  }
+  // chatNowProject(chat_now_stub: any) {
+  //   this.socket.emit(constant.CHAT_NOW_URL, chat_now_stub);
+  //   return Observable.create((observer) => {
+  //     this.socket['_callbacks']['$chatResponse'] = [];
+  //     this.socket.on(constant.TRY_NOW_LISTEN, (data) => {
+  //       if (data) {
+  //         observer.next(data);
+  //       } else {
+  //         observer.error('Unable To Reach Server');
+  //       }
+  //     });
+  //     return () => {
+  //       this.socket.disconnect();
+  //     };
+  //   });
+  // }
 
   createProjectDeployNSP(deploy_room: string) {
     this.socket.nsp = constant.PROJECT_DEPLOY_NSP;
@@ -562,5 +566,9 @@ export class WebSocketService {
 
   editAction(edit_action_stub: any, action_room: string) {
     this.socket.emit(constant.ACTIONS_UPDATE, edit_action_stub, action_room);
+  }
+
+  getSessionId() {
+    return this.session_id;
   }
 }

@@ -1,7 +1,8 @@
 from aiohttp import web
 import socketio
 from config import CONFIG
-
+import aiohttp_cors
+import json
 
 if CONFIG.get('api_gateway', 'LOGGING') == 'TRUE':
     print("--------------------Starting Socketio Connection in Debug Mode --------------------------")
@@ -11,20 +12,43 @@ else:
 
 app = web.Application()
 sio.attach(app)
-
+cors = aiohttp_cors.setup(app)
 
 async def index(request):
     print(request)
     with open('index.html') as f:
         return web.Response(text=f.read(), content_type='text/html')
 
-
 # Imports for Endpoints
 
 import endpoints
 import rooms_endpoints
 
+try_chat_now = endpoints.TryNow()
+
+async def trynow(request):
+    return await try_chat_now.on_trynow(request)
+
+async def chatnow(request):
+    return await try_chat_now.on_chatNow(request)
+
 app.router.add_get('/', index)
+cors.add(app.router.add_route("POST", "/tryNow", trynow), {
+    "http://localhost:8080": aiohttp_cors.ResourceOptions(
+        allow_credentials=True,
+        expose_headers=("X-Custom-Server-Header",),
+        allow_headers=("X-Requested-With", "Content-Type"),
+        max_age=3600,
+    )
+})
+cors.add(app.router.add_route("POST", "/chatNow", chatnow), {
+    "http://localhost:8080": aiohttp_cors.ResourceOptions(
+        allow_credentials=True,
+        expose_headers=("X-Custom-Server-Header",),
+        allow_headers=("X-Requested-With", "Content-Type"),
+        max_age=3600,
+    )
+})
 
 # We kick off our server
 if __name__ == '__main__':
