@@ -5,6 +5,7 @@ import { constant } from '../../environments/constants';
 import { environment } from '../../environments/environment';
 import { TryNowLoadService } from '../common/services/try-now-load.service';
 import { ModelErrorService } from '../common/services/model-error.service';
+import { TryNowService } from '../common/services/try-now.service';
 
 declare var adjustTryNowScroll: Function;
 declare var changeRowBackgroundColor: Function;
@@ -35,11 +36,13 @@ export class TryNowComponent implements OnInit, OnDestroy {
   showUserPredictionsDetails: boolean;
   slots: any;
   appSource: string;
+  session_id: string;
 
   constructor(public webSocketService: WebSocketService,
               public sharedDataService: SharedDataService,
               public modelErrorService: ModelErrorService,
-              public tryNowLoadService: TryNowLoadService) { }
+              public tryNowLoadService: TryNowLoadService,
+              public tryNowService: TryNowService) { }
 
   ngOnInit() {
     this.appSource = environment.app_source;
@@ -47,12 +50,13 @@ export class TryNowComponent implements OnInit, OnDestroy {
     this.tryNowLoadService.spin$.next(true);
     this.showUserBotCardDetails = false;
     this.showUserPredictionsDetails = true;
+    this.session_id = this.webSocketService.getSessionId();
     this.tryNowProject();
   }
 
   tryNowProject() {
-    this.webSocketService.createTryNowRoom('try_now');
-    this.webSocketService.tryNowProject(this.projectObjectId).subscribe(response => {
+    console.log('In try now');
+    this.tryNowService.tryNow(this.session_id, this.projectObjectId).subscribe(response => {
       if (response.status === 'Success') {
         this.tryNowLoadService.spin$.next(false);
         this.chats = new Array<object>();
@@ -66,6 +70,11 @@ export class TryNowComponent implements OnInit, OnDestroy {
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
+    // this.webSocketService.createTryNowRoom('try_now');
+    // this.webSocketService.tryNowProject(this.projectObjectId).subscribe(response => {
+    // },
+    // err => console.error('Observer got an error: ' + err),
+    // () => console.log('Observer got a complete notification'));
   }
 
   sendChat(send_message?: string) {
@@ -74,7 +83,7 @@ export class TryNowComponent implements OnInit, OnDestroy {
       this.userChatMessage = send_message;
     }
     if (this.userChatMessage.trim() !== '') {
-      this.webSocketService.chatNowProject(this.userChatMessage).subscribe(response => {
+      this.tryNowService.chatNow(this.session_id, this.userChatMessage).subscribe(response => {
         if (response) {
           this.chats = this.chats_backup = this.storyCode = response['tracker-store']['events'];
           // tslint:disable-next-line: max-line-length

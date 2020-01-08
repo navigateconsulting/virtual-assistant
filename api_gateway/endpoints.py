@@ -6,7 +6,8 @@ import os
 import json
 import sys
 import time
-
+from aiohttp import web
+from bson.json_util import dumps
 
 EntityModel = EntityModel()
 ProjectsModel = ProjectsModel()
@@ -534,18 +535,18 @@ async def update_action(sid, update_query, room_name):
 
 # End points for Training
 
-
 from __main__ import socketio
 #from __main__ import aiohttp
 
-
-class TryNow(socketio.AsyncNamespace):
+class TryNow():
 
     agent = ''
+    #Try Now Rest Endpoint
 
-    async def on_tryNow(self, sid, data):
-        print("----------- Inside Try now --from SID {}--------------".format(sid))
-        result = await ExportProject.main(sid, data, 'SESSION')
+    async def on_trynow(self, request):
+        res_data = await request.json()
+        print("----------- Inside Try now --from SID {}--------------".format(res_data['sessionId']))
+        result = await ExportProject.main(res_data['sessionId'], res_data['projectObjectId'], 'SESSION')
         print(result)
 
         if result is not None:
@@ -567,7 +568,7 @@ class TryNow(socketio.AsyncNamespace):
 
         endpoints = EndpointConfig(url="http://action_server:5055/webhook")
 
-        base_path = base_path + sid + "/"
+        base_path = base_path + res_data['sessionId'] + "/"
 
         config = base_path + config
         training_files = base_path + training_files
@@ -581,39 +582,45 @@ class TryNow(socketio.AsyncNamespace):
             unpacked = model.get_model(model_path)
             domain = Domain.load(domain)
             _tracker_store = MongoTrackerStore(domain=domain,
-                                               host=CONFIG.get('api_gateway', 'MONGODB_URL'),
-                                               db=CONFIG.get('api_gateway', 'MONGODB_NAME'),
-                                               username=None,
-                                               password=None,
-                                               auth_source="admin",
-                                               collection="conversations",
-                                               event_broker=None)
+                                                host=CONFIG.get('api_gateway', 'MONGODB_URL'),
+                                                db=CONFIG.get('api_gateway', 'MONGODB_NAME'),
+                                                username=None,
+                                                password=None,
+                                                auth_source="admin",
+                                                collection="conversations",
+                                                event_broker=None)
             print("***************  Actions Endpoint as per data ********** {}".format(endpoints.url))
             self.agent = Agent.load(unpacked, tracker_store=_tracker_store, action_endpoint=endpoints)
-            await sio.emit('chatResponse', {"status": "Success", "message": "Ready to chat"}, namespace='/trynow', room=sid)
+            return web.json_response({"status": "Success", "message": "Ready to chat"})
+            #await sio.emit('chatResponse', {"status": "Success", "message": "Ready to chat"}, namespace='/trynow', room=sid)
         except Exception as e:
             print("Exception while try Now ---  "+str(e))
-            await sio.emit('chatResponse', {"status": "Error", "message": repr(e)}, namespace='/trynow', room=sid)
+            #await sio.emit('chatResponse', {"status": "Error", "message": repr(e)}, namespace='/trynow', room=sid)
+            return web.json_response({"status": "Error", "message": repr(e)})
 
-    async def on_chatNow(self, sid, message):
-
+    async def on_chatNow(self, request):
+        res_data = await request.json()
         out_message = {}
         print("inside chat now")
-        responses = await self.agent.handle_text(message, sender_id=sid)
-
-        result = await RasaConversations.get_conversations(sid)
-
+        responses = await self.agent.handle_text(res_data['message'], sender_id=res_data['sessionId'])
+        print(responses)
+        result = await RasaConversations.get_conversations(res_data['sessionId'])
+        print(result)
         if 'message' not in responses:
             out_message['tracker-store'] = result
-            await sio.emit('chatResponse', out_message, namespace='/trynow', room=sid)
+            print('out_message', out_message)
+            #await sio.emit('chatResponse', out_message, namespace='/trynow', room=sid)
+            return web.json_response(out_message)
         else:
             for response in responses:
                 print("--------- BOT Response {}".format(response))
                 response['tracker-store'] = result
-                await sio.emit('chatResponse', response, namespace='/trynow', room=sid)
+                print('response', response)
+                #await sio.emit('chatResponse', response, namespace='/trynow', room=sid)
+                return web.json_response(response)
 
 
-sio.register_namespace(TryNow('/trynow'))
+#sio.register_namespace(TryNow('/trynow'))
 
 # Endpoints for Model Publishing and Final training
 
