@@ -36,7 +36,7 @@ export class TryNowComponent implements OnInit, OnDestroy {
   showUserPredictionsDetails: boolean;
   slots: any;
   appSource: string;
-  session_id: string
+  session_id: string;
 
   constructor(public webSocketService: WebSocketService,
               public sharedDataService: SharedDataService,
@@ -55,6 +55,7 @@ export class TryNowComponent implements OnInit, OnDestroy {
   }
 
   tryNowProject() {
+    console.log('In try now');
     this.tryNowService.tryNow(this.session_id, this.projectObjectId).subscribe(response => {
       if (response.status === 'Success') {
         this.tryNowLoadService.spin$.next(false);

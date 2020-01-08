@@ -117,6 +117,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   tryNowProject(projectStub: any) {
     this.webSocketService.leaveProjectsRoom('root');
+    //this.webSocketService.disconnectSocketConn();
     this.sharedDataService.setSharedData('projectObjectId', projectStub._id.$oid, constant.MODULE_COMMON);
     this.selectedProject.emit({projectStub: projectStub, component: 'try-now'});
   }

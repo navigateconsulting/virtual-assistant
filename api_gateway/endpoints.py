@@ -538,11 +538,9 @@ async def update_action(sid, update_query, room_name):
 from __main__ import socketio
 #from __main__ import aiohttp
 
-
-class TryNow(socketio.AsyncNamespace):
+class TryNow():
 
     agent = ''
-
     #Try Now Rest Endpoint
 
     async def on_trynow(self, request):
@@ -605,22 +603,24 @@ class TryNow(socketio.AsyncNamespace):
         out_message = {}
         print("inside chat now")
         responses = await self.agent.handle_text(res_data['message'], sender_id=res_data['sessionId'])
-
+        print(responses)
         result = await RasaConversations.get_conversations(res_data['sessionId'])
-
+        print(result)
         if 'message' not in responses:
             out_message['tracker-store'] = result
+            print('out_message', out_message)
             #await sio.emit('chatResponse', out_message, namespace='/trynow', room=sid)
             return web.json_response(out_message)
         else:
             for response in responses:
                 print("--------- BOT Response {}".format(response))
                 response['tracker-store'] = result
+                print('response', response)
                 #await sio.emit('chatResponse', response, namespace='/trynow', room=sid)
                 return web.json_response(response)
 
 
-sio.register_namespace(TryNow('/trynow'))
+#sio.register_namespace(TryNow('/trynow'))
 
 # Endpoints for Model Publishing and Final training
 

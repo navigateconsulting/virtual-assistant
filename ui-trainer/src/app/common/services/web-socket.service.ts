@@ -569,6 +569,10 @@ export class WebSocketService {
   }
 
   getSessionId() {
-    return this.session_id;
+    return this.session_id + '_trynow';
+  }
+
+  disconnectSocketConn() {
+    this.socket.disconnect();
   }
 }

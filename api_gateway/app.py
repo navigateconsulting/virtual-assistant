@@ -34,7 +34,7 @@ async def chatnow(request):
 
 app.router.add_get('/', index)
 cors.add(app.router.add_route("POST", "/tryNow", trynow), {
-    "http://localhost:8080": aiohttp_cors.ResourceOptions(
+    "*": aiohttp_cors.ResourceOptions(
         allow_credentials=True,
         expose_headers=("X-Custom-Server-Header",),
         allow_headers=("X-Requested-With", "Content-Type"),
@@ -42,7 +42,7 @@ cors.add(app.router.add_route("POST", "/tryNow", trynow), {
     )
 })
 cors.add(app.router.add_route("POST", "/chatNow", chatnow), {
-    "http://localhost:8080": aiohttp_cors.ResourceOptions(
+    "*": aiohttp_cors.ResourceOptions(
         allow_credentials=True,
         expose_headers=("X-Custom-Server-Header",),
         allow_headers=("X-Requested-With", "Content-Type"),
