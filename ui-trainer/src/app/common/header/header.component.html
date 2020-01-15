@@ -44,6 +44,10 @@
     <mat-icon>gavel</mat-icon>
     <span>Actions</span>
   </button>
+  <button mat-menu-item [routerLink]="'/home/conversations'">
+    <mat-icon>chat</mat-icon>
+    <span>Conversations</span>
+  </button>
   <button mat-menu-item (click)="refreshDB()">
     <mat-icon>import_export</mat-icon>
     <span>Refresh</span>

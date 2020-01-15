@@ -1,0 +1,41 @@
+@import '../../scss/styles';
+
+.conversations-container {
+    padding: 1%;
+    overflow-x: hidden;
+    height: 100%;
+}
+.conversations-table-container {
+    height: 80%;
+    padding: 0.5%;
+    overflow-y: auto;
+}
+table {
+    width: 100%;
+}
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+.mat-column-conversations_id {
+    width: 45%;
+}
+.mat-column-conversation_timestamp {
+    width: 45%;
+}
+.mat-column-icon{
+    width: 10%;
+}
+.mat-row:hover {
+    background-color: #eee;
+}
+.modify_content {
+    position: fixed;
+    bottom: 3%;
+    width: 100%;
+}
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}

@@ -58,6 +58,8 @@ import { ManageActionsComponent } from './manage-actions/manage-actions.componen
 import { AddActionComponent } from './common/modals/add-action/add-action.component';
 import { EditActionComponent } from './common/modals/edit-action/edit-action.component';
 import { DeleteActionComponent } from './common/modals/delete-action/delete-action.component';
+import { ConversationsComponent } from './conversations/conversations.component';
+import { ConversationChatComponent } from './conversation-chat/conversation-chat.component';
 
 @NgModule({
   declarations: [
@@ -104,6 +106,8 @@ import { DeleteActionComponent } from './common/modals/delete-action/delete-acti
     AddActionComponent,
     EditActionComponent,
     DeleteActionComponent,
+    ConversationsComponent,
+    ConversationChatComponent,
   ],
   entryComponents: [
     AddEntityComponent,

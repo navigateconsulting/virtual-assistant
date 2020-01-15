@@ -568,6 +568,31 @@ export class WebSocketService {
     this.socket.emit(constant.ACTIONS_UPDATE, edit_action_stub, action_room);
   }
 
+  createConversationsRoom(conversations_room: string) {
+    this.socket.nsp = constant.CONVERSATIONS_NSP;
+    this.socket.emit('join_room', conversations_room);
+  }
+
+  getConversations(conversations_room: string) {
+    this.socket.emit(constant.CONVERSATIONS_URL, conversations_room);
+    return Observable.create((observer) => {
+      this.socket.on(constant.CONVERSATIONS_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+  }
+
+  leaveConversationsRoom(conversations_room: string) {
+    this.socket.emit('leave_room', conversations_room);
+  }
+
   getSessionId() {
     return this.session_id + '_trynow';
   }

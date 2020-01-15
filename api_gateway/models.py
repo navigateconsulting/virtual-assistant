@@ -18,6 +18,12 @@ class RasaConversations:
 
         result = await db.conversations.find_one({"sender_id": sender_id})
         return json.loads(dumps(result))
+    
+    async def get_all_conversations(self):
+        cursor = db.conversations.find()
+        result = await cursor.to_list(length=1000)
+        print("onversations sent {}".format(json.loads(dumps(result))))
+        return json.loads(dumps(result))
 
 
 # noinspection PyMethodMayBeStatic

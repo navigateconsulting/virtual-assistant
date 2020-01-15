@@ -6,6 +6,8 @@ import { ManageTrainerComponent } from '../app/manage-trainer/manage-trainer.com
 import { TryNowComponent } from '../app/try-now/try-now.component';
 import { DeployComponent } from '../app/deploy/deploy.component';
 import { ManageActionsComponent } from '../app/manage-actions/manage-actions.component';
+import { ConversationsComponent } from '../app/conversations/conversations.component';
+import { ConversationChatComponent } from '../app/conversation-chat/conversation-chat.component';
 
 const routes: Routes = [
       { path: '', redirectTo: 'home/trainer', pathMatch: 'full' },
@@ -15,6 +17,8 @@ const routes: Routes = [
         ] },
         { path: 'deploy', component: DeployComponent },
         { path: 'actions', component: ManageActionsComponent },
+        { path: 'conversations', component: ConversationsComponent },
+        { path: 'conversation-chat', component: ConversationChatComponent },
       ] },
     ];
 

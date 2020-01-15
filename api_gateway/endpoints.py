@@ -532,6 +532,12 @@ async def update_action(sid, update_query, room_name):
         result = await CustomActionsModel.get_custom_actions()
         await sio.emit('allActions', result, namespace='/action', room=room_name)
 
+@sio.on('getConversations', namespace='/conversation')
+async def get_conversations(sid, room_name):
+    print("##################################User {} Requested to refresh DB  ##########################".format(sid))
+    
+    result = await RasaConversations.get_all_conversations()
+    await sio.emit('allConversations', result, namespace='/conversation', room=room_name)
 
 # End points for Training
 

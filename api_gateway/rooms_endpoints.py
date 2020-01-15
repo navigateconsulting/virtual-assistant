@@ -142,3 +142,16 @@ async def leave_room(sid, room_name):
     print("________________________ User {} Left room {} with namespace /action_______________________".format(sid, room_name))
     sio.leave_room(sid, room=room_name, namespace='/action')
     sio.leave_room(sid, room=sid, namespace='/action')
+
+@sio.on('join_room', namespace='/conversation')
+async def join_room(sid, room_name):
+    print("________________________ User {} joined room {} with namespace /conversation_______________________".format(sid, room_name))
+    sio.enter_room(sid, room=room_name, namespace='/conversation')
+    sio.enter_room(sid, room=sid, namespace='/conversation')
+
+
+@sio.on('leave_room', namespace='/conversation')
+async def leave_room(sid, room_name):
+    print("________________________ User {} Left room {} with namespace /conversation_______________________".format(sid, room_name))
+    sio.leave_room(sid, room=room_name, namespace='/conversation')
+    sio.leave_room(sid, room=sid, namespace='/conversation')

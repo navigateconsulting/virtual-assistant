@@ -102,6 +102,11 @@ export const constant = {
     ACTIONS_DELETE: 'deleteAction',
     ACTIONS_UPDATE: 'updateAction',
 
+    CONVERSATIONS_URL: 'getConversations',
+    CONVERSATIONS_NSP: '/conversation',
+    CONVERSATIONS_LISTEN: 'allConversations',
+    CONVERSATIONS_RESPONSE: 'conversationsResponse',
+
     MODULE_COMMON: 'common',
     MODULE_MODEL: 'model',
 };
