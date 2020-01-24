@@ -9,8 +9,7 @@
         </div>
         <div class="col-md-1 show-entities-div">
           <mat-chip-list *ngIf="showPropertyPanel === true">
-            <mat-chip *ngIf="appSource==='enterprise'" class="show-entity-chip show-entity-chip-color" matTooltip="Show Property Panel" (click)="toggleEntities()"><mat-icon>navigate_before</mat-icon></mat-chip>
-            <mat-chip *ngIf="appSource==='open'" class="show-entity-chip show-entity-chip-black" matTooltip="Show Property Panel" (click)="toggleEntities()"><mat-icon>navigate_before</mat-icon></mat-chip>
+            <mat-chip class="show-entity-chip show-entity-chip-color" matTooltip="Show Property Panel" (click)="toggleEntities()"><mat-icon>navigate_before</mat-icon></mat-chip>
           </mat-chip-list>
         </div>
       </mat-toolbar>
@@ -37,28 +36,11 @@
       <div class="row property-panel-row">
         <div class="col-md-12">
           <div class="text-center">
-            <h4 class="prop-panel-text">Property Panel</h4>
-          </div>
-          <div class="row property-panel">
-            <div class="col-md-4 text-center">
-              <button mat-flat-button class="entities-button" (click)="openPropertyPanelComponent('entities')">Entities</button>
-            </div>
-            <div class="col-md-4 text-center">
-              <button mat-flat-button class="actions-button" (click)="openPropertyPanelComponent('actions')">Actions</button>
-            </div>
-            <div class="col-md-4 text-center">
-              <button mat-flat-button class="app-prop-button" (click)="openPropertyPanelComponent('app-prop')">AppProp</button>
-            </div>
+            <h4 class="prop-panel-text">Entities</h4>
           </div>
           <div class="row property-panel-components">
             <div style="width: 100%;" *ngIf="propertyPanel === 'entities'">
               <app-manage-entities #entityComponent [projectObjectId]="projectObjectId"></app-manage-entities>
-            </div>
-            <div style="width: 100%;" *ngIf="propertyPanel === 'actions'">
-              Manage Actions Coming Soon
-            </div>
-            <div style="width: 100%;" *ngIf="propertyPanel === 'app-prop'">
-              Manage App Properties Coming Soon
             </div>
           </div>
         </div>

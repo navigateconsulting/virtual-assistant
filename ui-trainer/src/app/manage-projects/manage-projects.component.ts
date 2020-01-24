@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { AddProjectComponent } from '../common/modals/add-project/add-project.component';
 import { EditProjectComponent } from '../common/modals/edit-project/edit-project.component';
@@ -9,8 +9,8 @@ import { DeleteProjectComponent } from '../common/modals/delete-project/delete-p
 import { CopyProjectComponent } from '../common/modals/copy-project/copy-project.component';
 import { NotificationsService } from '../common/services/notifications.service';
 import { SharedDataService } from '../common/services/shared-data.service';
-import { environment } from '../../environments/environment';
 import { constant } from '../../environments/constants';
+import { AppPropComponent } from '../common/modals/app-prop/app-prop.component';
 
 @Component({
   selector: 'app-manage-projects',
@@ -27,7 +27,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
               public dialog: MatDialog) {}
 
   // tslint:disable-next-line: max-line-length
-  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'padding1', 'project_description', 'padding2', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'try_now'];
+  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'padding1', 'project_description', 'padding2', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'try_now', 'properties'];
   projectsDataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -39,12 +39,10 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   openIntentORStoryORResponseFile: string;
   propertyPanel: string;
   projects_json: Array<object>;
-  appSource: string;
 
   @Output() selectedProject = new EventEmitter<object>();
 
   ngOnInit() {
-    this.appSource = environment.app_source;
     this.projects_json = new Array<object>();
     this.getProjects();
     this.paginator.pageIndex = +localStorage.getItem('projects_pageIndex');
@@ -75,6 +73,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
+        response['configuration'] = constant.DEFAULT_RASA_CONFIG;
         this.webSocketService.createProject(response, 'root');
       }
     });
@@ -117,9 +116,21 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   tryNowProject(projectStub: any) {
     this.webSocketService.leaveProjectsRoom('root');
-    //this.webSocketService.disconnectSocketConn();
     this.sharedDataService.setSharedData('projectObjectId', projectStub._id.$oid, constant.MODULE_COMMON);
     this.selectedProject.emit({projectStub: projectStub, component: 'try-now'});
+  }
+
+  openProjectProperties(projectObjectId: any, projectConfiguration: any) {
+    const dialogRef = this.dialog.open(AppPropComponent, {
+      height: '550px',
+      width: '650px',
+      data: {projectObjectId: projectObjectId, projectConfiguration: projectConfiguration}
+    });
+    dialogRef.afterClosed().subscribe(response => {
+      if (response) {
+        this.webSocketService.editProject(response, 'root');
+      }
+    });
   }
 
   selectProject(projectStub: any) {

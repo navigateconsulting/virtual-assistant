@@ -1,6 +1,7 @@
 import aiofiles
 import json
-from models import db, DomainsModel, IntentsModel, StoryModel, ResponseModel, EntityModel, CustomActionsModel, ValidateData
+import yaml
+from models import db, ProjectsModel, DomainsModel, IntentsModel, StoryModel, ResponseModel, EntityModel, CustomActionsModel, ValidateData
 import asyncio
 import os
 import shutil
@@ -13,6 +14,7 @@ from config import CONFIG
 class ExportProject:
 
     def __init__(self):
+        self.ProjectsModel = ProjectsModel()
         self.DomainModel = DomainsModel()
         self.IntentsModel = IntentsModel()
         self.StoryModel = StoryModel()
@@ -91,6 +93,9 @@ class ExportProject:
         print(result)
 
     async def start_export(self, project_id):
+        project_details = await self.ProjectsModel.get_a_project(project_id)
+        project_details = project_details[0]
+        print("Project Details Sent*********************", project_details)
         domain_details = await self.DomainModel.get_domains(project_id)
         domains_list = []
 
@@ -135,23 +140,25 @@ class ExportProject:
 
         async with aiofiles.open(self.project_home + '/config.yml', "w") as out:
 
-            await out.write("# Configuration for Rasa NLU." + "\n\n")
-            await out.write("language: en" + "\n")
-            await out.write("pipeline: supervised_embeddings" + "\n")
+            await out.write("# Configuration for Rasa NLU & Core." + "\n\n")
+            print(yaml.dump(yaml.load(json.dumps(project_details['configuration'])), default_flow_style=False) + "\n")
+            await out.write(yaml.dump(yaml.load(json.dumps(project_details['configuration'])), default_flow_style=False) + "\n")
+            # await out.write("language: en" + "\n")
+            # await out.write("pipeline: supervised_embeddings" + "\n")
 
-            await out.write("# Configuration for Rasa Core." + "\n\n")
-            await out.write("policies:" + "\n")
-            await out.write("  - name: KerasPolicy" + "\n")
-            await out.write("    epochs: 150" + "\n")
-            await out.write("    max_history: 4" + "\n")
-            await out.write("  - name: MemoizationPolicy" + "\n")
-            await out.write("  - name: TwoStageFallbackPolicy" + "\n")
-            await out.write("    nlu_threshold: 0.3" + "\n")
-            await out.write("    core_threshold: 0.3" + "\n")
-            await out.write("    fallback_core_action_name: ""action_default_fallback""" + "\n")
-            await out.write("    fallback_nlu_action_name: ""action_default_fallback""" + "\n")
-            await out.write("    deny_suggestion_intent_name: ""negative""" + "\n")
-            await out.write("  - name: MappingPolicy" + "\n")
+            # await out.write("# Configuration for Rasa Core." + "\n\n")
+            # await out.write("policies:" + "\n")
+            # await out.write("  - name: KerasPolicy" + "\n")
+            # await out.write("    epochs: 150" + "\n")
+            # await out.write("    max_history: 4" + "\n")
+            # await out.write("  - name: MemoizationPolicy" + "\n")
+            # await out.write("  - name: TwoStageFallbackPolicy" + "\n")
+            # await out.write("    nlu_threshold: 0.3" + "\n")
+            # await out.write("    core_threshold: 0.3" + "\n")
+            # await out.write("    fallback_core_action_name: ""action_default_fallback""" + "\n")
+            # await out.write("    fallback_nlu_action_name: ""action_default_fallback""" + "\n")
+            # await out.write("    deny_suggestion_intent_name: ""negative""" + "\n")
+            # await out.write("  - name: MappingPolicy" + "\n")
             await out.flush()
 
         return result

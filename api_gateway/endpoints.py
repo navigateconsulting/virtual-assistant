@@ -539,9 +539,17 @@ async def get_conversations(sid, room_name):
     result = await RasaConversations.get_all_conversations()
     await sio.emit('allConversations', result, namespace='/conversation', room=room_name)
 
+@sio.on('getAConversation', namespace='/conversation')
+async def get_grievance(sid, conversation_id, room_name):
+
+    print("---------- Request from Session {} -------------- ".format(sid))
+
+    result = await RasaConversations.get_conversations(conversation_id)
+    await sio.emit('aConversation', result, namespace='/conversation', room=room_name)
+
 # End points for Training
 
-from __main__ import socketio
+#from __main__ import socketio
 #from __main__ import aiohttp
 
 class TryNow():
@@ -631,18 +639,18 @@ class TryNow():
 # Endpoints for Model Publishing and Final training
 
 
-class ModelPublish(socketio.AsyncNamespace):
+class ModelPublish():
 
-    async def on_getDashboard(self, sid, room_name):
-
+    async def on_getDashboard(self, request):
         result = await ProjectsModel.get_projects()
         #TODO On Dashboard page load , check models on disk and mark them on Projects collection
-        await sio.emit('respModelPublish', result, namespace='/modelpublish', room=room_name)
+        #await sio.emit('respModelPublish', result, namespace='/modelpublish', room=room_name)
+        return web.json_response(result)
 
-    async def on_trainModel(self, sid, project_id):
-
+    async def on_trainModel(self, request):
+        res_data = await request.json()
         # export model to rasa folder
-        result = await ExportProject.main(sid, project_id, 'DEPLOY')
+        result = await ExportProject.main(res_data['sessionId'], res_data['projectObjectId'], 'DEPLOY')
 
         from rasa.train import train_async
         import aiohttp
@@ -655,7 +663,7 @@ class ModelPublish(socketio.AsyncNamespace):
         domain = "domain.yml"
         output = "models/"
 
-        base_path = base_path + project_id + "/"
+        base_path = base_path + res_data['projectObjectId'] + "/"
 
         config = base_path + config
         training_files = base_path + training_files
@@ -669,7 +677,7 @@ class ModelPublish(socketio.AsyncNamespace):
         if model_path is not None:
 
             model_name = os.path.basename(model_path)
-            load_model_path = "/app/models/"+project_id+"/models/"+model_name
+            load_model_path = "/app/models/"+res_data['projectObjectId']+"/models/"+model_name
             print(load_model_path)
 
             async with aiohttp.ClientSession() as session:
@@ -680,15 +688,17 @@ class ModelPublish(socketio.AsyncNamespace):
                     json_resp = await resp.json()
                     print("Response from Rasa {}".format(resp.status))
 
-            result = await ProjectsModel.update_project_model({"object_id": str(project_id),
+            result = await ProjectsModel.update_project_model({"object_id": str(res_data['projectObjectId']),
                                                                "model_name": model_name,
                                                                "state": "Published"})
 
-            await sio.emit('publishMessage', {"status": "Success", "message": "Model Published successfully"}, namespace='/modelpublish')
-            result = await ProjectsModel.get_projects()
-            await sio.emit('respModelPublish', result, namespace='/modelpublish')
+            return web.json_response({"status": "Success", "message": "Model Published successfully"})
+            #await sio.emit('publishMessage', {"status": "Success", "message": "Model Published successfully"}, namespace='/modelpublish')
+            #result = await ProjectsModel.get_projects()
+            #return web.json_response(result)
+            #await sio.emit('respModelPublish', result, namespace='/modelpublish')
         else:
             await sio.emit('publishMessage', {"status": "Error", "message": "Error while training model"}, namespace='/modelpublish')
 
 
-sio.register_namespace(ModelPublish('/modelpublish'))
+#sio.register_namespace(ModelPublish('/modelpublish'))

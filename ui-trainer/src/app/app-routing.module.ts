@@ -8,9 +8,11 @@ import { DeployComponent } from '../app/deploy/deploy.component';
 import { ManageActionsComponent } from '../app/manage-actions/manage-actions.component';
 import { ConversationsComponent } from '../app/conversations/conversations.component';
 import { ConversationChatComponent } from '../app/conversation-chat/conversation-chat.component';
+import { ApplicationsComponent } from '../app/applications/applications.component';
 
 const routes: Routes = [
       { path: '', redirectTo: 'home/trainer', pathMatch: 'full' },
+      { path: 'applications', component: ApplicationsComponent },
       { path: 'home', component: HomeComponent, children: [
         { path: 'trainer', component: ManageTrainerComponent, children: [
           { path: 'try-now', component: TryNowComponent },
@@ -18,7 +20,7 @@ const routes: Routes = [
         { path: 'deploy', component: DeployComponent },
         { path: 'actions', component: ManageActionsComponent },
         { path: 'conversations', component: ConversationsComponent },
-        { path: 'conversation-chat', component: ConversationChatComponent },
+        { path: 'conversations/:conversation_id', component: ConversationChatComponent },
       ] },
     ];
 

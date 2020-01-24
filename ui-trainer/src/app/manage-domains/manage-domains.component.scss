@@ -12,7 +12,7 @@
 }
 .domains-card-container {
   overflow-y: auto;
-  height: 85%;
+  height: 74vh;
 }
 .domain-card {
   width: 245px;
@@ -72,6 +72,21 @@
 .add-domain-button-color {
   background-image: $global_gradient;
 }
-.add-domain-button-black {
-  background-image: $global_gradient_black;
+@media screen and (min-width: 1367px) and (max-width: 1620px) {
+  .domains-card-container {
+      height: 76vh;
+      overflow-y: auto;
+  }
+}
+@media screen and (min-width: 1621px) and (max-width: 1729px) {
+  .domains-card-container {
+      height: 78vh;
+      overflow-y: auto;
+  }
+}
+@media screen and (min-width: 1730px) {
+  .domains-card-container {
+      height: 90vh;
+      overflow-y: auto;
+  }
 }

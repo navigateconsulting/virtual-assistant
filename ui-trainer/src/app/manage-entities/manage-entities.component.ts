@@ -24,6 +24,7 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   entities: Array<object>;
+  entities_backup: Array<object>;
   show_success_error: boolean;
   success_error_class: string;
   success_error_type: string;
@@ -39,7 +40,7 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
               public notificationsService: NotificationsService) { }
 
   ngOnInit() {
-    this.entities = [];
+    this.entities = this.entities_backup = new Array<object>();
     this.subscription = new Subscription();
     this.getEntities();
     adjustEntityScroll();
@@ -49,7 +50,7 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
   getEntities() {
     this.entities_service.createEntitiesRoom();
     this.entities_service.getEntities({project_id: this.projectObjectId}).subscribe(entities => {
-      this.entities = entities;
+      this.entities = this.entities_backup = entities;
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
@@ -62,6 +63,7 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
   }
 
   addEntity(event: MatChipInputEvent): void {
+    this.entities = this.entities_backup;
     const input = event.input;
     const value = event.value;
     // tslint:disable-next-line: no-shadowed-variable
@@ -115,6 +117,17 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
         } else {
           this.entities_service.editEntity(entity_details);
         }
+      }
+    });
+  }
+
+  applyEntitiesFilter(filterValue: string) {
+    this.entities = this.entities_backup;
+    this.entities = this.entities.filter((value) => {
+      if (value['entity_name'].includes(filterValue.trim()) ||
+          value['entity_name'].toLowerCase().includes(filterValue.trim()) ||
+          value['entity_name'].toUpperCase().includes(filterValue.trim())) {
+        return value;
       }
     });
   }

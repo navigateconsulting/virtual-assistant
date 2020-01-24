@@ -1,57 +1,75 @@
-@import '../../scss/styles';
+@import "../../scss/styles";
 
 .actions-container {
-    padding: 1%;
-    overflow-x: hidden;
-    height: 100%;
+  padding: 1%;
+  overflow-x: hidden;
+  height: auto;
 }
 .add-action {
-    height: 10%;
-    padding: 0.5%;
+  height: 10%;
+  padding: 0.5%;
 }
 .actions-table-container {
-    height: 80%;
-    padding: 0.5%;
-    overflow-y: auto;
+  height: 80vh;
+  padding: 0.5%;
+  overflow-y: auto;
 }
 table {
-    width: 100%;
+  width: 100%;
 }
 .mat-form-field {
-    font-size: 14px;
-    width: 100%;
+  font-size: 14px;
+  width: 100%;
 }
-.mat-column-icon{
-    width: 5%;
+.mat-column-icon {
+  width: 5%;
 }
-.mat-column-action_name{
-    width: 10%;
+.mat-column-action_name {
+  width: 10%;
 }
 .mat-column-action_description {
-    width: 35%;
+  width: 35%;
 }
 .mat-column-edit {
-    width: 5%;
+  width: 5%;
 }
 .mat-column-delete {
-    width: 5%;
+  width: 5%;
 }
 .mat-row:hover {
-    background-color: #eee;
+  background-color: #eee;
 }
 .edit_remove {
-    cursor: pointer;
+  cursor: pointer;
 }
 .modify_content {
-    position: fixed;
-    bottom: 3%;
-    width: 100%;
+  position: fixed;
+  bottom: 3%;
+  width: 100%;
 }
 .mat-paginator-sticky {
-    bottom: 0px;
-    position: sticky;
-    z-index: 10;
+  bottom: 0px;
+  position: sticky;
+  z-index: 10;
 }
 .add-action-button-color {
-    background-image: $global_gradient;
+  background-image: $global_gradient;
+}
+@media screen and (min-width: 1367px) and (max-width: 1620px) {
+  .actions-table-container {
+    height: 82vh;
+    overflow-y: auto;
+  }
+}
+@media screen and (min-width: 1621px) and (max-width: 1729px) {
+  .actions-table-container {
+    height: 84vh;
+    overflow-y: auto;
+  }
+}
+@media screen and (min-width: 1730px) {
+  .actions-table-container {
+    height: 86vh;
+    overflow-y: auto;
+  }
 }

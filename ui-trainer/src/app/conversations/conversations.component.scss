@@ -1,41 +1,59 @@
-@import '../../scss/styles';
+@import "../../scss/styles";
 
 .conversations-container {
-    padding: 1%;
-    overflow-x: hidden;
-    height: 100%;
+  padding: 1%;
+  overflow-x: hidden;
+  height: auto;
 }
 .conversations-table-container {
-    height: 80%;
-    padding: 0.5%;
-    overflow-y: auto;
+  height: 80vh;
+  padding: 0.5%;
+  overflow-y: auto;
 }
 table {
-    width: 100%;
+  width: 100%;
 }
 .mat-form-field {
-    font-size: 14px;
-    width: 100%;
+  font-size: 14px;
+  width: 100%;
 }
 .mat-column-conversations_id {
-    width: 45%;
+  width: 45%;
 }
 .mat-column-conversation_timestamp {
-    width: 45%;
+  width: 45%;
 }
-.mat-column-icon{
-    width: 10%;
+.mat-column-icon {
+  width: 10%;
 }
 .mat-row:hover {
-    background-color: #eee;
+  background-color: #eee;
 }
 .modify_content {
-    position: fixed;
-    bottom: 3%;
-    width: 100%;
+  position: fixed;
+  bottom: 3%;
+  width: 100%;
 }
 .mat-paginator-sticky {
-    bottom: 0px;
-    position: sticky;
-    z-index: 10;
+  bottom: 0px;
+  position: sticky;
+  z-index: 10;
+}
+@media screen and (min-width: 1367px) and (max-width: 1620px) {
+  .conversations-table-container {
+    height: 82vh;
+    overflow-y: auto;
+  }
+}
+@media screen and (min-width: 1621px) and (max-width: 1729px) {
+  .conversations-table-container {
+    height: 84vh;
+    overflow-y: auto;
+  }
+}
+@media screen and (min-width: 1730px) {
+  .conversations-table-container {
+    height: 86vh;
+    overflow-y: auto;
+  }
 }

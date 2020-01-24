@@ -80,60 +80,16 @@ export class AppComponent {
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/edit-disabled.svg')
     );
     this.matIconRegistry.addSvgIcon(
-      'menu-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/menu-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'trainer-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/trainer-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'deploy-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/deploy-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'project-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/project-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'edit-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/edit-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'delete-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/delete-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'copy-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/copy-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'try-now-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/try-now-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'domain-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/domain-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'intent-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/intent-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'response-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/response-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'story-black',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/story-black.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
       'trainer-loader',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/trainer-loader.svg')
     );
     this.matIconRegistry.addSvgIcon(
       'trainer-error',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/trainer-error.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
+      'app-properties',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/app-properties.svg')
     );
   }
 }

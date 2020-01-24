@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row manage-intents-container">
     <div id="accordion">
       <div *ngIf="currentIntent">
         <div class="card" *ngFor="let text_entity of text_entities; let i = index;">
@@ -57,14 +57,12 @@
               </div>
               <div class="col-md-1 text-right">
                 <button mat-icon-button (click)="removeIntentTextElement(text_entity.text, text_entity.entities)">
-                  <mat-icon *ngIf="appSource==='enterprise'" svgIcon="delete"></mat-icon>
-                  <mat-icon *ngIf="appSource==='open'" svgIcon="delete-black"></mat-icon>
+                  <mat-icon svgIcon="delete"></mat-icon>
                 </button>
               </div>
               <div class="col-md-1 text-right">
                 <button class="btn btn-link" data-toggle="collapse" aria-expanded="false" attr.data-target="#intentText_{{i}}" aria-expanded="true" attr.aria-controls="intentText_{{i}}">
-                  <mat-icon *ngIf="appSource==='enterprise'" class="key_arrow_down">keyboard_arrow_down</mat-icon>
-                  <mat-icon *ngIf="appSource==='open'" class="key_arrow_down_black">keyboard_arrow_down</mat-icon>
+                  <mat-icon class="key_arrow_down">keyboard_arrow_down</mat-icon>
                 </button>
               </div>
             </div>
@@ -87,8 +85,7 @@
                     <td>{{entity.value}}</td>
                     <td>
                       <button mat-icon-button (mouseenter)="unhighlightTextEntity(i)" (mouseleave)="highlightTextEntity(entity.start,entity.end,i)" (click)="removeEntityElement(i, text_entity.text, text_entity.entities, j)">
-                        <mat-icon *ngIf="appSource==='enterprise'" svgIcon="delete"></mat-icon>
-                        <mat-icon *ngIf="appSource==='open'" svgIcon="delete-black"></mat-icon>
+                        <mat-icon svgIcon="delete"></mat-icon>
                       </button>
                     </td>
                   </tr>

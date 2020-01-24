@@ -32,6 +32,12 @@ async def trynow(request):
 async def chatnow(request):
     return await try_chat_now.on_chatNow(request)
 
+async def getProjectsForDeploy(request):
+    return await endpoints.ModelPublish().on_getDashboard(request)
+
+async def deploy(request):
+    return await endpoints.ModelPublish().on_trainModel(request)
+
 app.router.add_get('/', index)
 cors.add(app.router.add_route("POST", "/tryNow", trynow), {
     "*": aiohttp_cors.ResourceOptions(
@@ -49,7 +55,22 @@ cors.add(app.router.add_route("POST", "/chatNow", chatnow), {
         max_age=3600,
     )
 })
-
+cors.add(app.router.add_get("/getProjectsForDeploy", getProjectsForDeploy), {
+    "*": aiohttp_cors.ResourceOptions(
+        allow_credentials=True,
+        expose_headers=("X-Custom-Server-Header",),
+        allow_headers=("X-Requested-With", "Content-Type"),
+        max_age=3600,
+    )
+})
+cors.add(app.router.add_route("POST", "/deploy", deploy), {
+    "*": aiohttp_cors.ResourceOptions(
+        allow_credentials=True,
+        expose_headers=("X-Custom-Server-Header",),
+        allow_headers=("X-Requested-With", "Content-Type"),
+        max_age=3600,
+    )
+})
 # We kick off our server
 if __name__ == '__main__':
     sio.attach(app)

@@ -60,6 +60,8 @@ import { EditActionComponent } from './common/modals/edit-action/edit-action.com
 import { DeleteActionComponent } from './common/modals/delete-action/delete-action.component';
 import { ConversationsComponent } from './conversations/conversations.component';
 import { ConversationChatComponent } from './conversation-chat/conversation-chat.component';
+import { ApplicationsComponent } from './applications/applications.component';
+import { AppPropComponent } from './common/modals/app-prop/app-prop.component';
 
 @NgModule({
   declarations: [
@@ -108,6 +110,8 @@ import { ConversationChatComponent } from './conversation-chat/conversation-chat
     DeleteActionComponent,
     ConversationsComponent,
     ConversationChatComponent,
+    ApplicationsComponent,
+    AppPropComponent,
   ],
   entryComponents: [
     AddEntityComponent,
@@ -137,7 +141,8 @@ import { ConversationChatComponent } from './conversation-chat/conversation-chat
     ConfirmRefreshComponent,
     AddActionComponent,
     EditActionComponent,
-    DeleteActionComponent
+    DeleteActionComponent,
+    AppPropComponent
   ],
   imports: [
     BrowserModule,

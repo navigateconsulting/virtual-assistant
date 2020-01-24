@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-deploy-model',
@@ -9,13 +8,9 @@ import { environment } from '../../../../environments/environment';
 })
 export class DeployModelComponent implements OnInit {
 
-  appSource: string;
-
   constructor(public dialogRef: MatDialogRef<DeployModelComponent>) { }
 
-  ngOnInit() {
-    this.appSource = environment.app_source;
-  }
+  ngOnInit() {}
 
   confirmDeploy() {
     this.dialogRef.close(true);

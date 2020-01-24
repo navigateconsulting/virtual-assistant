@@ -589,6 +589,19 @@ export class WebSocketService {
     });
   }
 
+  getAConversation(conversations_room: string, conversation_id: string) {
+    this.socket.emit(constant.ACONVERSATION_URL, conversation_id, conversations_room);
+    return Observable.create((observer) => {
+      this.socket.on(constant.ACONVERSATION_LISTEN, (data) => {
+        if (data) {
+          observer.next(data);
+        } else {
+          observer.error('Unable To Reach Server');
+        }
+      });
+    });
+  }
+
   leaveConversationsRoom(conversations_room: string) {
     this.socket.emit('leave_room', conversations_room);
   }

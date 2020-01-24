@@ -3,8 +3,7 @@
     <h1 mat-dialog-title>Edit Entity Details</h1>
   </div>
   <div class="col-md-4 text-right">
-    <button *ngIf="appSource==='enterprise'" mat-raised-button class="remove-entity-button" (click)="removeEntity()">Delete Entity</button>
-    <button *ngIf="appSource==='open'" mat-raised-button class="remove-entity-button-black" (click)="removeEntity()">Delete Entity</button>
+    <button mat-raised-button class="remove-entity-button" (click)="removeEntity()">Delete Entity</button>
   </div>
 </div>
 <mat-divider></mat-divider>
@@ -25,17 +24,7 @@
   <div class="row">
     <span class="mat-body-strong">Select Entity Slot Type</span>
   </div>
-  <div *ngIf="appSource==='enterprise'">
-    <mat-radio-group [(ngModel)]="entitySlotType">
-      <mat-radio-button value="text" (change)="setEntitySlotType($event)">text</mat-radio-button>
-      <mat-radio-button value="bool" (change)="setEntitySlotType($event)">bool</mat-radio-button>
-      <mat-radio-button value="categorical" (change)="setEntitySlotType($event)">categorical</mat-radio-button>
-      <mat-radio-button value="float" (change)="setEntitySlotType($event)">float</mat-radio-button>
-      <mat-radio-button value="list" (change)="setEntitySlotType($event)">list</mat-radio-button>
-      <mat-radio-button value="unfeaturized" (change)="setEntitySlotType($event)">unfeaturized</mat-radio-button>
-    </mat-radio-group>
-  </div>
-  <div *ngIf="appSource==='open'">
+  <div>
     <mat-radio-group [(ngModel)]="entitySlotType">
       <mat-radio-button value="text" (change)="setEntitySlotType($event)">text</mat-radio-button>
       <mat-radio-button value="bool" (change)="setEntitySlotType($event)">bool</mat-radio-button>
@@ -77,8 +66,7 @@
         <button mat-raised-button mat-dialog-close>Cancel</button>
       </div>
       <div class="col-md-6 text-right">
-        <button *ngIf="appSource==='enterprise'" mat-raised-button class="entity-save-button" (click)="saveEntitySlotDetails()">Save</button>
-        <button *ngIf="appSource==='open'" mat-raised-button class="entity-save-button-black" (click)="saveEntitySlotDetails()">Save</button>
+        <button mat-raised-button class="entity-save-button" (click)="saveEntitySlotDetails()">Save</button>
       </div>
     </div>
   </div>

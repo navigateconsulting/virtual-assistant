@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MatInput } from '@angular/material/input';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-add-entity',
@@ -25,7 +24,6 @@ export class AddEntityComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    this.appSource = environment.app_source;
     this.entity_name = this.data.entity_name;
     this.show_cat_error = false;
     this.show_entity_error = false;

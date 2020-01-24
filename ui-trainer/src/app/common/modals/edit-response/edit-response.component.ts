@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-edit-response',
@@ -11,13 +10,11 @@ import { environment } from '../../../../environments/environment';
 export class EditResponseComponent implements OnInit {
 
   editResponseForm: FormGroup;
-  appSource: string;
 
   constructor(public dialogRef: MatDialogRef<EditResponseComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    this.appSource = environment.app_source;
     this.editResponseForm = new FormGroup({
       responseName: new FormControl({value: this.data.responseName, disabled: true}, Validators.required),
       responseDescription: new FormControl(this.data.responseDescription, Validators.required)

@@ -10,7 +10,7 @@
     padding: 0.5%;
 }
 .projects-table-container {
-    height: 75%;
+    height: 73vh;
     padding: 0.5%;
     overflow-y: auto;
 }
@@ -31,7 +31,7 @@ table {
     width: 1%;
 }
 .mat-column-project_description {
-    width: 35%;
+    width: 32%;
 }
 .mat-column-padding2{
     width: 1%;
@@ -55,7 +55,10 @@ table {
     width: 5%;
 }
 .mat-column-try_now {
-    width: 7%;
+    width: 5%;
+}
+.mat-column-properties {
+    width: 5%;
 }
 .mat-row:hover {
     background-color: #eee;
@@ -88,6 +91,15 @@ table {
 .add-project-button-color {
     background-image: $global_gradient;
 }
-.add-project-button-black {
-    background-image: $global_gradient_black;
+@media screen and (min-width: 1367px) and (max-width: 1620px) {
+    .projects-table-container {
+        height: 75vh;
+        overflow-y: auto;
+    }
+}
+@media screen and (min-width: 1621px) {
+    .projects-table-container {
+        height: 77vh;
+        overflow-y: auto;
+    }
 }

@@ -106,6 +106,12 @@ export const constant = {
     CONVERSATIONS_NSP: '/conversation',
     CONVERSATIONS_LISTEN: 'allConversations',
     CONVERSATIONS_RESPONSE: 'conversationsResponse',
+    ACONVERSATION_URL: 'getAConversation',
+    ACONVERSATION_LISTEN: 'aConversation',
+    ACONVERSATION_RESPONSE: 'aconversationResponse',
+
+    // tslint:disable-next-line: max-line-length
+    DEFAULT_RASA_CONFIG: {"language": "en","pipeline": "supervised_embeddings","policies": [{"name": "KerasPolicy","epochs": 150,"max_history": 4},{"name": "MemoizationPolicy"},{"name": "TwoStageFallbackPolicy","nlu_threshold": 0.3,"core_threshold": 0.3,"fallback_core_action_name": "action_default_fallback","fallback_nlu_action_name": "my_fallback_action","deny_suggestion_intent_name": "negative"},{"name": "MappingPolicy"}]},
 
     MODULE_COMMON: 'common',
     MODULE_MODEL: 'model',

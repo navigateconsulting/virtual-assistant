@@ -96,10 +96,6 @@
     background-color: #19D2CC;
 }
 
-.user-black {
-    background-image: $global_gradient_black;
-}
-
 .user-chat {
 	box-sizing: border-box;
     margin-left: 8px;
@@ -119,10 +115,6 @@
 
 .user-chat-color {
     background-color: $primary-color-2;
-}
-
-.user-chat-black {
-    background-color: $primary-color-9;
 }
 
 .user-intent {
@@ -161,10 +153,6 @@
 
 .bot-color {
     background-color: $primary-color-1;
-}
-
-.bot-black {
-    background-image: $global_gradient_black;
 }
 
 .bot-chat {

@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from '../common/services/web-socket.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
-import { environment } from '../../environments/environment';
 import { TryNowLoadService } from '../common/services/try-now-load.service';
 import { ModelErrorService } from '../common/services/model-error.service';
 import { TryNowService } from '../common/services/try-now.service';
@@ -35,7 +34,6 @@ export class TryNowComponent implements OnInit, OnDestroy {
   predictions: any;
   showUserPredictionsDetails: boolean;
   slots: any;
-  appSource: string;
   session_id: string;
 
   constructor(public webSocketService: WebSocketService,
@@ -45,7 +43,6 @@ export class TryNowComponent implements OnInit, OnDestroy {
               public tryNowService: TryNowService) { }
 
   ngOnInit() {
-    this.appSource = environment.app_source;
     this.projectObjectId = this.sharedDataService.getSharedData('projectObjectId', constant.MODULE_COMMON);
     this.tryNowLoadService.spin$.next(true);
     this.showUserBotCardDetails = false;
@@ -55,7 +52,6 @@ export class TryNowComponent implements OnInit, OnDestroy {
   }
 
   tryNowProject() {
-    console.log('In try now');
     this.tryNowService.tryNow(this.session_id, this.projectObjectId).subscribe(response => {
       if (response.status === 'Success') {
         this.tryNowLoadService.spin$.next(false);
