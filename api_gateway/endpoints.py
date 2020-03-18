@@ -576,7 +576,7 @@ class TryNow():
         output = base_path + output
         start_time = time.time()
         try:
-            model_path = await train_async(domain, config, [training_files], output, kwargs={"augmentation_factor": 10})
+            model_path = await train_async(domain, config, [training_files], output, additional_arguments={"augmentation_factor": 10})
             end_time = time.time()
             print("it took this long to run: {}".format(end_time - start_time))
             unpacked = model.get_model(model_path)
