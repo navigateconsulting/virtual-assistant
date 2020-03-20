@@ -3,5 +3,5 @@ aiohttp==3.5.
 aiohttp_cors
 python-engineio==3.8.1
 python-socketio==4.1.0
-rasa==1.3.1
+rasa==1.8.1
 aiofiles==0.4.0
