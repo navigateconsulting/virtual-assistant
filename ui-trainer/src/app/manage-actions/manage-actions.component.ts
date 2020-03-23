@@ -50,7 +50,6 @@ export class ManageActionsComponent implements OnInit, OnDestroy {
           action['status'] = false;
         }
       });
-      console.log(this.actions_json);
       this.actionsDataSource = new MatTableDataSource(this.actions_json);
       this.actionsDataSource.paginator = this.paginator;
     },

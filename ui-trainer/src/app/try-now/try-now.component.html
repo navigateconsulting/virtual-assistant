@@ -19,10 +19,10 @@
           <div *ngIf="chat.event==='user'" class="row user-message" id="chat-{{i}}" (click)="selectRowIndex(i)">
             <div class="col-md-12">
               <div class="user-box">
-                <div color="white" font-size="4" class="user" class="user-color">M</div>
+                <div color="white" font-size="4" class="user-color user">M</div>
               </div>
               <div class="user-box">
-                  <div font-size="2" letter-spacing="0" class="user-chat" class="user-chat-color"><span [innerHtml]='chat.text'></span></div>
+                  <div font-size="2" letter-spacing="0" class="user-chat user-chat-color"><span [innerHtml]='chat.text'></span></div>
               </div>
               <div class="user-intent-box">
                 <p class="user-intent">{{chat.parse_data.intent.name}}</p>
@@ -32,7 +32,7 @@
           <div *ngIf="chat.event==='bot'" class="row bot-message" id="chat-{{i}}" (click)="selectRowIndex(i)">
             <div class="col-md-12">
               <div class="bot-box">
-                <div color="white" font-size="4" class="bot" class="bot-color">B</div>
+                <div color="white" font-size="4" class="bot bot-color">B</div>
               </div>
               <div class="bot-box">
                   <div font-size="2" letter-spacing="0" class="bot-chat"><span [innerHtml]='chat.text'></span></div>
