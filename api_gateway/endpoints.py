@@ -564,8 +564,7 @@ class TryNow():
         print(result)
 
         if result is not None:
-            await sio.emit('chatResponse', {"status": "Error", "message": result}, namespace='/trynow', room=sid)
-            return 1
+            return web.json_response({"status": "Error", "message": result})
 
         import rasa.model as model
         from rasa.core.agent import Agent
