@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  BASE_URL: 'http://localhost:8089',
+  BASE_URL: 'http://' + window.location.hostname + ':8089',
 };
 
 /*
