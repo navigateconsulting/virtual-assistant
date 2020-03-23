@@ -9,13 +9,9 @@ import { environment } from '../../../../environments/environment';
 })
 export class DeleteDomainComponent implements OnInit {
 
-  appSource: string;
-
   constructor(public dialogRef: MatDialogRef<DeleteDomainComponent>) { }
 
-  ngOnInit() {
-    this.appSource = environment.app_source;
-  }
+  ngOnInit() {}
 
   confirmDelete() {
     this.dialogRef.close(true);

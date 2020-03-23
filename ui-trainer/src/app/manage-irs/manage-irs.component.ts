@@ -48,10 +48,8 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   stories_json: Array<object>;
   storiesDataSource: any;
   activeTabIndex: any;
-  appSource: string;
 
   ngOnInit() {
-    this.appSource = environment.app_source;
     this.intents_json = new Array<object>();
     this.responses_json = new Array<object>();
     this.stories_json = new Array<object>();

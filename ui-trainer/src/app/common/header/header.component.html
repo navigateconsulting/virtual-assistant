@@ -2,7 +2,10 @@
   <div class="col-md-10">
     <div class="eva-logo-div">
       <div class="logo-div" [routerLink]="'/home/trainer'">
-        <img class="side_header_logo_img" src="/assets/images/trainer-loader.svg">
+        <img
+          class="side_header_logo_img"
+          src="/assets/images/trainer-loader.svg"
+        />
         <span class="header-text">Virtual&nbsp;Assistant</span>
       </div>
     </div>
@@ -11,41 +14,17 @@
     <div class="row">
       <div class="col-md-5 header-buttons"></div>
       <div class="col-md-3 header-buttons">
-        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-          <mat-icon class="header-icons" svgIcon="menu"></mat-icon>
+        <button mat-icon-button [routerLink]="'/applications'">
+          <mat-icon class="header-icons">apps</mat-icon>
         </button>
       </div>
       <div class="col-md-4 header-buttons">
-        <a href="https://navigateconsulting.github.io/virtual-assistant/" target="_blank"><mat-icon class="header-icons" svgIcon="help"></mat-icon></a>
+        <a
+          href="https://navigateconsulting.github.io/virtual-assistant/"
+          target="_blank"
+          ><mat-icon class="header-icons">help_outline</mat-icon></a
+        >
       </div>
     </div>
   </div>
 </div>
-<mat-menu #menu="matMenu" xPosition="before">
-  <button *ngIf="showTrainerOrDeploy==='trainer'" [routerLink]="'/home/trainer'" mat-menu-item>
-    <mat-icon svgIcon="trainer"></mat-icon>
-    <span>Trainer</span>
-  </button>
-  <button *ngIf="showTrainerOrDeploy==='deploy'" [routerLink]="'/home/deploy'" mat-menu-item>
-    <mat-icon svgIcon="deploy"></mat-icon>
-    <span>Deploy</span>
-  </button>
-  <div *ngIf="showTrainerOrDeploy==='both'">
-    <button mat-menu-item [routerLink]="'/home/trainer'">
-      <mat-icon svgIcon="trainer"></mat-icon>
-      <span>Trainer</span>
-    </button>
-    <button mat-menu-item [routerLink]="'/home/deploy'">
-      <mat-icon svgIcon="deploy"></mat-icon>
-      <span>Deploy</span>
-    </button>
-  </div>
-  <button mat-menu-item [routerLink]="'/home/actions'">
-    <mat-icon>gavel</mat-icon>
-    <span>Actions</span>
-  </button>
-  <button mat-menu-item (click)="refreshDB()">
-    <mat-icon>import_export</mat-icon>
-    <span>Refresh</span>
-  </button>
-</mat-menu>

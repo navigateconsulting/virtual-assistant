@@ -1,0 +1,62 @@
+<div class="conversations-container">
+  <div class="row">
+    <div class="col-md-12">
+      <mat-form-field>
+        <input
+          matInput
+          (keyup)="applyConversationsFilter($event.target.value)"
+          placeholder="Filter Conversations"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+  <div *ngIf="conversations_json.length === 0" class="row empty-conversations">
+    <div class="col-md-12">
+      <div class="alert alert-info">
+        <strong>Info!</strong> Currently there are no conversations.
+      </div>
+    </div>
+  </div>
+  <div class="row conversations-table-container">
+    <div class="col-md-12">
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="conversationsDataSource">
+          <ng-container matColumnDef="conversation_id">
+            <th mat-header-cell *matHeaderCellDef>Conversation Id</th>
+            <td mat-cell *matCellDef="let conversation">
+              {{ conversation.sender_id }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="conversation_timestamp">
+            <th mat-header-cell *matHeaderCellDef>Conversation Date Time</th>
+            <td mat-cell *matCellDef="let conversation">
+              {{ convertTimestamp(conversation.latest_event_time) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="icon">
+            <th mat-header-cell *matHeaderCellDef>Conversation Details</th>
+            <td mat-cell *matCellDef="let conversation">
+              <button mat-icon-button (click)="openConversationChat(conversation.sender_id)">
+                <mat-icon>details</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="conversationsDisplayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: conversationsDisplayedColumns"
+          ></tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[10, 15, 20]"
+          showFirstLastButtons
+          (page)="getConversationsPaginatorData($event)"
+        ></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

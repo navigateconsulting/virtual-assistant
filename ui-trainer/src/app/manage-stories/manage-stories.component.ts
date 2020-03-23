@@ -62,7 +62,6 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
   on_intent_response_entity: boolean;
 
   currentStory: any;
-  appSource: string;
   @Input() projectObjectId: string;
   @Input() domainObjectId: string;
   @Input() storyObjectId: string;
@@ -76,7 +75,6 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
               public sharedDataService: SharedDataService) { }
 
   ngOnInit() {
-    this.appSource = environment.app_source;
     const intents_responses: FormArray = new FormArray([]);
 
     this.storyForm = this.fb.group({

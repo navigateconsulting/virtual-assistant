@@ -1,45 +1,63 @@
 .models-container {
-    padding: 1%;
-    overflow-x: hidden;
-    height: 100%;
+  padding: 1%;
+  overflow-x: hidden;
+  height: auto;
 }
 .add-model {
-    height: 10%;
-    padding: 0.5%;
+  height: 10%;
+  padding: 0.5%;
 }
 .projects-model-table-container {
-    height: 80%;
-    padding: 0.5%;
-    overflow-y: auto;
+  height: 80vh;
+  padding: 0.5%;
+  overflow-y: auto;
 }
 table {
-    width: 100%;
+  width: 100%;
 }
 .mat-form-field {
-    font-size: 14px;
-    width: 100%;
+  font-size: 14px;
+  width: 100%;
 }
-.mat-column-icon{
-    width: 5%;
+.mat-column-icon {
+  width: 5%;
 }
-.mat-column-project_name{
-    width: 25%;
+.mat-column-project_name {
+  width: 25%;
 }
 .mat-column-source {
-    width: 25%;
+  width: 25%;
 }
 .mat-column-model_name {
-    width: 25%;
+  width: 25%;
 }
 .mat-column-state {
-    width: 15%;
+  width: 15%;
 }
 .mat-column-deploy {
-    width: 5%;
+  width: 5%;
 }
 .mat-row:hover {
-    background-color: #eee;
+  background-color: #eee;
 }
 .deploy {
-    cursor: pointer;
+  cursor: pointer;
+}
+@media screen and (min-width: 1367px) and (max-width: 1620px) {
+  .projects-model-table-container {
+    height: 82vh;
+    overflow-y: auto;
+  }
+}
+@media screen and (min-width: 1621px) and (max-width: 1729px) {
+  .projects-model-table-container {
+    height: 84vh;
+    overflow-y: auto;
+  }
+}
+@media screen and (min-width: 1730px) {
+  .projects-model-table-container {
+    height: 86vh;
+    overflow-y: auto;
+  }
 }

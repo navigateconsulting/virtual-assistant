@@ -18,6 +18,12 @@ class RasaConversations:
 
         result = await db.conversations.find_one({"sender_id": sender_id})
         return json.loads(dumps(result))
+    
+    async def get_all_conversations(self):
+        cursor = db.conversations.find()
+        result = await cursor.to_list(length=1000)
+        print("Conversations sent {}".format(json.loads(dumps(result))))
+        return json.loads(dumps(result))
 
 
 # noinspection PyMethodMayBeStatic
@@ -102,11 +108,16 @@ class ProjectsModel:
         result = await cursor.to_list(length=1000)
         print("Projects sent {}".format(json.loads(dumps(result))))
         return json.loads(dumps(result))
+    
+    async def get_a_project(self, project_id):
+        query = {"_id": ObjectId("{}".format(project_id))}
+        cursor = db.projects.find(query)
+        result = await cursor.to_list(length=1000)
+        return json.loads(dumps(result))
 
     async def create_projects(self, record):
 
         json_record = json.loads(json.dumps(record))
-
         # Validation to check if project already exists
 
         val_res = await db.projects.find_one({"project_name": json_record['project_name']})
@@ -162,7 +173,11 @@ class ProjectsModel:
             return {"status": "Success", "message": "Project details updated successfully "}
         '''
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        update_field = {"$set": {"project_description": json_record['project_description']
+        if 'config_description' in json_record:
+            update_field = {"$set": {"configuration": json_record['config_description']
+                                 }}
+        elif 'project_description' in json_record:
+            update_field = {"$set": {"project_description": json_record['project_description']
                                  }}
         result = await db.projects.update_one(query, update_field)
         print("Project Updated , rows modified {}".format(result))

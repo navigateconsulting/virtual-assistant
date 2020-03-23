@@ -3,8 +3,7 @@
     <h1 mat-dialog-title>Create New Story</h1>
   </div>
   <div class="col-md-3 text-right">
-    <mat-icon *ngIf="appSource==='enterprise'" class="dialog-icon" svgIcon="story"></mat-icon>
-    <mat-icon *ngIf="appSource==='open'" class="dialog-icon" svgIcon="story-black"></mat-icon>
+    <mat-icon class="dialog-icon" svgIcon="story"></mat-icon>
   </div>
 </div>
 <form [formGroup]="newStoryForm" (ngSubmit)="closeDialog()">
@@ -23,8 +22,7 @@
 <mat-dialog-actions>
   <div class="row" style="width: 100%;">
     <div class="col-md-6 text-right">
-      <button *ngIf="appSource==='enterprise'" mat-raised-button type="submit" class="submit-button" [disabled]="!newStoryForm.valid">Confirm</button>
-      <button *ngIf="appSource==='open'" mat-raised-button type="submit" class="submit-button-black" [disabled]="!newStoryForm.valid">Confirm</button>
+      <button mat-raised-button type="submit" class="submit-button" [disabled]="!newStoryForm.valid">Confirm</button>
     </div>
     <div class="col-md-6 text-center">
       <button mat-raised-button mat-dialog-close class="cancel-button">Cancel</button>

@@ -47,21 +47,18 @@
                                 <div class="col-md-4">
                                   <div class="row intent-buttons-box">
                                     <div class="col-md-3">
-                                      <button class="intent-buttons" [ngClass]="(appSource==='open')?'intent-black-button':'intent-color-button'" mat-mini-fab matTooltip="Add Intent" (click)="addIntentResponseDetailsToStory('intent', ind+1)">
-                                        <mat-icon *ngIf="appSource==='enterprise'">add</mat-icon>
-                                        <mat-icon *ngIf="appSource==='open'">add_circle_outline</mat-icon>
+                                      <button class="intent-buttons intent-color-button" mat-mini-fab matTooltip="Add Intent" (click)="addIntentResponseDetailsToStory('intent', ind+1)">
+                                        <mat-icon>add</mat-icon>
                                       </button>
                                     </div>
                                     <div class="col-md-4">
-                                      <button class="intent-buttons" [ngClass]="(appSource==='open')?'intent-black-button':'intent-color-button'" mat-mini-fab matTooltip="Remove Intent" (click)="removeIntentResponseFromStory(ind, intent_response, intent_response_entity_arr[ind])">
-                                        <mat-icon *ngIf="appSource==='enterprise'">remove</mat-icon>
-                                        <mat-icon *ngIf="appSource==='open'">highlight_off</mat-icon>
+                                      <button class="intent-buttons intent-color-button" mat-mini-fab matTooltip="Remove Intent" (click)="removeIntentResponseFromStory(ind, intent_response, intent_response_entity_arr[ind])">
+                                        <mat-icon>remove</mat-icon>
                                       </button>
                                     </div>
                                     <div class="col-md-3">
-                                      <button class="intent-buttons" [ngClass]="(appSource==='open')?'ir-black-button':'ir-color-button'" mat-mini-fab (focusout)="collapse_close('intent', ind)" data-toggle="collapse" attr.data-target="#collapseIntent_{{ind}}" aria-expanded="false" attr.aria-controls="collapseIntent_{{ind}}" matTooltip="Show Entities">
-                                        <mat-icon *ngIf="appSource==='enterprise'">keyboard_arrow_down</mat-icon>
-                                        <mat-icon *ngIf="appSource==='open'">expand_more</mat-icon>
+                                      <button class="intent-buttons ir-color-button" mat-mini-fab (focusout)="collapse_close('intent', ind)" data-toggle="collapse" attr.data-target="#collapseIntent_{{ind}}" aria-expanded="false" attr.aria-controls="collapseIntent_{{ind}}" matTooltip="Show Entities">
+                                        <mat-icon>keyboard_arrow_down</mat-icon>
                                       </button>
                                     </div>
                                   </div>
@@ -105,21 +102,18 @@
                                 <div class="col-md-4">
                                   <div class="row response-buttons-box">
                                     <div class="col-md-4">
-                                      <button class="response-buttons" [ngClass]="(appSource==='open')?'ir-black-button':'ir-color-button'" mat-mini-fab (focusout)="collapse_close('response', ind)" data-toggle="collapse" attr.data-target="#collapseResponse_{{ind}}" aria-expanded="false" attr.aria-controls="collapseResponse_{{ind}}" matTooltip="Show Entities">
-                                        <mat-icon *ngIf="appSource==='enterprise'">keyboard_arrow_down</mat-icon>
-                                        <mat-icon *ngIf="appSource==='open'">expand_more</mat-icon>
+                                      <button class="response-buttons ir-color-button" mat-mini-fab (focusout)="collapse_close('response', ind)" data-toggle="collapse" attr.data-target="#collapseResponse_{{ind}}" aria-expanded="false" attr.aria-controls="collapseResponse_{{ind}}" matTooltip="Show Entities">
+                                        <mat-icon>keyboard_arrow_down</mat-icon>
                                       </button>
                                     </div>
                                     <div class="col-md-3">
-                                      <button class="response-buttons" [ngClass]="(appSource==='open')?'response-black-button':'response-color-button'" mat-mini-fab matTooltip="Remove Response" (click)="removeIntentResponseFromStory(ind, intent_response)">
-                                        <mat-icon *ngIf="appSource==='enterprise'">remove</mat-icon>
-                                        <mat-icon *ngIf="appSource==='open'">highlight_off</mat-icon>
+                                      <button class="response-buttons response-color-button" mat-mini-fab matTooltip="Remove Response" (click)="removeIntentResponseFromStory(ind, intent_response)">
+                                        <mat-icon>remove</mat-icon>
                                       </button>
                                     </div>
                                     <div class="col-md-3">
-                                      <button class="response-buttons" [ngClass]="(appSource==='open')?'response-black-button':'response-color-button'" mat-mini-fab matTooltip="Add Response" (click)="addIntentResponseDetailsToStory('response', ind+1)">
-                                        <mat-icon *ngIf="appSource==='enterprise'">add</mat-icon>
-                                        <mat-icon *ngIf="appSource==='open'">add_circle_outline</mat-icon>
+                                      <button class="response-buttons response-color-button" mat-mini-fab matTooltip="Add Response" (click)="addIntentResponseDetailsToStory('response', ind+1)">
+                                        <mat-icon>add</mat-icon>
                                       </button>
                                     </div>
                                   </div>
@@ -164,12 +158,12 @@
             <hr />
             <div class="row story-buttons-box">
               <div class="col-md-6 text-left add-intent-button">
-                <button  mat-mini-fab [ngClass]="(appSource==='open')?'add-intent-black':'add-intent-color'" matTooltip="Add Intent" (click)="addIntentToStory()">
+                <button  mat-mini-fab class="add-intent-color" matTooltip="Add Intent" (click)="addIntentToStory()">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
               <div class="col-md-6 text-right add-response-button">
-                <button  mat-mini-fab [ngClass]="(appSource==='open')?'add-response-black':'add-response-color'" [disabled]="disable_response" matTooltip="Add Response" (click)="addResponseToStory()">
+                <button  mat-mini-fab class="add-response-color" [disabled]="disable_response" matTooltip="Add Response" (click)="addResponseToStory()">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>

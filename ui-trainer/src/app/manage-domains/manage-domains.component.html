@@ -6,7 +6,7 @@
       </mat-form-field>
     </div>
     <div class="col-md-1 text-right">
-      <button mat-mini-fab matTooltip="Add Domain" [ngClass]="(appSource==='open')?'add-domain-button-black':'add-domain-button-color'" (click)="addNewDomain()">
+      <button mat-mini-fab matTooltip="Add Domain" class="add-domain-button-color" (click)="addNewDomain()">
         <mat-icon>add</mat-icon>
       </button>
     </div>
@@ -33,8 +33,7 @@
             <mat-card class="domain-card">
               <div class="row" (click)="selectDomain(domain)">
                 <div class="col-md-2">
-                  <mat-icon *ngIf="appSource==='enterprise'" svgIcon="domain"></mat-icon>
-                  <mat-icon *ngIf="appSource==='open'" svgIcon="domain-black"></mat-icon>
+                  <mat-icon svgIcon="domain"></mat-icon>
                 </div>
                 <div class="col-md-10 domain-name" matTooltip="{{domain.domain_name}}">
                   <span class="domain_text">{{domain.domain_name}}</span>
@@ -49,16 +48,14 @@
                   <div class="row">
                     <div class="col-md-12">
                       <button mat-icon-button (click)="editDomain(domain._id.$oid, domain.domain_name, domain.domain_description)">
-                        <mat-icon *ngIf="appSource==='enterprise'" svgIcon="edit"></mat-icon>
-                        <mat-icon *ngIf="appSource==='open'" svgIcon="edit-black"></mat-icon>
+                        <mat-icon vgIcon="edit"></mat-icon>
                       </button>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
                       <button mat-icon-button (click)="deleteDomain(domain._id.$oid)">
-                        <mat-icon *ngIf="appSource==='enterprise'" svgIcon="delete"></mat-icon>
-                        <mat-icon *ngIf="appSource==='open'" svgIcon="delete-black"></mat-icon>
+                        <mat-icon svgIcon="delete"></mat-icon>
                       </button>
                     </div>
                   </div>

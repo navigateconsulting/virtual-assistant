@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-edit-intent',
@@ -11,13 +10,11 @@ import { environment } from '../../../../environments/environment';
 export class EditIntentComponent implements OnInit {
 
   editIntentForm: FormGroup;
-  appSource: string;
 
   constructor(public dialogRef: MatDialogRef<EditIntentComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    this.appSource = environment.app_source;
     this.editIntentForm = new FormGroup({
       intentName: new FormControl({value: this.data.intentName, disabled: true}, Validators.required),
       intentDescription: new FormControl(this.data.intentDescription, Validators.required)

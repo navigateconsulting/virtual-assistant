@@ -1,0 +1,185 @@
+<div class="trynow-container">
+  <div class="row">
+    <div class="col-md-11"></div>
+    <div class="col-md-1 text-right end-try-now">
+      <mat-icon
+        matTooltip="Close Chat Window"
+        [routerLink]="'/home/conversations'"
+        svgIcon="delete"
+      ></mat-icon>
+    </div>
+  </div>
+  <div class="row try-now-frame">
+    <div class="col-md-8 left">
+      <div class="user-bot-chat">
+        <div *ngFor="let chat of chats; let i = index">
+          <div
+            *ngIf="chat.event === 'action'"
+            class="row action-message"
+            id="chat-{{ i }}"
+            (click)="selectRowIndex(i)"
+          >
+            <div class="col-md-12">
+              <div class="action-box">
+                <p class="action-chat">{{ chat.name }}</p>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="chat.event === 'user'"
+            class="row user-message"
+            id="chat-{{ i }}"
+            (click)="selectRowIndex(i)"
+          >
+            <div class="col-md-12">
+              <div class="user-box">
+                <div color="white" font-size="4" class="user user-color">
+                  M
+                </div>
+              </div>
+              <div class="user-box">
+                <div
+                  font-size="2"
+                  letter-spacing="0"
+                  class="user-chat user-chat-color"
+                >
+                  <span [innerHtml]="chat.text"></span>
+                </div>
+              </div>
+              <div class="user-intent-box">
+                <p class="user-intent">{{ chat.parse_data.intent.name }}</p>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="chat.event === 'bot'"
+            class="row bot-message"
+            id="chat-{{ i }}"
+            (click)="selectRowIndex(i)"
+          >
+            <div class="col-md-12">
+              <div class="bot-box">
+                <div color="white" font-size="4" class="bot bot-color">
+                  B
+                </div>
+              </div>
+              <div class="bot-box">
+                <div font-size="2" letter-spacing="0" class="bot-chat">
+                  <span [innerHtml]="chat.text"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 right">
+      <mat-card *ngIf="showUserBotCardDetails" class="user-bot-card">
+        <mat-card-header class="mat-card-header-ell">
+          <div mat-card-avatar color="white" font-size="4" class="bot">
+            {{ userBotCardType }}
+          </div>
+          <mat-card-title>{{ userBotCardText }}</mat-card-title>
+          <mat-card-subtitle>
+            {{ userBotCardTime | date: "shortTime" }}
+            <span *ngIf="userBotCardIntent !== ''">|</span>
+            {{ userBotCardIntent }}
+            <span *ngIf="userBotCardConfidence !== ''">|</span>
+            {{ userBotCardConfidence }}
+          </mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+      <br />
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>Story till now</b>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="story-box">
+            <div class="story-conversation-box">
+              <code *ngIf="!storyCode" class="story-conversation-code"
+                >No story yet</code
+              >
+              <code *ngIf="storyCode" class="story-conversation-code">
+                <pre style="margin: 0px;">
+## Story from conversation with me</pre
+                >
+                <span *ngFor="let code of storyCode">
+                  <pre *ngIf="code.event === 'user'" style="margin: 0px;">
+* {{ code.parse_data.intent.name }}</pre
+                  >
+                  <pre
+                    *ngIf="
+                      code.event === 'action' && code.name !== 'action_listen'
+                    "
+                    style="margin: 0px;"
+                  >
+    - {{ code.name }}</pre
+                  >
+                </span>
+              </code>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <br />
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b
+                >Predictions for message:
+                <span *ngIf="predictions">{{ predictions.text }}</span></b
+              >
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <table
+            *ngIf="predictions && showUserPredictionsDetails"
+            class="table table-striped"
+          >
+            <thead>
+              <tr>
+                <th scope="col">Intent</th>
+                <th scope="col">Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let prediction of predictions.intent_ranking">
+                <th scope="row">{{ prediction.name }}</th>
+                <td>{{ prediction.confidence }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <br />
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>Slot Values: </b>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <br />
+          <table *ngIf="conversation_json" class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Key</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of conversation_json['slots'] | keyvalue">
+                <th scope="row">{{ item.key }}</th>
+                <td *ngIf="item.value">{{ item.value }}</td>
+                <td *ngIf="!item.value">None</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</div>

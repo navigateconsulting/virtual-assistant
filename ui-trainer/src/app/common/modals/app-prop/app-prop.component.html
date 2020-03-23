@@ -1,0 +1,46 @@
+<div>
+  <div class="row">
+    <div class="col-md-7">
+      <h1 mat-dialog-title>Configuration for NLU & Core</h1>
+    </div>
+    <div class="col-md-5 text-right">
+      <button mat-raised-button (click)="setDefaultConfig()" class="submit-button">
+        Set Default Configuration
+      </button>
+    </div>
+  </div>
+  <form [formGroup]="configurationForm" (ngSubmit)="closeDialog()">
+    <mat-dialog-content>
+      <mat-form-field class="dialog-full-width" appearance="outline">
+        <textarea
+          matInput
+          rows="18"
+          formControlName="configDescription"
+        ></textarea>
+      </mat-form-field>
+      <mat-error class="yaml-error" *ngIf="show_yaml_error">
+        {{ yaml_error }}
+      </mat-error>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <div class="row" style="width: 100%;">
+        <div class="col-md-6 text-right">
+          <button
+            mat-raised-button
+            type="submit"
+            class="submit-button"
+            [disabled]="!configurationForm.valid"
+          >
+            Confirm
+          </button>
+        </div>
+        <div class="col-md-6 text-center">
+          <button mat-raised-button mat-dialog-close class="cancel-button">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </mat-dialog-actions>
+  </form>
+</div>

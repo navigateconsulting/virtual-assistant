@@ -44,14 +44,12 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   connection: any;
   domains_json: Array<object>;
   domains_json_backup: Array<object>;
-  appSource: string;
 
   @Input() projectObjectId: string;
 
   @Output() selectedDomain = new EventEmitter<string>();
 
   ngOnInit() {
-    this.appSource = environment.app_source;
     this.domains_json = new Array<object>();
     this.domains_json_backup = new Array<object>();
     this.getDomains();

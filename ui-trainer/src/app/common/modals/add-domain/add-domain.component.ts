@@ -2,7 +2,6 @@ import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-add-domain',
@@ -13,13 +12,11 @@ export class AddDomainComponent implements OnInit {
 
   newDomainForm: FormGroup;
   @ViewChild('domainName') domainNameInput: MatInput;
-  appSource: string;
 
   constructor(public dialogRef: MatDialogRef<AddDomainComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    this.appSource = environment.app_source;
     this.newDomainForm = new FormGroup({
       domainName: new FormControl('', Validators.required),
       domainDescription: new FormControl('', Validators.required)

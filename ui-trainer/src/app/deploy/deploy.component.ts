@@ -11,8 +11,7 @@ import { SharedDataService } from '../common/services/shared-data.service';
 
 import { DeployModelComponent } from '../common/modals/deploy-model/deploy-model.component';
 import { HeaderService } from '../common/services/header.service';
-
-import { environment } from '../../environments/environment';
+import { DeployService } from '../common/services/deploy.service';
 
 @Component({
   selector: 'app-deploy',
@@ -22,10 +21,11 @@ import { environment } from '../../environments/environment';
 export class DeployComponent implements OnInit, OnDestroy {
 
   projectModels: any;
-  appSource: string;
+  session_id: string;
 
   constructor(public dialog: MatDialog,
               public headerService: HeaderService,
+              public deployService: DeployService,
               public overlayService: OverlayService,
               public webSocketService: WebSocketService,
               public modelErrorService: ModelErrorService,
@@ -38,31 +38,21 @@ export class DeployComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
-    this.appSource = environment.app_source;
     this.headerService.changeHeaderApplication('trainer');
     this.getProjectsForDeploy();
     this.paginator.pageIndex = +localStorage.getItem('deploy_pageIndex');
     this.paginator.pageSize = +localStorage.getItem('deploy_pageSize');
+    this.session_id = this.webSocketService.getSessionId();
   }
 
   getProjectsForDeploy() {
-    this.webSocketService.createProjectDeployNSP('deploy_model');
-    this.webSocketService.getProjectsForDeploy('deploy_model').subscribe(projects => {
+    this.deployService.getProjectsForDeploy().subscribe(projects => {
       this.projectModels = (projects !== '' && projects !== null) ? projects : [];
       if (this.projectModels.length === 0) {
         this.projectModels = new Array<object>();
       }
       this.projectsModelDataSource = new MatTableDataSource(this.projectModels);
       this.projectsModelDataSource.paginator = this.paginator;
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
-
-    this.webSocketService.getModelDeployAlerts().subscribe(response => {
-      if (response) {
-        this.overlayService.spin$.next(false);
-        this.notificationsService.showToast(response);
-      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
@@ -77,7 +67,15 @@ export class DeployComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
         this.overlayService.spin$.next(true);
-        this.webSocketService.deployModel(projectObjectId);
+        this.deployService.deploy(this.session_id, projectObjectId).subscribe(result => {
+          if (result) {
+            this.overlayService.spin$.next(false);
+            this.notificationsService.showToast(result);
+            this.getProjectsForDeploy();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }

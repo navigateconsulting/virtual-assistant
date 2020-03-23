@@ -7,9 +7,6 @@
     overflow: hidden;
     height: 50px;
 }
-.header-black {
-    background-image: $global_gradient_header;
-}
 .header-color {
     background-image: $global_gradient;
 }
@@ -39,6 +36,7 @@
     padding: 0;
 }
 .header-icons {
-    width: 35px;
-    height: 50px;
+    margin-top: 5px;
+    font-size: 40px;
+    color: white;
 }
