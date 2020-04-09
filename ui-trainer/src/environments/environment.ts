@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   BASE_URL: 'http://' + window.location.hostname + ':8089',
-  PARENT_APP_URL: 'http://'+window.location.hostname+':4200',
+  PARENT_APP_URL: 'http://'+window.location.hostname,
 };
 
 /*
