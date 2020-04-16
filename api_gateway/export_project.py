@@ -99,7 +99,7 @@ class ExportProject:
         domain_details = await self.DomainModel.get_domains(project_id)
         domains_list = []
 
-        # make file and folder structures
+        # Makefile file and folder structures
         for domain in domain_details:
             domain_id = domain['_id']['$oid']
             domains_list.append([domain_id, domain['domain_name']])
