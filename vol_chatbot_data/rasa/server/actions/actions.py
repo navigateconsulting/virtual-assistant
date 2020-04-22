@@ -25,10 +25,10 @@ class ActionLogServiceRequest(Action):
     def run(self, dispatcher, tracker, domain):
         url = 'http://esas_api_gateway:5000/api/v1/incident'
         user_id = tracker.sender_id
-        service_group = tracker.get_slot('service_group')
+        service_group = "Queue"
         issue_details = tracker.get_slot('issue_details')
         headers = {'content-type': 'application/json'}
-        insert_record = {"created_by": user_id, "request_summary": issue_details, "request_description": issue_details, "assign_group_id": service_group, "status": '1', "priority": '1', "assignee": 'null', "resolution": "", "last_assigned_by": 'null'}
+        insert_record = {"created_by": user_id, "request_summary": issue_details, "request_description": issue_details, "assign_group_name": service_group, "status": '1', "priority": '1', "assignee": 'null', "resolution": "", "last_assigned_by": 'null'}
         x = requests.post(url, data=json.dumps(insert_record), headers=headers)
         logging.warning(x)
         if x.status_code == 200:
