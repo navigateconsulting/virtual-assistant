@@ -44,7 +44,7 @@ cors.add(app.router.add_route("POST", "/tryNow", trynow), {
         allow_credentials=True,
         expose_headers=("X-Custom-Server-Header",),
         allow_headers=("X-Requested-With", "Content-Type"),
-        max_age=3600,
+        max_age=7200,
     )
 })
 cors.add(app.router.add_route("POST", "/chatNow", chatnow), {
@@ -68,7 +68,7 @@ cors.add(app.router.add_route("POST", "/deploy", deploy), {
         allow_credentials=True,
         expose_headers=("X-Custom-Server-Header",),
         allow_headers=("X-Requested-With", "Content-Type"),
-        max_age=3600,
+        max_age=7200,
     )
 })
 # We kick off our server
