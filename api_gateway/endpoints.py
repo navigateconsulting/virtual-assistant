@@ -43,19 +43,19 @@ async def disconnect(sid):
 """ Import Export Projects"""
 
 @sio.on('exportProject', namespace='/exportimport')
-async def export_projects(sid, project_rec):
+async def export_projects(sid, project_rec, room_name):
     print("---------- Request from Session {} -------------- ".format(sid))
     result = await ExportImport.export_project(project_rec)
-    #await sio.emit('exportProjects', result, namespace='/exportimport', room=room_name)
-    await sio.emit('exportProjects', result, namespace='/exportimport')
+    await sio.emit('exportProjects', result, namespace='/exportimport', room=room_name)
+    #await sio.emit('exportProjects', result, namespace='/exportimport')
 
 
 @sio.on('importProject', namespace='/exportimport')
-async def export_projects(sid, project_rec):
+async def export_projects(sid, project_rec, room_name):
     print("---------- Request from Session {} -------------- ".format(sid))
     result = await ExportImport.import_projects(project_rec)
-    #await sio.emit('importProjects', result, namespace='/exportimport', room=room_name)
-    await sio.emit('importProjects', result, namespace='/exportimport')
+    await sio.emit('importProjects', result, namespace='/exportimport', room=room_name)
+    #await sio.emit('importProjects', result, namespace='/exportimport')
 
 
 ''' Refresh seed data. 
