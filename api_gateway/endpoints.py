@@ -1,5 +1,5 @@
 from __main__ import sio
-from models import ProjectsModel, DomainsModel, IntentsModel, ResponseModel, StoryModel, EntityModel, RefreshDb, RasaConversations, CustomActionsModel
+from models import ProjectsModel, DomainsModel, IntentsModel, ResponseModel, StoryModel, EntityModel, RefreshDb, RasaConversations, CustomActionsModel, ExportImport
 from export_project import ExportProject
 from config import CONFIG
 import os
@@ -19,6 +19,7 @@ ExportProject = ExportProject()
 RefreshDb = RefreshDb()
 RasaConversations = RasaConversations()
 CustomActionsModel = CustomActionsModel()
+ExportImport = ExportImport()
 
 @sio.on('connect')
 async def connect(sid, environ):
@@ -37,6 +38,24 @@ async def disconnect(sid):
         print("Clean up successful")
     else:
         print("-------------------- Error during cleanup ---------------------")
+
+
+""" Import Export Projects"""
+
+@sio.on('exportProject', namespace='/exportimport')
+async def export_projects(sid, project_rec):
+    print("---------- Request from Session {} -------------- ".format(sid))
+    result = await ExportImport.export_project(project_rec)
+    #await sio.emit('exportProjects', result, namespace='/exportimport', room=room_name)
+    await sio.emit('exportProjects', result, namespace='/exportimport')
+
+
+@sio.on('importProject', namespace='/exportimport')
+async def export_projects(sid, project_rec):
+    print("---------- Request from Session {} -------------- ".format(sid))
+    result = await ExportImport.import_projects(project_rec)
+    #await sio.emit('importProjects', result, namespace='/exportimport', room=room_name)
+    await sio.emit('importProjects', result, namespace='/exportimport')
 
 
 ''' Refresh seed data. 
