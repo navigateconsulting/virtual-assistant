@@ -1105,7 +1105,8 @@ class ExportImport:
         domains_cursor = db.domains.find({"project_id": str(source_project_id)})
         domain_list = []
         for domain in await domains_cursor.to_list(length=100):
-            domain['source_domain'] = domain['_id']
+            print(domain.get('_id'))
+            domain['source_domain'] = str(domain.get('_id'))
             del domain['_id']
             domain_list.append(domain)
         export_model["domains"] = domain_list
@@ -1143,6 +1144,8 @@ class ExportImport:
 
         # Create Project
         json_record = eval(record)
+        #json_record = record
+        #json_record = json.loads(json.dumps(record))
         print(json_record['project'])
 
         # Check if project already exists
@@ -1171,7 +1174,7 @@ class ExportImport:
         domains = json_record['domains']
         for lines in domains:
             print(lines)
-            source_domain = lines['source_domain']['$oid']
+            source_domain = lines['source_domain']
             lines['project_id'] = "{}".format(new_project.inserted_id)
             new_domain = await db.domains.insert_one(lines)
             print("new domain inserted with id {}".format(new_domain.inserted_id))
