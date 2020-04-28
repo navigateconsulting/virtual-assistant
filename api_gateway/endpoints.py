@@ -594,13 +594,14 @@ class TryNow():
         from rasa.train import train_async
         from rasa.utils.endpoints import EndpointConfig
 
-        base_path = CONFIG.get('api_gateway', 'SESSION_MODEL_PATH')
+        base_path = os.getcwd() +'/try_now_sessions/' #CONFIG.get('api_gateway', 'SESSION_MODEL_PATH')
         config = "config.yml"
         training_files = "data/"
         domain = "domain.yml"
         output = "models/"
 
-        endpoints = EndpointConfig(url="http://action_server:5055/webhook")
+        #endpoints = EndpointConfig(url="http://action_server:5055/webhook")
+        endpoints = EndpointConfig(url=os.environ['ACTION_SERVER_URL'])
 
         base_path = base_path + res_data['sessionId'] + "/"
 
@@ -616,8 +617,8 @@ class TryNow():
             unpacked = model.get_model(model_path)
             domain = Domain.load(domain)
             _tracker_store = MongoTrackerStore(domain=domain,
-                                                host=CONFIG.get('api_gateway', 'MONGODB_URL'),
-                                                db=CONFIG.get('api_gateway', 'MONGODB_NAME'),
+                                                host=os.environ["MONGODB_URL"],  #CONFIG.get('api_gateway', 'MONGODB_URL'),
+                                                db=os.environ["MONGODB_NAME"], #CONFIG.get('api_gateway', 'MONGODB_NAME'),
                                                 username=None,
                                                 password=None,
                                                 auth_source="admin",
@@ -677,7 +678,7 @@ class ModelPublish():
 
         print(result)
 
-        base_path = CONFIG.get('api_gateway', 'DEPLOY_MODEL_PATH')
+        base_path = './models/' #CONFIG.get('api_gateway', 'DEPLOY_MODEL_PATH')
         config = "config.yml"
         training_files = "data/"
         domain = "domain.yml"
@@ -694,6 +695,8 @@ class ModelPublish():
 
         # Upload model to Rasa Server
 
+        # TODO Need capability for Multiple Rasa server endpoints
+
         if model_path is not None:
 
             model_name = os.path.basename(model_path)
@@ -701,7 +704,7 @@ class ModelPublish():
             print(load_model_path)
 
             async with aiohttp.ClientSession() as session:
-                async with session.put(CONFIG.get('api_gateway', 'RASA_URL'),
+                async with session.put(os.environ['RASA_SERVER_URL'], #CONFIG.get('api_gateway', 'RASA_URL'),
                                        data=json.dumps({'model_file': str(load_model_path)}),
                                        headers={'content-type': 'application/json'}
                                        ) as resp:

@@ -50,6 +50,12 @@ services:
 
   api_gateway:
     container_name: api_gateway
+    environment:
+      MONGODB_URL: mongodb://mongodb:27017
+      MONGODB_NAME: eva_platform
+      LOGGING: 'Yes'
+      ACTION_SERVER_URL: http://action_server:5055/webhook
+      RASA_SERVER_URL: http://rasa:5005/model
     volumes:
       - ./vol_chatbot_data:/vol_chatbot_data
     build: './api_gateway'

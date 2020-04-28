@@ -34,7 +34,8 @@ class RefreshDb:
 
         # Setting source data paths
 
-        seed_data_path = CONFIG.get('api_gateway', 'SEED_DATA_PATH')
+        #seed_data_path = CONFIG.get('api_gateway', 'SEED_DATA_PATH')
+        seed_data_path = './seed_data/'
 
         # Cleaning up collections
         await db.entities.delete_many({})

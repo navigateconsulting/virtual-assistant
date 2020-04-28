@@ -68,11 +68,17 @@ class ExportProject:
         print("Starting export for project  ID {}".format(project_id))
 
         if model_path == 'SESSION':
-            self.project_base_path = CONFIG.get('api_gateway', 'SESSION_MODEL_PATH')
+            #self.project_base_path = CONFIG.get('api_gateway', 'SESSION_MODEL_PATH')
+            if not os.path.exists('./try_now_sessions/'):
+                os.makedirs('./try_now_sessions/')
+            self.project_base_path = './try_now_sessions/'
             self.project_home = self.project_base_path + sid
 
         else:
-            self.project_base_path = CONFIG.get('api_gateway', 'DEPLOY_MODEL_PATH')
+            #self.project_base_path = CONFIG.get('api_gateway', 'DEPLOY_MODEL_PATH')
+            if not os.path.exists('./models/'):
+                os.makedirs('./models/')
+            self.project_base_path = './models/'
             self.project_home = self.project_base_path + project_id
 
         await self.reset_globals(sid)

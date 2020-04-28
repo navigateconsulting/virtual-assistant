@@ -3,8 +3,10 @@ import socketio
 from config import CONFIG
 import aiohttp_cors
 import json
+import os
 
-if CONFIG.get('api_gateway', 'LOGGING') == 'TRUE':
+#if CONFIG.get('api_gateway', 'LOGGING') == 'TRUE':
+if os.environ["LOGGING"] == 'Yes':
     print("--------------------Starting Socketio Connection in Debug Mode --------------------------")
     sio = socketio.AsyncServer(async_mode='aiohttp', logger=True, engineio_logger=True, ping_timeout=60000000, ping_interval=6000000 )
 else:
@@ -115,4 +117,4 @@ cors.add(app.router.add_route("POST", "/exportProject", exportProject), {
 # We kick off our server
 if __name__ == '__main__':
     sio.attach(app)
-    web.run_app(app, port=CONFIG.get('api_gateway', 'PORT'))
+    web.run_app(app, port=8089)
