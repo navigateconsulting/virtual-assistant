@@ -43,7 +43,7 @@ services:
       - MONGODB_USER="eva"
       - MONGODB_PASS="evapass"
     volumes:
-      - ./vol_chatbot_data/database/db:/data/db
+      - mongodb:/data/db
     ports:
       - 27017:27017
     command: mongod  --logpath=/dev/null # --quiet
@@ -69,3 +69,6 @@ services:
       - "8080:80"
     depends_on:
       - api_gateway
+
+volumes:
+  mongodb:
