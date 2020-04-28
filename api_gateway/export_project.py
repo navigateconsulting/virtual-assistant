@@ -5,7 +5,6 @@ from models import db, ProjectsModel, DomainsModel, IntentsModel, StoryModel, Re
 import asyncio
 import os
 import shutil
-from config import CONFIG
 
 # TODO Do files need to be split by domain ? or combine them under common files after checking if domain is to be exported or not
 

@@ -1,7 +1,6 @@
 from __main__ import sio
 from models import ProjectsModel, DomainsModel, IntentsModel, ResponseModel, StoryModel, EntityModel, RefreshDb, RasaConversations, CustomActionsModel, ExportImport
 from export_project import ExportProject
-from config import CONFIG
 import os
 import json
 import sys

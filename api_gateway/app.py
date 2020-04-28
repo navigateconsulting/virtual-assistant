@@ -1,6 +1,5 @@
 from aiohttp import web
 import socketio
-from config import CONFIG
 import aiohttp_cors
 import json
 import os

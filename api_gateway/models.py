@@ -2,7 +2,6 @@ from bson.json_util import dumps
 import json
 from bson.objectid import ObjectId
 from database import ConDatabase
-from config import CONFIG
 
 
 '''motor Mongo Db connection '''
