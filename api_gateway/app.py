@@ -29,14 +29,6 @@ try_chat_now = endpoints.TryNow()
 async def trynow(request):
     return await try_chat_now.on_trynow(request)
 
-async def chatnow(request):
-    return await try_chat_now.on_chatNow(request)
-
-async def getProjectsForDeploy(request):
-    return await endpoints.ModelPublish().on_getDashboard(request)
-
-async def deploy(request):
-    return await endpoints.ModelPublish().on_trainModel(request)
 
 app.router.add_get('/', index)
 cors.add(app.router.add_route("POST", "/tryNow", trynow), {
@@ -47,6 +39,11 @@ cors.add(app.router.add_route("POST", "/tryNow", trynow), {
         max_age=7200,
     )
 })
+
+async def chatnow(request):
+    return await try_chat_now.on_chatNow(request)
+
+
 cors.add(app.router.add_route("POST", "/chatNow", chatnow), {
     "*": aiohttp_cors.ResourceOptions(
         allow_credentials=True,
@@ -55,6 +52,12 @@ cors.add(app.router.add_route("POST", "/chatNow", chatnow), {
         max_age=3600,
     )
 })
+
+
+async def getProjectsForDeploy(request):
+    return await endpoints.ModelPublish().on_getDashboard(request)
+
+
 cors.add(app.router.add_get("/getProjectsForDeploy", getProjectsForDeploy), {
     "*": aiohttp_cors.ResourceOptions(
         allow_credentials=True,
@@ -63,6 +66,12 @@ cors.add(app.router.add_get("/getProjectsForDeploy", getProjectsForDeploy), {
         max_age=3600,
     )
 })
+
+
+async def deploy(request):
+    return await endpoints.ModelPublish().on_trainModel(request)
+
+
 cors.add(app.router.add_route("POST", "/deploy", deploy), {
     "*": aiohttp_cors.ResourceOptions(
         allow_credentials=True,
@@ -71,6 +80,38 @@ cors.add(app.router.add_route("POST", "/deploy", deploy), {
         max_age=7200,
     )
 })
+
+
+async def importProject(request):
+    return await endpoints.import_projects(request)
+
+
+cors.add(app.router.add_route("POST", "/importProject", importProject), {
+    "*": aiohttp_cors.ResourceOptions(
+        allow_credentials=True,
+        expose_headers=("X-Custom-Server-Header",),
+        allow_headers=("X-Requested-With", "Content-Type"),
+        max_age=7200,
+    )
+})
+
+
+async def exportProject(request):
+    return await endpoints.export_projects(request)
+
+
+cors.add(app.router.add_route("POST", "/exportProject", exportProject), {
+    "*": aiohttp_cors.ResourceOptions(
+        allow_credentials=True,
+        expose_headers=("X-Custom-Server-Header",),
+        allow_headers=("X-Requested-With", "Content-Type"),
+        max_age=7200,
+    )
+})
+
+
+
+
 # We kick off our server
 if __name__ == '__main__':
     sio.attach(app)

@@ -42,19 +42,21 @@ async def disconnect(sid):
 
 """ Import Export Projects"""
 
-@sio.on('exportProject', namespace='/exportimport')
-async def export_projects(sid, project_rec, room_name):
-    print("---------- Request from Session {} -------------- ".format(sid))
+#@sio.on('exportProject', namespace='/exportimport')
+async def export_projects(project_rec):
+    print("---------- Request from Session {} -------------- ")
     result = await ExportImport.export_project(project_rec)
-    await sio.emit('exportProjects', result, namespace='/exportimport', room=room_name)
+    return result
+    #await sio.emit('exportProjects', result, namespace='/exportimport', room=room_name)
     #await sio.emit('exportProjects', result, namespace='/exportimport')
 
 
-@sio.on('importProject', namespace='/exportimport')
-async def export_projects(sid, project_rec, room_name):
-    print("---------- Request from Session {} -------------- ".format(sid))
+#@sio.on('importProject', namespace='/exportimport')
+async def import_projects(project_rec):
+    print("---------- Request from Session {} -------------- ")
     result = await ExportImport.import_projects(project_rec)
-    await sio.emit('importProjects', result, namespace='/exportimport', room=room_name)
+    return result
+    #await sio.emit('importProjects', result, namespace='/exportimport', room=room_name)
     #await sio.emit('importProjects', result, namespace='/exportimport')
 
 
