@@ -1140,10 +1140,10 @@ class ExportImport:
         print(json.loads(dumps(export_model)))
         return json.loads(dumps(export_model))
 
-    async def import_projects(self, record):
+    async def import_project(self, json_record):
 
         # Create Project
-        json_record = eval(record)
+        #json_record = eval(record)
         #json_record = record
         #json_record = json.loads(json.dumps(record))
         print(json_record['project'])
