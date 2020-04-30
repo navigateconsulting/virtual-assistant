@@ -6,23 +6,17 @@ services:
 
   action_server:
     build: './action_server'
+    container_name: action_server
     ports:
       - 5055:5055
-    container_name: action_server
 
   rasa:
     build: './rasa_custom'
+    container_name: "rasa"
     ports:
       - 5005:5005
-#    volumes:
-#    - "./vol_chatbot_data/rasa/server/models:/app/models"
-#    - "./vol_chatbot_data/rasa/server/config:/app/config"
-#    - "./vol_chatbot_data/rasa/server/logs:/app/logs"
-#    - "./vol_chatbot_data/rasa/server/data:/app/data"
     command:
     - run
-#    - --endpoints
-#    - config/endpoints.yml
     - --debug
     - --enable-api
     - --cors
