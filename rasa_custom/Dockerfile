@@ -6,11 +6,12 @@ WORKDIR /app/config
 
 USER root
 
-
 # Copy actions folder to working directory
 COPY endpoints.yml /app/config
 
-# By best practices, don't run the code with root user
-USER 1001
+# Make sure the default group has the same permissions as the owner
+RUN chgrp -R 0 . && chmod -R g=u .
 
+# Don't run as root
+USER 1001
 
