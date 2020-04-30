@@ -694,14 +694,14 @@ class ModelPublish():
 
         model_path = await train_async(domain, config, [training_files], output)
 
-        # Upload model to Rasa Server
+        # Upload model to Rasa Server  --
 
         # TODO Need capability for Multiple Rasa server endpoints
 
         if model_path is not None:
 
             model_name = os.path.basename(model_path)
-            load_model_path = "/app/models/"+res_data['projectObjectId']+"/models/"+model_name
+            load_model_path = "/api_gateway/models/"+res_data['projectObjectId']+"/models/"+model_name
             print(load_model_path)
 
             async with aiohttp.ClientSession() as session:
