@@ -679,7 +679,7 @@ class ModelPublish():
 
         print(result)
 
-        base_path = './models/' #CONFIG.get('api_gateway', 'DEPLOY_MODEL_PATH')
+        base_path = '/app/models/' #CONFIG.get('api_gateway', 'DEPLOY_MODEL_PATH')
         config = "config.yml"
         training_files = "data/"
         domain = "domain.yml"
@@ -693,7 +693,7 @@ class ModelPublish():
         output = base_path + output
 
         model_path = await train_async(domain, config, [training_files], output)
-
+        print(model_path)
         # Upload model to Rasa Server
 
         # TODO Need capability for Multiple Rasa server endpoints
@@ -701,16 +701,18 @@ class ModelPublish():
         if model_path is not None:
 
             model_name = os.path.basename(model_path)
-            load_model_path = "/api_gateway/models/"+res_data['projectObjectId']+"/models/"+model_name
+            load_model_path = "/app/models/"+res_data['projectObjectId']+"/models/"+model_name
+
             print(load_model_path)
 
             async with aiohttp.ClientSession() as session:
-                async with session.put(os.environ['RASA_SERVER_URL'], #CONFIG.get('api_gateway', 'RASA_URL'),
-                                       data=json.dumps({'model_file': str(load_model_path)}),
+                async with session.put(os.environ['RASA_SERVER_URL'],
+                                       data=json.dumps({"model_file": str(load_model_path)}),
                                        headers={'content-type': 'application/json'}
                                        ) as resp:
                     json_resp = await resp.json()
                     print("Response from Rasa {}".format(resp.status))
+                    print("Response from Rasa {}".format(json_resp))
 
             result = await ProjectsModel.update_project_model({"object_id": str(res_data['projectObjectId']),
                                                                "model_name": model_name,

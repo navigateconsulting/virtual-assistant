@@ -9,6 +9,9 @@ RUN apt-get install -y tk-dev && rm -r /var/lib/apt/lists/*
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
 
+#RUN mkdir -p /app/config/
+#COPY ./rasa_custom/endpoints.yml /app/config/endpoints.yml
+
 ADD . /api_gateway
 WORKDIR /api_gateway
 

@@ -12,11 +12,16 @@ services:
 
   rasa:
     build: './rasa_custom'
-    container_name: "rasa"
+    #image: rasa/rasa:1.8.1-full
+#    container_name: "rasa"
     ports:
       - 5005:5005
+    volumes:
+    - rasa_vol:/app/models
     command:
     - run
+    - --endpoints
+    - config/endpoints.yml
     - --debug
     - --enable-api
     - --cors
@@ -43,6 +48,8 @@ services:
   api_gateway:
     container_name: api_gateway
     build: './api_gateway'
+    volumes:
+    - rasa_vol:/app/models
     environment:
       MONGODB_URL: mongodb://mongodb:27017
       MONGODB_NAME: eva_platform
@@ -64,3 +71,4 @@ services:
 
 volumes:
   mongodb:
+  rasa_vol:
