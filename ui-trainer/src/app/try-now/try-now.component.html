@@ -19,7 +19,7 @@
           <div *ngIf="chat.event==='user'" class="row user-message" id="chat-{{i}}" (click)="selectRowIndex(i)">
             <div class="col-md-12">
               <div class="user-box">
-                <div color="white" font-size="4" class="user user-color">M</div>
+                <div color="white" font-size="4" class="user-color user">M</div>
               </div>
               <div class="user-box">
                   <div font-size="2" letter-spacing="0" class="user-chat user-chat-color"><span [innerHtml]='chat.text'></span></div>
