@@ -11,6 +11,7 @@ import { NotificationsService } from '../common/services/notifications.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
 import { AppPropComponent } from '../common/modals/app-prop/app-prop.component';
+import { ImportExportService } from '../common/services/import-export.service';
 
 @Component({
   selector: 'app-manage-projects',
@@ -22,12 +23,13 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   constructor(public webSocketService: WebSocketService,
+              public importExportService: ImportExportService,
               public notificationsService: NotificationsService,
               public sharedDataService: SharedDataService,
               public dialog: MatDialog) {}
 
   // tslint:disable-next-line: max-line-length
-  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'padding1', 'project_description', 'padding2', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'try_now', 'properties'];
+  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'padding1', 'project_description', 'padding2', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'try_now', 'properties', 'export'];
   projectsDataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -131,6 +133,41 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
         this.webSocketService.editProject(response, 'root');
       }
     });
+  }
+
+  importProject(file: File) {
+    const fileReader = new FileReader();
+    fileReader.readAsText(file, "UTF-8");
+    fileReader.onload = () => {
+      this.importExportService.importProject(JSON.parse(fileReader.result.toString())).subscribe(result => {
+        if (result) {
+          this.notificationsService.showToast({status: result['status'], message: result['message']}); 
+          if (result['status'] === 'Success') {
+            this.getProjects();
+          }
+        }   
+      },
+      err => console.error('Observer got an error: ' + err),
+      () => console.log('Observer got a complete notification'));
+    }
+    fileReader.onerror = (error) => {
+      console.log(error);
+    }
+  }
+
+  exportProject(projectName: any) {
+    this.importExportService.exportProject(projectName).subscribe(result => {
+      var sJson = JSON.stringify(result);
+      var element = document.createElement('a');
+      element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
+      element.setAttribute('download', projectName + ".json");
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click(); // simulate click
+      document.body.removeChild(element);
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   selectProject(projectStub: any) {

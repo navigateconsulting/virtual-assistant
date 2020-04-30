@@ -2,7 +2,6 @@ from bson.json_util import dumps
 import json
 from bson.objectid import ObjectId
 from database import ConDatabase
-from config import CONFIG
 
 
 '''motor Mongo Db connection '''
@@ -34,7 +33,8 @@ class RefreshDb:
 
         # Setting source data paths
 
-        seed_data_path = CONFIG.get('api_gateway', 'SEED_DATA_PATH')
+        #seed_data_path = CONFIG.get('api_gateway', 'SEED_DATA_PATH')
+        seed_data_path = './seed_data/'
 
         # Cleaning up collections
         await db.entities.delete_many({})
@@ -1063,3 +1063,144 @@ class CustomActionsModel:
         result = await db.actions.delete_one(query)
         print("Action Deleted count {}".format(result))
         return {"status": "Success", "message": "Action Deleted Successfully"}
+
+
+class ExportImport:
+
+    def __init__(self):
+        pass
+
+    async def export_project(self, json_record):
+        #{"project_name": "BaseDomain"}
+
+        print("Inside Export project")
+
+        export_model = {'project': '',
+                        'entities': '',
+                        'domains': '',
+                        'intents': '',
+                        'response': '',
+                        'stories': ''}
+
+        source_project = await db.projects.find_one({"project_name": json_record['project_name']})
+        source_project_id = source_project.get('_id')
+        del source_project['_id']
+
+        # Create Project
+
+        export_model["project"] = source_project
+
+        # Copy Entities
+
+        entities_cursor = db.entities.find({"project_id": str(source_project_id)})
+        entities_list = await entities_cursor.to_list(length=10000)
+        entity_dict = []
+        for entities in entities_list:
+            del entities['_id']
+            entity_dict.append(entities)
+        export_model["entities"] = entity_dict
+
+        # Copy Domains
+
+        domains_cursor = db.domains.find({"project_id": str(source_project_id)})
+        domain_list = []
+        for domain in await domains_cursor.to_list(length=100):
+            print(domain.get('_id'))
+            domain['source_domain'] = str(domain.get('_id'))
+            del domain['_id']
+            domain_list.append(domain)
+        export_model["domains"] = domain_list
+
+        # Copy Intents
+        intents_cursor = db.intents.find({"project_id": str(source_project_id)})
+        intents_list = []
+        for intents in await intents_cursor.to_list(length=100):
+            del intents['_id']
+            intents_list.append(intents)
+        export_model["intents"] = intents_list
+
+        # Copy Responses
+
+        responses_cursor = db.responses.find({"project_id": str(source_project_id)})
+        response_list = []
+        for response in await responses_cursor.to_list(length=100):
+            del response['_id']
+            response_list.append(response)
+        export_model["response"] = response_list
+
+        # Copy Stories
+
+        stories_cursor = db.stories.find({"project_id": str(source_project_id)})
+        story_list = []
+        for story in await stories_cursor.to_list(length=100):
+            del story['_id']
+            story_list.append(story)
+        export_model["stories"] = story_list
+
+        print(json.loads(dumps(export_model)))
+        return json.loads(dumps(export_model))
+
+    async def import_project(self, json_record):
+
+        # Create Project
+        #json_record = eval(record)
+        #json_record = record
+        #json_record = json.loads(json.dumps(record))
+        print(json_record['project'])
+
+        # Check if project already exists
+
+        val_res = await db.projects.find_one({"project_name": json_record['project']['project_name']})
+
+        if val_res is not None:
+            print('Project already exists')
+            return {"status": "Error", "message": "Project already exists"}
+
+        # Remove later
+        new_project = await db.projects.insert_one(json_record['project'])
+        print("project created {}".format(new_project.inserted_id))
+
+        # Copy Entities
+
+        entities = json_record["entities"]
+        for lines in entities:
+            lines['project_id'] = "{}".format(new_project.inserted_id)
+            new_entity = await db.entities.insert_one(lines)
+            print(lines)
+
+
+        # Copy Domains
+
+        domains = json_record['domains']
+        for lines in domains:
+            print(lines)
+            source_domain = lines['source_domain']
+            lines['project_id'] = "{}".format(new_project.inserted_id)
+            new_domain = await db.domains.insert_one(lines)
+            print("new domain inserted with id {}".format(new_domain.inserted_id))
+
+            intents = json_record['intents']
+            for intent_lines in intents:
+                if intent_lines['domain_id'] == source_domain:
+                    print("insert with new domain ID ")
+                    intent_lines['project_id'] = "{}".format(new_project.inserted_id)
+                    intent_lines['domain_id'] = "{}".format(new_domain.inserted_id)
+                    new_intents = await db.intents.insert_one(intent_lines)
+
+            responses = json_record['response']
+            for response_lines in responses:
+                if response_lines['domain_id'] == source_domain:
+                    print("insert with new domain ID ")
+                    response_lines['project_id'] = "{}".format(new_project.inserted_id)
+                    response_lines['domain_id'] = "{}".format(new_domain.inserted_id)
+                    new_responses = await db.responses.insert_one(response_lines)
+
+            story = json_record['stories']
+            for story_lines in story:
+                if story_lines['domain_id'] == source_domain:
+                    print("insert with new domain ID ")
+                    story_lines['project_id'] = "{}".format(new_project.inserted_id)
+                    story_lines['domain_id'] = "{}".format(new_domain.inserted_id)
+                    new_story = await db.stories.insert_one(story_lines)
+
+        return {"status": "Success", "message": "Project successfully imported "}

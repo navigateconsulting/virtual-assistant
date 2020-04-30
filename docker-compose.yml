@@ -5,26 +5,24 @@ services:
   # Server Stack
 
   action_server:
-    image: rasa/rasa-sdk:1.8.1
+    build: './action_server'
     ports:
       - 5055:5055
     container_name: action_server
-    volumes:
-    - "./vol_chatbot_data/rasa/server/actions:/app/actions"
 
   rasa:
-    image: rasa/rasa:1.8.1-full
+    build: './rasa_custom'
     ports:
       - 5005:5005
-    volumes:
-    - "./vol_chatbot_data/rasa/server/models:/app/models"
-    - "./vol_chatbot_data/rasa/server/config:/app/config"
-    - "./vol_chatbot_data/rasa/server/logs:/app/logs"
-    - "./vol_chatbot_data/rasa/server/data:/app/data"
+#    volumes:
+#    - "./vol_chatbot_data/rasa/server/models:/app/models"
+#    - "./vol_chatbot_data/rasa/server/config:/app/config"
+#    - "./vol_chatbot_data/rasa/server/logs:/app/logs"
+#    - "./vol_chatbot_data/rasa/server/data:/app/data"
     command:
     - run
-    - --endpoints
-    - config/endpoints.yml
+#    - --endpoints
+#    - config/endpoints.yml
     - --debug
     - --enable-api
     - --cors
@@ -43,16 +41,20 @@ services:
       - MONGODB_USER="eva"
       - MONGODB_PASS="evapass"
     volumes:
-      - ./vol_chatbot_data/database/db:/data/db
+      - mongodb:/data/db
     ports:
       - 27017:27017
     command: mongod  --logpath=/dev/null # --quiet
 
   api_gateway:
     container_name: api_gateway
-    volumes:
-      - ./vol_chatbot_data:/vol_chatbot_data
     build: './api_gateway'
+    environment:
+      MONGODB_URL: mongodb://mongodb:27017
+      MONGODB_NAME: eva_platform
+      LOGGING: 'Yes'
+      ACTION_SERVER_URL: http://action_server:5055/webhook
+      RASA_SERVER_URL: http://rasa:5005/model
     ports:
       - "8089:8089"
     depends_on:
@@ -65,3 +67,6 @@ services:
       - "8080:80"
     depends_on:
       - api_gateway
+
+volumes:
+  mongodb:
