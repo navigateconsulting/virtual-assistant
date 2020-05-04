@@ -114,7 +114,7 @@ async def getConversations(request):
     return await endpoints.Conversations().get_conversations(request)
 
 
-cors.add(app.router.add_get("/getConversations", getConversations), {
+cors.add(app.router.add_route("POST", "/getConversations", getConversations), {
     "*": aiohttp_cors.ResourceOptions(
         allow_credentials=True,
         expose_headers=("X-Custom-Server-Header",),
