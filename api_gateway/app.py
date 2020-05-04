@@ -110,6 +110,19 @@ cors.add(app.router.add_route("POST", "/exportProject", exportProject), {
     )
 })
 
+async def getConversations(request):
+    return await endpoints.Conversations().get_conversations(request)
+
+
+cors.add(app.router.add_get("/getConversations", getConversations), {
+    "*": aiohttp_cors.ResourceOptions(
+        allow_credentials=True,
+        expose_headers=("X-Custom-Server-Header",),
+        allow_headers=("X-Requested-With", "Content-Type"),
+        max_age=7200,
+    )
+})
+
 
 
 
