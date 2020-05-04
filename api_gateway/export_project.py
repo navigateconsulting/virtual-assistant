@@ -75,9 +75,9 @@ class ExportProject:
 
         else:
             #self.project_base_path = CONFIG.get('api_gateway', 'DEPLOY_MODEL_PATH')
-            if not os.path.exists('./models/'):
-                os.makedirs('./models/')
-            self.project_base_path = './models/'
+            if not os.path.exists('/app/models/'):
+                os.makedirs('/app/models/')
+            self.project_base_path = '/app/models/'
             self.project_home = self.project_base_path + project_id
 
         await self.reset_globals(sid)
