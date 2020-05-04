@@ -63,6 +63,9 @@ import { ConversationChatComponent } from './conversation-chat/conversation-chat
 import { ApplicationsComponent } from './applications/applications.component';
 import { AppPropComponent } from './common/modals/app-prop/app-prop.component';
 
+import { AuthGuard } from './auth.guard';
+import { AuthService } from './common/services/auth.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -157,7 +160,11 @@ import { AppPropComponent } from './common/modals/app-prop/app-prop.component';
     OverlayModule,
     ToastrModule.forRoot()
   ],
-  providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}, EntitiesDataService],
+  providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}, 
+    EntitiesDataService,
+    AuthGuard,
+    AuthService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -12,8 +12,7 @@
   </div>
   <div class="col-md-2">
     <div class="row">
-      <div class="col-md-5 header-buttons"></div>
-      <div class="col-md-3 header-buttons">
+      <div class="col-md-4 header-buttons">
         <button mat-icon-button [routerLink]="'/applications'">
           <mat-icon class="header-icons">apps</mat-icon>
         </button>
@@ -24,6 +23,11 @@
           target="_blank"
           ><mat-icon class="header-icons">help_outline</mat-icon></a
         >
+      </div>
+      <div class="col-md-4 header-buttons">
+        <button mat-icon-button (click)="closeWindow()">
+          <mat-icon class="header-icons">close</mat-icon>
+        </button>
       </div>
     </div>
   </div>

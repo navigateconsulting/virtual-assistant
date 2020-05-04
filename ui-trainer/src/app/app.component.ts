@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { AuthService } from './common/services/auth.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +11,13 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'eva-chatbot-app';
 
-  constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
+  title = 'eva-chatbot-app';
+  loggedIn = false;
+
+  constructor(private matIconRegistry: MatIconRegistry,
+              private domSanitizer: DomSanitizer,
+              private router: Router, public authService: AuthService) {
     this.matIconRegistry.addSvgIcon(
       'project',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/project.svg')
@@ -91,5 +98,25 @@ export class AppComponent {
       'app-properties',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/app-properties.svg')
     );
+  }
+
+  ngOnInit() {
+    if (localStorage.getItem('jwt_token') === null) {
+      if (this.authService.checkValidToken(window.location.href.split('/').pop())) {
+        this.authService.setToken(window.location.href.split('/').pop());
+      }
+    }
+    if (!this.authService.isTokenExpired()) {
+      this.loggedIn = true;
+      this.router.navigate(['/applications'])
+    } else {
+      this.callParentApp();
+    }
+  }
+
+  callParentApp () {
+    localStorage.clear();
+    let url = environment.PARENT_APP_URL;   
+    window.open(url, '_self');
   }
 }

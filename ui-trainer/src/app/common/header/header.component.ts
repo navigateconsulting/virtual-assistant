@@ -44,4 +44,8 @@ export class HeaderComponent implements OnInit {
       window.location.reload();
     });
   }
+
+  closeWindow() {
+    window.close();
+  }
 }

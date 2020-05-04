@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { ManageTrainerComponent } from '../app/manage-trainer/manage-trainer.component';
 import { TryNowComponent } from '../app/try-now/try-now.component';
@@ -9,11 +10,13 @@ import { ManageActionsComponent } from '../app/manage-actions/manage-actions.com
 import { ConversationsComponent } from '../app/conversations/conversations.component';
 import { ConversationChatComponent } from '../app/conversation-chat/conversation-chat.component';
 import { ApplicationsComponent } from '../app/applications/applications.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
-      { path: '', redirectTo: 'home/trainer', pathMatch: 'full' },
-      { path: 'applications', component: ApplicationsComponent },
-      { path: 'home', component: HomeComponent, children: [
+      { path: 'app/:apptype/:atoken', component: AppComponent },
+      // { path: '', redirectTo: 'home/trainer', pathMatch: 'full' },
+      { path: 'applications', component: ApplicationsComponent, canActivate: [AuthGuard] },
+      { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
         { path: 'trainer', component: ManageTrainerComponent, children: [
           { path: 'try-now', component: TryNowComponent },
         ] },

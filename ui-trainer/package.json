@@ -28,6 +28,7 @@
     "hammerjs": "^2.0.8",
     "js-yaml": "^3.13.1",
     "json2yaml": "^1.1.0",
+    "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",
     "lodash.mergewith": "^4.6.2",
     "ng6-toastr-notifications": "^1.0.4",
