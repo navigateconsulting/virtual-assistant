@@ -728,3 +728,10 @@ class ModelPublish():
 
 
 #sio.register_namespace(ModelPublish('/modelpublish'))
+
+class Conversations:
+
+    async def get_conversations(self, request):
+        res_data = await request.json()        
+        result = await RasaConversations.get_conversations(res_data['session_id'])
+        return json.loads(dumps(result))
