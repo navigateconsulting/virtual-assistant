@@ -113,7 +113,6 @@ cors.add(app.router.add_route("POST", "/exportProject", exportProject), {
 async def getConversations(request):
     return await endpoints.Conversations().get_conversations(request)
 
-
 cors.add(app.router.add_route("POST", "/getConversations", getConversations), {
     "*": aiohttp_cors.ResourceOptions(
         allow_credentials=True,
@@ -122,9 +121,6 @@ cors.add(app.router.add_route("POST", "/getConversations", getConversations), {
         max_age=7200,
     )
 })
-
-
-
 
 # We kick off our server
 if __name__ == '__main__':
