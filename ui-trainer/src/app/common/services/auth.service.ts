@@ -47,8 +47,8 @@ export class AuthService {
     if(!token) token = this.getToken();
     if(!token) return true;
 
-    if (token === 'undefined') {
-      return true
+    if (token === 'undefined' || token === 'no_token') {
+      return false;
     } else {
       const date = this.getTokenExpirationDate(token);
       if(date === undefined) return false;

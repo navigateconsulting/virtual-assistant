@@ -13,7 +13,7 @@ import { ApplicationsComponent } from '../app/applications/applications.componen
 import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
-      { path: 'app/:apptype/:atoken', component: AppComponent },
+      // { path: ':atoken', component: AppComponent },
       // { path: '', redirectTo: 'home/trainer', pathMatch: 'full' },
       { path: 'applications', component: ApplicationsComponent, canActivate: [AuthGuard] },
       { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [

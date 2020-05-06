@@ -101,11 +101,20 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    if (localStorage.getItem('jwt_token') === null) {
+    if (localStorage.getItem('jwt_token') === null || localStorage.getItem('jwt_token') === 'no_token') {
       if (this.authService.checkValidToken(window.location.href.split('/').pop())) {
         this.authService.setToken(window.location.href.split('/').pop());
+        this.checkTokenValidity();
+      } else {
+        this.authService.setToken('no_token');
+        this.checkTokenValidity();
       }
+    } else {
+      this.checkTokenValidity();
     }
+  }
+
+  checkTokenValidity() {
     if (!this.authService.isTokenExpired()) {
       this.loggedIn = true;
       this.router.navigate(['/applications'])
