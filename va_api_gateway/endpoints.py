@@ -3,7 +3,8 @@ import redis
 import os
 import logging
 from models import CustomActionsModel, ProjectsModel, CopyProjectModel, DomainsModel, ConversationsModel
-from models import RefreshDbModel, IntentsModel, IntentDetailModel
+from models import RefreshDbModel, IntentsModel, IntentDetailModel, ResponseModel, ResponseDetailModel
+from models import StoryModel, StoryDetailModel, EntityModel
 import json
 
 # Set logger
@@ -21,6 +22,11 @@ ConversationsModel = ConversationsModel()
 RefreshDbModel = RefreshDbModel()
 IntentsModel = IntentsModel()
 IntentDetailModel = IntentDetailModel()
+ResponseModel = ResponseModel()
+ResponseDetailModel = ResponseDetailModel()
+StoryDetailModel = StoryDetailModel()
+StoryModel = StoryModel()
+EntityModel = EntityModel()
 
 # Initiate redis
 try:
@@ -296,6 +302,297 @@ class IntentDetails(Resource):
 
         # Clear redis cache
         r.delete("intent_"+str(intent_id))
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class Responses(Resource):
+
+    def get(self):
+
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        # check if result can be served from cache
+        if r.exists("responses_"+str(project_id)+"_"+str(domain_id)):
+            return json.loads(r.get("responses_"+str(project_id)+"_"+str(domain_id)))
+
+        else:
+            # Get results and update the cache with new values
+            logging.debug('getting Data from DB')
+
+            result = ResponseModel.get_responses(json_data)
+            r.set("responses_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=60)
+
+            return result
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        result = ResponseModel.create_response(json_data)
+
+        # Clear redis cache
+        r.delete("responses_"+str(project_id)+"_"+str(domain_id))
+        return result
+
+    def put(self):
+
+        # Updating record
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        result = ResponseModel.update_response(json_data)
+
+        # Clear redis cache
+        r.delete("responses_"+str(project_id)+"_"+str(domain_id))
+        return result
+
+    def delete(self):
+        # Deleting record
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        result = ResponseModel.delete_response(json_data)
+
+        # Clear redis cache
+        r.delete("responses_"+str(project_id)+"_"+str(domain_id))
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class ResponseDetails(Resource):
+
+    def get(self, response_id):
+
+        # check if result can be served from cache
+        if r.exists("response_"+str(response_id)):
+            return json.loads(r.get("response_"+str(response_id)))
+
+        else:
+            # Get results and update the cache with new values
+            logging.debug('getting Data from DB')
+
+            result = IntentDetailModel.get_intent_details(response_id)
+            r.set("response_"+str(response_id), json.dumps(result), ex=60)
+
+            return result
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        response_id = json_data['object_id']
+
+        result = IntentDetailModel.insert_intent_detail(json_data)
+
+        # Clear redis cache
+        r.delete("response_"+str(response_id))
+        return result
+
+    def put(self):
+
+        # Updating record
+        json_data = request.get_json(force=True)
+
+        response_id = json_data['object_id']
+
+        result = IntentDetailModel.update_intent_detail(json_data)
+
+        # Clear redis cache
+        r.delete("response_"+str(response_id))
+        return result
+
+    def delete(self):
+        # Deleting record
+        json_data = request.get_json(force=True)
+
+        response_id = json_data['object_id']
+
+        result = IntentDetailModel.delete_intent_detail(json_data)
+
+        # Clear redis cache
+        r.delete("response_"+str(response_id))
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class Story(Resource):
+
+    def get(self):
+
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        # check if result can be served from cache
+        if r.exists("stories_"+str(project_id)+"_"+str(domain_id)):
+            return json.loads(r.get("stories_"+str(project_id)+"_"+str(domain_id)))
+
+        else:
+            # Get results and update the cache with new values
+            logging.debug('getting Data from DB')
+
+            result = StoryModel.get_stories(json_data)
+            r.set("stories_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=60)
+
+            return result
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        result = StoryModel.create_story(json_data)
+
+        # Clear redis cache
+        r.delete("stories_"+str(project_id)+"_"+str(domain_id))
+        return result
+
+    def put(self):
+
+        # Updating record
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        result = StoryModel.update_story(json_data)
+
+        # Clear redis cache
+        r.delete("stories_"+str(project_id)+"_"+str(domain_id))
+        return result
+
+    def delete(self):
+        # Deleting record
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        result = StoryModel.delete_story(json_data)
+
+        # Clear redis cache
+        r.delete("stories_"+str(project_id)+"_"+str(domain_id))
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class StoryDetails(Resource):
+
+    def get(self, story_id):
+
+        # check if result can be served from cache
+        if r.exists("response_"+str(story_id)):
+            return json.loads(r.get("response_"+str(story_id)))
+
+        else:
+            # Get results and update the cache with new values
+            logging.debug('getting Data from DB')
+
+            result = StoryDetailModel.get_story_details(story_id)
+            r.set("response_"+str(story_id), json.dumps(result), ex=60)
+
+            return result
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        story_id = json_data['object_id']
+
+        result = StoryDetailModel.insert_story_details(json_data)
+
+        # Clear redis cache
+        r.delete("response_"+str(story_id))
+        return result
+
+    def put(self):
+
+        # Updating record
+        json_data = request.get_json(force=True)
+
+        story_id = json_data['object_id']
+
+        result = StoryDetailModel.update_story_detail(json_data)
+
+        # Clear redis cache
+        r.delete("response_"+str(story_id))
+        return result
+
+    def delete(self):
+        # Deleting record
+        json_data = request.get_json(force=True)
+
+        story_id = json_data['object_id']
+
+        result = StoryDetailModel.delete_story_detail(json_data)
+
+        # Clear redis cache
+        r.delete("response_"+str(story_id))
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class Entities(Resource):
+
+    def get(self, entity_id):
+
+        # check if result can be served from cache
+        if r.exists("entity_"+str(entity_id)):
+            return json.loads(r.get("entity_"+str(entity_id)))
+
+        else:
+            # Get results and update the cache with new values
+            logging.debug('getting Data from DB')
+
+            result = EntityModel.get_entities(entity_id)
+            r.set("entity_"+str(entity_id), json.dumps(result), ex=60)
+
+            return result
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        entity_id = json_data['object_id']
+
+        result = EntityModel.create_entity(json_data)
+
+        # Clear redis cache
+        r.delete("entity_"+str(entity_id))
+        return result
+
+    def put(self):
+
+        # Updating record
+        json_data = request.get_json(force=True)
+
+        entity_id = json_data['object_id']
+
+        result = EntityModel.update_entity(json_data)
+
+        # Clear redis cache
+        r.delete("entity_"+str(entity_id))
+        return result
+
+    def delete(self):
+        # Deleting record
+        json_data = request.get_json(force=True)
+
+        entity_id = json_data['object_id']
+
+        result = EntityModel.delete_entity(json_data)
+
+        # Clear redis cache
+        r.delete("entity_"+str(entity_id))
         return result
 
 

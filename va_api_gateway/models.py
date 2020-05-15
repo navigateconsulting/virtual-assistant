@@ -335,10 +335,7 @@ class IntentsModel:
         json_record = json.loads(json.dumps(record))
 
         cursor = db.intents.find(json_record, {"project_id": 1, "domain_id": 1, "intent_name": 1, "intent_description": 1})
-        result = cursor.to_list(length=1000)
-        json_result = json.loads(dumps(result))
-        print("Intents sent {}".format(json_result))
-        return json_result
+        return json.loads(dumps(list(cursor)))
 
     def create_intent(self, record):
 
@@ -494,6 +491,423 @@ class IntentDetailModel:
         return {"status": "Success", "message": "Intent text Removed "}
 
 
+# noinspection PyMethodMayBeStatic
+class ResponseModel:
+
+    def __init__(self):
+        pass
+
+    def get_responses(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        cursor = db.responses.find(json_record, {"project_id": 1, "domain_id": 1, "response_name": 1, "response_description": 1})
+        return json.loads(dumps(list(cursor)))
+
+    def create_response(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
+                         "response_name": json_record['response_name'],
+                         "response_description": json_record['response_description'], "text_entities": []}
+
+        val_res = db.responses.find_one({"project_id": json_record['project_id'],
+                                               #"domain_id": json_record['domain_id'],
+                                               "response_name": json_record['response_name']})
+
+        if val_res is not None:
+            print('Response already exists')
+            return {"status": "Error", "message": "Response already exists"}
+        else:
+
+            result = db.responses.insert_one(json.loads(json.dumps(insert_record)))
+            print("Response created with ID {}".format(result.inserted_id))
+
+            #get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            #responses_list = self.get_responses(get_responses)
+
+            return {"status": "Success", "message": "Response created successfully"}
+
+    def delete_response(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        # check if response exists in any story
+
+        response_detail = db.responses.find_one(query)
+
+        exists = db.stories.find_one({"story": {"$elemMatch": {"key": response_detail['response_name']}}})
+
+        if exists is None:
+
+            result = db.responses.delete_one(query)
+            print("Response Deleted count {}".format(result))
+
+            #get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            #responses_list = self.get_responses(get_responses)
+
+            return {"status": "Success", "message": "Response Deleted successfully"}
+        else:
+            return {"status": "Error", "message": "Response exists in story cannot delete response"}
+
+    def update_response(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"response_name": json_record['response_name'],
+                                 "response_description": json_record['response_description']}}
+
+        # Check if Response already exists
+        val_res = db.responses.find_one({"project_id": json_record['project_id'],
+                                               #"domain_id": json_record['domain_id'],
+                                               "response_name": json_record['response_name']})
+
+        if val_res is None or val_res['response_name'] == json_record['response_name']:
+            update_record = db.responses.update_one(query, update_field)
+
+            print("Response Updated , rows modified {}".format(update_record))
+
+            #get_responses = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            #responses_list = self.get_responses(get_responses)
+
+            return {"status": "Success", "message": "Response Updated successfully"}
+        else:
+            return {"status": "Error", "message": "Response Name already exists"}
+
+
+# noinspection PyMethodMayBeStatic
+class ResponseDetailModel:
+
+    def __init__(self):
+        pass
+
+    def get_response_details(self, response_id):
+
+        query = {"_id": ObjectId("{}".format(response_id))}
+        cursor = db.responses.find_one(query)
+        return json.loads(dumps(list(cursor)))
+
+    def insert_response_detail(self, data):
+
+        json_record = json.loads(json.dumps(data))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        object_id = json_record['object_id']
+        del json_record['object_id']
+
+        # to Prevent Duplicates
+
+        result = db.responses.update_one(query, {"$addToSet": {"text_entities": json_record['text_entities']}})
+
+        print("Inserted new row in Intent {}".format(result.modified_count))
+
+        #intent_detail = self.get_response_details({"object_id": object_id})
+
+        if result.modified_count == 1:
+            return {"status": "Success", "message": "Response added "}
+        else:
+            return {"status": "Error", "message": "Response Already exists "}
+
+    def delete_response_detail(self, data):
+
+        # {"object_id": "", "text":"I am in india ","entities":[{"start":8,"end":13,"value":"india","entity":"timezone"}] }
+
+        json_record = json.loads(json.dumps(data))
+        object_id = json_record['object_id']
+        del json_record['object_id']
+
+        response_detail = self.get_response_details({"object_id": object_id})
+        try:
+            res = response_detail['text_entities'][1]
+        except IndexError:
+            return {"status": "Error", "message": "Atleast one record should be present for an Response"}
+
+        query = {"_id": ObjectId("{}".format(object_id))}
+
+        result = db.responses.update_one(query, {"$pull": {"text_entities": json_record['text_entities']}})
+        print("Removed row from Intent {}".format(result))
+
+        #response_detail = self.get_response_details({"object_id": object_id})
+        return {"status": "Success", "message": "Response text Removed "}
+
+
+# noinspection PyMethodMayBeStatic
+class StoryModel:
+
+    def __init__(self):
+        pass
+
+    def get_stories(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        cursor = db.stories.find(json_record, {"project_id": 1, "domain_id": 1, "story_name": 1, "story_description": 1})
+        result = cursor.to_list(length=1000)
+
+        print("Stories sent {}".format(json.loads(dumps(result))))
+        return json.loads(dumps(result))
+
+    def create_story(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
+                         "story_name": json_record['story_name'],
+                         "story_description": json_record['story_description'], "story": []}
+
+        val_res = db.stories.find_one({"project_id": json_record['project_id'],
+                                             "domain_id": json_record['domain_id'],
+                                             "story_name": json_record['story_name']})
+
+        if val_res is not None:
+            print('Story already exists')
+            return {"status": "Error", "message": "Story already exists"}, None
+
+        else:
+
+            result = db.stories.insert_one(json.loads(json.dumps(insert_record)))
+            print("Story created with ID {}".format(result.inserted_id))
+
+            get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            stories_list = self.get_stories(get_stories)
+
+            return {"status": "Success", "message": "Story created successfully "}, stories_list
+
+    def delete_story(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        result = db.stories.delete_one(query)
+        print("Story Deleted count {}".format(result))
+
+        get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+        stories_list = self.get_stories(get_stories)
+
+        return {"status": "Success", "message": "Story Deleted successfully"}, stories_list
+
+    def update_story(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"story_name": json_record['story_name'],
+                                 "story_description": json_record['story_description']}}
+
+        # Check if Response already exists
+        val_res = db.stories.find_one({"project_id": json_record['project_id'],
+                                             "domain_id": json_record['domain_id'],
+                                             "story_name": json_record['story_name']})
+
+        if val_res is None or val_res['story_name'] == json_record['story_name']:
+
+            update_record = db.stories.update_one(query, update_field)
+            print("Story Updated , rows modified {}".format(update_record))
+
+            get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            stories_list = self.get_stories(get_stories)
+            return {"status": "Success", "message": "Story Updated successfully "}, stories_list
+
+        else:
+            return {"status": "Error", "message": "Story Name already exists"}, None
+
+
+# TODO : where does this fit ?
+#     async def get_only_story_details(self, data):
+#
+#         json_record = json.loads(json.dumps(data))
+#         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+#         result = await db.stories.find_one(query)
+#         print("Story Details sent {}".format(json.loads(dumps(result))))
+#         return result
+#
+#
+
+# noinspection PyMethodMayBeStatic
+class StoryDetailModel:
+
+    def __init__(self):
+        pass
+
+    def get_story_details(self, story_id):
+
+        query = {"_id": ObjectId("{}".format(story_id))}
+        cursor = db.stories.find_one(query)
+        return json.loads(dumps(list(cursor)))
+
+
+
+        # TODO  - Verify if this works If intents or responses are created , when user is in Story details page , all intents / responses should be
+        #  broadcast to this room as well
+
+        # # Get intents
+        # # cursor = db.intents.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
+        #
+        # cursor = db.intents.find({"project_id": json_record['project_id']})
+        # result_intents = cursor.to_list(length=1000)
+        # intents_list = json.loads(dumps(result_intents))
+        #
+        # # Get Responses
+        # # cursor = db.responses.find({"project_id": json_record['project_id'], "domain_id": json_record['domain_id']})
+        #
+        # cursor = db.responses.find({"project_id": json_record['project_id']})
+        # result_response = cursor.to_list(length=1000)
+        # response_list = json.loads(dumps(result_response))
+        #
+        # # get actions
+        # cursor = db.actions.find({})
+        # result_action = cursor.to_list(length=1000)
+        # action_list = json.loads(dumps(result_action))
+        #
+        # return json.loads(dumps(result)), intents_list, response_list, action_list
+
+    def insert_story_details(self, data):
+
+        # {'object_id':"", "position":"", "story": ["key":"abc", "value":"", "type": "intent",
+        #                           "entities": [{"entity_name": "test entity", "entity_value": "Test"}]]}
+
+        json_record = json.loads(json.dumps(data))
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        position = json_record['position']
+
+        result = db.stories.update_one(query, {"$push": {"story": {"$each": json_record['story'],
+                                                                         "$position": position}
+                                                               }})
+
+        print("Story Details Updated {}".format(result))
+
+        # story_details, intents_list, response_list, actions_list = self.get_story_details({"object_id": json_record['object_id'],
+        #                                                                            "project_id": json_record['project_id'],
+        #                                                                            "domain_id": json_record['domain_id']})
+
+        return {"status": "Success", "message": "Story created"}
+
+    def delete_story_detail(self, data):
+
+        json_record = json.loads(json.dumps(data))
+        object_id = json_record['object_id']
+        index = json_record['doc_index']
+
+        query = {"_id": ObjectId("{}".format(object_id))}
+
+        # Unset the record at  position provided and then pull it to properly remove the element
+        result1 = db.stories.update_one(query, {"$unset": {"story."+str(index): 1}})
+
+        result = db.stories.update_one(query, {"$pull": {"story": None}})
+
+        print("Removed row from Story {}".format(result))
+
+        # story_detail,  intents_list, response_list,actions_list = self.get_story_details({"object_id": json_record['object_id'],
+        #                                                                            "project_id": json_record['project_id'],
+        #                                                                            "domain_id": json_record['domain_id']})
+        return {"status": "Success", "message": "Story element Removed "}
+
+    def update_story_detail(self, data):
+
+        json_record = json.loads(json.dumps(data))
+
+        object_id = json_record['object_id']
+        index = json_record['doc_index']
+        query = {"_id": ObjectId("{}".format(object_id))}
+        result = db.stories.update_one(query, {"$set": {"story."+str(index): json_record['story']}})
+        print("Record updated {}".format(result))
+
+        # story_detail,  intents_list, response_list, actions_list = self.get_story_details({"object_id": json_record['object_id'],
+        #                                                                            "project_id": json_record['project_id'],
+        #                                                                            "domain_id": json_record['domain_id']})
+        return {"status": "Success", "message": "Story Updated successfully"}
+
+
+# noinspection PyMethodMayBeStatic
+class EntityModel:
+
+    def __init__(self):
+        pass
+
+    def get_entities(self, entity_id):
+
+        json_record = json.loads(json.dumps(entity_id))
+        cursor = db.entities.find(json_record)
+        return json.loads(dumps(list(cursor)))
+
+    def create_entity(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        # Check if Entity already exists
+        val_res = db.entities.find_one({"project_id": json_record['project_id'],
+                                              "entity_name": json_record['entity_name']})
+
+        if val_res is not None:
+            print("Entity Already exists ")
+            return {"status": "Error", "message": "Entity Already exists "}, None
+        else:
+            result = db.entities.insert_one(json_record)
+            print("Entity created with ID {}".format(result.inserted_id))
+
+            # get_entities = {"project_id": json_record['project_id']}
+            # entities_list = self.get_entities(get_entities)
+
+            return {"status": "Success", "message": "Entity created successfully"}
+
+    def delete_entity(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        # check if entity is used in any Intent
+        # {"text_entities": {"$elemMatch":  {"entities.entity": "location_value"} }}
+
+        entity_detail = db.entities.find_one(query)
+
+        res = db.intents.find_one({"text_entities": {"$elemMatch":  {"entities.entity": entity_detail['entity_name']}}})
+
+        res2 = db.responses.find_one({"text_entities": "/"+entity_detail['entity_name']+"/"})
+
+        if res is None and res2 is None:
+
+            result = db.entities.delete_one(query)
+            print("Entity Deleted count {}".format(result))
+
+            # get_entities = {"project_id": json_record['project_id']}
+            # entities_list = self.get_entities(get_entities)
+
+            return {"status": "Success", "message": "Entity deleted successfully"}
+        elif res is None:
+            return {"status": "Error", "message": "Unable to delete entity , its used in an Response"}
+        else:
+            return {"status": "Error", "message": "Unable to delete entity , its used in an Intent"}
+
+    def update_entity(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        # Check if Entity already exists
+        val_res = db.entities.find_one({"project_id": json_record['project_id'],
+                                              "entity_name": json_record['entity_name']})
+
+        object_id = val_res.get('_id')
+        query = {"_id": ObjectId("{}".format(object_id))}
+
+        if val_res is None or val_res['entity_name'] == json_record['entity_name']:
+            del json_record['_id']
+            print("Got value ", json_record)
+            update_record = db.entities.update_one(query, {"$set": json_record})
+            print("Entity Updated , rows modified {}".format(update_record.modified_count))
+
+            # get_entities = {"project_id": json_record['project_id']}
+            # entities_list = self.get_entities(get_entities)
+            return {"status": "Success", "message": "Entity updated successfully"}
+
+        else:
+            return {"status": "Error", "message": "Entity Name already exists"}
 
 
 # noinspection PyMethodMayBeStatic

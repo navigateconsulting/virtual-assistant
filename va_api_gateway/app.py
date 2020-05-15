@@ -1,7 +1,8 @@
 from flask import Flask, request
 from flask_restful import Api, Resource
 import logging
-from endpoints import CustomActionsAPI, Projects, CopyProject, Domains, Conversations, AllConversations, RefreshDb, IntentDetails , Intents
+from endpoints import CustomActionsAPI, Projects, CopyProject, Domains, Conversations, AllConversations, RefreshDb
+from endpoints import IntentDetails, Intents, Story, StoryDetails, Entities, Responses, ResponseDetails
 from flask_cors import CORS
 
 
@@ -30,3 +31,10 @@ api.add_resource(RefreshDb, '/refresh_db', endpoint='refresh_db')
 api.add_resource(Intents, '/intents', endpoints='intents')
 api.add_resource(IntentDetails, '/intent_details', endpoints='intent_details')
 
+api.add_resource(Responses, '/responses', endpoints='responses')
+api.add_resource(ResponseDetails, '/responses_details', endpoints='responses_details')
+
+api.add_resource(Story, '/story', endpoints='story')
+api.add_resource(StoryDetails, '/story_details', endpoints='story_details')
+
+api.add_resource(Entities, '/entities', endpoints='entities')
