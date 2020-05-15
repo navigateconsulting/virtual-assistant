@@ -323,3 +323,91 @@ class DomainsModel:
             print('Domain already exists')
             return {"status": "Error", "message": "Domain already exists"}
 
+
+# noinspection PyMethodMayBeStatic
+class ConversationsModel:
+
+    def __init__(self):
+        pass
+
+    def get_all_conversations(self):
+        cursor = db.conversations.find()
+        return json.loads(dumps(list(cursor)))
+
+    def get_conversations(self, sender_id):
+        print("Pulling tracker data for a conversation")
+
+        result = db.conversations.find_one({"sender_id": sender_id})
+        return json.loads(dumps(result))
+
+
+# noinspection PyMethodMayBeStatic
+class RefreshDbModel:
+
+    def refresh_db(self):
+        print('received request to refresh database')
+
+        # Setting source data paths
+
+        #seed_data_path = CONFIG.get('api_gateway', 'SEED_DATA_PATH')
+        seed_data_path = './seed_data/'
+
+        # Cleaning up collections
+        db.entities.delete_many({})
+
+        db.projects.delete_many({})
+        db.domains.delete_many({})
+        db.intents.delete_many({})
+        db.responses.delete_many({})
+        db.stories.delete_many({})
+        db.conversations.delete_many({})
+        db.actions.delete_many({})
+
+        # Inserting Data in collection
+
+        with open(seed_data_path+'projects.json') as json_file:
+            data = json.load(json_file)
+            db.projects.insert_many(data)
+
+        # Get project ID
+
+        project = db.projects.find_one({})
+        project_id = project.get('_id')
+        print("project ID {}".format(project_id))
+
+        with open(seed_data_path+'domains.json') as json_file:
+            data = json.load(json_file)
+            db.domains.insert_many(data)
+
+        db.domains.update_many({}, {'$set': {'project_id': str(project_id)}})
+        domain_id = db.domains.find_one({})
+
+        with open(seed_data_path+'intents.json') as json_file:
+            data = json.load(json_file)
+            db.intents.insert_many(data)
+
+        db.intents.update_many({}, {'$set': {'project_id': str(project_id), 'domain_id': str(domain_id.get('_id'))}})
+
+        with open(seed_data_path+'entities.json') as json_file:
+            data = json.load(json_file)
+            db.entities.insert_many(data)
+
+        db.entities.update_many({}, {'$set': {'project_id': str(project_id)}})
+
+        with open(seed_data_path+'responses.json') as json_file:
+            data = json.load(json_file)
+            db.responses.insert_many(data)
+
+        db.responses.update_many({}, {'$set': {'project_id': str(project_id), 'domain_id': str(domain_id.get('_id'))}})
+
+        with open(seed_data_path+'stories.json') as json_file:
+            data = json.load(json_file)
+            db.stories.insert_many(data)
+
+        db.stories.update_many({}, {'$set': {'project_id': str(project_id), 'domain_id': str(domain_id.get('_id'))}})
+
+        with open(seed_data_path+'actions.json') as json_file:
+            data = json.load(json_file)
+            db.actions.insert_many(data)
+
+        return {"status": "Success", "message": "Database Refreshed"}

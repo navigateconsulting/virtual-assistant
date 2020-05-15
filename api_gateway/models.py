@@ -8,7 +8,6 @@ from database import ConDatabase
 
 db = ConDatabase.connect()
 
-Yes
 # noinspection PyMethodMayBeStatic
 class RasaConversations:
 

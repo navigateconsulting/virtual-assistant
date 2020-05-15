@@ -2,7 +2,7 @@ from app import Resource, request
 import redis
 import os
 import logging
-from models import CustomActionsModel, ProjectsModel, CopyProject, DomainsModel
+from models import CustomActionsModel, ProjectsModel, CopyProject, DomainsModel, ConversationsModel, RefreshDbModel
 import json
 
 # Set logger
@@ -16,7 +16,8 @@ CustomActionsModel = CustomActionsModel()
 ProjectsModel = ProjectsModel()
 CopyProject = CopyProject()
 DomainsModel = DomainsModel()
-
+ConversationsModel = ConversationsModel()
+RefreshDbModel = RefreshDbModel()
 
 # Initiate redis
 try:
@@ -176,3 +177,37 @@ class Domains(Resource):
         r.delete("domains_"+str(project_id))
         return result
 
+
+# noinspection PyMethodMayBeStatic
+class AllConversations(Resource):
+
+    def get(self):
+
+        # check if result can be served from cache
+        if r.exists("conversations"):
+            return json.loads(r.get("conversations"))
+
+        else:
+            # Get results and update the cache with new values
+            logging.debug('getting Data from DB')
+
+            result = ConversationsModel.get_all_conversations()
+            r.set("conversations", json.dumps(result), ex=60)
+
+            return result
+
+
+# noinspection PyMethodMayBeStatic
+class Conversations(Resource):
+    def get(self, conversation_id):
+
+        result = ConversationsModel.get_conversations(conversation_id)
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class RefreshDb(Resource):
+    def get(self, conversation_id):
+
+        result = RefreshDbModel.refresh_db()
+        return result
