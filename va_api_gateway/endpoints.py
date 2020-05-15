@@ -137,7 +137,7 @@ class Domains(Resource):
     def get(self, project_id):
 
         # check if result can be served from cache
-        if r.exists("all_domains"+str(project_id)):
+        if r.exists("domains_"+str(project_id)):
             return json.loads(r.get("all_domains"+str(project_id)))
 
         else:
@@ -145,7 +145,7 @@ class Domains(Resource):
             logging.debug('getting Data from DB')
 
             result = DomainsModel.get_all_domains(project_id)
-            r.set("all_domains"+str(project_id), json.dumps(result), ex=60)
+            r.set("domains_"+str(project_id), json.dumps(result), ex=60)
 
             return result
 
@@ -154,7 +154,7 @@ class Domains(Resource):
         result = DomainsModel.create_domain(project_id, json_data)
 
         # Clear redis cache
-        r.delete("all_domains"+str(project_id))
+        r.delete("domains_"+str(project_id))
         return result
 
     def put(self, project_id):
@@ -164,7 +164,7 @@ class Domains(Resource):
         result = DomainsModel.update_domain(project_id, json_data)
 
         # Clear redis cache
-        r.delete("all_domains"+str(project_id))
+        r.delete("domains_"+str(project_id))
         return result
 
     def delete(self, project_id):
@@ -173,6 +173,6 @@ class Domains(Resource):
         result = DomainsModel.delete_domain(project_id, object_id)
 
         # Clear redis cache
-        r.delete("all_domains"+str(project_id))
+        r.delete("domains_"+str(project_id))
         return result
 

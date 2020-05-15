@@ -89,7 +89,10 @@ class ProjectsModel:
             print("project created {}".format(result.inserted_id))
             return {"status": "Success", "message": "Project Created with ID {}".format(result.inserted_id)}
 
-    def delete_project(self, object_id):
+    def delete_project(self, record):
+
+        json_record = json.loads(json.dumps(record))
+        object_id = json_record['object_id']
         query = {"_id": ObjectId("{}".format(object_id))}
 
         # Delete Domains Intents , Entities , Stories , Responses
@@ -239,6 +242,7 @@ class DomainsModel:
         pass
 
     def get_all_domains(self, project_id):
+
         query = {"project_id": project_id}
         cursor = db.domains.find(query)
         return json.loads(dumps(list(cursor)))
