@@ -50,7 +50,10 @@ class CustomActionsModel:
         print("Action Updated , rows modified {}".format(result))
         return {"status": "Success", "message": "Action details updated successfully "}
 
-    def delete_action(self, object_id):
+    def delete_action(self, record):
+
+        json_record = json.loads(json.dumps(record))
+        object_id = json_record['object_id']
         query = {"_id": ObjectId("{}".format(object_id))}
 
         # Delete Action

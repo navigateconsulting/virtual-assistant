@@ -65,8 +65,8 @@ class CustomActionsAPI(Resource):
 
     def delete(self):
         # Deleting record
-        object_id = request.get_json()
-        result = CustomActionsModel.delete_action(object_id)
+        json_data = request.get_json()
+        result = CustomActionsModel.delete_action(json_data)
 
         # Clear redis cache
         r.delete("all_custom_actions")
