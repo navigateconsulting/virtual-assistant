@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_restful import Api, Resource
 import logging
-from endpoints import CustomActionsAPI, Projects, CopyProject
+from endpoints import CustomActionsAPI, Projects, CopyProject,Domains
 from flask_cors import CORS
 
 
@@ -23,3 +23,4 @@ app.logger.setLevel(logging.DEBUG)
 api.add_resource(CustomActionsAPI, '/custom_actions', endpoint='custom_actions')
 api.add_resource(Projects, '/projects', endpoint='projects')
 api.add_resource(CopyProject, '/copy_project', endpoint='copy_project')
+api.add_resource(Domains, '/domains/<project_id>', endpoint="domains")

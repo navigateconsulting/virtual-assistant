@@ -211,6 +211,7 @@ class CopyProject:
             return {"status": "Success", "message": "Project Copied ID {}".format(new_project.inserted_id)}
 
 
+# TODO : Merge this with model publish code
 class PublishModel:
     def update_project_model(self, record):
         json_record = json.loads(json.dumps(record))
@@ -226,3 +227,92 @@ class PublishModel:
         print("Projects set to Archived state {}".format(res_archived))
         print("Project Updated , rows modified {}".format(result))
         return {"status": "Success", "message": "Model Published "}
+
+
+# noinspection PyMethodMayBeStatic
+class DomainsModel:
+
+    def __init__(self):
+        pass
+
+    def get_all_domains(self, project_id):
+        query = {"project_id": project_id}
+        cursor = db.domains.find(query)
+        return json.loads(dumps(list(cursor)))
+
+    def create_domain(self, project_id, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        insert_record = {"project_id": project_id, "domain_name": json_record['domain_name'],
+                         "domain_description": json_record['domain_description']}
+
+        # Check if domain exists already
+
+        val_res = db.domains.find_one({"project_id": project_id,
+                                       "domain_name": json_record['domain_name']})
+
+        if val_res is not None:
+            print('Domain already exists')
+            return {"status": "Error", "message": "Domain already exists"}, None
+        else:
+            insert_result = db.domains.insert_one(json.loads(json.dumps(insert_record)))
+            print("Domain created with ID {}".format(insert_result.inserted_id))
+
+            #domains_list = self.get_all_domains(json_record['project_id'])
+            return {"status": "Success", "message": "Domain created successfully"}
+
+    def delete_domain(self, project_id, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        result = db.intents.delete_many({"domain_id": json_record['object_id']})
+        print("Intents Deleted - count {}".format(result))
+
+        result = db.stories.delete_many({"domain_id": json_record['object_id']})
+        print("Stories Deleted - count {}".format(result))
+
+        result = db.responses.delete_many({"domain_id": json_record['object_id']})
+        print("Responses Deleted - count {}".format(result))
+
+        delete_record = db.domains.delete_one(query)
+        print("Domain Deleted count {}".format(delete_record))
+
+        #domains_list = self.get_domains(json_record['project_id'])
+
+        return {"status": "Success", "message": "Domain Deleted Successfully"}
+
+    def update_domain(self, project_id, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"domain_name": json_record['domain_name'],
+                                 "domain_description": json_record['domain_description']}}
+
+        # Check if Domain already exists
+        val_res = db.domains.find_one({"project_id": project_id,
+                                       "domain_name": json_record['domain_name']})
+
+        if val_res is None:
+            update_record = db.domains.update_one(query, update_field)
+            print("Domain Updated , rows modified {}".format(update_record))
+
+            #domains_list = self.get_domains(json_record['project_id'])
+            return {"status": "Success", "message": "Domain updated successfully "}
+
+        elif val_res['domain_name'] == json_record['domain_name']:
+            print("updating domain description")
+
+            update_record = db.domains.update_one(query, update_field)
+            print("Domain Updated , rows modified {}".format(update_record))
+
+            #domains_list = self.get_domains(json_record['project_id'])
+            return {"status": "Success", "message": "Domain updated successfully "}
+
+        else:
+            print('Domain already exists')
+            return {"status": "Error", "message": "Domain already exists"}
+

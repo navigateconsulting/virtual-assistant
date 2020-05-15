@@ -2,7 +2,7 @@ from app import Resource, request
 import redis
 import os
 import logging
-from models import CustomActionsModel, ProjectsModel, CopyProject
+from models import CustomActionsModel, ProjectsModel, CopyProject, DomainsModel
 import json
 
 # Set logger
@@ -15,6 +15,7 @@ logging.basicConfig(level=logging.DEBUG)
 CustomActionsModel = CustomActionsModel()
 ProjectsModel = ProjectsModel()
 CopyProject = CopyProject()
+DomainsModel = DomainsModel()
 
 
 # Initiate redis
@@ -127,5 +128,51 @@ class CopyProject(Resource):
 
         # Clear redis cache
         r.delete("all_projects")
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class Domains(Resource):
+
+    def get(self, project_id):
+
+        # check if result can be served from cache
+        if r.exists("all_domains"+str(project_id)):
+            return json.loads(r.get("all_domains"+str(project_id)))
+
+        else:
+            # Get results and update the cache with new values
+            logging.debug('getting Data from DB')
+
+            result = DomainsModel.get_all_domains(project_id)
+            r.set("all_domains"+str(project_id), json.dumps(result), ex=60)
+
+            return result
+
+    def post(self, project_id):
+        json_data = request.get_json(force=True)
+        result = DomainsModel.create_domain(project_id, json_data)
+
+        # Clear redis cache
+        r.delete("all_domains"+str(project_id))
+        return result
+
+    def put(self, project_id):
+
+        # Updating record
+        json_data = request.get_json(force=True)
+        result = DomainsModel.update_domain(project_id, json_data)
+
+        # Clear redis cache
+        r.delete("all_domains"+str(project_id))
+        return result
+
+    def delete(self, project_id):
+        # Deleting record
+        object_id = request.get_json()
+        result = DomainsModel.delete_domain(project_id, object_id)
+
+        # Clear redis cache
+        r.delete("all_domains"+str(project_id))
         return result
 
