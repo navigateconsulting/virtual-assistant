@@ -207,7 +207,7 @@ class Conversations(Resource):
 
 # noinspection PyMethodMayBeStatic
 class RefreshDb(Resource):
-    def get(self, conversation_id):
+    def get(self):
 
         result = RefreshDbModel.refresh_db()
         return result
