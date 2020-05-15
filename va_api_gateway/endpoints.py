@@ -109,7 +109,7 @@ class Projects(Resource):
     def delete(self):
         # Deleting record
         object_id = request.get_json()
-        result = CustomActionsModel.delete_action(object_id)
+        result = ProjectsModel.delete_project(object_id)
 
         # Clear redis cache
         r.delete("all_projects")

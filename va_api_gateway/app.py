@@ -19,4 +19,4 @@ app.logger.setLevel(logging.DEBUG)
 #api.add_resource(CustomActionsAPI, '/custom_actions/<int:id>', endpoint='custom_actions')
 
 api.add_resource(CustomActionsAPI, '/custom_actions', endpoint='custom_actions')
-api.add_resource(Projects, '/project', endpoint='project')
+api.add_resource(Projects, '/projects', endpoint='projects')

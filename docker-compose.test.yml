@@ -35,13 +35,13 @@ services:
       - 27017:27017
     command: mongod  --logpath=/dev/null # --quiet
 
-  ui_trainer:
-    container_name: ui_trainer
-    build: './ui-trainer'
-    ports:
-      - "8080:80"
-    depends_on:
-      - va_api_gateway
+#  ui_trainer:
+#    container_name: ui_trainer
+#    build: './ui-trainer'
+#    ports:
+#      - "8080:80"
+#    depends_on:
+#      - va_api_gateway
 
 volumes:
   mongodb:
