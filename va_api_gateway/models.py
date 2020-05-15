@@ -350,7 +350,7 @@ class RefreshDbModel:
         # Setting source data paths
 
         #seed_data_path = CONFIG.get('api_gateway', 'SEED_DATA_PATH')
-        seed_data_path = './seed_data/'
+        seed_data_path = './database_files/'
 
         # Cleaning up collections
         db.entities.delete_many({})
