@@ -4,7 +4,7 @@ import os
 import logging
 from models import CustomActionsModel, ProjectsModel, CopyProjectModel, DomainsModel, ConversationsModel
 from models import RefreshDbModel, IntentsModel, IntentDetailModel, ResponseModel, ResponseDetailModel
-from models import StoryModel, StoryDetailModel, EntityModel
+from models import StoryModel, StoryDetailModel, EntityModel, ExportModel, ImportModel
 import json
 
 # Set logger
@@ -27,6 +27,8 @@ ResponseDetailModel = ResponseDetailModel()
 StoryDetailModel = StoryDetailModel()
 StoryModel = StoryModel()
 EntityModel = EntityModel()
+ExportModel = ExportModel()
+ImportModel = ImportModel()
 
 # Initiate redis
 try:
@@ -628,4 +630,20 @@ class RefreshDb(Resource):
     def get(self):
 
         result = RefreshDbModel.refresh_db()
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class ExportModel(Resource):
+    def get(self):
+
+        result = ExportModel.export_project()
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class ImportModel(Resource):
+    def get(self):
+
+        result = ImportModel.import_project()
         return result

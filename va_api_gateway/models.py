@@ -997,3 +997,236 @@ class RefreshDbModel:
             db.actions.insert_many(data)
 
         return {"status": "Success", "message": "Database Refreshed"}
+
+
+# noinspection PyMethodMayBeStatic
+class ExportModel:
+
+    def __init__(self):
+        pass
+
+    def export_project(self, json_record):
+        #{"project_name": "BaseDomain"}
+
+        print("Inside Export project")
+
+        export_model = {'project': '',
+                        'entities': '',
+                        'domains': '',
+                        'intents': '',
+                        'response': '',
+                        'stories': ''}
+
+        source_project = db.projects.find_one({"project_name": json_record['project_name']})
+        source_project_id = source_project.get('_id')
+        del source_project['_id']
+
+        # Create Project
+
+        export_model["project"] = source_project
+
+        # Copy Entities
+
+        entities_cursor = db.entities.find({"project_id": str(source_project_id)})
+        entities_list = entities_cursor.to_list(length=10000)
+        entity_dict = []
+        for entities in entities_list:
+            del entities['_id']
+            entity_dict.append(entities)
+        export_model["entities"] = entity_dict
+
+        # Copy Domains
+
+        domains_cursor = db.domains.find({"project_id": str(source_project_id)})
+        domain_list = []
+        for domain in domains_cursor.to_list(length=100):
+            print(domain.get('_id'))
+            domain['source_domain'] = str(domain.get('_id'))
+            del domain['_id']
+            domain_list.append(domain)
+        export_model["domains"] = domain_list
+
+        # Copy Intents
+        intents_cursor = db.intents.find({"project_id": str(source_project_id)})
+        intents_list = []
+        for intents in intents_cursor.to_list(length=100):
+            del intents['_id']
+            intents_list.append(intents)
+        export_model["intents"] = intents_list
+
+        # Copy Responses
+
+        responses_cursor = db.responses.find({"project_id": str(source_project_id)})
+        response_list = []
+        for response in responses_cursor.to_list(length=100):
+            del response['_id']
+            response_list.append(response)
+        export_model["response"] = response_list
+
+        # Copy Stories
+
+        stories_cursor = db.stories.find({"project_id": str(source_project_id)})
+        story_list = []
+        for story in stories_cursor.to_list(length=100):
+            del story['_id']
+            story_list.append(story)
+        export_model["stories"] = story_list
+
+        print(json.loads(dumps(export_model)))
+        return json.loads(dumps(export_model))
+
+
+# noinspection PyMethodMayBeStatic
+class ImportModel:
+
+    def __init__(self):
+        pass
+
+    def import_project(self, json_record):
+
+        # Create Project
+        #json_record = eval(record)
+        #json_record = record
+        #json_record = json.loads(json.dumps(record))
+        print(json_record['project'])
+
+        # Check if project already exists
+
+        val_res = db.projects.find_one({"project_name": json_record['project']['project_name']})
+
+        if val_res is not None:
+            print('Project already exists')
+            return {"status": "Error", "message": "Project already exists"}
+
+        # Remove later
+        new_project = db.projects.insert_one(json_record['project'])
+        print("project created {}".format(new_project.inserted_id))
+
+        # Copy Entities
+
+        entities = json_record["entities"]
+        for lines in entities:
+            lines['project_id'] = "{}".format(new_project.inserted_id)
+            new_entity = db.entities.insert_one(lines)
+            print(lines)
+
+
+        # Copy Domains
+
+        domains = json_record['domains']
+        for lines in domains:
+            print(lines)
+            source_domain = lines['source_domain']
+            lines['project_id'] = "{}".format(new_project.inserted_id)
+            new_domain = db.domains.insert_one(lines)
+            print("new domain inserted with id {}".format(new_domain.inserted_id))
+
+            intents = json_record['intents']
+            for intent_lines in intents:
+                if intent_lines['domain_id'] == source_domain:
+                    print("insert with new domain ID ")
+                    intent_lines['project_id'] = "{}".format(new_project.inserted_id)
+                    intent_lines['domain_id'] = "{}".format(new_domain.inserted_id)
+                    new_intents = db.intents.insert_one(intent_lines)
+
+            responses = json_record['response']
+            for response_lines in responses:
+                if response_lines['domain_id'] == source_domain:
+                    print("insert with new domain ID ")
+                    response_lines['project_id'] = "{}".format(new_project.inserted_id)
+                    response_lines['domain_id'] = "{}".format(new_domain.inserted_id)
+                    new_responses = db.responses.insert_one(response_lines)
+
+            story = json_record['stories']
+            for story_lines in story:
+                if story_lines['domain_id'] == source_domain:
+                    print("insert with new domain ID ")
+                    story_lines['project_id'] = "{}".format(new_project.inserted_id)
+                    story_lines['domain_id'] = "{}".format(new_domain.inserted_id)
+                    new_story = db.stories.insert_one(story_lines)
+
+        return {"status": "Success", "message": "Project successfully imported "}
+
+
+# noinspection PyMethodMayBeStatic
+class ValidateData:
+    def __int__(self):
+        pass
+
+    def validate_data(self, project_id):
+        ret_val = ''
+        query = {"project_id": project_id}
+
+        # TODO
+        #  Intent 'intent1' has only 1 training examples! Minimum is 2, training may fail
+        #  Story must have valid data in it
+
+        # Check for count of Intents in project
+
+        cursor = db.intents.find(query)
+        result = cursor.to_list(length=10)
+        print("Count of intents in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Atleast one Intent should be defined in the Project \n"
+
+        # Check for count of Responses in project
+
+        cursor = db.responses.find(query)
+        result = cursor.to_list(length=10)
+        print("Count of Responses in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Atleast one Response should be defined in the Project \n"
+
+        # Check for count of Story in project
+
+        cursor = db.stories.find(query)
+        result = cursor.to_list(length=10)
+        print("Count of Stories in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Atleast one Story should be defined in the Project \n"
+        else:
+            # get the first story
+            try:
+                print("First story from the result {}".format(result[0]['story'][0]))
+            except IndexError:
+                ret_val = ret_val + "Story {} should have atleast one Intent and Response ".format(result[0]['story_name'])
+
+        # Check for count of Entity in project
+
+        cursor = db.entities.find(query)
+        result = cursor.to_list(length=10)
+        print("Count of entities in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Atleast one Entity should be defined in the Project \n"
+
+        # checks for two stage fallback policy
+        # Check for Negative Intent if its present.
+
+        cursor = db.intents.find({"project_id": project_id, "intent_name": "negative"})
+        result = cursor.to_list(length=10)
+        print("Count of negative intents in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Intent 'negative' should be defined in the Project \n"
+
+        # check for utter_default
+        cursor = db.responses.find({"project_id": project_id, "response_name": "utter_default"})
+        result = cursor.to_list(length=10)
+        print("Count of Responses in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Response default should be defined in the Project \n"
+
+        # check for utter_ask_rephrase
+        cursor = db.responses.find({"project_id": project_id, "response_name": "utter_ask_rephrase"})
+        result = cursor.to_list(length=10)
+        print("Count of Responses in Project {}".format(len(result)))
+
+        if len(result) < 1:
+            ret_val = ret_val + "Response ask_rephrase should be defined in the Project \n"
+
+        return ret_val
