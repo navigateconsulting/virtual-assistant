@@ -2,7 +2,7 @@ from app import Resource, request
 import redis
 import os
 import logging
-from models import CustomActionsModel, ProjectsModel
+from models import CustomActionsModel, ProjectsModel, CopyProject
 import json
 
 # Set logger
@@ -14,6 +14,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 CustomActionsModel = CustomActionsModel()
 ProjectsModel = ProjectsModel()
+CopyProject = CopyProject()
+
 
 # Initiate redis
 try:
@@ -110,6 +112,18 @@ class Projects(Resource):
         # Deleting record
         object_id = request.get_json()
         result = ProjectsModel.delete_project(object_id)
+
+        # Clear redis cache
+        r.delete("all_projects")
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class CopyProject(Resource):
+
+    def post(self):
+        json_data = request.get_json(force=True)
+        result = CopyProject.copy_project(json_data)
 
         # Clear redis cache
         r.delete("all_projects")

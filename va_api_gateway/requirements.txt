@@ -4,3 +4,4 @@ gunicorn
 flask_restful
 redis
 pymongo
+flask-cors

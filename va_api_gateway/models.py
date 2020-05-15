@@ -130,24 +130,9 @@ class ProjectsModel:
         return {"status": "Success", "message": "Project details updated successfully "}
 
 
-class PublishModel:
-    def update_project_model(self, record):
-        json_record = json.loads(json.dumps(record))
-
-        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-        update_field = {"$set": {"model_name": json_record['model_name'],
-                                 "state": json_record['state']
-                                 }}
-
-        res_archived = db.projects.update_many({"state": "Published"}, {"$set": {"state": "Archived"}})
-        result = db.projects.update_one(query, update_field)
-
-        print("Projects set to Archived state {}".format(res_archived))
-        print("Project Updated , rows modified {}".format(result))
-        return {"status": "Success", "message": "Model Published "}
-
-
+# noinspection PyMethodMayBeStatic
 class CopyProject:
+
     def copy_project(self, record):
         json_record = json.loads(json.dumps(record))
 
@@ -224,3 +209,20 @@ class CopyProject:
                     print("new story inserted with id {}".format(new_story.inserted_id))
 
             return {"status": "Success", "message": "Project Copied ID {}".format(new_project.inserted_id)}
+
+
+class PublishModel:
+    def update_project_model(self, record):
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"model_name": json_record['model_name'],
+                                 "state": json_record['state']
+                                 }}
+
+        res_archived = db.projects.update_many({"state": "Published"}, {"$set": {"state": "Archived"}})
+        result = db.projects.update_one(query, update_field)
+
+        print("Projects set to Archived state {}".format(res_archived))
+        print("Project Updated , rows modified {}".format(result))
+        return {"status": "Success", "message": "Model Published "}
