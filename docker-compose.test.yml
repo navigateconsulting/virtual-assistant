@@ -41,7 +41,7 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - api_gateway
+      - va_api_gateway
 
 volumes:
   mongodb:

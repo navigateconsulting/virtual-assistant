@@ -2,7 +2,7 @@ from app import Resource, request
 import redis
 import os
 import logging
-from models import CustomActionsModel
+from models import CustomActionsModel, ProjectsModel
 import json
 
 # Set logger
@@ -13,6 +13,7 @@ logging.basicConfig(level=logging.DEBUG)
 # Init model classes
 
 CustomActionsModel = CustomActionsModel()
+ProjectsModel = ProjectsModel()
 
 # Initiate redis
 try:
@@ -68,4 +69,47 @@ class CustomActionsAPI(Resource):
         return result
 
 
+class Projects(Resource):
+
+    def get(self):
+
+        # check if result can be served from cache
+        if r.exists("all_projects"):
+            return json.loads(r.get("all_projects"))
+
+        else:
+            # Get results and update the cache with new values
+            logging.debug('getting Data from DB')
+
+            result = CustomActionsModel.get_all_custom_actions()
+            r.set("all_projects", json.dumps(result), ex=60)
+
+            return result
+
+    def post(self):
+        json_data = request.get_json(force=True)
+        result = CustomActionsModel.create_action(json_data)
+
+        # Clear redis cache
+        r.delete("all_projects")
+        return result
+
+    def put(self):
+
+        # Updating record
+        json_data = request.get_json(force=True)
+        result = CustomActionsModel.update_action(json_data)
+
+        # Clear redis cache
+        r.delete("all_projects")
+        return result
+
+    def delete(self):
+        # Deleting record
+        object_id = request.get_json()
+        result = CustomActionsModel.delete_action(object_id)
+
+        # Clear redis cache
+        r.delete("all_projects")
+        return result
 
