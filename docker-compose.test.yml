@@ -1,0 +1,39 @@
+version: "3.7"
+services:
+#  va_api_gateway:
+#    init: true
+#    build: './va_api_gateway'
+#    environment:
+#      - PORT_APP=3000
+#      - WORKERS=4
+#      - THREADS=50
+#      - REDIS_URL=redis
+#      - REDIS_PORT=6379
+#      - MONGODB_HOST=mongodb
+#      - MONGODB_PORT=27017
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - redis
+
+  redis:
+    image: 'redis:4-alpine'
+    ports:
+      - '6379:6379'
+
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+      - MONGODB_USER="eva"
+      - MONGODB_PASS="evapass"
+    volumes:
+      - mongodb:/data/db
+    ports:
+      - 27017:27017
+    command: mongod  --logpath=/dev/null # --quiet
+
+volumes:
+  mongodb:

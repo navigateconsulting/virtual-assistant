@@ -1,0 +1,6 @@
+Flask
+flask_caching
+gunicorn
+flask_restful
+redis
+pymongo
