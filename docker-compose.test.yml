@@ -1,20 +1,20 @@
 version: "3.7"
 services:
-#  va_api_gateway:
-#    init: true
-#    build: './va_api_gateway'
-#    environment:
-#      - PORT_APP=3000
-#      - WORKERS=4
-#      - THREADS=50
-#      - REDIS_URL=redis
-#      - REDIS_PORT=6379
-#      - MONGODB_HOST=mongodb
-#      - MONGODB_PORT=27017
-#    ports:
-#      - "3000:3000"
-#    depends_on:
-#      - redis
+  va_api_gateway:
+    init: true
+    build: './va_api_gateway'
+    environment:
+      - PORT_APP=3000
+      - WORKERS=4
+      - THREADS=50
+      - REDIS_URL=redis
+      - REDIS_PORT=6379
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
 
   redis:
     image: 'redis:4-alpine'
@@ -34,6 +34,14 @@ services:
     ports:
       - 27017:27017
     command: mongod  --logpath=/dev/null # --quiet
+
+  ui_trainer:
+    container_name: ui_trainer
+    build: './ui-trainer'
+    ports:
+      - "8080:80"
+    depends_on:
+      - api_gateway
 
 volumes:
   mongodb:
