@@ -137,7 +137,7 @@ class ProjectsModel:
 
 
 # noinspection PyMethodMayBeStatic
-class CopyProject:
+class CopyProjectModel:
 
     def copy_project(self, record):
         json_record = json.loads(json.dumps(record))
@@ -322,6 +322,178 @@ class DomainsModel:
         else:
             print('Domain already exists')
             return {"status": "Error", "message": "Domain already exists"}
+
+
+# noinspection PyMethodMayBeStatic
+class IntentsModel:
+
+    def __init__(self):
+        pass
+
+    def get_intents(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        cursor = db.intents.find(json_record, {"project_id": 1, "domain_id": 1, "intent_name": 1, "intent_description": 1})
+        result = cursor.to_list(length=1000)
+        json_result = json.loads(dumps(result))
+        print("Intents sent {}".format(json_result))
+        return json_result
+
+    def create_intent(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        insert_record = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id'],
+                         "intent_name": json_record['intent_name'],
+                         "intent_description": json_record['intent_description'], "text_entities": []}
+
+        val_res = db.intents.find_one({"project_id": json_record['project_id'],
+                                             #"domain_id": json_record['domain_id'],
+                                             "intent_name": json_record['intent_name']})
+
+        if val_res is not None:
+            print('Intent already exists')
+            return {"status": "Error", "message": "Intent already exists"}, None
+        else:
+            result = db.intents.insert_one(json.loads(json.dumps(insert_record)))
+            message = {"status": "Success", "message": "Intent created with ID {}".format(result.inserted_id)}
+
+            #get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            #intents_list = self.get_intents(get_intents)
+
+            return message
+
+    def delete_intent(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        # Query to check intent   - {"story": {$elemMatch: {"key": "greet" }}}
+
+        # check if intent exists in any story
+
+        intent_detail = db.intents.find_one(query)
+
+        exists = db.stories.find_one({"story": {"$elemMatch": {"key": intent_detail['intent_name']}}})
+
+        if exists is None:
+
+            result = db.intents.delete_one(query)
+            print("Intent deleted successfully {}".format(result))
+            message = {"status": "Success", "message": "Intent deleted successfully "}
+
+            #get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            #intents_list = self.get_intents(get_intents)
+
+            return message
+        else:
+
+            message = {"status": "Error", "message": "Intent is used in a story cannot delete this intent"}
+            return message
+
+    def update_intent(self, record):
+
+        json_record = json.loads(json.dumps(record))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+        update_field = {"$set": {"intent_name": json_record['intent_name'],
+                                 "intent_description": json_record['intent_description']}}
+
+        # Check if intent already exists
+        val_res = db.intents.find_one({"project_id": json_record['project_id'],
+                                             #"domain_id": json_record['domain_id'],
+                                             "intent_name": json_record['intent_name']})
+
+        if val_res is None or val_res['intent_name'] == json_record['intent_name']:
+
+            update_record = db.intents.update_one(query, update_field)
+
+            print("Intent Updated , rows modified {}".format(update_record))
+
+            #get_intents = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            #intents_list = self.get_intents(get_intents)
+
+            return {"status": "Success", "message": "Intent Updated Successfully"}
+        else:
+            return {"status": "Error", "message": "Intent Name already exists"}
+
+
+# noinspection PyMethodMayBeStatic
+class IntentDetailModel:
+
+    def __init__(self):
+        pass
+
+    def get_intent_details(self, intent_id):
+
+        query = {"_id": ObjectId("{}".format(intent_id))}
+        cursor = db.intents.find_one(query)
+        return json.loads(dumps(list(cursor)))
+
+    def insert_intent_detail(self, data):
+
+        # Data format - No check for Intent already exists
+        # {"object_id":"", "text":"I am in india ","entities":[{"start":8,"end":13,"value":"india","entity":"timezone"}]}
+
+        json_record = json.loads(json.dumps(data))
+
+        query = {"_id": ObjectId("{}".format(json_record['object_id']))}
+
+        object_id = json_record['object_id']
+        del json_record['object_id']
+
+        result = db.intents.update_one(query, {"$addToSet": {"text_entities": json_record}})
+        print("Inserted new row in Intent {}".format(result))
+
+        #intent_detail = self.get_intent_details({"object_id": object_id})
+        print("Result of Intent Addition {}".format(result.modified_count))
+        if result.modified_count == 1:
+            return {"status": "Success", "message": "Intent text added "}
+        else:
+            return {"status": "Error", "message": "Intent already exists "}
+
+    def update_intent_detail(self, data):
+
+        json_record = json.loads(json.dumps(data))
+
+        object_id = json_record['object_id']
+        index = json_record['doc_index']
+        del json_record['object_id']
+        del json_record['doc_index']
+        query = {"_id": ObjectId("{}".format(object_id))}
+        result = db.intents.update_one(query, {"$set": {"text_entities."+index: json_record}})
+        print("Record updated {}".format(result))
+
+        #intent_detail = self.get_intent_details({"object_id": object_id})
+        return {"status": "Success", "message": "Intent Updated successfully"}
+
+    def delete_intent_detail(self, data):
+
+        # {"object_id": "", "text":"I am in india ","entities":[{"start":8,"end":13,"value":"india","entity":"timezone"}] }
+
+        json_record = json.loads(json.dumps(data))
+        object_id = json_record['object_id']
+        del json_record['object_id']
+
+        intent_detail = self.get_intent_details({"object_id": object_id})
+        print("Intent Details count {}".format(intent_detail['text_entities'][0]))
+
+        try:
+            res = intent_detail['text_entities'][1]
+        except IndexError:
+            return {"status": "Error", "message": "Atleast one record should be present for an Intent"}, intent_detail
+
+        query = {"_id": ObjectId("{}".format(object_id))}
+
+        result = db.intents.update_one(query, {"$pull": {"text_entities": json_record}})
+        print("Removed row from Intent {}".format(result))
+
+        #intent_detail = self.get_intent_details({"object_id": object_id})
+        return {"status": "Success", "message": "Intent text Removed "}
+
+
 
 
 # noinspection PyMethodMayBeStatic

@@ -2,7 +2,8 @@ from app import Resource, request
 import redis
 import os
 import logging
-from models import CustomActionsModel, ProjectsModel, CopyProject, DomainsModel, ConversationsModel, RefreshDbModel
+from models import CustomActionsModel, ProjectsModel, CopyProjectModel, DomainsModel, ConversationsModel
+from models import RefreshDbModel, IntentsModel, IntentDetailModel
 import json
 
 # Set logger
@@ -14,10 +15,12 @@ logging.basicConfig(level=logging.DEBUG)
 
 CustomActionsModel = CustomActionsModel()
 ProjectsModel = ProjectsModel()
-CopyProject = CopyProject()
+CopyProjectModel = CopyProjectModel()
 DomainsModel = DomainsModel()
 ConversationsModel = ConversationsModel()
 RefreshDbModel = RefreshDbModel()
+IntentsModel = IntentsModel()
+IntentDetailModel = IntentDetailModel()
 
 # Initiate redis
 try:
@@ -125,7 +128,7 @@ class CopyProject(Resource):
 
     def post(self):
         json_data = request.get_json(force=True)
-        result = CopyProject.copy_project(json_data)
+        result = CopyProjectModel.copy_project(json_data)
 
         # Clear redis cache
         r.delete("all_projects")
@@ -175,6 +178,124 @@ class Domains(Resource):
 
         # Clear redis cache
         r.delete("domains_"+str(project_id))
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class Intents(Resource):
+
+    def get(self):
+
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        # check if result can be served from cache
+        if r.exists("intents_"+str(project_id)+"_"+str(domain_id)):
+            return json.loads(r.get("intents_"+str(project_id)+"_"+str(domain_id)))
+
+        else:
+            # Get results and update the cache with new values
+            logging.debug('getting Data from DB')
+
+            result = IntentsModel.get_intents(json_data)
+            r.set("intents_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=60)
+
+            return result
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        result = IntentsModel.create_intent(json_data)
+
+        # Clear redis cache
+        r.delete("intents_"+str(project_id)+"_"+str(domain_id))
+        return result
+
+    def put(self):
+
+        # Updating record
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        result = IntentsModel.update_intent(json_data)
+
+        # Clear redis cache
+        r.delete("intents_"+str(project_id)+"_"+str(domain_id))
+        return result
+
+    def delete(self):
+        # Deleting record
+        json_data = request.get_json(force=True)
+
+        project_id = json_data['project_id']
+        domain_id = json_data['domain_id']
+
+        result = IntentsModel.delete_intent(json_data)
+
+        # Clear redis cache
+        r.delete("intents_"+str(project_id)+"_"+str(domain_id))
+        return result
+
+
+# noinspection PyMethodMayBeStatic
+class IntentDetails(Resource):
+
+    def get(self, intent_id):
+
+        # check if result can be served from cache
+        if r.exists("intent_"+str(intent_id)):
+            return json.loads(r.get("intent_"+str(intent_id)))
+
+        else:
+            # Get results and update the cache with new values
+            logging.debug('getting Data from DB')
+
+            result = IntentDetailModel.get_intent_details(intent_id)
+            r.set("intent_"+str(intent_id), json.dumps(result), ex=60)
+
+            return result
+
+    def post(self):
+        json_data = request.get_json(force=True)
+
+        intent_id = json_data['object_id']
+
+        result = IntentDetailModel.insert_intent_detail(json_data)
+
+        # Clear redis cache
+        r.delete("intent_"+str(intent_id))
+        return result
+
+    def put(self):
+
+        # Updating record
+        json_data = request.get_json(force=True)
+
+        intent_id = json_data['object_id']
+
+        result = IntentDetailModel.update_intent_detail(json_data)
+
+        # Clear redis cache
+        r.delete("intent_"+str(intent_id))
+        return result
+
+    def delete(self):
+        # Deleting record
+        json_data = request.get_json(force=True)
+
+        intent_id = json_data['object_id']
+
+        result = IntentDetailModel.delete_intent_detail(json_data)
+
+        # Clear redis cache
+        r.delete("intent_"+str(intent_id))
         return result
 
 
