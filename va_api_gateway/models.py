@@ -13,6 +13,7 @@ except KeyError:
 
 db = client.eva_platform
 
+
 # noinspection PyMethodMayBeStatic
 class CustomActionsModel:
     def __init__(self):
@@ -66,7 +67,7 @@ class ProjectsModel:
     def __init__(self):
         pass
 
-    def get__all_projects(self):
+    def get_all_projects(self):
         cursor = db.projects.find()
         return json.loads(dumps(list(cursor)))
 
@@ -114,19 +115,6 @@ class ProjectsModel:
 
         json_record = json.loads(json.dumps(record))
 
-        # val_res = await db.projects.find_one({"project_name": json_record['project_name']})
-        '''
-        if val_res is not None:
-            print('Project already exists')
-            return {"status": "Error", "message": "Project name already exists"}
-        else:
-            query = {"_id": ObjectId("{}".format(json_record['object_id']))}
-            update_field = {"$set": {"project_description": json_record['project_description']
-                                     }}
-            result = await db.projects.update_one(query, update_field)
-            print("Project Updated , rows modified {}".format(result))
-            return {"status": "Success", "message": "Project details updated successfully "}
-        '''
         query = {"_id": ObjectId("{}".format(json_record['object_id']))}
         if 'config_description' in json_record:
             update_field = {"$set": {"configuration": json_record['config_description']
@@ -134,10 +122,15 @@ class ProjectsModel:
         elif 'project_description' in json_record:
             update_field = {"$set": {"project_description": json_record['project_description']
                                      }}
+        else:
+            return {"status": "Error", "message": "Nothing to update"}
+
         result = db.projects.update_one(query, update_field)
         print("Project Updated , rows modified {}".format(result))
         return {"status": "Success", "message": "Project details updated successfully "}
 
+
+class PublishModel:
     def update_project_model(self, record):
         json_record = json.loads(json.dumps(record))
 
@@ -153,6 +146,8 @@ class ProjectsModel:
         print("Project Updated , rows modified {}".format(result))
         return {"status": "Success", "message": "Model Published "}
 
+
+class CopyProject:
     def copy_project(self, record):
         json_record = json.loads(json.dumps(record))
 

@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_restful import Api, Resource
 import logging
-from endpoints import CustomActionsAPI
+from endpoints import CustomActionsAPI, Projects
 
 
 app = Flask(__name__)
@@ -19,3 +19,4 @@ app.logger.setLevel(logging.DEBUG)
 #api.add_resource(CustomActionsAPI, '/custom_actions/<int:id>', endpoint='custom_actions')
 
 api.add_resource(CustomActionsAPI, '/custom_actions', endpoint='custom_actions')
+api.add_resource(Projects, '/project', endpoint='project')

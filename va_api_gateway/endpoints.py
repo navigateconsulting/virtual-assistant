@@ -24,6 +24,7 @@ except KeyError:
     r = redis.Redis(host='localhost', port=6379, charset="utf-8", decode_responses=True)
 
 
+# noinspection PyMethodMayBeStatic
 class CustomActionsAPI(Resource):
 
     def get(self):
@@ -69,6 +70,7 @@ class CustomActionsAPI(Resource):
         return result
 
 
+# noinspection PyMethodMayBeStatic
 class Projects(Resource):
 
     def get(self):
@@ -81,14 +83,14 @@ class Projects(Resource):
             # Get results and update the cache with new values
             logging.debug('getting Data from DB')
 
-            result = CustomActionsModel.get_all_custom_actions()
+            result = ProjectsModel.get_all_projects()
             r.set("all_projects", json.dumps(result), ex=60)
 
             return result
 
     def post(self):
         json_data = request.get_json(force=True)
-        result = CustomActionsModel.create_action(json_data)
+        result = ProjectsModel.create_projects(json_data)
 
         # Clear redis cache
         r.delete("all_projects")
@@ -98,7 +100,7 @@ class Projects(Resource):
 
         # Updating record
         json_data = request.get_json(force=True)
-        result = CustomActionsModel.update_action(json_data)
+        result = ProjectsModel.update_project(json_data)
 
         # Clear redis cache
         r.delete("all_projects")
