@@ -995,7 +995,7 @@ class RefreshDbModel:
 
 
 # noinspection PyMethodMayBeStatic
-class ExportModel:
+class ExportProjectModel:
 
     def __init__(self):
         pass
@@ -1072,7 +1072,7 @@ class ExportModel:
 
 
 # noinspection PyMethodMayBeStatic
-class ImportModel:
+class ImportProjectModel:
 
     def __init__(self):
         pass

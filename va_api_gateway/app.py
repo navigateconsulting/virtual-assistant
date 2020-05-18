@@ -3,7 +3,7 @@ from flask_restful import Api, Resource
 import logging
 from endpoints import CustomActionsAPI, Projects, CopyProject, Domains, Conversations, AllConversations, RefreshDb
 from endpoints import IntentDetails, Intents, Story, StoryDetails, Entities, Responses, ResponseDetails
-from endpoints import ExportModel, ImportModel
+from endpoints import ExportProject, ImportProject
 from flask_cors import CORS
 
 
@@ -40,5 +40,5 @@ api.add_resource(StoryDetails, '/story_details', endpoint='story_details')
 
 api.add_resource(Entities, '/entities/<project_id>', endpoint='entities')
 
-api.add_resource(ExportModel, '/export_model', endpoint='export_model')
-api.add_resource(ImportModel, '/import_model', endpoint='import_model')
+api.add_resource(ExportProject, '/export_model', endpoint='export_model')
+api.add_resource(ImportProject, '/import_model', endpoint='import_model')
