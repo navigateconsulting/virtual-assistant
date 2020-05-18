@@ -668,10 +668,10 @@ class StoryModel:
             result = db.stories.insert_one(json.loads(json.dumps(insert_record)))
             print("Story created with ID {}".format(result.inserted_id))
 
-            get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-            stories_list = self.get_stories(get_stories)
+            #get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            #stories_list = self.get_stories(get_stories)
 
-            return {"status": "Success", "message": "Story created successfully "}, stories_list
+            return {"status": "Success", "message": "Story created successfully "}
 
     def delete_story(self, record):
 
