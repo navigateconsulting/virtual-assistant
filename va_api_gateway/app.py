@@ -29,16 +29,16 @@ api.add_resource(AllConversations, '/all_conversations', endpoint='all_conversat
 api.add_resource(Conversations, '/conversation/<conversation_id>', endpoint='conversation')
 api.add_resource(RefreshDb, '/refresh_db', endpoint='refresh_db')
 
-api.add_resource(Intents, '/intents', endpoints='intents')
-api.add_resource(IntentDetails, '/intent_details', endpoints='intent_details')
+api.add_resource(Intents, '/intents', endpoint='intents')
+api.add_resource(IntentDetails, '/intent_details', endpoint='intent_details')
 
-api.add_resource(Responses, '/responses', endpoints='responses')
-api.add_resource(ResponseDetails, '/responses_details', endpoints='responses_details')
+api.add_resource(Responses, '/responses', endpoint='responses')
+api.add_resource(ResponseDetails, '/responses_details', endpoint='responses_details')
 
-api.add_resource(Story, '/story', endpoints='story')
-api.add_resource(StoryDetails, '/story_details', endpoints='story_details')
+api.add_resource(Story, '/story', endpoint='story')
+api.add_resource(StoryDetails, '/story_details', endpoint='story_details')
 
-api.add_resource(Entities, '/entities', endpoints='entities')
+api.add_resource(Entities, '/entities', endpoint='entities')
 
-api.add_resource(ExportModel, '/export_model', endpoints='export_model')
-api.add_resource(ImportModel, '/import_model', endpoints='import_model')
+api.add_resource(ExportModel, '/export_model', endpoint='export_model')
+api.add_resource(ImportModel, '/import_model', endpoint='import_model')

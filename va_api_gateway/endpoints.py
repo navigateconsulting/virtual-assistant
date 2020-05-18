@@ -149,15 +149,15 @@ class Domains(Resource):
     def get(self, project_id):
 
         # check if result can be served from cache
-        if r.exists("domains_"+str(project_id)):
-            return json.loads(r.get("all_domains"+str(project_id)))
+        if r.exists("all_domains_"+str(project_id)):
+            return json.loads(r.get("all_domains_"+str(project_id)))
 
         else:
             # Get results and update the cache with new values
             logging.debug('getting Data from DB')
 
             result = DomainsModel.get_all_domains(project_id)
-            r.set("domains_"+str(project_id), json.dumps(result), ex=60)
+            r.set("all_domains_"+str(project_id), json.dumps(result), ex=60)
 
             return result
 
@@ -166,7 +166,7 @@ class Domains(Resource):
         result = DomainsModel.create_domain(project_id, json_data)
 
         # Clear redis cache
-        r.delete("domains_"+str(project_id))
+        r.delete("all_domains_"+str(project_id))
         return result
 
     def put(self, project_id):
@@ -176,7 +176,7 @@ class Domains(Resource):
         result = DomainsModel.update_domain(project_id, json_data)
 
         # Clear redis cache
-        r.delete("domains_"+str(project_id))
+        r.delete("all_domains_"+str(project_id))
         return result
 
     def delete(self, project_id):
@@ -185,7 +185,7 @@ class Domains(Resource):
         result = DomainsModel.delete_domain(project_id, object_id)
 
         # Clear redis cache
-        r.delete("domains_"+str(project_id))
+        r.delete("all_domains_"+str(project_id))
         return result
 
 
@@ -194,10 +194,11 @@ class Intents(Resource):
 
     def get(self):
 
-        json_data = request.get_json(force=True)
-
-        project_id = json_data['project_id']
-        domain_id = json_data['domain_id']
+        json_data = request.get_json()
+        project_id = request.args.getlist('project_id')
+        domain_id = request.args.getlist('domain_id')
+        #project_id = json_data['project_id']
+        #domain_id = json_data['domain_id']
 
         # check if result can be served from cache
         if r.exists("intents_"+str(project_id)+"_"+str(domain_id)):
