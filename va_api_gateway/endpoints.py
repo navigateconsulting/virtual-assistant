@@ -194,7 +194,6 @@ class Intents(Resource):
 
     def get(self):
 
-        json_data = request.get_json()
         project_id = request.args.getlist('project_id')
         domain_id = request.args.getlist('domain_id')
         #project_id = json_data['project_id']
