@@ -645,10 +645,7 @@ class StoryModel:
         #json_record = json.loads(json.dumps(record))
 
         cursor = db.stories.find({"project_id": str(project_id), "domain_id": str(domain_id)}, {"project_id": 1, "domain_id": 1, "story_name": 1, "story_description": 1})
-        result = cursor.to_list(length=1000)
-
-        print("Stories sent {}".format(json.loads(dumps(result))))
-        return json.loads(dumps(result))
+        return json.loads(dumps(list(cursor)))
 
     def create_story(self, record):
 
