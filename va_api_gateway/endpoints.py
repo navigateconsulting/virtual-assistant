@@ -194,10 +194,8 @@ class Intents(Resource):
 
     def get(self):
 
-        project_id = request.args.getlist('project_id')
-        domain_id = request.args.getlist('domain_id')
-        #project_id = json_data['project_id']
-        #domain_id = json_data['domain_id']
+        project_id = request.args.getlist('project_id')[0]
+        domain_id = request.args.getlist('domain_id')[0]
 
         # check if result can be served from cache
         if r.exists("intents_"+str(project_id)+"_"+str(domain_id)):
@@ -207,7 +205,7 @@ class Intents(Resource):
             # Get results and update the cache with new values
             logging.debug('getting Data from DB')
 
-            result = IntentsModel.get_intents(json_data)
+            result = IntentsModel.get_intents(project_id, domain_id)
             r.set("intents_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=60)
 
             return result

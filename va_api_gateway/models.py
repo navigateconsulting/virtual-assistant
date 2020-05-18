@@ -330,11 +330,9 @@ class IntentsModel:
     def __init__(self):
         pass
 
-    def get_intents(self, record):
+    def get_intents(self, project_id, domain_id):
 
-        json_record = json.loads(json.dumps(record))
-
-        cursor = db.intents.find(json_record, {"project_id": 1, "domain_id": 1, "intent_name": 1, "intent_description": 1})
+        cursor = db.intents.find({"project_id": str(project_id), "domain_id": str(domain_id)}, {"project_id": 1, "domain_id": 1, "intent_name": 1, "intent_description": 1})
         return json.loads(dumps(list(cursor)))
 
     def create_intent(self, record):
