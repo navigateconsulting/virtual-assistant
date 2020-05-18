@@ -550,55 +550,55 @@ class StoryDetails(Resource):
 # noinspection PyMethodMayBeStatic
 class Entities(Resource):
 
-    def get(self, entity_id):
+    def get(self, project_id):
 
         # check if result can be served from cache
-        if r.exists("entity_"+str(entity_id)):
-            return json.loads(r.get("entity_"+str(entity_id)))
+        if r.exists("entity_"+str(project_id)):
+            return json.loads(r.get("entity_"+str(project_id)))
 
         else:
             # Get results and update the cache with new values
             logging.debug('getting Data from DB')
 
-            result = EntityModel.get_entities(entity_id)
-            r.set("entity_"+str(entity_id), json.dumps(result), ex=60)
+            result = EntityModel.get_entities(project_id)
+            r.set("entity_"+str(project_id), json.dumps(result), ex=60)
 
             return result
 
-    def post(self):
+    def post(self, project_id):
         json_data = request.get_json(force=True)
 
-        entity_id = json_data['object_id']
+        #entity_id = json_data['object_id']
 
         result = EntityModel.create_entity(json_data)
 
         # Clear redis cache
-        r.delete("entity_"+str(entity_id))
+        r.delete("entity_"+str(project_id))
         return result
 
-    def put(self):
+    def put(self, project_id):
 
         # Updating record
         json_data = request.get_json(force=True)
 
-        entity_id = json_data['object_id']
+        #entity_id = json_data['object_id']
 
         result = EntityModel.update_entity(json_data)
 
         # Clear redis cache
-        r.delete("entity_"+str(entity_id))
+        r.delete("entity_"+str(project_id))
         return result
 
-    def delete(self):
+    def delete(self, project_id):
         # Deleting record
         json_data = request.get_json(force=True)
 
-        entity_id = json_data['object_id']
+        #entity_id = json_data['object_id']
 
         result = EntityModel.delete_entity(json_data)
 
         # Clear redis cache
-        r.delete("entity_"+str(entity_id))
+        r.delete("entity_"+str(project_id))
         return result
 
 

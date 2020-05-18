@@ -825,10 +825,10 @@ class EntityModel:
     def __init__(self):
         pass
 
-    def get_entities(self, entity_id):
+    def get_entities(self, project_id):
 
-        json_record = json.loads(json.dumps(entity_id))
-        cursor = db.entities.find(json_record)
+        query = {"project_id": project_id}
+        cursor = db.entities.find(query)
         return json.loads(dumps(list(cursor)))
 
     def create_entity(self, record):

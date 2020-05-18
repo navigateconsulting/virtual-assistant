@@ -38,7 +38,7 @@ api.add_resource(ResponseDetails, '/responses_details', endpoint='responses_deta
 api.add_resource(Story, '/story', endpoint='story')
 api.add_resource(StoryDetails, '/story_details', endpoint='story_details')
 
-api.add_resource(Entities, '/entities', endpoint='entities')
+api.add_resource(Entities, '/entities/<project_id>', endpoint='entities')
 
 api.add_resource(ExportModel, '/export_model', endpoint='export_model')
 api.add_resource(ImportModel, '/import_model', endpoint='import_model')
