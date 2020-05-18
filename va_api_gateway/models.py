@@ -682,10 +682,10 @@ class StoryModel:
         result = db.stories.delete_one(query)
         print("Story Deleted count {}".format(result))
 
-        get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-        stories_list = self.get_stories(get_stories)
+        #get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+        #stories_list = self.get_stories(get_stories)
 
-        return {"status": "Success", "message": "Story Deleted successfully"}, stories_list
+        return {"status": "Success", "message": "Story Deleted successfully"}
 
     def update_story(self, record):
 
@@ -705,12 +705,12 @@ class StoryModel:
             update_record = db.stories.update_one(query, update_field)
             print("Story Updated , rows modified {}".format(update_record))
 
-            get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
-            stories_list = self.get_stories(get_stories)
-            return {"status": "Success", "message": "Story Updated successfully "}, stories_list
+            #get_stories = {"project_id": json_record['project_id'], "domain_id": json_record['domain_id']}
+            #stories_list = self.get_stories(get_stories)
+            return {"status": "Success", "message": "Story Updated successfully "}
 
         else:
-            return {"status": "Error", "message": "Story Name already exists"}, None
+            return {"status": "Error", "message": "Story Name already exists"}
 
 
 # TODO : where does this fit ?
