@@ -308,7 +308,7 @@ class IntentDetails(Resource):
 # noinspection PyMethodMayBeStatic
 class Responses(Resource):
 
-    def get(self, project_id , domain_id):
+    def get(self):
 
         # json_data = request.get_json(force=True)
         #
@@ -429,7 +429,7 @@ class ResponseDetails(Resource):
 # noinspection PyMethodMayBeStatic
 class Story(Resource):
 
-    def get(self, project_id, domain_id):
+    def get(self):
 
         # json_data = request.get_json(force=True)
         #
