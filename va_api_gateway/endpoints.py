@@ -639,7 +639,7 @@ class RefreshDb(Resource):
 
 # noinspection PyMethodMayBeStatic
 class ExportProject(Resource):
-    def get(self):
+    def post(self):
         json_data = request.get_json(force=True)
         result = ExportProjectModel.export_project(json_data)
         return result
@@ -647,7 +647,7 @@ class ExportProject(Resource):
 
 # noinspection PyMethodMayBeStatic
 class ImportProject(Resource):
-    def get(self):
+    def post(self):
         json_data = request.get_json(force=True)
         result = ImportProjectModel.import_project(json_data)
         return result
