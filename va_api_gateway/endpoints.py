@@ -268,10 +268,10 @@ class IntentDetails(Resource):
 
             return result
 
-    def post(self):
+    def post(self, intent_id):
         json_data = request.get_json(force=True)
 
-        intent_id = json_data['object_id']
+        #intent_id = json_data['object_id']
 
         result = IntentDetailModel.insert_intent_detail(json_data)
 
@@ -279,12 +279,12 @@ class IntentDetails(Resource):
         r.delete("intent_"+str(intent_id))
         return result
 
-    def put(self):
+    def put(self, intent_id):
 
         # Updating record
         json_data = request.get_json(force=True)
 
-        intent_id = json_data['object_id']
+        #intent_id = json_data['object_id']
 
         result = IntentDetailModel.update_intent_detail(json_data)
 
@@ -292,11 +292,11 @@ class IntentDetails(Resource):
         r.delete("intent_"+str(intent_id))
         return result
 
-    def delete(self):
+    def delete(self, intent_id):
         # Deleting record
         json_data = request.get_json(force=True)
 
-        intent_id = json_data['object_id']
+        #intent_id = json_data['object_id']
 
         result = IntentDetailModel.delete_intent_detail(json_data)
 

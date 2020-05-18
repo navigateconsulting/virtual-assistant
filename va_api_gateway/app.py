@@ -30,7 +30,7 @@ api.add_resource(Conversations, '/conversation/<conversation_id>', endpoint='con
 api.add_resource(RefreshDb, '/refresh_db', endpoint='refresh_db')
 
 api.add_resource(Intents, '/intents', endpoint='intents')
-api.add_resource(IntentDetails, '/intent_details', endpoint='intent_details')
+api.add_resource(IntentDetails, '/intent_details/<intent_id>', endpoint='intent_details')
 
 api.add_resource(Responses, '/responses', endpoint='responses')
 api.add_resource(ResponseDetails, '/responses_details', endpoint='responses_details')
