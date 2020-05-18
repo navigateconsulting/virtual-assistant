@@ -495,11 +495,11 @@ class ResponseModel:
     def __init__(self):
         pass
 
-    def get_responses(self, record):
+    def get_responses(self, project_id, domain_id):
 
-        json_record = json.loads(json.dumps(record))
+        #json_record = json.loads(json.dumps(record))
 
-        cursor = db.responses.find(json_record, {"project_id": 1, "domain_id": 1, "response_name": 1, "response_description": 1})
+        cursor = db.responses.find({"project_id": str(project_id), "domain_id": str(domain_id)}, {"project_id": 1, "domain_id": 1, "response_name": 1, "response_description": 1})
         return json.loads(dumps(list(cursor)))
 
     def create_response(self, record):
@@ -640,11 +640,11 @@ class StoryModel:
     def __init__(self):
         pass
 
-    def get_stories(self, record):
+    def get_stories(self, project_id, domain_id):
 
-        json_record = json.loads(json.dumps(record))
+        #json_record = json.loads(json.dumps(record))
 
-        cursor = db.stories.find(json_record, {"project_id": 1, "domain_id": 1, "story_name": 1, "story_description": 1})
+        cursor = db.stories.find({"project_id": str(project_id), "domain_id": str(domain_id)}, {"project_id": 1, "domain_id": 1, "story_name": 1, "story_description": 1})
         result = cursor.to_list(length=1000)
 
         print("Stories sent {}".format(json.loads(dumps(result))))

@@ -308,12 +308,15 @@ class IntentDetails(Resource):
 # noinspection PyMethodMayBeStatic
 class Responses(Resource):
 
-    def get(self):
+    def get(self, project_id , domain_id):
 
-        json_data = request.get_json(force=True)
+        # json_data = request.get_json(force=True)
+        #
+        # project_id = json_data['project_id']
+        # domain_id = json_data['domain_id']
+        project_id = request.args.getlist('project_id')[0]
+        domain_id = request.args.getlist('domain_id')[0]
 
-        project_id = json_data['project_id']
-        domain_id = json_data['domain_id']
 
         # check if result can be served from cache
         if r.exists("responses_"+str(project_id)+"_"+str(domain_id)):
@@ -323,7 +326,7 @@ class Responses(Resource):
             # Get results and update the cache with new values
             logging.debug('getting Data from DB')
 
-            result = ResponseModel.get_responses(json_data)
+            result = ResponseModel.get_responses(project_id, domain_id)
             r.set("responses_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=60)
 
             return result
@@ -426,12 +429,15 @@ class ResponseDetails(Resource):
 # noinspection PyMethodMayBeStatic
 class Story(Resource):
 
-    def get(self):
+    def get(self, project_id, domain_id):
 
-        json_data = request.get_json(force=True)
+        # json_data = request.get_json(force=True)
+        #
+        # project_id = json_data['project_id']
+        # domain_id = json_data['domain_id']
 
-        project_id = json_data['project_id']
-        domain_id = json_data['domain_id']
+        project_id = request.args.getlist('project_id')[0]
+        domain_id = request.args.getlist('domain_id')[0]
 
         # check if result can be served from cache
         if r.exists("stories_"+str(project_id)+"_"+str(domain_id)):
@@ -441,7 +447,7 @@ class Story(Resource):
             # Get results and update the cache with new values
             logging.debug('getting Data from DB')
 
-            result = StoryModel.get_stories(json_data)
+            result = StoryModel.get_stories(project_id, domain_id)
             r.set("stories_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=60)
 
             return result
