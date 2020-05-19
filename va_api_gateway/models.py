@@ -486,7 +486,7 @@ class IntentDetailModel:
         except IndexError:
             return {"status": "Error", "message": "Atleast one record should be present for an Intent"}, intent_detail
 
-        query = {"_id": ObjectId("{}".format(object_id))}
+        query = {"_id": ObjectId("{}".format(str(object_id)))}
 
         result = db.intents.update_one(query, {"$pull": {"text_entities": json_record}})
         print("Removed row from Intent {}".format(result))

@@ -27,8 +27,8 @@ ResponseDetailModel = ResponseDetailModel()
 StoryDetailModel = StoryDetailModel()
 StoryModel = StoryModel()
 EntityModel = EntityModel()
-ExportModel = ExportProjectModel()
-ImportModel = ImportProjectModel()
+ExportProjectModel = ExportProjectModel()
+ImportProjectModel = ImportProjectModel()
 
 # Initiate redis
 try:
