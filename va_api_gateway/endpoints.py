@@ -384,7 +384,7 @@ class ResponseDetails(Resource):
             # Get results and update the cache with new values
             logging.debug('getting Data from DB')
 
-            result = IntentDetailModel.get_intent_details(response_id)
+            result = ResponseDetailModel.get_response_details(response_id)
             r.set("response_"+str(response_id), json.dumps(result), ex=60)
 
             return result
@@ -394,24 +394,24 @@ class ResponseDetails(Resource):
 
         #response_id = json_data['object_id']
 
-        result = IntentDetailModel.insert_intent_detail(json_data)
+        result = ResponseDetailModel.insert_response_detail(json_data)
 
         # Clear redis cache
         r.delete("response_"+str(response_id))
         return result
 
-    def put(self, response_id):
-
-        # Updating record
-        json_data = request.get_json(force=True)
-
-        #response_id = json_data['object_id']
-
-        result = IntentDetailModel.update_intent_detail(json_data)
-
-        # Clear redis cache
-        r.delete("response_"+str(response_id))
-        return result
+    # def put(self, response_id):
+    #
+    #     # Updating record
+    #     json_data = request.get_json(force=True)
+    #
+    #     #response_id = json_data['object_id']
+    #
+    #     result = ResponseDetailModel.update_intent_detail(json_data)
+    #
+    #     # Clear redis cache
+    #     r.delete("response_"+str(response_id))
+    #     return result
 
     def delete(self, response_id):
         # Deleting record
@@ -419,7 +419,7 @@ class ResponseDetails(Resource):
 
         #response_id = json_data['object_id']
 
-        result = IntentDetailModel.delete_intent_detail(json_data)
+        result = ResponseDetailModel.delete_response_detail(json_data)
 
         # Clear redis cache
         r.delete("response_"+str(response_id))
