@@ -389,10 +389,10 @@ class ResponseDetails(Resource):
 
             return result
 
-    def post(self):
+    def post(self, response_id):
         json_data = request.get_json(force=True)
 
-        response_id = json_data['object_id']
+        #response_id = json_data['object_id']
 
         result = IntentDetailModel.insert_intent_detail(json_data)
 
@@ -400,12 +400,12 @@ class ResponseDetails(Resource):
         r.delete("response_"+str(response_id))
         return result
 
-    def put(self):
+    def put(self, response_id):
 
         # Updating record
         json_data = request.get_json(force=True)
 
-        response_id = json_data['object_id']
+        #response_id = json_data['object_id']
 
         result = IntentDetailModel.update_intent_detail(json_data)
 
@@ -413,11 +413,11 @@ class ResponseDetails(Resource):
         r.delete("response_"+str(response_id))
         return result
 
-    def delete(self):
+    def delete(self, response_id):
         # Deleting record
         json_data = request.get_json(force=True)
 
-        response_id = json_data['object_id']
+        #response_id = json_data['object_id']
 
         result = IntentDetailModel.delete_intent_detail(json_data)
 
@@ -510,10 +510,10 @@ class StoryDetails(Resource):
 
             return result
 
-    def post(self):
+    def post(self, story_id):
         json_data = request.get_json(force=True)
 
-        story_id = json_data['object_id']
+        #story_id = json_data['object_id']
 
         result = StoryDetailModel.insert_story_details(json_data)
 
@@ -521,12 +521,12 @@ class StoryDetails(Resource):
         r.delete("response_"+str(story_id))
         return result
 
-    def put(self):
+    def put(self, story_id):
 
         # Updating record
         json_data = request.get_json(force=True)
 
-        story_id = json_data['object_id']
+        #story_id = json_data['object_id']
 
         result = StoryDetailModel.update_story_detail(json_data)
 
@@ -534,11 +534,11 @@ class StoryDetails(Resource):
         r.delete("response_"+str(story_id))
         return result
 
-    def delete(self):
+    def delete(self, story_id):
         # Deleting record
         json_data = request.get_json(force=True)
 
-        story_id = json_data['object_id']
+        #story_id = json_data['object_id']
 
         result = StoryDetailModel.delete_story_detail(json_data)
 

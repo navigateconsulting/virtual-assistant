@@ -33,10 +33,10 @@ api.add_resource(Intents, '/intents', endpoint='intents')
 api.add_resource(IntentDetails, '/intent_details/<intent_id>', endpoint='intent_details')
 
 api.add_resource(Responses, '/responses', endpoint='responses')
-api.add_resource(ResponseDetails, '/responses_details', endpoint='responses_details')
+api.add_resource(ResponseDetails, '/responses_details/<response_id>', endpoint='responses_details')
 
 api.add_resource(Story, '/story', endpoint='story')
-api.add_resource(StoryDetails, '/story_details', endpoint='story_details')
+api.add_resource(StoryDetails, '/story_details/<story_id>', endpoint='story_details')
 
 api.add_resource(Entities, '/entities/<project_id>', endpoint='entities')
 

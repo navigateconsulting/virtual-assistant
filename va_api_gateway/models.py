@@ -3,6 +3,11 @@ import os
 import json
 from bson.json_util import dumps
 from bson.objectid import ObjectId
+import logging
+
+# Set logger
+logger = logging.getLogger('flask.app')
+logging.basicConfig(level=logging.DEBUG)
 
 
 try:
@@ -425,7 +430,8 @@ class IntentDetailModel:
 
         query = {"_id": ObjectId("{}".format(intent_id))}
         cursor = db.intents.find_one(query)
-        return json.loads(dumps(list(cursor)))
+        logger.debug("Inside Intent Details ")
+        return json.loads(dumps(cursor))
 
     def insert_intent_detail(self, data):
 
@@ -587,7 +593,7 @@ class ResponseDetailModel:
 
         query = {"_id": ObjectId("{}".format(response_id))}
         cursor = db.responses.find_one(query)
-        return json.loads(dumps(list(cursor)))
+        return json.loads(dumps(cursor))
 
     def insert_response_detail(self, data):
 
@@ -734,7 +740,7 @@ class StoryDetailModel:
 
         query = {"_id": ObjectId("{}".format(story_id))}
         cursor = db.stories.find_one(query)
-        return json.loads(dumps(list(cursor)))
+        return json.loads(dumps(cursor))
 
 
 
