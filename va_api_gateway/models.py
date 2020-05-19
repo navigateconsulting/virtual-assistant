@@ -633,7 +633,7 @@ class ResponseDetailModel:
         except IndexError:
             return {"status": "Error", "message": "Atleast one record should be present for an Response"}
 
-        query = {"_id": ObjectId("{}".format(object_id))}
+        query = {"_id": ObjectId("{}".format(str(object_id)))}
 
         result = db.responses.update_one(query, {"$pull": {"text_entities": json_record['text_entities']}})
         print("Removed row from Intent {}".format(result))
