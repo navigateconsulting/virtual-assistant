@@ -506,7 +506,8 @@ class ResponseModel:
 
         #json_record = json.loads(json.dumps(record))
 
-        cursor = db.responses.find({"project_id": str(project_id), "domain_id": str(domain_id)}, {"project_id": 1, "domain_id": 1, "response_name": 1, "response_description": 1})
+        #cursor = db.responses.find({"project_id": str(project_id), "domain_id": str(domain_id)}, {"project_id": 1, "domain_id": 1, "response_name": 1, "response_description": 1})
+        cursor = db.responses.find({"project_id": str(project_id), "domain_id": str(domain_id)})
         return json.loads(dumps(list(cursor)))
 
     def create_response(self, record):
