@@ -722,7 +722,7 @@ class StoryDetailModel:
         position = json_record['position']
 
         result = db.stories.update_one(query,
-                                       {"$push": {"story": {"$each": json_record['story'],"$position": position}}})
+                                       {"$push": {"story": {"$each": json_record['story'], "$position": position}}})
 
         print("Story Details Updated {}".format(result))
 

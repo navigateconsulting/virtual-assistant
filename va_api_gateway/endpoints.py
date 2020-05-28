@@ -39,6 +39,10 @@ ExportProjectModel = ExportProjectModel()
 ImportProjectModel = ImportProjectModel()
 
 
+# Setting Expiry for redis cache
+
+GLOBAL_EXPIRY = 60
+
 # Initiate redis
 try:
     r = redis.Redis(host=os.environ['REDIS_URL'],
@@ -62,7 +66,7 @@ class CustomActionsAPI(Resource):
             # Get results and update the cache with new values
             logging.debug('getting Data from DB')
             result = CustomActionsModel.get_all_custom_actions()
-            r.set("all_custom_actions", json.dumps(result), ex=60)
+            r.set("all_custom_actions", json.dumps(result), ex=GLOBAL_EXPIRY)
             return result
 
     def post(self):
@@ -107,7 +111,7 @@ class Projects(Resource):
             logging.debug('getting Data from DB')
 
             result = ProjectsModel.get_all_projects()
-            r.set("all_projects", json.dumps(result), ex=60)
+            r.set("all_projects", json.dumps(result), ex=GLOBAL_EXPIRY)
 
             return result
 
@@ -165,7 +169,7 @@ class Domains(Resource):
             logging.debug('getting Data from DB')
 
             result = DomainsModel.get_all_domains(project_id)
-            r.set("all_domains_"+str(project_id), json.dumps(result), ex=60)
+            r.set("all_domains_"+str(project_id), json.dumps(result), ex=GLOBAL_EXPIRY)
 
             return result
 
@@ -214,7 +218,7 @@ class Intents(Resource):
             logging.debug('getting Data from DB')
 
             result = IntentsModel.get_intents(project_id, domain_id)
-            r.set("intents_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=60)
+            r.set("intents_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=GLOBAL_EXPIRY)
 
             return result
 
@@ -272,7 +276,7 @@ class IntentDetails(Resource):
             logging.debug('getting Data from DB')
 
             result = IntentDetailModel.get_intent_details(intent_id)
-            r.set("intent_"+str(intent_id), json.dumps(result), ex=60)
+            r.set("intent_"+str(intent_id), json.dumps(result), ex=GLOBAL_EXPIRY)
 
             return result
 
@@ -324,7 +328,7 @@ class Responses(Resource):
             logging.debug('getting Data from DB')
 
             result = ResponseModel.get_responses(project_id, domain_id)
-            r.set("responses_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=60)
+            r.set("responses_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=GLOBAL_EXPIRY)
 
             return result
 
@@ -382,7 +386,7 @@ class ResponseDetails(Resource):
             logging.debug('getting Data from DB')
 
             result = ResponseDetailModel.get_response_details(response_id)
-            r.set("response_"+str(response_id), json.dumps(result), ex=60)
+            r.set("response_"+str(response_id), json.dumps(result), ex=GLOBAL_EXPIRY)
 
             return result
 
@@ -436,7 +440,7 @@ class Story(Resource):
             logging.debug('getting Data from DB')
 
             result = StoryModel.get_stories(project_id, domain_id)
-            r.set("stories_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=60)
+            r.set("stories_"+str(project_id)+"_"+str(domain_id), json.dumps(result), ex=GLOBAL_EXPIRY)
 
             return result
 
@@ -494,7 +498,7 @@ class StoryDetails(Resource):
             logging.debug('getting Data from DB')
 
             result = StoryDetailModel.get_story_details(story_id)
-            r.set("response_"+str(story_id), json.dumps(result), ex=60)
+            r.set("response_"+str(story_id), json.dumps(result), ex=GLOBAL_EXPIRY)
 
             return result
 
@@ -543,7 +547,7 @@ class Entities(Resource):
             logging.debug('getting Data from DB')
 
             result = EntityModel.get_entities(project_id)
-            r.set("entity_"+str(project_id), json.dumps(result), ex=60)
+            r.set("entity_"+str(project_id), json.dumps(result), ex=GLOBAL_EXPIRY)
 
             return result
 
@@ -592,7 +596,7 @@ class AllConversations(Resource):
             logging.debug('getting Data from DB')
 
             result = ConversationsModel.get_all_conversations()
-            r.set("conversations", json.dumps(result), ex=60)
+            r.set("conversations", json.dumps(result), ex=GLOBAL_EXPIRY)
 
             return result
 
