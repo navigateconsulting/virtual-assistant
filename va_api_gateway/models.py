@@ -473,7 +473,10 @@ class IntentDetailModel:
 
     def delete_intent_detail(self, data):
 
-        # {"object_id": "", "text":"I am in india ","entities":[{"start":8,"end":13,"value":"india","entity":"timezone"}] }
+        """
+         input type :
+        {"object_id": "", "text":"I am in india ","entities":[{"start":8,"end":13,"value":"india","entity":"timezone"}]}
+        """
 
         json_record = json.loads(json.dumps(data))
         object_id = json_record['object_id']
@@ -485,14 +488,12 @@ class IntentDetailModel:
         try:
             res = intent_detail['text_entities'][1]
         except IndexError:
-            return {"status": "Error", "message": "Atleast one record should be present for an Intent"}, intent_detail
+            return {"status": "Error", "message": "At least one record should be present for an Intent"}, intent_detail
 
         query = {"_id": ObjectId("{}".format(str(object_id)))}
-
         result = db.intents.update_one(query, {"$pull": {"text_entities": json_record}})
         print("Removed row from Intent {}".format(result))
 
-        #intent_detail = self.get_intent_details({"object_id": object_id})
         return {"status": "Success", "message": "Intent text Removed "}
 
 
