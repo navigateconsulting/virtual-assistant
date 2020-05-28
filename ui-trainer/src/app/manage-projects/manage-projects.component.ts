@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
-import { WebSocketService } from '../common/services/web-socket.service';
 import { AddProjectComponent } from '../common/modals/add-project/add-project.component';
 import { EditProjectComponent } from '../common/modals/edit-project/edit-project.component';
 import { DeleteProjectComponent } from '../common/modals/delete-project/delete-project.component';
@@ -11,7 +9,7 @@ import { NotificationsService } from '../common/services/notifications.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
 import { AppPropComponent } from '../common/modals/app-prop/app-prop.component';
-import { ImportExportService } from '../common/services/import-export.service';
+import { ApiService } from '../common/services/apis.service';
 
 @Component({
   selector: 'app-manage-projects',
@@ -20,13 +18,10 @@ import { ImportExportService } from '../common/services/import-export.service';
 })
 export class ManageProjectsComponent implements OnInit, OnDestroy {
 
-  private subscription: Subscription = new Subscription();
-
-  constructor(public webSocketService: WebSocketService,
-              public importExportService: ImportExportService,
-              public notificationsService: NotificationsService,
+  constructor(public notificationsService: NotificationsService,
               public sharedDataService: SharedDataService,
-              public dialog: MatDialog) {}
+              public dialog: MatDialog,
+              public apiService: ApiService) {}
 
   // tslint:disable-next-line: max-line-length
   projectsDisplayedColumns: string[] = ['icon', 'project_name', 'padding1', 'project_description', 'padding2', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'try_now', 'properties', 'export'];
@@ -52,20 +47,14 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   }
 
   getProjects() {
-    this.webSocketService.createProjectsRoom('root');
-    this.webSocketService.getProjects('root').subscribe(projects => {
+    // this.webSocketService.createProjectsRoom('root');
+    this.apiService.requestProjects().subscribe(projects => {
       this.projects_json = projects;
       this.projectsDataSource = new MatTableDataSource(this.projects_json);
       this.projectsDataSource.paginator = this.paginator;
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
-
-    this.subscription.add(this.webSocketService.getProjectAlerts().subscribe(response => {
-      this.notificationsService.showToast(response);
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification')));
   }
 
   addNewProject() {
@@ -76,7 +65,14 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
         response['configuration'] = constant.DEFAULT_RASA_CONFIG;
-        this.webSocketService.createProject(response, 'root');
+        this.apiService.createProject(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -89,7 +85,14 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.editProject(response, 'root');
+        this.apiService.editProject(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -98,7 +101,14 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DeleteProjectComponent);
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.deleteProject(projectObjectId, 'root');
+        this.apiService.deleteProject(projectObjectId).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -111,13 +121,19 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.copyProject(response, 'root');
+        this.apiService.copyProject(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
 
   tryNowProject(projectStub: any) {
-    this.webSocketService.leaveProjectsRoom('root');
     this.sharedDataService.setSharedData('projectObjectId', projectStub._id.$oid, constant.MODULE_COMMON);
     this.selectedProject.emit({projectStub: projectStub, component: 'try-now'});
   }
@@ -130,7 +146,14 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.editProject(response, 'root');
+        this.apiService.editProject(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -139,12 +162,10 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     const fileReader = new FileReader();
     fileReader.readAsText(file, "UTF-8");
     fileReader.onload = () => {
-      this.importExportService.importProject(JSON.parse(fileReader.result.toString())).subscribe(result => {
+      this.apiService.importProject(JSON.parse(fileReader.result.toString())).subscribe(result => {
         if (result) {
-          this.notificationsService.showToast({status: result['status'], message: result['message']}); 
-          if (result['status'] === 'Success') {
-            this.getProjects();
-          }
+          this.notificationsService.showToast(result); 
+          this.forceReload();
         }   
       },
       err => console.error('Observer got an error: ' + err),
@@ -156,7 +177,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   }
 
   exportProject(projectName: any) {
-    this.importExportService.exportProject(projectName).subscribe(result => {
+    this.apiService.exportProject(projectName).subscribe(result => {
       var sJson = JSON.stringify(result);
       var element = document.createElement('a');
       element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
@@ -171,7 +192,6 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   }
 
   selectProject(projectStub: any) {
-    this.webSocketService.leaveProjectsRoom('root');
     this.selectedProject.emit({projectStub: projectStub, component: 'manage-domains'});
   }
 
@@ -188,9 +208,13 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     localStorage.setItem('projects_pageSize', event.pageSize);
   }
 
+  forceReload() {
+    this.apiService.forceProjectsCacheReload('reset');
+    this.getProjects();
+  }
+
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.webSocketService.leaveProjectsRoom('root');
+    this.apiService.forceProjectsCacheReload('finish');
     this.dialog.closeAll();
   }
 

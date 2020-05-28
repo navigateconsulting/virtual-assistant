@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
-import { WebSocketService } from '../common/services/web-socket.service';
 import { AddIntentComponent } from '../common/modals/add-intent/add-intent.component';
 import { EditIntentComponent } from '../common/modals/edit-intent/edit-intent.component';
 import { DeleteIntentComponent } from '../common/modals/delete-intent/delete-intent.component';
@@ -12,10 +11,10 @@ import { AddStoryComponent } from '../common/modals/add-story/add-story.componen
 import { EditStoryComponent } from '../common/modals/edit-story/edit-story.component';
 import { DeleteStoryComponent } from '../common/modals/delete-story/delete-story.component';
 import { NotificationsService } from '../common/services/notifications.service';
-import { Subscription } from 'rxjs';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
 import { environment } from '../../environments/environment';
+import { ApiService } from '../common/services/apis.service';
 
 @Component({
   selector: 'app-manage-irs',
@@ -24,11 +23,9 @@ import { environment } from '../../environments/environment';
 })
 export class ManageIrsComponent implements OnInit, OnDestroy {
 
-  private subscription: Subscription = new Subscription();
-
-  constructor(public webSocketService: WebSocketService,
-              public notificationsService: NotificationsService,
+  constructor(public notificationsService: NotificationsService,
               public dialog: MatDialog,
+              public apiService: ApiService,
               public sharedDataService: SharedDataService) { }
 
   @Input() projectObjectId: string;
@@ -57,7 +54,6 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     if (this.activeTabIndex === undefined) {
       this.activeTabIndex = '0';
     }
-    this.webSocketService.createIRSRoom('domain_' + this.domainObjectId);
     this.getIntents();
     this.getResponses();
     this.getStories();
@@ -70,54 +66,39 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   }
 
   getIntents() {
-    const project_domain_ids = {project_id: this.projectObjectId, domain_id: this.domainObjectId};
-    this.webSocketService.getIntents(project_domain_ids, 'domain_' + this.domainObjectId).subscribe(intents => {
-      this.intents_json = intents;
-      this.intentsDataSource = new MatTableDataSource(intents);
-      this.intentsDataSource.paginator = this.intentsPaginator;
+    this.apiService.requestIntents(this.projectObjectId, this.domainObjectId).subscribe(intents => {
+      if (intents) {
+        this.intents_json = intents;
+        this.intentsDataSource = new MatTableDataSource(intents);
+        this.intentsDataSource.paginator = this.intentsPaginator;
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
-
-    this.subscription.add(this.webSocketService.getIntentAlerts().subscribe(response => {
-      this.notificationsService.showToast(response);
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification')));
   }
 
   getResponses() {
-    const project_domain_ids = {project_id: this.projectObjectId, domain_id: this.domainObjectId};
-    this.webSocketService.getResponses(project_domain_ids, 'domain_' + this.domainObjectId).subscribe(responses => {
-      this.responses_json = responses;
-      this.responsesDataSource = new MatTableDataSource(responses);
-      this.responsesDataSource.paginator = this.responsesPaginator;
+    this.apiService.requestResponses(this.projectObjectId, this.domainObjectId).subscribe(responses => {
+      if (responses) {
+        this.responses_json = responses;
+        this.responsesDataSource = new MatTableDataSource(responses);
+        this.responsesDataSource.paginator = this.responsesPaginator;
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
-
-    this.subscription.add(this.webSocketService.getResponseAlerts().subscribe(response => {
-      this.notificationsService.showToast(response);
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification')));
   }
 
   getStories() {
-    const project_domain_ids = {project_id: this.projectObjectId, domain_id: this.domainObjectId};
-    this.webSocketService.getStories(project_domain_ids, 'domain_' + this.domainObjectId).subscribe(stories => {
-      this.stories_json = stories;
-      this.storiesDataSource = new MatTableDataSource(stories);
-      this.storiesDataSource.paginator = this.storiesPaginator;
+    this.apiService.requestStories(this.projectObjectId, this.domainObjectId).subscribe(stories => {
+      if (stories) {
+        this.stories_json = stories;
+        this.storiesDataSource = new MatTableDataSource(stories);
+        this.storiesDataSource.paginator = this.storiesPaginator;
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
-
-    this.subscription.add(this.webSocketService.getStoryAlerts().subscribe(response => {
-      this.notificationsService.showToast(response);
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification')));
   }
 
   addNewIntent() {
@@ -128,7 +109,14 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.createIntent(response, 'domain_' + this.domainObjectId);
+        this.apiService.createIntent(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceIntentReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -147,7 +135,14 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.editIntent(response, 'domain_' + this.domainObjectId);
+        this.apiService.editIntent(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceIntentReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -161,7 +156,14 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
           domain_id: this.domainObjectId,
           object_id: intentObjectId
         };
-        this.webSocketService.deleteIntent(delete_intent_stub, 'domain_' + this.domainObjectId);
+        this.apiService.deleteIntent(delete_intent_stub).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceIntentReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -171,13 +173,17 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   }
 
   selectIntent(intentObject: any) {
-    this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
     this.selectedIRS.emit({irs_object: intentObject, type: 'intent'});
   }
 
   getIntentsPaginatorData(event: any) {
     localStorage.setItem('intents_pageIndex', event.pageIndex);
     localStorage.setItem('intents_pageSize', event.pageSize);
+  }
+
+  forceIntentReload() {
+    this.apiService.forceIntentsCacheReload('reset');
+    this.getIntents();
   }
 
   addNewResponse() {
@@ -188,7 +194,14 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.createResponse(response, 'domain_' + this.domainObjectId);
+        this.apiService.createResponse(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceResponseReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -207,7 +220,14 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.editResponse(response, 'domain_' + this.domainObjectId);
+        this.apiService.editResponse(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceResponseReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -221,7 +241,14 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
           domain_id: this.domainObjectId,
           object_id: responseObjectId
         };
-        this.webSocketService.deleteResponse(delete_response_stub, 'domain_' + this.domainObjectId);
+        this.apiService.deleteResponse(delete_response_stub).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceResponseReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -231,13 +258,17 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   }
 
   selectResponse(responseObject: any) {
-    this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
     this.selectedIRS.emit({irs_object: responseObject, type: 'response'});
   }
 
   getResponsesPaginatorData(event: any) {
     localStorage.setItem('responses_pageIndex', event.pageIndex);
     localStorage.setItem('responses_pageSize', event.pageSize);
+  }
+
+  forceResponseReload() {
+    this.apiService.forceResponsesCacheReload('reset');
+    this.getResponses();
   }
 
   addNewStory() {
@@ -248,7 +279,14 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.createStory(response, 'domain_' + this.domainObjectId);
+        this.apiService.createStory(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceStoryReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -267,7 +305,14 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.editStory(response, 'domain_' + this.domainObjectId);
+        this.apiService.editStory(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceStoryReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -281,7 +326,14 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
           domain_id: this.domainObjectId,
           object_id: storyObjectId
         };
-        this.webSocketService.deleteStory(delete_story_stub, 'domain_' + this.domainObjectId);
+        this.apiService.deleteStory(delete_story_stub).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceStoryReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -291,7 +343,6 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   }
 
   selectStory(storyObject: any) {
-    this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
     this.selectedIRS.emit({irs_object: storyObject, type: 'story'});
   }
 
@@ -300,9 +351,15 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     localStorage.setItem('stories_pageSize', event.pageSize);
   }
 
+  forceStoryReload() {
+    this.apiService.forceStoriesCacheReload('reset');
+    this.getStories();
+  }
+
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.webSocketService.leaveIRSRoom('domain_' + this.domainObjectId);
+    this.apiService.forceIntentsCacheReload('finish');
+    this.apiService.forceResponsesCacheReload('finish');
+    this.apiService.forceStoriesCacheReload('finish');
     this.dialog.closeAll();
   }
 }

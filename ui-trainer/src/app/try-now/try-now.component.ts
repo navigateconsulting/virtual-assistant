@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { WebSocketService } from '../common/services/web-socket.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
 import { TryNowLoadService } from '../common/services/try-now-load.service';
@@ -36,8 +35,7 @@ export class TryNowComponent implements OnInit, OnDestroy {
   slots: any;
   session_id: string;
 
-  constructor(public webSocketService: WebSocketService,
-              public sharedDataService: SharedDataService,
+  constructor(public sharedDataService: SharedDataService,
               public modelErrorService: ModelErrorService,
               public tryNowLoadService: TryNowLoadService,
               public tryNowService: TryNowService) { }
@@ -47,7 +45,7 @@ export class TryNowComponent implements OnInit, OnDestroy {
     this.tryNowLoadService.spin$.next(true);
     this.showUserBotCardDetails = false;
     this.showUserPredictionsDetails = true;
-    this.session_id = this.webSocketService.getSessionId();
+    this.session_id = ''; // this.webSocketService.getSessionId();
     this.tryNowProject();
   }
 

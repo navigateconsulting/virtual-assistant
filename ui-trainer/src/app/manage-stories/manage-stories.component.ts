@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { EntitiesDataService } from '../common/services/entities-data.service';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl, AbstractControl, ValidatorFn } from '@angular/forms';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Story } from '../common/models/story';
 import { Intent } from '../common/models/intent';
@@ -10,10 +9,9 @@ import { Entity } from '../common/models/entity';
 import { IntentResponse } from '../common/models/intent_response';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEntityValueComponent } from '../common/modals/add-entity-value/add-entity-value.component';
-import { WebSocketService } from '../common/services/web-socket.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
-import { environment } from '../../environments/environment';
+import { ApiService } from '../common/services/apis.service';
 
 declare var adjustScroll: Function;
 
@@ -23,8 +21,6 @@ declare var adjustScroll: Function;
   styleUrls: ['./manage-stories.component.scss']
 })
 export class ManageStoriesComponent implements OnInit, OnDestroy {
-
-  private subscription: Subscription = new Subscription();
 
   story: Story;
   storyForm: FormGroup;
@@ -70,8 +66,7 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
               public dialog: MatDialog,
-              private webSocketService: WebSocketService,
-              private entities_service: EntitiesDataService,
+              public apiService: ApiService,
               public sharedDataService: SharedDataService) { }
 
   ngOnInit() {
@@ -80,12 +75,11 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
     this.storyForm = this.fb.group({
       intents_responses: intents_responses
     });
+    
+    // Get Everything (Actions has entire story in it)
+    this.getActions();
 
     this.getEntities();
-
-    this.getStory();
-
-    this.getActions();
 
     this.getIntents();
 
@@ -98,33 +92,43 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
   }
 
   getStory() {
-    this.webSocketService.createStoryRoom('story_' + this.storyObjectId);
-    // tslint:disable-next-line: max-line-length
-    this.webSocketService.getStoryDetails({object_id: this.storyObjectId, project_id: this.projectObjectId, domain_id: this.domainObjectId}, 'story_' + this.storyObjectId).subscribe(story_details => {
-      this.currentStory = story_details;
+    this.apiService.requestStoryDetails(this.storyObjectId).subscribe(story_details => {
+      if (story_details) {
+        this.currentStory = story_details;
+        if (this.currentStory !== undefined) {
+          if (this.currentStory.story.length > 0) {
+            this.story = new Story;
+            this.story.story_name = this.currentStory.story_name;
+            this.story.story = this.currentStory.story;
+            this.initForm(this.story); // handles both the create and edit logic
+          } else {
+            this.initForm(); // handles both the create and edit logic
+          }
+        }
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
-
-    this.subscription.add(this.webSocketService.getStoryDetailAlerts().subscribe(response => {
-      console.log(response);
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification')));
   }
 
   getActions() {
-    this.webSocketService.getActionsForStory().subscribe(actions => {
-      this.actions = actions;
+    this.apiService.requestActions().subscribe(actions => {
+      if (actions) {
+        this.actions = actions;
+        this.convertToResponseTextArray();
+        this.getStory();
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
   }
 
   getIntents() {
-    this.webSocketService.getIntentsForStory().subscribe(intents => {
-      this.intents = intents;
-      this.convertToIntentTextArray();
+    this.apiService.requestIntents(this.projectObjectId, this.domainObjectId).subscribe(intents => {
+      if (intents) {
+        this.intents = intents;
+        this.convertToIntentTextArray();
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
@@ -145,18 +149,9 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
   }
 
   getResponses() {
-    this.webSocketService.getResponsesForStory().subscribe(responses => {
-      this.responses = responses;
-      this.convertToResponseTextArray();
-      if (this.currentStory !== undefined) {
-        if (this.currentStory.story.length > 0) {
-          this.story = new Story;
-          this.story.story_name = this.currentStory.story_name;
-          this.story.story = this.currentStory.story;
-          this.initForm(this.story); // handles both the create and edit logic
-        } else {
-          this.initForm(); // handles both the create and edit logic
-        }
+    this.apiService.requestResponses(this.projectObjectId, this.domainObjectId).subscribe(responses => {
+      if (responses) {
+        this.responses = responses;
       }
     },
     err => console.error('Observer got an error: ' + err),
@@ -176,25 +171,23 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
     });
     if (this.actions !== undefined) {
       this.actions.forEach(function (action) {
-        if (action !== undefined) {
-          // tslint:disable-next-line: max-line-length
-          responses_text_arr.push({'response_id': action._id.$oid, 'response_name': action.action_name, 'response_text': action.action_description});
-        }
+        responses_text_arr.push({'response_id': action._id.$oid, 'response_name': action.action_name, 'response_text': action.action_description});
       });
     }
     this.responses_text_arr = responses_text_arr;
   }
 
   getEntities() {
-    this.entities_service.createEntitiesRoom();
-    this.entities_service.getEntities({project_id: this.projectObjectId}).subscribe(entities => {
-      this.entities = entities;
-      this.convertToEntityTextArray();
-      this.entityControl = new FormControl('', requireEntityMatch(this.entities));
-      this.entitiesfilteredOptions = this.entityControl.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter_entities(value))
-      );
+    this.apiService.requestEntities(this.projectObjectId).subscribe(entities => {
+      if (entities) {
+        this.entities = entities;
+        this.convertToEntityTextArray();
+        this.entityControl = new FormControl('', requireEntityMatch(this.entities));
+        this.entitiesfilteredOptions = this.entityControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter_entities(value))
+        );
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
@@ -232,6 +225,7 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
       this.addIntentToStory();
       // this.addResponseToStory();
     } else {
+      console.log("Story", story);
       // Editing a story
       story.story.forEach((intent_response, intentresponseIndex) => {
         if (intent_response.type === 'intent') {
@@ -365,7 +359,13 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
           entities: []
         }]
       };
-      this.webSocketService.insertDetailsToStory(insert_ir_to_story, 'story_' + this.storyObjectId);
+      this.apiService.insertStoryDetails(insert_ir_to_story, this.storyObjectId).subscribe(result => {
+        if (result) {
+          this.forceReload();
+        }
+      },
+      err => console.error('Observer got an error: ' + err),
+      () => console.log('Observer got a complete notification'));
     }
   }
 
@@ -382,7 +382,13 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
         entities: entities ? entities : []
       }]
     };
-    this.webSocketService.deleteDetailsFromStory(delete_ir_to_story, 'story_' + this.storyObjectId);
+    this.apiService.deleteStoryDetails(delete_ir_to_story, this.storyObjectId).subscribe(result => {
+      if (result) {
+        this.forceReload();
+      }
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
     adjustScroll();
   }
 
@@ -400,8 +406,15 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
         entities: entities ? entities : []
       }
     };
-    this.webSocketService.updateDetailsFromStory(update_ir_in_story, 'story_' + this.storyObjectId);
-    this.on_intent_response_entity = true;
+    this.apiService.updateStoryDetails(update_ir_in_story, this.storyObjectId).subscribe(result => {
+      if (result) {
+        console.log(result);
+        this.forceReload();
+        this.on_intent_response_entity = true;
+      }
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   validateIntentInput(intent_index: number, event: any) {
@@ -492,14 +505,23 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
     // collapseClose(type, index);
   }
 
+  forceReload() {
+    this.apiService.forceStoryDetailsCacheReload('reset');
+    this.getStory();
+  }
+
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     for (let i = 0; i < this.currentStory['story'].length; i++) {
       if (this.currentStory['story'][i]['key'] === '') {
         this.removeIntentResponseFromStory(i, this.currentStory['story'][i]);
       }
     }
     this.currentStory = undefined;
+    this.apiService.forceStoryDetailsCacheReload('finish');
+    this.apiService.forceActionsCacheReload('finish');
+    this.apiService.forceEntitiesCacheReload('finish');
+    this.apiService.forceIntentsCacheReload('finish');
+    this.apiService.forceResponsesCacheReload('finish');
     this.dialog.closeAll();
   }
 }

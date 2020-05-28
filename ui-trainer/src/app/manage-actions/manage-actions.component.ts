@@ -1,15 +1,12 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { Observable, Subscription } from 'rxjs';
-import { WebSocketService } from '../common/services/web-socket.service';
 import { NotificationsService } from '../common/services/notifications.service';
 import { SharedDataService } from '../common/services/shared-data.service';
-import { environment } from '../../environments/environment';
-import { constant } from '../../environments/constants';
 import { MatDialog } from '@angular/material/dialog';
 import { AddActionComponent } from '../common/modals/add-action/add-action.component';
 import { EditActionComponent } from '../common/modals/edit-action/edit-action.component';
 import { DeleteActionComponent } from '../common/modals/delete-action/delete-action.component';
+import { ApiService } from '../common/services/apis.service';
 
 @Component({
   selector: 'app-manage-actions',
@@ -18,9 +15,7 @@ import { DeleteActionComponent } from '../common/modals/delete-action/delete-act
 })
 export class ManageActionsComponent implements OnInit, OnDestroy {
 
-  private subscription: Subscription = new Subscription();
-
-  constructor(public webSocketService: WebSocketService,
+  constructor(public apiService: ApiService,
               public notificationsService: NotificationsService,
               public sharedDataService: SharedDataService,
               public dialog: MatDialog) { }
@@ -40,27 +35,23 @@ export class ManageActionsComponent implements OnInit, OnDestroy {
   }
 
   getActions() {
-    this.webSocketService.createActionsRoom('action');
-    this.webSocketService.getActions('action').subscribe(actions => {
-      this.actions_json = actions;
-      this.actions_json.forEach((action, index) => {
-        if (index < 8) {
-          action['status'] = true;
-        } else {
-          action['status'] = false;
-        }
-      });
-      this.actionsDataSource = new MatTableDataSource(this.actions_json);
-      this.actionsDataSource.paginator = this.paginator;
+    this.apiService.requestActions().subscribe(actions => {
+      console.log(actions);
+      if (actions) {
+        this.actions_json = actions;
+        this.actions_json.forEach((action, index) => {
+          if (index < 8) {
+            action['status'] = true;
+          } else {
+            action['status'] = false;
+          }
+        });
+        this.actionsDataSource = new MatTableDataSource(this.actions_json);
+        this.actionsDataSource.paginator = this.paginator;
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
-
-    this.subscription.add(this.webSocketService.getActionAlerts().subscribe(response => {
-      this.notificationsService.showToast(response);
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification')));
   }
 
   addNewAction() {
@@ -70,8 +61,14 @@ export class ManageActionsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        console.log(response);
-        this.webSocketService.createAction(response, 'action');
+        this.apiService.createAction(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -84,7 +81,14 @@ export class ManageActionsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.editAction(response, 'action');
+        this.apiService.editAction(response).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -93,9 +97,21 @@ export class ManageActionsComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DeleteActionComponent);
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.deleteAction(actionObjectId, 'action');
+        this.apiService.deleteAction(actionObjectId).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
+  }
+
+  forceReload() {
+    this.apiService.forceActionsCacheReload('reset');
+    this.getActions();
   }
 
   applyActionsFilter(filterValue: string) {
@@ -108,8 +124,7 @@ export class ManageActionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.webSocketService.leaveProjectsRoom('action');
+    this.apiService.forceActionsCacheReload('finish');
     this.dialog.closeAll();
   }
 

@@ -3,14 +3,12 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
 
-import { WebSocketService } from '../common/services/web-socket.service';
 import { NotificationsService } from '../common/services/notifications.service';
 import { OverlayService } from '../common/services/overlay.service';
 import { ModelErrorService } from '../common/services/model-error.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 
 import { DeployModelComponent } from '../common/modals/deploy-model/deploy-model.component';
-import { HeaderService } from '../common/services/header.service';
 import { DeployService } from '../common/services/deploy.service';
 
 @Component({
@@ -24,10 +22,8 @@ export class DeployComponent implements OnInit, OnDestroy {
   session_id: string;
 
   constructor(public dialog: MatDialog,
-              public headerService: HeaderService,
               public deployService: DeployService,
               public overlayService: OverlayService,
-              public webSocketService: WebSocketService,
               public modelErrorService: ModelErrorService,
               public sharedDataService: SharedDataService,
               public notificationsService: NotificationsService) {}
@@ -38,11 +34,10 @@ export class DeployComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
-    this.headerService.changeHeaderApplication('trainer');
     this.getProjectsForDeploy();
     this.paginator.pageIndex = +localStorage.getItem('deploy_pageIndex');
     this.paginator.pageSize = +localStorage.getItem('deploy_pageSize');
-    this.session_id = this.webSocketService.getSessionId();
+    this.session_id = ''; // this.webSocketService.getSessionId();
   }
 
   getProjectsForDeploy() {

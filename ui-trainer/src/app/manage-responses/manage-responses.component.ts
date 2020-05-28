@@ -1,11 +1,10 @@
 import { Component, OnInit, Input, ViewChild, HostListener, OnDestroy } from '@angular/core';
-import { WebSocketService } from '../common/services/web-socket.service';
-import { EntitiesDataService } from '../common/services/entities-data.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { NotificationsService } from '../common/services/notifications.service';
 import { constant } from '../../environments/constants';
 import { MatInput } from '@angular/material/input';
 import { Subscription } from 'rxjs';
+import { ApiService } from '../common/services/apis.service';
 
 @Component({
   selector: 'app-manage-responses',
@@ -31,8 +30,7 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
 
   @ViewChild('responseText') responseTextInput: MatInput;
 
-  constructor(private entities_service: EntitiesDataService,
-              private webSocketService: WebSocketService,
+  constructor(public apiService: ApiService,
               public sharedDataService: SharedDataService,
               public notificationsService: NotificationsService) { }
 
@@ -45,29 +43,25 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
   }
 
   getEntities() {
-    this.entities_service.createEntitiesRoom();
-    this.entities_service.getEntities({project_id: this.projectObjectId}).subscribe(entities => {
-      this.entities = this.entities_backup = entities;
+    this.apiService.requestEntities(this.projectObjectId).subscribe(entities => {
+      if (entities) {
+        this.entities = this.entities_backup = entities;
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
   }
 
   getResponseDetails() {
-    this.webSocketService.createResponseRoom('response_' + this.responseObjectId);
-    // tslint:disable-next-line: max-line-length
-    this.webSocketService.getResponseDetails({object_id: this.responseObjectId}, 'response_' + this.responseObjectId).subscribe(response_details => {
-      this.currentResponse = response_details;
-      this.text_entities = this.text_entities_backup = this.currentResponse.text_entities;
+    this.apiService.requestResponseDetails(this.responseObjectId).subscribe(response_details => {
+      if (response_details) {
+        console.log(response_details);
+        this.currentResponse = response_details;
+        this.text_entities = this.text_entities_backup = this.currentResponse.text_entities;
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
-
-    this.subscription.add(this.webSocketService.getResponseDetailsAlerts().subscribe(intent_details => {
-      this.notificationsService.showToast(intent_details);
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification')));
   }
 
   addResponseTextElement(event: any) {
@@ -81,8 +75,14 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
           }
         }
         this.new_response_text = new_response_text_arr.join(' ');
-        // tslint:disable-next-line: max-line-length
-        this.webSocketService.createResponseText({object_id: this.responseObjectId, text_entities: this.new_response_text}, 'response_' + this.responseObjectId);
+        this.apiService.createResponseText({object_id: this.responseObjectId, text_entities: this.new_response_text}, this.responseObjectId).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       } else {
         this.notificationsService.showToast({status: 'Error', message: 'Response Text Already Exists'});
       }
@@ -106,9 +106,15 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
     }
   }
 
-  removeResponseTextElement(index: number, text_entity: string) {
-    // tslint:disable-next-line: max-line-length
-    this.webSocketService.deleteResponseText({object_id: this.responseObjectId, text_entities: text_entity}, 'response_' + this.responseObjectId);
+  removeResponseTextElement(text_entity: string) {
+    this.apiService.deleteResponseText({object_id: this.responseObjectId, text_entities: text_entity}, this.responseObjectId).subscribe(result => {
+      if (result) {
+        this.notificationsService.showToast(result);
+        this.forceReload();
+      }
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   applyMapFilter(filterValue: string) {
@@ -166,10 +172,13 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  forceReload() {
+    this.apiService.forceResponseDetailsCacheReload('reset');
+    this.getResponseDetails();
+  }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.apiService.forceResponseDetailsCacheReload('finish');
   }
 
 }

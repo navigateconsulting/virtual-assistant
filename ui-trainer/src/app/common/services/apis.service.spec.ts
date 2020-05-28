@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { WebSocketService } from './web-socket.service';
+import { ApisService } from './apis.service';
 
-describe('WebSocketService', () => {
+describe('ApisService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: WebSocketService = TestBed.get(WebSocketService);
+    const service: ApisService = TestBed.get(ApisService);
     expect(service).toBeTruthy();
   });
 });

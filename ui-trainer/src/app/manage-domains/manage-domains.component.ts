@@ -1,12 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { WebSocketService } from '../common/services/web-socket.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDomainComponent } from '../common/modals/add-domain/add-domain.component';
 import { DeleteDomainComponent } from '../common/modals/delete-domain/delete-domain.component';
 import { EditDomainComponent } from '../common/modals/edit-domain/edit-domain.component';
 import { NotificationsService } from '../common/services/notifications.service';
-import { environment } from '../../environments/environment';
+import { ApiService } from '../common/services/apis.service';
 
 @Component({
   selector: 'app-manage-domains',
@@ -15,9 +13,7 @@ import { environment } from '../../environments/environment';
 })
 export class ManageDomainsComponent implements OnInit, OnDestroy {
 
-  private subscription: Subscription = new Subscription();
-
-  constructor(public webSocketService: WebSocketService,
+  constructor(public apiService: ApiService,
               public notificationsService: NotificationsService,
               public dialog: MatDialog) { }
 
@@ -56,18 +52,14 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   }
 
   getDomains() {
-    this.webSocketService.createDomainsRoom('project_' + this.projectObjectId);
-    this.webSocketService.getDomains(this.projectObjectId, 'project_' + this.projectObjectId).subscribe(domains => {
-      this.domains_json = this.domains_json_backup = domains;
+    this.apiService.requestDomains(this.projectObjectId).subscribe(domains => {
+      if (domains) {
+        console.log(domains);
+        this.domains_json = this.domains_json_backup = domains;
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
-
-    this.subscription.add(this.webSocketService.getDomainAlerts().subscribe(response => {
-      this.notificationsService.showToast(response);
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification')));
   }
 
   addNewDomain() {
@@ -78,7 +70,14 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.createDomain(response, 'project_' + this.projectObjectId);
+        this.apiService.createDomain(response, this.projectObjectId).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -96,7 +95,14 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.editDomain(response, 'project_' + this.projectObjectId);
+        this.apiService.editDomain(response, this.projectObjectId).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -106,7 +112,14 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
         // tslint:disable-next-line: max-line-length
-        this.webSocketService.deleteDomain({project_id: this.projectObjectId, object_id: domainObjectId}, 'project_' + this.projectObjectId);
+        this.apiService.deleteDomain(domainObjectId, this.projectObjectId).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       }
     });
   }
@@ -122,13 +135,17 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   }
 
   selectDomain(domainStub: any) {
-    this.webSocketService.leaveDomainsRoom('project_' + this.projectObjectId);
+    // this.webSocketService.leaveDomainsRoom('project_' + this.projectObjectId);
     this.selectedDomain.emit(domainStub);
   }
 
+  forceReload() {
+    this.apiService.forceDomainsCacheReload('reset');
+    this.getDomains();
+  }
+
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.webSocketService.leaveDomainsRoom('project_' + this.projectObjectId);
+    this.apiService.forceDomainsCacheReload('finish');
     this.dialog.closeAll();
   }
 }
