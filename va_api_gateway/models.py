@@ -479,7 +479,7 @@ class IntentDetailModel:
         object_id = json_record['object_id']
         del json_record['object_id']
 
-        intent_detail = self.get_intent_details({"object_id": object_id})
+        intent_detail = self.get_intent_details({"object_id": str(object_id)})
         print("Intent Details count {}".format(intent_detail['text_entities'][0]))
 
         try:
