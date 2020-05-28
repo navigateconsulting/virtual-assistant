@@ -628,7 +628,7 @@ class ResponseDetailModel:
         object_id = json_record['object_id']
         del json_record['object_id']
 
-        response_detail = self.get_response_details({"object_id": object_id})
+        response_detail = self.get_response_details(object_id)
         try:
             res = response_detail['text_entities'][1]
         except IndexError:
