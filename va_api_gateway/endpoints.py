@@ -1,11 +1,19 @@
-from app import Resource, request
-import redis
-import os
+"""
+Endpoints file , for api code
+"""
+
 import logging
-from models import CustomActionsModel, ProjectsModel, CopyProjectModel, DomainsModel, ConversationsModel
-from models import RefreshDbModel, IntentsModel, IntentDetailModel, ResponseModel, ResponseDetailModel
-from models import StoryModel, StoryDetailModel, EntityModel, ExportProjectModel, ImportProjectModel
+import os
 import json
+import redis
+from app import Resource, request
+from models import CustomActionsModel, ProjectsModel, \
+    CopyProjectModel, DomainsModel, ConversationsModel
+from models import RefreshDbModel, IntentsModel, \
+    IntentDetailModel, ResponseModel, ResponseDetailModel
+from models import StoryModel, StoryDetailModel, \
+    EntityModel, ExportProjectModel, ImportProjectModel
+
 
 # Set logger
 logger = logging.getLogger('flask.app')
@@ -30,9 +38,12 @@ EntityModel = EntityModel()
 ExportProjectModel = ExportProjectModel()
 ImportProjectModel = ImportProjectModel()
 
+
 # Initiate redis
 try:
-    r = redis.Redis(host=os.environ['REDIS_URL'], port=os.environ['REDIS_PORT'], charset="utf-8", decode_responses=True)
+    r = redis.Redis(host=os.environ['REDIS_URL'],
+                    port=os.environ['REDIS_PORT'],
+                    charset="utf-8", decode_responses=True)
     logger.info("Trying to connect to Redis Docker container ")
 except KeyError:
     logger.debug("Local run connecting to Redis  ")
@@ -47,14 +58,11 @@ class CustomActionsAPI(Resource):
         # check if result can be served from cache
         if r.exists("all_custom_actions"):
             return json.loads(r.get("all_custom_actions"))
-
         else:
             # Get results and update the cache with new values
             logging.debug('getting Data from DB')
-
             result = CustomActionsModel.get_all_custom_actions()
             r.set("all_custom_actions", json.dumps(result), ex=60)
-
             return result
 
     def post(self):
@@ -271,8 +279,6 @@ class IntentDetails(Resource):
     def post(self, intent_id):
         json_data = request.get_json(force=True)
 
-        #intent_id = json_data['object_id']
-
         result = IntentDetailModel.insert_intent_detail(json_data)
 
         # Clear redis cache
@@ -284,8 +290,6 @@ class IntentDetails(Resource):
         # Updating record
         json_data = request.get_json(force=True)
 
-        #intent_id = json_data['object_id']
-
         result = IntentDetailModel.update_intent_detail(json_data)
 
         # Clear redis cache
@@ -295,8 +299,6 @@ class IntentDetails(Resource):
     def delete(self, intent_id):
         # Deleting record
         json_data = request.get_json(force=True)
-
-        #intent_id = json_data['object_id']
 
         result = IntentDetailModel.delete_intent_detail(json_data)
 
@@ -310,13 +312,8 @@ class Responses(Resource):
 
     def get(self):
 
-        # json_data = request.get_json(force=True)
-        #
-        # project_id = json_data['project_id']
-        # domain_id = json_data['domain_id']
         project_id = request.args.getlist('project_id')[0]
         domain_id = request.args.getlist('domain_id')[0]
-
 
         # check if result can be served from cache
         if r.exists("responses_"+str(project_id)+"_"+str(domain_id)):
@@ -392,8 +389,6 @@ class ResponseDetails(Resource):
     def post(self, response_id):
         json_data = request.get_json(force=True)
 
-        #response_id = json_data['object_id']
-
         result = ResponseDetailModel.insert_response_detail(json_data)
 
         # Clear redis cache
@@ -417,8 +412,6 @@ class ResponseDetails(Resource):
         # Deleting record
         json_data = request.get_json(force=True)
 
-        #response_id = json_data['object_id']
-
         result = ResponseDetailModel.delete_response_detail(json_data)
 
         # Clear redis cache
@@ -430,11 +423,6 @@ class ResponseDetails(Resource):
 class Story(Resource):
 
     def get(self):
-
-        # json_data = request.get_json(force=True)
-        #
-        # project_id = json_data['project_id']
-        # domain_id = json_data['domain_id']
 
         project_id = request.args.getlist('project_id')[0]
         domain_id = request.args.getlist('domain_id')[0]
@@ -513,8 +501,6 @@ class StoryDetails(Resource):
     def post(self, story_id):
         json_data = request.get_json(force=True)
 
-        #story_id = json_data['object_id']
-
         result = StoryDetailModel.insert_story_details(json_data)
 
         # Clear redis cache
@@ -526,8 +512,6 @@ class StoryDetails(Resource):
         # Updating record
         json_data = request.get_json(force=True)
 
-        #story_id = json_data['object_id']
-
         result = StoryDetailModel.update_story_detail(json_data)
 
         # Clear redis cache
@@ -537,8 +521,6 @@ class StoryDetails(Resource):
     def delete(self, story_id):
         # Deleting record
         json_data = request.get_json(force=True)
-
-        #story_id = json_data['object_id']
 
         result = StoryDetailModel.delete_story_detail(json_data)
 
@@ -568,8 +550,6 @@ class Entities(Resource):
     def post(self, project_id):
         json_data = request.get_json(force=True)
 
-        #entity_id = json_data['object_id']
-
         result = EntityModel.create_entity(json_data)
 
         # Clear redis cache
@@ -581,8 +561,6 @@ class Entities(Resource):
         # Updating record
         json_data = request.get_json(force=True)
 
-        #entity_id = json_data['object_id']
-
         result = EntityModel.update_entity(json_data)
 
         # Clear redis cache
@@ -592,8 +570,6 @@ class Entities(Resource):
     def delete(self, project_id):
         # Deleting record
         json_data = request.get_json(force=True)
-
-        #entity_id = json_data['object_id']
 
         result = EntityModel.delete_entity(json_data)
 

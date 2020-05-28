@@ -1,10 +1,17 @@
+""" Flask app entry point
+    starts a gunicorn server form dockerfile file
+"""
+
+
+import logging
 from flask import Flask, request
 from flask_restful import Api, Resource
-import logging
-from endpoints import CustomActionsAPI, Projects, CopyProject, Domains, Conversations, AllConversations, RefreshDb
-from endpoints import IntentDetails, Intents, Story, StoryDetails, Entities, Responses, ResponseDetails
-from endpoints import ExportProject, ImportProject
 from flask_cors import CORS
+from endpoints import CustomActionsAPI, Projects, CopyProject, \
+     Domains, Conversations, AllConversations, RefreshDb
+from endpoints import IntentDetails, Intents, Story, \
+    StoryDetails, Entities, Responses, ResponseDetails
+from endpoints import ExportProject, ImportProject
 
 
 app = Flask(__name__)
