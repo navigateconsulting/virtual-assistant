@@ -954,11 +954,8 @@ class ExportProjectModel:
         # Copy Entities
 
         entities_cursor = db.entities.find({"project_id": str(source_project_id)})
-        entities_list = list(entities_cursor)
-        #entities_list = entities_cursor.to_list(length=10000)
-        #json.loads(dumps(list(cursor)))
         entity_dict = []
-        for entities in entities_list:
+        for entities in list(entities_cursor):
             del entities['_id']
             entity_dict.append(entities)
         export_model["entities"] = entity_dict
@@ -967,7 +964,7 @@ class ExportProjectModel:
 
         domains_cursor = db.domains.find({"project_id": str(source_project_id)})
         domain_list = []
-        for domain in domains_cursor.to_list(length=100):
+        for domain in list(domains_cursor):
             print(domain.get('_id'))
             domain['source_domain'] = str(domain.get('_id'))
             del domain['_id']
@@ -977,7 +974,7 @@ class ExportProjectModel:
         # Copy Intents
         intents_cursor = db.intents.find({"project_id": str(source_project_id)})
         intents_list = []
-        for intents in intents_cursor.to_list(length=100):
+        for intents in list(intents_cursor):
             del intents['_id']
             intents_list.append(intents)
         export_model["intents"] = intents_list
@@ -986,7 +983,7 @@ class ExportProjectModel:
 
         responses_cursor = db.responses.find({"project_id": str(source_project_id)})
         response_list = []
-        for response in responses_cursor.to_list(length=100):
+        for response in list(responses_cursor):
             del response['_id']
             response_list.append(response)
         export_model["response"] = response_list
@@ -995,7 +992,7 @@ class ExportProjectModel:
 
         stories_cursor = db.stories.find({"project_id": str(source_project_id)})
         story_list = []
-        for story in stories_cursor.to_list(length=100):
+        for story in list(stories_cursor):
             del story['_id']
             story_list.append(story)
         export_model["stories"] = story_list
