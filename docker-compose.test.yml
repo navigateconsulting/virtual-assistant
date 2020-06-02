@@ -13,6 +13,8 @@ services:
       - MONGODB_PORT=27017
     ports:
       - "3000:3000"
+    volumes:
+      - rasa_projects:/rasa_projects
     depends_on:
       - redis
 
@@ -20,6 +22,15 @@ services:
     image: 'redis:4-alpine'
     ports:
       - '6379:6379'
+
+  trainer_worker:
+    build: './trainer_worker'
+#    user: nobody
+    volumes:
+      - rasa_projects:/rasa_projects
+    depends_on:
+      - redis
+      - va_api_gateway
 
   mongodb:
     image: mongo:latest
@@ -45,3 +56,4 @@ services:
 
 volumes:
   mongodb:
+  rasa_projects:
