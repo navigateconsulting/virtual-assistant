@@ -11,7 +11,7 @@ from endpoints import CustomActionsAPI, Projects, CopyProject, \
      Domains, Conversations, AllConversations, RefreshDb
 from endpoints import IntentDetails, Intents, Story, \
     StoryDetails, Entities, Responses, ResponseDetails
-from endpoints import ExportProject, ImportProject
+from endpoints import ExportProject, ImportProject, TrainModel, TaskStatus, TaskResult
 
 
 app = Flask(__name__)
@@ -49,3 +49,9 @@ api.add_resource(Entities, '/entities/<project_id>', endpoint='entities')
 
 api.add_resource(ExportProject, '/export_model', endpoint='export_model')
 api.add_resource(ImportProject, '/import_model', endpoint='import_model')
+
+api.add_resource(TrainModel, '/train/<project_id>', endpoint='train')
+
+api.add_resource(TaskStatus, '/task_status/<task_id>', endpoint='task_status')
+api.add_resource(TaskResult, '/task_result/<task_id>', endpoint='task_result')
+
