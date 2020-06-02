@@ -80,6 +80,10 @@ class ProjectsModel:
         cursor = db.projects.find()
         return json.loads(dumps(list(cursor)))
 
+    def get_project_details(self, project_id):
+        query = {"_id": ObjectId("{}".format(project_id))}
+        return json.loads(dumps(db.projects.find_one(query)))
+
     def create_projects(self, record):
 
         json_record = json.loads(json.dumps(record))
@@ -1085,7 +1089,7 @@ class ValidateData:
         # Check for count of Intents in project
 
         cursor = db.intents.find(query)
-        result = cursor.to_list(length=10)
+        result = list(cursor)
         print("Count of intents in Project {}".format(len(result)))
 
         if len(result) < 1:
@@ -1094,7 +1098,7 @@ class ValidateData:
         # Check for count of Responses in project
 
         cursor = db.responses.find(query)
-        result = cursor.to_list(length=10)
+        result = list(cursor)
         print("Count of Responses in Project {}".format(len(result)))
 
         if len(result) < 1:
@@ -1103,7 +1107,7 @@ class ValidateData:
         # Check for count of Story in project
 
         cursor = db.stories.find(query)
-        result = cursor.to_list(length=10)
+        result = list(cursor)
         print("Count of Stories in Project {}".format(len(result)))
 
         if len(result) < 1:
@@ -1119,7 +1123,7 @@ class ValidateData:
         # Check for count of Entity in project
 
         cursor = db.entities.find(query)
-        result = cursor.to_list(length=10)
+        result = list(cursor)
         print("Count of entities in Project {}".format(len(result)))
 
         if len(result) < 1:
@@ -1129,7 +1133,7 @@ class ValidateData:
         # Check for Negative Intent if its present.
 
         cursor = db.intents.find({"project_id": project_id, "intent_name": "negative"})
-        result = cursor.to_list(length=10)
+        result = list(cursor)
         print("Count of negative intents in Project {}".format(len(result)))
 
         if len(result) < 1:
@@ -1137,7 +1141,7 @@ class ValidateData:
 
         # check for utter_default
         cursor = db.responses.find({"project_id": project_id, "response_name": "utter_default"})
-        result = cursor.to_list(length=10)
+        result = list(cursor)
         print("Count of Responses in Project {}".format(len(result)))
 
         if len(result) < 1:
@@ -1145,7 +1149,7 @@ class ValidateData:
 
         # check for utter_ask_rephrase
         cursor = db.responses.find({"project_id": project_id, "response_name": "utter_ask_rephrase"})
-        result = cursor.to_list(length=10)
+        result = list(cursor)
         print("Count of Responses in Project {}".format(len(result)))
 
         if len(result) < 1:
