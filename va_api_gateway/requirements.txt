@@ -5,3 +5,6 @@ flask_restful
 redis
 pymongo
 flask-cors
+aiofiles
+pyyaml
+celery[redis]
