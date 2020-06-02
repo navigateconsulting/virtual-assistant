@@ -6,13 +6,16 @@ import logging
 import os
 import json
 import redis
+from celery import Celery
 from app import Resource, request
 from models import CustomActionsModel, ProjectsModel, \
     CopyProjectModel, DomainsModel, ConversationsModel
 from models import RefreshDbModel, IntentsModel, \
     IntentDetailModel, ResponseModel, ResponseDetailModel
 from models import StoryModel, StoryDetailModel, \
-    EntityModel, ExportProjectModel, ImportProjectModel
+    EntityModel, ExportProjectModel, ImportProjectModel, \
+    ValidateData
+from export import Export
 
 
 # Set logger
@@ -37,7 +40,7 @@ StoryModel = StoryModel()
 EntityModel = EntityModel()
 ExportProjectModel = ExportProjectModel()
 ImportProjectModel = ImportProjectModel()
-
+Export = Export()
 
 # Setting Expiry for redis cache
 
@@ -52,6 +55,11 @@ try:
 except KeyError:
     logger.debug("Local run connecting to Redis  ")
     r = redis.Redis(host='localhost', port=6379, charset="utf-8", decode_responses=True)
+
+
+# Connect to celery task Queue
+
+trainer_app = Celery('simple_worker', broker='redis://redis:6379/0', backend='redis://redis:6379/0')
 
 
 # noinspection PyMethodMayBeStatic
@@ -631,3 +639,53 @@ class ImportProject(Resource):
         json_data = request.get_json(force=True)
         result = ImportProjectModel.import_project(json_data)
         return result
+
+
+# noinspection PyMethodMayBeStatic
+class TrainModel(Resource):
+
+    def __init__(self):
+        self.ValidateData = ValidateData()
+
+    def get(self, project_id):
+
+        logger.debug("Training model " + str(project_id))
+
+        logger.debug("Validating project ID " + str(project_id))
+        result = self.ValidateData.validate_data(project_id)
+
+        if result != '':
+            logger.debug("Validation failed for the project ")
+            return {"status": "Error", "message": result}
+
+        result = Export.call_main(project_id)
+        logger.debug(result)
+
+        # Start Training for the model
+
+        task_obj = trainer_app.send_task('tasks.train_model', kwargs={'project_id': project_id})
+        logger.debug("Task ID "+str(task_obj.id))
+
+        # get status
+
+        status = trainer_app.AsyncResult(task_obj.id, app=trainer_app)
+        logger.debug("Status of the task "+str(status.state))
+
+        return {"status": "Success", "message": str(status.state), "task_id": str(task_obj.id)}
+
+
+# noinspection PyMethodMayBeStatic
+class TaskStatus(Resource):
+
+    def get(self, task_id):
+
+        status = trainer_app.AsyncResult(task_id, app=trainer_app)
+        return {"Status": str(status.state)}
+
+
+# noinspection PyMethodMayBeStatic
+class TaskResult(Resource):
+
+    def get(self, task_id):
+        result = trainer_app.AsyncResult(task_id).result
+        return {"Result": str(result)}
