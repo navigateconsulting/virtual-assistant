@@ -1,0 +1,2 @@
+celery[redis]
+rasa==1.10.1
