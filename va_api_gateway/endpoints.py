@@ -701,8 +701,8 @@ class LoadModel:
         self.agent = create_agent(model_path)
         return {"Status": "Success", "Message": "Agent Loaded"}
 
-    def handle_text(self, text_line):
-        result = asyncio.run(self.agent.handle_text(text_line))
+    def handle_text(self, text_line, session_id):
+        result = asyncio.run(self.agent.handle_text(text_line, sender_id=session_id))
         return result
 
 
@@ -721,15 +721,25 @@ class TryNow(Resource):
     def post(self):
 
         # TODO Need to return tracker conversation
-
+        out_message = {}
         json_data = request.get_json(force=True)
-        input_text = json_data['input_text']
+        input_text = json_data['message']
+        session_id = json_data['sessionId']
 
-        response = LoadModel.handle_text(input_text)
-        #response = asyncio.run(self.agent.handle_text(input_text))
-        #response = self.agent.handle_text(input_text)
+        responses = LoadModel.handle_text(input_text, session_id)
 
-        return response
+        result = Conversations.get(session_id)
+
+        if 'message' not in responses:
+            out_message['tracker-store'] = result
+            print('out_message', out_message)
+            return out_message
+        else:
+            for response in responses:
+                print("--------- BOT Response {}".format(response))
+                response['tracker-store'] = result
+                print('response', response)
+                return response
 
 
 # noinspection PyMethodMayBeStatic
