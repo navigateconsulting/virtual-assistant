@@ -698,7 +698,8 @@ class LoadModel:
     agent = ''
 
     def load_model(self, model_path):
-        self.agent = create_agent(model_path)
+        endpoints_file = './database_files/try_now_endpoints.yml'
+        self.agent = create_agent(model_path, endpoints=endpoints_file)
         return {"Status": "Success", "Message": "Agent Loaded"}
 
     def handle_text(self, text_line, session_id):
