@@ -32,7 +32,10 @@ table {
   width: 25%;
 }
 .mat-column-state {
-  width: 15%;
+  width: 10%;
+}
+.mat-column-train {
+  width: 5%;
 }
 .mat-column-deploy {
   width: 5%;
@@ -42,6 +45,9 @@ table {
 }
 .deploy {
   cursor: pointer;
+}
+.train-icon {
+  color: #1C90D1;
 }
 @media screen and (min-width: 1367px) and (max-width: 1620px) {
   .projects-model-table-container {

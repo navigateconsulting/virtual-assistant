@@ -832,6 +832,70 @@ export class ApiService {
 
   //Import Export Projects API End
 
+  // Entities API Start
+  private trainingCache$: Observable<any>;
+  private reloadTraining$ = new Subject<void>();
+
+  checkModelTrainStatus(trainTaskId: string): Observable<any> {
+    if (!this.trainingCache$) {
+      // Set up timer that ticks every X milliseconds
+      const timer$ = timer(0, REFRESH_INTERVAL);
+      // For each tick make an http request to fetch new data
+      this.trainingCache$ = timer$.pipe(
+        switchMap(_ => this.checkModelTrainingStatus(trainTaskId)),
+        takeUntil(this.reloadTraining$),
+        shareReplay(CACHE_SIZE)
+      );
+    }
+    return this.trainingCache$;
+  }
+
+  forceModelTrainingCacheReload(type: string) {
+    if (type === 'reset') {
+      // Calling next will complete the current cache instance
+      this.reloadTraining$.next();
+      // Setting the cache to null will create a new cache the
+      this.trainingCache$ = null;
+    } else if (type === 'finish') {
+      // Calling next will complete the current cache instance
+      this.reloadTraining$.next();
+    }
+  }
+
+  requestModelTraining(projectObjectId: string) {
+    return this.http.get(this.apiURL + '/train/' + projectObjectId, this.httpOptions)
+    .pipe(
+      retry(1),
+      catchError(this.handleError)
+    );
+  }
+
+  checkModelTrainingStatus(trainTaskId: string) {
+    return this.http.get(this.apiURL + '/task_status/' + trainTaskId, this.httpOptions)
+    .pipe(
+      retry(1),
+      catchError(this.handleError)
+    );
+  }
+
+  getModelTrainingResult(trainTaskId: string) {
+    return this.http.get(this.apiURL + '/task_result/' + trainTaskId, this.httpOptions)
+    .pipe(
+      retry(1),
+      catchError(this.handleError)
+    );
+  }
+
+  deployTrainedModel(modelPublishPath: string) {
+    return this.http.get(this.apiURL + '/publish_model?model_path=' + modelPublishPath, this.httpOptions)
+    .pipe(
+      retry(1),
+      catchError(this.handleError)
+    );
+  }
+
+  // Entities API End
+
   // Error handling
   handleError(error) {
      let errorMessage = '';
