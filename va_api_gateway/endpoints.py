@@ -16,6 +16,8 @@ from models import StoryModel, StoryDetailModel, \
     EntityModel, ExportProjectModel, ImportProjectModel, \
     ValidateData
 from export import Export
+from rasa.run import create_agent
+import asyncio
 
 
 # Set logger
@@ -689,3 +691,63 @@ class TaskResult(Resource):
     def get(self, task_id):
         result = trainer_app.AsyncResult(task_id).result
         return {"Result": str(result)}
+
+
+class LoadModel:
+
+    agent = ''
+
+    def load_model(self, model_path):
+        self.agent = create_agent(model_path)
+        return {"Status": "Success", "Message": "Agent Loaded"}
+
+    def handle_text(self, text_line):
+        result = asyncio.run(self.agent.handle_text(text_line))
+        return result
+
+
+LoadModel = LoadModel()
+
+
+# noinspection PyMethodMayBeStatic
+class TryNow(Resource):
+
+    def get(self):
+
+        # TODO need to add Tracker store
+        model_path = request.args.getlist('model_path')[0]
+        return LoadModel.load_model(model_path)
+
+    def post(self):
+
+        # TODO Need to return tracker conversation
+
+        json_data = request.get_json(force=True)
+        input_text = json_data['input_text']
+
+        response = LoadModel.handle_text(input_text)
+        #response = asyncio.run(self.agent.handle_text(input_text))
+        #response = self.agent.handle_text(input_text)
+
+        return response
+
+
+# noinspection PyMethodMayBeStatic
+class PublishModel(Resource):
+
+    def get(self):
+
+        # Publish Model to Rasa server
+
+        model_path = request.args.getlist('model_path')[0]
+
+        import requests
+        rasa_server_url = 'http://rasa:5005/model'
+
+        result = requests.put(rasa_server_url,
+                              data=json.dumps({"model_file": str(model_path)}),
+                              headers={'content-type': 'application/json'})
+
+        return {"Status ": str(result.status_code), "Message": str(result.content)}
+
+

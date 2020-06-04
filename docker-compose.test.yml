@@ -1,5 +1,6 @@
 version: "3.7"
 services:
+
   va_api_gateway:
     init: true
     build: './va_api_gateway'
@@ -53,6 +54,30 @@ services:
       - "8080:80"
     depends_on:
       - va_api_gateway
+
+
+  action_server:
+    build: './action_server'
+    container_name: action_server
+    ports:
+      - 5055:5055
+
+  rasa:
+    build: './rasa_custom'
+    ports:
+      - 5005:5005
+    volumes:
+      - rasa_projects:/rasa_projects
+    command:
+      - run
+      - --endpoints
+      - config/endpoints.yml
+      - --debug
+      - --enable-api
+      - --cors
+      - "*"
+    depends_on:
+      - action_server
 
 volumes:
   mongodb:
