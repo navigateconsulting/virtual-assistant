@@ -26,7 +26,6 @@ services:
 
   trainer_worker:
     build: './trainer_worker'
-#    user: nobody
     volumes:
       - rasa_projects:/rasa_projects
     depends_on:
@@ -72,12 +71,29 @@ services:
       - run
       - --endpoints
       - config/endpoints.yml
+      - --credentials
+      - config/credentials.yml
       - --debug
       - --enable-api
       - --cors
       - "*"
     depends_on:
       - action_server
+
+# Use only for testing not for Production.
+# use url /inspect/http to get the ngrok url
+
+#  ngrok:
+#    image: wernight/ngrok
+#    ports:
+#      - "4040:4040"
+#    command:
+#      - /bin/sh
+#      - -c
+#      - |
+#        ngrok http rasa:5005
+#    depends_on:
+#      - rasa
 
 volumes:
   mongodb:

@@ -9,6 +9,7 @@ FROM rasa/rasa:1.10.1-full
 # Copy actions folder to working directory
 #RUN mkdir -p /app/config
 COPY endpoints.yml /app/config/endpoints.yml
+COPY credentials.yml /app/config/credentials.yml
 
 # Make sure the default group has the same permissions as the owner
 #RUN chgrp -R 0 . && chmod -R g=u .
