@@ -24,7 +24,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
               public apiService: ApiService) {}
 
   // tslint:disable-next-line: max-line-length
-  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'padding1', 'project_description', 'padding2', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'try_now', 'properties', 'export'];
+  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'padding1', 'project_description', 'padding2', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'train', 'try_now', 'properties', 'export'];
   projectsDataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -131,6 +131,44 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
         () => console.log('Observer got a complete notification'));
       }
     });
+  }
+
+  trainProject(projectObjectId: string) {
+    this.apiService.requestModelTraining(projectObjectId).subscribe(response => {
+      console.log(response);
+      if (response['status'] === 'Success' && response['message'] === 'PENDING') {
+        this.notificationsService.showToast({status: 'Info', message: 'Model Is Getting Trained.'});
+        this.checkModelTrainStatus(projectObjectId, response['task_id']);
+      }
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
+  }
+
+  checkModelTrainStatus(projectObjectId: string, taskId: string) {
+    this.apiService.checkModelTrainStatus(taskId).subscribe(response => {
+      if (response['Status'] === 'SUCCESS') {
+        this.getModelTrainResult(projectObjectId, taskId);
+      }
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
+  }
+
+  getModelTrainResult(projectObjectId: string, taskId: string) {
+    this.apiService.getModelTrainingResult(taskId).subscribe(response => {
+      if (response['Result'] !== '') {
+        sessionStorage.setItem(projectObjectId, response['Result']);
+        this.notificationsService.showToast({status: 'Success', message: 'Model Training Complete. Ready To Try Now'});
+        this.finishTraining();
+      }
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
+  }
+
+  finishTraining() {
+    this.apiService.forceModelTrainingCacheReload('finish');
   }
 
   tryNowProject(projectStub: any) {

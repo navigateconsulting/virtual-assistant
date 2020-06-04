@@ -894,6 +894,23 @@ export class ApiService {
     );
   }
 
+  tryNowTrainedModel(modelPublishPath: string) {
+    return this.http.get(this.apiURL + '/try_now?model_path=' + modelPublishPath, this.httpOptions)
+    .pipe(
+      retry(1),
+      catchError(this.handleError)
+    );
+  }
+
+  tryNowModel(sessionId: string, chatMessage: string) {
+    // tslint:disable-next-line: max-line-length
+    return this.http.post(this.apiURL + '/try_now', JSON.stringify({sessionId: sessionId, message: chatMessage}), this.httpOptions)
+    .pipe(
+      retry(1),
+      catchError(this.handleError)
+    );
+  }
+
   // Entities API End
 
   // Error handling
