@@ -6,7 +6,7 @@ services:
     build: './va_api_gateway'
     environment:
       - PORT_APP=3000
-      - WORKERS=4
+      - WORKERS=1
       - THREADS=50
       - REDIS_URL=redis
       - REDIS_PORT=6379
