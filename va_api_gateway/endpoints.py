@@ -753,7 +753,7 @@ class PublishModel(Resource):
         model_path = request.args.getlist('model_path')[0]
 
         import requests
-        rasa_server_url = 'http://rasa:5005/model'
+        rasa_server_url = os.environ['RASA_SERVER']
 
         result = requests.put(rasa_server_url,
                               data=json.dumps({"model_file": str(model_path)}),

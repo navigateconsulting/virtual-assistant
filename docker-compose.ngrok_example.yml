@@ -12,6 +12,7 @@ services:
       - REDIS_PORT=6379
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
+      - RASA_SERVER=http://rasa:5005/model
     ports:
       - "3000:3000"
     volumes:

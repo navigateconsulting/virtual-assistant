@@ -1,35 +1,37 @@
-version: '3.0'
-
+version: "3.7"
 services:
 
-  # Server Stack
-
-  action_server:
-    build: './action_server'
-    container_name: action_server
+  va_api_gateway:
+    init: true
+    build: './va_api_gateway'
+    environment:
+      - PORT_APP=3000
+      - WORKERS=1
+      - THREADS=50
+      - REDIS_URL=redis
+      - REDIS_PORT=6379
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - RASA_SERVER=http://rasa:5005/model
     ports:
-      - 5055:5055
-
-  rasa:
-    build: './rasa_custom'
-    #image: rasa/rasa:1.8.1-full
-#    container_name: "rasa"
-    ports:
-      - 5005:5005
+      - "3000:3000"
     volumes:
-    - rasa_vol:/app/models
-    command:
-    - run
-    - --endpoints
-    - config/endpoints.yml
-    - --debug
-    - --enable-api
-    - --cors
-    - "*"
+      - rasa_projects:/rasa_projects
     depends_on:
-      - action_server
+      - redis
 
-  ## Trainer stack
+  redis:
+    image: 'redis:4-alpine'
+    ports:
+      - '6379:6379'
+
+  trainer_worker:
+    build: './trainer_worker'
+    volumes:
+      - rasa_projects:/rasa_projects
+    depends_on:
+      - redis
+      - va_api_gateway
 
   mongodb:
     image: mongo:latest
@@ -45,30 +47,40 @@ services:
       - 27017:27017
     command: mongod  --logpath=/dev/null # --quiet
 
-  api_gateway:
-    container_name: api_gateway
-    build: './api_gateway'
-    volumes:
-    - rasa_vol:/app/models
-    environment:
-      MONGODB_URL: mongodb://mongodb:27017
-      MONGODB_NAME: eva_platform
-      LOGGING: 'Yes'
-      ACTION_SERVER_URL: http://action_server:5055/webhook
-      RASA_SERVER_URL: http://rasa:5005/model
-    ports:
-      - "8089:8089"
-    depends_on:
-      - mongodb
-
   ui_trainer:
     container_name: ui_trainer
     build: './ui-trainer'
     ports:
       - "8080:80"
     depends_on:
-      - api_gateway
+      - va_api_gateway
+
+
+  action_server:
+    build: './action_server'
+    container_name: action_server
+    ports:
+      - 5055:5055
+
+  rasa:
+    build: './rasa_custom'
+    ports:
+      - 5005:5005
+    volumes:
+      - rasa_projects:/rasa_projects
+    command:
+      - run
+      - --endpoints
+      - config/endpoints.yml
+      - --credentials
+      - config/credentials.yml
+      - --debug
+      - --enable-api
+      - --cors
+      - "*"
+    depends_on:
+      - action_server
 
 volumes:
   mongodb:
-  rasa_vol:
+  rasa_projects:
