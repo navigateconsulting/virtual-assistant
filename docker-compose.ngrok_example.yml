@@ -1,3 +1,5 @@
+## Sample File showing ngrok configuration. Do not use this as is for Production. This is for Testing only
+
 version: "3.7"
 services:
 
@@ -84,17 +86,17 @@ services:
 # Use only for testing not for Production.
 # use url /inspect/http to get the ngrok url
 
-#  ngrok:
-#    image: wernight/ngrok
-#    ports:
-#      - "4040:4040"
-#    command:
-#      - /bin/sh
-#      - -c
-#      - |
-#        ngrok http rasa:5005
-#    depends_on:
-#      - rasa
+  ngrok:
+    image: wernight/ngrok
+    ports:
+      - "4040:4040"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        ngrok http rasa:5005
+    depends_on:
+      - rasa
 
 volumes:
   mongodb:
