@@ -13,15 +13,15 @@ export class NotificationsService {
   }
 
   showError(notification_message: string, notification_type: string, notification_param: any) {
-      this.toastr.errorToastr(notification_message, notification_type, notification_param);
+    this.toastr.errorToastr(notification_message, notification_type, notification_param);
   }
 
   showWarning() {
-      this.toastr.warningToastr('This is warning toast.', 'Alert!');
+    this.toastr.warningToastr('This is warning toast.', 'Alert!');
   }
 
-  showInfo() {
-      this.toastr.infoToastr('This is info toast.', 'Info');
+  showInfo(notification_message: string, notification_type: string, notification_param: any) {
+    this.toastr.infoToastr(notification_message, notification_type, notification_param);
   }
 
   showToast(notification_stub: any) {
@@ -36,6 +36,8 @@ export class NotificationsService {
       this.showSuccess(notification_stub.message, notification_stub.status, notification_param);
     } else if (notification_stub.status === 'Error') {
       this.showError(notification_stub.message, notification_stub.status, notification_param);
+    } else if (notification_stub.status === 'Info') {
+      this.showInfo(notification_stub.message, notification_stub.status, notification_param);
     }
   }
 }
