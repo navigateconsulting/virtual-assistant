@@ -709,19 +709,19 @@ class LoadModel:
 
 LoadModel = LoadModel()
 
+# TODO Try now method should be moved to a seperate server running rasa ? for each instance of try now ?
+
 
 # noinspection PyMethodMayBeStatic
 class TryNow(Resource):
 
     def get(self):
 
-        # TODO need to add Tracker store
         model_path = request.args.getlist('model_path')[0]
         return LoadModel.load_model(model_path)
 
     def post(self):
 
-        # TODO Need to return tracker conversation
         out_message = {}
         json_data = request.get_json(force=True)
         input_text = json_data['message']
