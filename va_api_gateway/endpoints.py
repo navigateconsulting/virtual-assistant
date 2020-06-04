@@ -729,7 +729,7 @@ class TryNow(Resource):
 
         responses = LoadModel.handle_text(input_text, session_id)
 
-        result = Conversations.get(session_id)
+        result = ConversationsModel.get_conversations(session_id)
 
         if 'message' not in responses:
             out_message['tracker-store'] = result
