@@ -175,7 +175,7 @@ class CopyProjectModel:
             # Copy Entities
 
             entities_cursor = db.entities.find({"project_id": str(source_project_id)})
-            for entity in entities_cursor.to_list(length=100):
+            for entity in list(entities_cursor):
                 del entity['_id']
                 entity['project_id'] = "{}".format(new_project.inserted_id)
                 new_entity = db.entities.insert_one(entity)
@@ -184,7 +184,7 @@ class CopyProjectModel:
             # Copy domains
 
             domains_cursor = db.domains.find({"project_id": str(source_project_id)})
-            for domain in domains_cursor.to_list(length=100):
+            for domain in list(domains_cursor):
                 source_domain_id = domain.get('_id')
                 del domain['_id']
                 domain['project_id'] = "{}".format(new_project.inserted_id)
@@ -195,7 +195,7 @@ class CopyProjectModel:
 
                 intents_cursor = db.intents.find(
                     {"project_id": str(source_project_id), "domain_id": str(source_domain_id)})
-                for intents in intents_cursor.to_list(length=100):
+                for intents in list(intents_cursor):
                     del intents['_id']
                     intents['project_id'] = "{}".format(new_project.inserted_id)
                     intents['domain_id'] = "{}".format(new_domain.inserted_id)
@@ -206,7 +206,7 @@ class CopyProjectModel:
 
                 responses_cursor = db.responses.find(
                     {"project_id": str(source_project_id), "domain_id": str(source_domain_id)})
-                for response in responses_cursor.to_list(length=100):
+                for response in list(responses_cursor):
                     del response['_id']
                     response['project_id'] = "{}".format(new_project.inserted_id)
                     response['domain_id'] = "{}".format(new_domain.inserted_id)
@@ -217,7 +217,7 @@ class CopyProjectModel:
 
                 stories_cursor = db.stories.find(
                     {"project_id": str(source_project_id), "domain_id": str(source_domain_id)})
-                for story in stories_cursor.to_list(length=100):
+                for story in list(stories_cursor):
                     del story['_id']
                     story['project_id'] = "{}".format(new_project.inserted_id)
                     story['domain_id'] = "{}".format(new_domain.inserted_id)
