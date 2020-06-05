@@ -3,7 +3,6 @@ import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
 import { TryNowLoadService } from '../common/services/try-now-load.service';
 import { ModelErrorService } from '../common/services/model-error.service';
-import { TryNowService } from '../common/services/try-now.service';
 import { ApiService } from '../common/services/apis.service';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -40,7 +39,6 @@ export class TryNowComponent implements OnInit, OnDestroy {
   constructor(public sharedDataService: SharedDataService,
               public modelErrorService: ModelErrorService,
               public tryNowLoadService: TryNowLoadService,
-              public tryNowService: TryNowService,
               public apiService: ApiService) { }
 
   ngOnInit() {

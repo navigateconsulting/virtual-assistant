@@ -31,7 +31,7 @@ table {
     width: 1%;
 }
 .mat-column-project_description {
-    width: 27%;
+    width: 21%;
 }
 .mat-column-padding2{
     width: 1%;
@@ -40,7 +40,7 @@ table {
     width: 10%;
 }
 .mat-column-state {
-    width: 5%;
+    width: 10%;
 }
 .mat-column-source {
     width: 6%;
@@ -58,7 +58,7 @@ table {
     width: 5%;
 }
 .mat-column-properties {
-    width: 5%;
+    width: 6%;
 }
 .mat-column-export {
     width: 5%;
@@ -73,8 +73,8 @@ table {
     text-decoration: underline;
     cursor: pointer;
 }
-.edit_remove {
-    cursor: pointer;
+svg {
+    vertical-align: initial !important;
 }
 .modify_content {
     position: fixed;

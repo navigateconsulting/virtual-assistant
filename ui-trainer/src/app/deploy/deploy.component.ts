@@ -9,7 +9,6 @@ import { ModelErrorService } from '../common/services/model-error.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 
 import { DeployModelComponent } from '../common/modals/deploy-model/deploy-model.component';
-import { DeployService } from '../common/services/deploy.service';
 import { ApiService } from '../common/services/apis.service';
 
 @Component({
@@ -24,7 +23,6 @@ export class DeployComponent implements OnInit, OnDestroy {
 
   constructor(public dialog: MatDialog,
               public apiService: ApiService,
-              public deployService: DeployService,
               public overlayService: OverlayService,
               public modelErrorService: ModelErrorService,
               public sharedDataService: SharedDataService,
