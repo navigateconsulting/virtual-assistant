@@ -35,10 +35,11 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
               public notificationsService: NotificationsService) { }
 
   ngOnInit() {
+    this.apiService.forceResponseDetailsCacheReload('reset');
     this.text_entities = new Array<string>();
     this.text_entities_backup = new Array<string>();
     this.getEntities();
-    this.getResponseDetails();
+    this.forceReload();
     this.sharedDataService.setSharedData('activeTabIndex', '1', constant.MODULE_COMMON);
   }
 

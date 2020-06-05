@@ -116,7 +116,7 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
       if (actions) {
         this.actions = actions;
         this.convertToResponseTextArray();
-        this.getStory();
+        this.forceReload();
       }
     },
     err => console.error('Observer got an error: ' + err),
@@ -160,6 +160,7 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
 
   convertToResponseTextArray() {
     const responses_text_arr = new Array<object>();
+    console.log(this.responses);
     this.responses.forEach(function (response) {
       if (response.text_entities !== undefined) {
         const response_text_entities = response.text_entities;
@@ -507,6 +508,10 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
 
   forceReload() {
     this.apiService.forceStoryDetailsCacheReload('reset');
+    this.apiService.forceActionsCacheReload('reset');
+    this.apiService.forceEntitiesCacheReload('reset');
+    this.apiService.forceIntentsCacheReload('reset');
+    this.apiService.forceResponsesCacheReload('reset');
     this.getStory();
   }
 

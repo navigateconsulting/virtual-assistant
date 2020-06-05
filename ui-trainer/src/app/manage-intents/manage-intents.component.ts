@@ -49,7 +49,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     this.text_entities = new Array<object>();
     this.text_entities_backup = new Array<object>();
     this.getEntities();
-    this.getIntentDetails();
+    this.forceReload();
     this.sharedDataService.setSharedData('activeTabIndex', '0', constant.MODULE_COMMON);
   }
 
