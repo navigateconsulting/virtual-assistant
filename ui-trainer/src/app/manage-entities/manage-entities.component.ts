@@ -5,9 +5,8 @@ import { AddEntityComponent } from '../common/modals/add-entity/add-entity.compo
 import { EditEntityComponent } from '../common/modals/edit-entity/edit-entity.component';
 import { MatDialog } from '@angular/material';
 import { MatInput } from '@angular/material/input';
-import { EntitiesDataService } from '../common/services/entities-data.service';
 import { NotificationsService } from '../common/services/notifications.service';
-import { Subscription } from 'rxjs';
+import { ApiService } from '../common/services/apis.service';
 
 declare var adjustEntityScroll: Function;
 
@@ -33,33 +32,25 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
   @Input() projectObjectId: string;
   @ViewChild('entityName') entityNameInput: MatInput;
 
-  private subscription: Subscription;
-
   constructor(public dialog: MatDialog,
-              private entities_service: EntitiesDataService,
+              public apiService: ApiService,
               public notificationsService: NotificationsService) { }
 
   ngOnInit() {
     this.entities = this.entities_backup = new Array<object>();
-    this.subscription = new Subscription();
     this.getEntities();
     adjustEntityScroll();
     this.entityNameInput.focus();
   }
 
   getEntities() {
-    this.entities_service.createEntitiesRoom();
-    this.entities_service.getEntities({project_id: this.projectObjectId}).subscribe(entities => {
-      this.entities = this.entities_backup = entities;
+    this.apiService.requestEntities(this.projectObjectId).subscribe(entities => {
+      if (entities) {
+        this.entities = this.entities_backup = entities;
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
-
-    this.subscription.add(this.entities_service.getEntityAlerts().subscribe(entities => {
-      this.notificationsService.showToast(entities);
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification')));
   }
 
   addEntity(event: MatChipInputEvent): void {
@@ -86,7 +77,14 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
           if (entity_details) {
             if (Object.keys(entity_details).length !== 0) {
               entity_details['entity_name'] = value.trim();
-              this.entities_service.createEntity(entity_details);
+              this.apiService.createEntity(entity_details, this.projectObjectId).subscribe(result => {
+                if (result) {
+                  this.notificationsService.showToast(result);
+                  this.forceReload();
+                }
+              },
+              err => console.error('Observer got an error: ' + err),
+              () => console.log('Observer got a complete notification'));
               adjustEntityScroll();
             }
           }
@@ -112,10 +110,23 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(entity_details => {
       if (entity_details) {
         if (typeof entity_details === 'string') {
-          entity_details = {project_id: this.projectObjectId, object_id: entity_details};
-          this.entities_service.deleteEntity(entity_details);
+          this.apiService.deleteEntity(entity_details, this.projectObjectId).subscribe(result => {
+            if (result) {
+              this.notificationsService.showToast(result);
+              this.forceReload();
+            }
+          },
+          err => console.error('Observer got an error: ' + err),
+          () => console.log('Observer got a complete notification'));
         } else {
-          this.entities_service.editEntity(entity_details);
+          this.apiService.editEntity(entity_details, this.projectObjectId).subscribe(result => {
+            if (result) {
+              this.notificationsService.showToast(result);
+              this.forceReload();
+            }
+          },
+          err => console.error('Observer got an error: ' + err),
+          () => console.log('Observer got a complete notification'));
         }
       }
     });
@@ -132,8 +143,13 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
     });
   }
 
+  forceReload() {
+    this.apiService.forceEntitiesCacheReload('reset');
+    this.getEntities();
+  }
+
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.apiService.forceEntitiesCacheReload('finish');
     this.dialog.closeAll();
   }
 }

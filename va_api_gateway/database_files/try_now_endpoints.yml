@@ -1,0 +1,8 @@
+action_endpoint:
+  url: "http://action_server:5055/webhook"
+tracker_store:
+  store_type: mongod
+  url: mongodb://mongodb:27017
+  db: eva_platform
+  auth_source: admin
+  collection: conversations

@@ -1,23 +1,25 @@
 import aiofiles
 import json
 import yaml
-from models import db, ProjectsModel, DomainsModel, IntentsModel, StoryModel, ResponseModel, EntityModel, CustomActionsModel, ValidateData
+from models import db, ProjectsModel, DomainsModel, IntentsModel, StoryModel, \
+    ResponseModel, EntityModel, CustomActionsModel, ValidateData, IntentDetailModel, StoryDetailModel, ResponseDetailModel
 import asyncio
 import os
 import shutil
 
-# TODO Do files need to be split by domain ? or combine them under common files after checking if domain is to be exported or not
-
 
 # noinspection PyMethodMayBeStatic
-class ExportProject:
+class Export:
 
     def __init__(self):
         self.ProjectsModel = ProjectsModel()
         self.DomainModel = DomainsModel()
         self.IntentsModel = IntentsModel()
+        self.IntentDetailModel = IntentDetailModel()
         self.StoryModel = StoryModel()
+        self.StoryDetailModel = StoryDetailModel()
         self.ResponseModel = ResponseModel()
+        self.ResponseDetailModel = ResponseDetailModel()
         self.EntityModel = EntityModel()
         self.CustomActionsModel = CustomActionsModel()
         self.ValidateData = ValidateData()
@@ -32,14 +34,14 @@ class ExportProject:
         self.master_domain_templates = ""
         self.master_domain_entities = ""
 
-    async def reset_globals(self, sid):
+    async def reset_globals(self):
         self.master_nlu = {"rasa_nlu_data": {"common_examples": []}}
         self.master_stories = ""
         self.master_domain_intents = ""
         self.master_domain_actions = ""
         self.master_domain_templates = ""
         self.master_domain_entities = ""
-        self.session_id = sid
+        self.session_id = ""
 
     async def clean_up(self, sid):
         print("Cleaning up on session disconnect for session ID {}".format(sid))
@@ -48,47 +50,34 @@ class ExportProject:
             shutil.rmtree(self.project_base_path + sid)
         return 1
 
-    async def validate_project(self, project_id):
+    def call_main(self, project_id):
 
-        # Check 1
-        # Project should have atleast 1 Intent Response Entity and Story defined.
-        result = await self.ValidateData.validate_data(project_id)
-        return result
+        return asyncio.run(self.main(project_id))
 
-    async def main(self, sid, project_id, model_path):
+    async def main(self, project_id):
         # Invoke Method to start parallel activity
 
-        print("Validating the project data for any issues for project ID {}".format(project_id))
-
-        result = await self.validate_project(project_id)
-
-        if result is not '':
-            return result
         print("Starting export for project  ID {}".format(project_id))
 
-        if model_path == 'SESSION':
-            #self.project_base_path = CONFIG.get('api_gateway', 'SESSION_MODEL_PATH')
-            if not os.path.exists('./try_now_sessions/'):
-                os.makedirs('./try_now_sessions/')
-            self.project_base_path = './try_now_sessions/'
-            self.project_home = self.project_base_path + sid
+        if not os.path.exists('/rasa_projects/'):
+            os.makedirs('/rasa_projects/')
+        self.project_base_path = '/rasa_projects/'
+        self.project_home = self.project_base_path + project_id
 
-        else:
-            #self.project_base_path = CONFIG.get('api_gateway', 'DEPLOY_MODEL_PATH')
-            if not os.path.exists('/app/models/'):
-                os.makedirs('/app/models/')
-            self.project_base_path = '/app/models/'
-            self.project_home = self.project_base_path + project_id
+        await self.reset_globals()
 
-        await self.reset_globals(sid)
-
-        if os.path.isdir(self.project_base_path+sid):
+        if os.path.isdir(self.project_home):
             print("Directory already exists , Empty the directory")
-            print("Working on project home {}".format(self.project_base_path + sid))
-            shutil.rmtree(self.project_base_path+sid)
-
+            print("Working on project home {}".format(self.project_home))
+            try:
+                shutil.rmtree(self.project_home+'/data')
+                shutil.rmtree(self.project_home + '/skills')
+                os.remove(self.project_home + '/config.yml')
+                os.remove(self.project_home + '/domain.yml')
+            except FileNotFoundError:
+                print("Folder already clear")
         else:
-            print("Working on project home {}".format(self.project_base_path + sid))
+            print("Working on project home {}".format(self.project_home))
 
         if not os.path.exists(self.project_home):
             os.mkdir(self.project_home)
@@ -98,18 +87,25 @@ class ExportProject:
         print(result)
 
     async def start_export(self, project_id):
-        project_details = await self.ProjectsModel.get_a_project(project_id)
-        project_details = project_details[0]
+        project_details = self.ProjectsModel.get_project_details(project_id)
         print("Project Details Sent*********************", project_details)
-        domain_details = await self.DomainModel.get_domains(project_id)
+
+        domain_details = self.DomainModel.get_all_domains(project_id)
         domains_list = []
 
         # Makefile file and folder structures
         for domain in domain_details:
             domain_id = domain['_id']['$oid']
             domains_list.append([domain_id, domain['domain_name']])
+
+            # check for path for skills folder
             if not os.path.exists(self.project_home+'/skills/'+domain['domain_name']+'/data'):
                 os.makedirs(self.project_home+'/skills/'+domain['domain_name']+'/data')
+
+            # check for path for Data folder
+            if not os.path.exists(self.project_home+'/data'):
+                os.makedirs(self.project_home+'/data')
+
             result = await self.write_domain_file(project_id, domain_id, domain['domain_name'])
 
         # Starting export of each Domain in Parallel - This is disabled till multi skills is proven
@@ -148,22 +144,6 @@ class ExportProject:
             await out.write("# Configuration for Rasa NLU & Core." + "\n\n")
             print(yaml.dump(yaml.load(json.dumps(project_details['configuration'])), default_flow_style=False) + "\n")
             await out.write(yaml.dump(yaml.load(json.dumps(project_details['configuration'])), default_flow_style=False) + "\n")
-            # await out.write("language: en" + "\n")
-            # await out.write("pipeline: supervised_embeddings" + "\n")
-
-            # await out.write("# Configuration for Rasa Core." + "\n\n")
-            # await out.write("policies:" + "\n")
-            # await out.write("  - name: KerasPolicy" + "\n")
-            # await out.write("    epochs: 150" + "\n")
-            # await out.write("    max_history: 4" + "\n")
-            # await out.write("  - name: MemoizationPolicy" + "\n")
-            # await out.write("  - name: TwoStageFallbackPolicy" + "\n")
-            # await out.write("    nlu_threshold: 0.3" + "\n")
-            # await out.write("    core_threshold: 0.3" + "\n")
-            # await out.write("    fallback_core_action_name: ""action_default_fallback""" + "\n")
-            # await out.write("    fallback_nlu_action_name: ""action_default_fallback""" + "\n")
-            # await out.write("    deny_suggestion_intent_name: ""negative""" + "\n")
-            # await out.write("  - name: MappingPolicy" + "\n")
             await out.flush()
 
         return result
@@ -181,11 +161,11 @@ class ExportProject:
     async def export_nlu_data(self, project_id, domain_id, domain_name):
         print("Exporting NLU Data {} {}".format(project_id, domain_id))
 
-        intents_list = await self.IntentsModel.get_intents({"project_id": project_id, "domain_id": domain_id})
+        intents_list = self.IntentsModel.get_intents(project_id, domain_id)
         base_nlu_stub = {"rasa_nlu_data": {"common_examples": []}}
 
         for intents in intents_list:
-            intent_details = await self.IntentsModel.get_intent_details({'object_id': intents['_id']['$oid']})
+            intent_details = self.IntentDetailModel.get_intent_details(intents['_id']['$oid'])
             for intent in intent_details['text_entities']:
                 json_record = {"text": intent['text'],
                                "intent": intents['intent_name'],
@@ -198,13 +178,13 @@ class ExportProject:
             await out.flush()
 
     async def export_stories(self, project_id, domain_id, domain_name):
-        stories_list = await self.StoryModel.get_stories({"project_id": project_id, "domain_id": domain_id})
+        stories_list = self.StoryModel.get_stories(project_id, domain_id)
 
         async with aiofiles.open(self.project_home+'/skills/'+domain_name+'/data/stories.md', "w") as out:
             print("Writing files ")
             entity_list = None
             for stories in stories_list:
-                story_detail = await self.StoryModel.get_only_story_details({'object_id': stories['_id']['$oid']})
+                story_detail = self.StoryDetailModel.get_story_details(stories['_id']['$oid'])
                 await out.write("##"+stories['story_name']+"\n")
                 self.master_stories = self.master_stories + "##"+stories['story_name']+"\n"
                 for story_rec in story_detail['story']:
@@ -231,7 +211,7 @@ class ExportProject:
 
         # Writing intents List, responses list and responses details  in Domains.yml
 
-        intents_list = await self.IntentsModel.get_intents({"project_id": project_id, "domain_id": domain_id})
+        intents_list = self.IntentsModel.get_intents(project_id, domain_id)
 
         async with aiofiles.open(self.project_home + '/skills/' + domain_name + '/domain.yml', "w") as out:
             await out.write("intents:"+"\n")
@@ -241,7 +221,7 @@ class ExportProject:
             await out.write("\n")
             await out.write("\n")
 
-            slots_list = await self.EntityModel.get_entities({"project_id": project_id})
+            slots_list = self.EntityModel.get_entities(project_id)
 
             for slots in slots_list:
                 if slots['entity_name'] not in self.master_domain_entities:
@@ -250,7 +230,7 @@ class ExportProject:
                 else:
                     print("Entity Already exists ")
 
-            response_list = await self.ResponseModel.get_responses({"project_id": project_id, "domain_id": domain_id})
+            response_list = self.ResponseModel.get_responses(project_id, domain_id)
 
             await out.write("actions:"+"\n")
             for resp in response_list:
@@ -268,7 +248,7 @@ class ExportProject:
                                'action_default_ask_rephrase',
                                'action_back']
 
-            custom_actions = await self.CustomActionsModel.get_custom_actions()
+            custom_actions = self.CustomActionsModel.get_all_custom_actions()
 
             for record in custom_actions:
                 if record['action_name'] not in default_actions:
@@ -283,7 +263,7 @@ class ExportProject:
             for response in response_list:
                 await out.write("  "+response['response_name']+":\n")
                 self.master_domain_templates = self.master_domain_templates + "  "+response['response_name']+":\n"
-                response_detail = await self.ResponseModel.get_response_details({"object_id": response['_id']['$oid']})
+                response_detail = self.ResponseDetailModel.get_response_details(response['_id']['$oid'])
                 for resp_value in response_detail['text_entities']:
                     await out.write("  - "+"text: "+f'"'+resp_value+f'"')
                     await out.write("\n")

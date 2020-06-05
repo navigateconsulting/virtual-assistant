@@ -1,15 +1,14 @@
 import { Component, OnInit, Input, ViewEncapsulation, ViewChild, OnDestroy } from '@angular/core';
 import { MatAutocompleteTrigger } from '@angular/material';
 import { FormControl, FormArray, FormGroup } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ChooseEntityComponent } from '../common/modals/choose-entity/choose-entity.component';
-import { EntitiesDataService } from '../common/services/entities-data.service';
-import { WebSocketService } from '../common/services/web-socket.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
 import { NotificationsService } from '../common/services/notifications.service';
+import { ApiService } from '../common/services/apis.service';
 
 declare var selectText: Function;
 declare var highlightText: Function;
@@ -35,11 +34,8 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   show_invalid_entity_error = false;
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
 
-  private subscription: Subscription = new Subscription();
-
   constructor(public dialog: MatDialog,
-              private entities_service: EntitiesDataService,
-              private webSocketService: WebSocketService,
+              public apiService: ApiService,
               public sharedDataService: SharedDataService,
               public notificationsService: NotificationsService) {}
 
@@ -53,37 +49,35 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     this.text_entities = new Array<object>();
     this.text_entities_backup = new Array<object>();
     this.getEntities();
-    this.getIntentDetails();
+    this.forceReload();
     this.sharedDataService.setSharedData('activeTabIndex', '0', constant.MODULE_COMMON);
   }
 
   getEntities() {
-    this.entities_service.createEntitiesRoom();
-    this.entities_service.getEntities({project_id: this.projectObjectId}).subscribe(entities => {
-      this.entities = entities;
-      this.entityfilteredOptions = this.entitiesControl.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
+    // this.entities_service.createEntitiesRoom();
+    this.apiService.requestEntities(this.projectObjectId).subscribe(entities => {
+      if (entities) {
+        this.entities = entities;
+        this.entityfilteredOptions = this.entitiesControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value))
+        );
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
   }
 
   getIntentDetails() {
-    this.webSocketService.createIntentRoom('intent_' + this.intentObjectId);
-    this.webSocketService.getIntentDetails({object_id: this.intentObjectId}, 'intent_' + this.intentObjectId).subscribe(intent_details => {
-      this.currentIntent = intent_details;
-      this.text_entities = this.text_entities_backup = this.currentIntent.text_entities;
+    this.apiService.requestIntentDetails(this.intentObjectId).subscribe(intent_details => {
+      if (intent_details) {
+        console.log(intent_details);
+        this.currentIntent = intent_details;
+        this.text_entities = this.text_entities_backup = this.currentIntent.text_entities;
+      }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
-
-    this.subscription.add(this.webSocketService.getIntentDetailsAlerts().subscribe(intent_details => {
-      this.notificationsService.showToast(intent_details);
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification')));
   }
 
   applyMapFilter(filterValue: string) {
@@ -112,7 +106,14 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
         }
         this.new_intent_text = new_intent_text_arr.join(' ');
         // tslint:disable-next-line: max-line-length
-        this.webSocketService.createIntentText({object_id: this.intentObjectId, text: this.new_intent_text, entities: []}, 'intent_' + this.intentObjectId);
+        this.apiService.createIntentText({object_id: this.intentObjectId, text: this.new_intent_text, entities: []}, this.intentObjectId).subscribe(result => {
+          if (result) {
+            this.notificationsService.showToast(result);
+            this.forceReload();
+          }
+        },
+        err => console.error('Observer got an error: ' + err),
+        () => console.log('Observer got a complete notification'));
       } else {
         this.notificationsService.showToast({status: 'Error', message: 'Intent Text Already Exists'});
       }
@@ -124,8 +125,14 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   }
 
   removeIntentTextElement(index_text: string, intent_text_entities: Array<string>) {
-    // tslint:disable-next-line: max-line-length
-    this.webSocketService.deleteIntentText({object_id: this.intentObjectId, text: index_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
+    this.apiService.deleteIntentText({object_id: this.intentObjectId, text: index_text, entities: intent_text_entities}, this.intentObjectId).subscribe(result => {
+      if (result) {
+        this.notificationsService.showToast(result);
+        this.forceReload();
+      }
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   getEntityValue(entity_string: string) {
@@ -162,8 +169,15 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
                 this.entityValue['value'] = entity_value.chosen_entity_value;
                 this.entityValue['entity'] = this.entity_value;
                 intent_text_entities.push(this.entityValue);
-                // tslint:disable-next-line: max-line-length
-                this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
+                // this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
+                this.apiService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, this.intentObjectId).subscribe(result => {
+                  if (result) {
+                    this.notificationsService.showToast(result);
+                    this.forceReload();
+                  }
+                },
+                err => console.error('Observer got an error: ' + err),
+                () => console.log('Observer got a complete notification'));
                 toggleIntentEntity(intent_text_index);
               }
             });
@@ -171,8 +185,14 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
             delete this.entityValue['text_id'];
             this.entityValue['entity'] = this.entity_value;
             intent_text_entities.push(this.entityValue);
-            // tslint:disable-next-line: max-line-length
-            this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
+            this.apiService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, this.intentObjectId).subscribe(result => {
+              if (result) {
+                this.notificationsService.showToast(result);
+                this.forceReload();
+              }
+            },
+            err => console.error('Observer got an error: ' + err),
+            () => console.log('Observer got a complete notification'));
             toggleIntentEntity(intent_text_index);
           }
         }
@@ -191,8 +211,14 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
               delete this.entityValue['text_id'];
               this.entityValue['entity'] = entity_value.chosen_entity;
               intent_text_entities.push(this.entityValue);
-              // tslint:disable-next-line: max-line-length
-              this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
+              this.apiService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, this.intentObjectId).subscribe(result => {
+                if (result) {
+                  this.notificationsService.showToast(result);
+                  this.forceReload();
+                }
+              },
+              err => console.error('Observer got an error: ' + err),
+              () => console.log('Observer got a complete notification'));
               toggleIntentEntity(intent_text_index);
             }
           });
@@ -246,8 +272,14 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
 
   removeEntityElement(intent_text_index: number, intent_text: string, intent_text_entities: Array<string>, entity_index: number) {
     intent_text_entities.splice(entity_index, 1);
-    // tslint:disable-next-line: max-line-length
-    this.webSocketService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, 'intent_' + this.intentObjectId);
+    this.apiService.editIntentText({object_id: this.intentObjectId, doc_index: '' + intent_text_index, text: intent_text, entities: intent_text_entities}, this.intentObjectId).subscribe(result => {
+      if (result) {
+        this.notificationsService.showToast(result);
+        this.forceReload();
+      }
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
     toggleIntentEntity(intent_text_index);
   }
 
@@ -271,8 +303,13 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
+  forceReload() {
+    this.apiService.forceIntentDetailsCacheReload('reset');
+    this.getIntentDetails();
+  }
+
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.apiService.forceIntentDetailsCacheReload('finish');
     this.dialog.closeAll();
   }
 }

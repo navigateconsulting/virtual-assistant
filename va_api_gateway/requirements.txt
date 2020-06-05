@@ -1,0 +1,11 @@
+Flask
+flask_caching
+gunicorn
+flask_restful
+redis
+pymongo
+flask-cors
+aiofiles
+pyyaml
+celery[redis]
+rasa==1.10.1

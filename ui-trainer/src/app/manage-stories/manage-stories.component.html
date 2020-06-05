@@ -1,7 +1,7 @@
 <div class="story-container">
   <div class="row">
     <div class="col-md-12">
-      <div *ngIf="currentStory" class="place_div_center">
+      <div class="place_div_center">
         <form [formGroup]="storyForm">
           <div class="row story-description-box">
             <div class="col-md-12">
@@ -158,12 +158,12 @@
             <hr />
             <div class="row story-buttons-box">
               <div class="col-md-6 text-left add-intent-button">
-                <button  mat-mini-fab class="add-intent-color" matTooltip="Add Intent" (click)="addIntentToStory()">
+                <button  mat-mini-fab class="add-intent-color" matTooltip="Add Intent" (click)="addIntentResponseDetailsToStory('intent')">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
               <div class="col-md-6 text-right add-response-button">
-                <button  mat-mini-fab class="add-response-color" [disabled]="disable_response" matTooltip="Add Response" (click)="addResponseToStory()">
+                <button  mat-mini-fab class="add-response-color" [disabled]="disable_response" matTooltip="Add Response" (click)="addIntentResponseDetailsToStory('response')">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>

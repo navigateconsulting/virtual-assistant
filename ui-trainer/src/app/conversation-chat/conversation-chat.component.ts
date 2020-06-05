@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { constant } from '../../environments/constants';
-import { WebSocketService } from '../common/services/web-socket.service';
+import { ApiService } from '../common/services/apis.service';
 
 declare var changeRowBackgroundColor: Function;
 
@@ -16,7 +16,7 @@ export class ConversationChatComponent implements OnInit {
   conversation_id: string;
   chats: Array<object>;
   chats_backup: Array<object>;
-  conversation_json: Array<object>;
+  conversation_json: any;
   showUserBotCardDetails: boolean;
   showUserPredictionsDetails: boolean;
   storyCode: any;
@@ -28,9 +28,9 @@ export class ConversationChatComponent implements OnInit {
   userBotCardConfidence: string;
 
   constructor(public sharedDataService: SharedDataService,
-    public _router: Router,
-    public route: ActivatedRoute,
-    public webSocketService: WebSocketService) { }
+              public _router: Router,
+              public route: ActivatedRoute,
+              public apiService: ApiService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -40,17 +40,17 @@ export class ConversationChatComponent implements OnInit {
       } else {
         this.showUserBotCardDetails = false;
         this.showUserPredictionsDetails = true;
-        this.conversation_json = new Array<object>();
         this.conversation_json = this.sharedDataService.getSharedData('conversation_json', constant.MODULE_COMMON)[0];
         if (this.conversation_json !== undefined) {
           delete this.conversation_json['_id'];
           delete this.conversation_json['sender_id'];
           this.getConversationChat();
         } else {
-          this.webSocketService.createConversationsRoom('aconversation');
-          this.webSocketService.getAConversation('aconversation', this.conversation_id).subscribe(conversation => {
-            this.conversation_json = conversation;
-            this.getConversationChat();
+          this.apiService.requestConversationChats(this.conversation_id).subscribe(chats => {
+            if (chats) {
+              this.conversation_json = chats;
+              this.getConversationChat();
+            }
           },
           err => console.error('Observer got an error: ' + err),
           () => console.log('Observer got a complete notification'));

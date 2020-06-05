@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { WebSocketService } from '../common/services/web-socket.service';
+import { NotificationsService } from '../common/services/notifications.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmRefreshComponent } from '../common/modals/confirm-refresh/confirm-refresh.component';
+import { ApiService } from '../common/services/apis.service';
 
 @Component({
   selector: 'app-applications',
@@ -11,7 +12,8 @@ import { ConfirmRefreshComponent } from '../common/modals/confirm-refresh/confir
 export class ApplicationsComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
-              private webSocketService: WebSocketService) { }
+              public apiService: ApiService,
+              private notificationsService: NotificationsService) { }
 
   ngOnInit() {
   }
@@ -20,12 +22,14 @@ export class ApplicationsComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmRefreshComponent);
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
-        this.webSocketService.refreshAppDB().subscribe((resp: any) => {
+        this.apiService.refreshAppDB().subscribe(result => {
+          if(result) {
+            this.notificationsService.showToast(result);
+          }
         },
         err => console.error('Observer got an error: ' + err),
         () => {console.log('Observer got a complete notification')});
       }
-      window.location.reload();
     });
   }
 

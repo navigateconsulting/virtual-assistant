@@ -31,7 +31,7 @@ table {
     width: 1%;
 }
 .mat-column-project_description {
-    width: 27%;
+    width: 21%;
 }
 .mat-column-padding2{
     width: 1%;
@@ -58,9 +58,12 @@ table {
     width: 5%;
 }
 .mat-column-properties {
-    width: 5%;
+    width: 6%;
 }
 .mat-column-export {
+    width: 5%;
+}
+.mat-column-train {
     width: 5%;
 }
 .mat-row:hover {
@@ -70,8 +73,8 @@ table {
     text-decoration: underline;
     cursor: pointer;
 }
-.edit_remove {
-    cursor: pointer;
+svg {
+    vertical-align: initial !important;
 }
 .modify_content {
     position: fixed;
@@ -99,6 +102,9 @@ table {
 }
 input[type="file"] {
     display: none;
+}
+.train-project {
+    color: #1C90D1;
 }
 .upload-project {
     box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);

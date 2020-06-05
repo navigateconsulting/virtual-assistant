@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { WebSocketService } from '../common/services/web-socket.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
 import { TryNowLoadService } from '../common/services/try-now-load.service';
 import { ModelErrorService } from '../common/services/model-error.service';
-import { TryNowService } from '../common/services/try-now.service';
+import { ApiService } from '../common/services/apis.service';
+import { v4 as uuidv4 } from 'uuid';
 
 declare var adjustTryNowScroll: Function;
 declare var changeRowBackgroundColor: Function;
@@ -36,31 +36,30 @@ export class TryNowComponent implements OnInit, OnDestroy {
   slots: any;
   session_id: string;
 
-  constructor(public webSocketService: WebSocketService,
-              public sharedDataService: SharedDataService,
+  constructor(public sharedDataService: SharedDataService,
               public modelErrorService: ModelErrorService,
               public tryNowLoadService: TryNowLoadService,
-              public tryNowService: TryNowService) { }
+              public apiService: ApiService) { }
 
   ngOnInit() {
     this.projectObjectId = this.sharedDataService.getSharedData('projectObjectId', constant.MODULE_COMMON);
     this.tryNowLoadService.spin$.next(true);
     this.showUserBotCardDetails = false;
     this.showUserPredictionsDetails = true;
-    this.session_id = this.webSocketService.getSessionId();
+    this.session_id = uuidv4();
     this.tryNowProject();
   }
 
   tryNowProject() {
-    this.tryNowService.tryNow(this.session_id, this.projectObjectId).subscribe(response => {
-      if (response.status === 'Success') {
+    this.apiService.tryNowTrainedModel(sessionStorage.getItem(this.projectObjectId)).subscribe(response => {
+      if (response['Status'] === 'Success') {
         this.tryNowLoadService.spin$.next(false);
         this.chats = new Array<object>();
         this.chats_backup = new Array<object>();
         this.chats.push({event: 'action', name: 'action_listen'});
-      } else if (response.status === 'Error') {
+      } else {
         this.tryNowLoadService.spin$.next(false);
-        this.sharedDataService.setSharedData('showErrorText', response.message, constant.MODULE_MODEL);
+        this.sharedDataService.setSharedData('showErrorText', 'There was a error.', constant.MODULE_MODEL);
         this.modelErrorService.modelError$.next(true);
       }
     },
@@ -79,7 +78,7 @@ export class TryNowComponent implements OnInit, OnDestroy {
       this.userChatMessage = send_message;
     }
     if (this.userChatMessage.trim() !== '') {
-      this.tryNowService.chatNow(this.session_id, this.userChatMessage).subscribe(response => {
+      this.apiService.tryNowModel(this.session_id, this.userChatMessage).subscribe(response => {
         if (response) {
           this.chats = this.chats_backup = this.storyCode = response['tracker-store']['events'];
           // tslint:disable-next-line: max-line-length

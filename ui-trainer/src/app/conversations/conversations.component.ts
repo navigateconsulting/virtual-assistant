@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { Observable, Subscription } from 'rxjs';
-import { WebSocketService } from '../common/services/web-socket.service';
 import { NotificationsService } from '../common/services/notifications.service';
 import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
 import { Router } from '@angular/router';
+import { ApiService } from '../common/services/apis.service';
 
 @Component({
   selector: 'app-conversations',
@@ -14,9 +13,7 @@ import { Router } from '@angular/router';
 })
 export class ConversationsComponent implements OnInit, OnDestroy {
 
-  private subscription: Subscription = new Subscription();
-
-  constructor(public webSocketService: WebSocketService,
+  constructor(public apiService: ApiService,
               public notificationsService: NotificationsService,
               public sharedDataService: SharedDataService,
               public _router: Router) { }
@@ -38,14 +35,15 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   }
 
   getConversations() {
-    this.webSocketService.createConversationsRoom('conversation');
-    this.webSocketService.getConversations('conversation').subscribe(conversations => {
-      this.conversations_json = this.conversations_json_backup = conversations;
-      this.conversationsDataSource = new MatTableDataSource(this.conversations_json);
-      this.conversationsDataSource.paginator = this.paginator;
+    this.apiService.requestConversations().subscribe(conversations => {
+      if (conversations) {
+        this.conversations_json = this.conversations_json_backup = conversations;
+        this.conversationsDataSource = new MatTableDataSource(this.conversations_json);
+        this.conversationsDataSource.paginator = this.paginator;
+      }
     },
-      err => console.error('Observer got an error: ' + err),
-      () => console.log('Observer got a complete notification'));
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
   applyConversationsFilter(filterValue: string) {
@@ -81,8 +79,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.webSocketService.leaveConversationsRoom('conversation');
+    this.apiService.forceConversationsCacheReload('finish');
   }
 
 }

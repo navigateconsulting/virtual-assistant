@@ -3,14 +3,12 @@ import { NgModule } from '@angular/core';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
-import { FooterComponent } from './common/footer/footer.component';
 import { HeaderComponent } from './common/header/header.component';
 import { HomeComponent } from './home/home.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
@@ -21,7 +19,6 @@ import { ManageIntentsComponent } from './manage-intents/manage-intents.componen
 import { AddEntityComponent } from './common/modals/add-entity/add-entity.component';
 import { EditEntityComponent } from './common/modals/edit-entity/edit-entity.component';
 import { ChooseEntityComponent } from './common/modals/choose-entity/choose-entity.component';
-import { EntitiesDataService } from './common/services/entities-data.service';
 import { ManageResponsesComponent } from './manage-responses/manage-responses.component';
 import { ManageStoriesComponent } from './manage-stories/manage-stories.component';
 import { AddEntityValueComponent } from './common/modals/add-entity-value/add-entity-value.component';
@@ -69,7 +66,6 @@ import { AuthService } from './common/services/auth.service';
 @NgModule({
   declarations: [
     AppComponent,
-    FooterComponent,
     HeaderComponent,
     HomeComponent,
     ManageDomainsComponent,
@@ -155,13 +151,11 @@ import { AuthService } from './common/services/auth.service';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    DragDropModule,
     FlexLayoutModule,
     OverlayModule,
     ToastrModule.forRoot()
   ],
   providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}, 
-    EntitiesDataService,
     AuthGuard,
     AuthService
   ],
