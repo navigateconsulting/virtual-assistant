@@ -48,7 +48,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.domains_json = new Array<object>();
     this.domains_json_backup = new Array<object>();
-    this.getDomains();
+    this.forceReload();
   }
 
   getDomains() {

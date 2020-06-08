@@ -157,11 +157,14 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   getModelTrainResult(projectObjectId: string, taskId: string) {
     this.apiService.getModelTrainingResult(taskId).subscribe(response => {
-      if (response['Result'] !== '') {
-        sessionStorage.setItem(projectObjectId, response['Result']);
-        this.notificationsService.showToast({status: 'Success', message: 'Model Training Complete. Ready To Try Now'});
-        this.finishTraining();
+      console.log(response);
+      if (response['Status'] === 'Success') {
+        sessionStorage.setItem(projectObjectId, response['Message']);
+        this.notificationsService.showToast({status: response['Status'], message: 'Model Training Complete.'});
+      } else if (response['Status'] === 'Error') {
+        this.notificationsService.showToast({status: response['Status'], message: response['Message']});
       }
+      this.finishTraining();
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));

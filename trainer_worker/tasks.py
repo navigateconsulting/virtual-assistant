@@ -25,7 +25,7 @@ def train_model(project_id):
 
         logger.info("Model Path " + str(model_path))
 
-        return {"Status": "Success", "message": model_path}
+        return {"Status": "Success", "Message": model_path}
 
     except Exception as e:
         logger.info("Exception while training the model " + str(e))
