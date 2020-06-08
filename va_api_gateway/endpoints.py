@@ -708,6 +708,7 @@ class LoadModel:
         logger.debug("Making Temporary Try now model Path ")
 
         model_home_path = "/".join(model_path.split('/')[:-1]) + "/" + session_id
+        os.mkdir(model_home_path)
         model_name = model_path.split('/')[-1]
         try_now_model_path = model_home_path + "/" + model_name
 
