@@ -640,6 +640,7 @@ class ImportProject(Resource):
     def post(self):
         json_data = request.get_json(force=True)
         result = ImportProjectModel.import_project(json_data)
+        r.delete("all_projects")
         return result
 
 
