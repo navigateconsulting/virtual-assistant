@@ -51,7 +51,7 @@ export class TryNowComponent implements OnInit, OnDestroy {
   }
 
   tryNowProject() {
-    this.apiService.tryNowTrainedModel(sessionStorage.getItem(this.projectObjectId)).subscribe(response => {
+    this.apiService.tryNowTrainedModel(sessionStorage.getItem(this.projectObjectId), this.session_id).subscribe(response => {
       if (response['Status'] === 'Success') {
         this.tryNowLoadService.spin$.next(false);
         this.chats = new Array<object>();

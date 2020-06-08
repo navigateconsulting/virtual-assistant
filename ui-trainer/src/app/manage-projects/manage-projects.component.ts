@@ -146,6 +146,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   }
 
   checkModelTrainStatus(projectObjectId: string, taskId: string) {
+    this.apiService.forceModelTrainingCacheReload('reset');
     this.apiService.checkModelTrainStatus(taskId).subscribe(response => {
       if (response['Status'] === 'SUCCESS') {
         this.getModelTrainResult(projectObjectId, taskId);

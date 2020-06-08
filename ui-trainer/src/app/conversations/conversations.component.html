@@ -38,7 +38,7 @@
           <ng-container matColumnDef="icon">
             <th mat-header-cell *matHeaderCellDef>Conversation Details</th>
             <td mat-cell *matCellDef="let conversation">
-              <button mat-icon-button (click)="openConversationChat(conversation.sender_id)">
+              <button mat-icon-button class="text-center project-icons" (click)="openConversationChat(conversation.sender_id)">
                 <mat-icon>details</mat-icon>
               </button>
             </td>

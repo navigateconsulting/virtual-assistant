@@ -894,8 +894,8 @@ export class ApiService {
     );
   }
 
-  tryNowTrainedModel(modelPublishPath: string) {
-    return this.http.get(this.apiURL + '/try_now?model_path=' + modelPublishPath, this.httpOptions)
+  tryNowTrainedModel(modelPublishPath: string, sessionId: string) {
+    return this.http.get(this.apiURL + '/try_now?model_path=' + modelPublishPath + '&session_id=' + sessionId, this.httpOptions)
     .pipe(
       retry(1),
       catchError(this.handleError)
