@@ -691,7 +691,7 @@ class TaskResult(Resource):
 
     def get(self, task_id):
         result = trainer_app.AsyncResult(task_id).result
-        return {"Result": str(result)}
+        return {"Status": result['Status'], "Message": result['Message']}
 
 
 class LoadModel:
