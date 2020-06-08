@@ -103,6 +103,10 @@ input[type="file"] {
 .project-icons {
     color: #1C90D1;
 }
+mat-spinner {
+    height: 20px;
+    width: 20px;
+}
 .upload-project {
     box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
     background-image: linear-gradient(to right, #19D2CC, #0968B5);
@@ -158,4 +162,7 @@ input[type="file"] {
         height: 77vh;
         overflow-y: auto;
     }
+}
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {   
+    stroke: #1C90D1;
 }
