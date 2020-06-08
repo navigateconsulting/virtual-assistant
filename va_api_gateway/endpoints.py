@@ -644,6 +644,7 @@ class ImportProject(Resource):
         return result
 
 
+# TODO Parallel trynow not working , need to fix
 # noinspection PyMethodMayBeStatic
 class TrainModel(Resource):
 
@@ -660,6 +661,11 @@ class TrainModel(Resource):
         if result != '':
             logger.debug("Validation failed for the project ")
             return {"status": "Error", "message": result}
+
+        # Set Project Status as "Training" so that all users can see model is under training
+        # Clear redis cache
+        r.delete("all_projects")
+        ProjectsModel.set_project_mode(mode="Training", project_id=project_id, model_path=None)
 
         result = Export.call_main(project_id)
         logger.debug(result)
@@ -691,6 +697,14 @@ class TaskResult(Resource):
 
     def get(self, task_id):
         result = trainer_app.AsyncResult(task_id).result
+
+        if result['Status'] == "Success":
+            # Update the model path to Projects collection
+            ProjectsModel.update_trained_model(result['Message'])
+
+        ProjectsModel.set_project_mode(mode="Done", model_path=result['Message'], project_id=None)
+        # Clear redis cache
+        r.delete("all_projects")
         return {"Status": result['Status'], "Message": result['Message']}
 
 

@@ -145,6 +145,35 @@ class ProjectsModel:
         print("Project Updated , rows modified {}".format(result))
         return {"status": "Success", "message": "Project details updated successfully "}
 
+    def update_trained_model(self, model_path):
+        model_name = model_path
+        project_id = model_path.split("/")[2]
+        logger.debug("Extracted Project ID " + str(project_id))
+
+        query = {"_id": ObjectId("{}".format(project_id))}
+        update_field = {"$set": {"model_name": model_name}}
+        result = db.projects.update_one(query, update_field)
+
+        logger.debug("Project Updated , rows modified {}".format(result))
+        return "Done"
+
+    def set_project_mode(self, mode, model_path, project_id):
+
+        if project_id is None:
+            project = model_path.split("/")[2]
+            query = {"_id": ObjectId("{}".format(project))}
+        else:
+            query = {"_id": ObjectId("{}".format(project_id))}
+
+        if mode == "Training":
+            update_field = {"$set": {"state": "Training"}}
+        else:
+            update_field = {"$set": {"state": ""}}
+
+        result = db.projects.update_one(query, update_field)
+        logger.debug("Project Updated , rows modified {}".format(result))
+        return "Done"
+
 
 # noinspection PyMethodMayBeStatic
 class CopyProjectModel:
