@@ -665,7 +665,7 @@ class TrainModel(Resource):
         # Set Project Status as "Training" so that all users can see model is under training
         # Clear redis cache
         r.delete("all_projects")
-        ProjectsModel.set_project_mode(mode="Training", project_id=project_id, model_path=None)
+        ProjectsModel.set_project_mode(mode="Training", project_id=project_id)
 
         result = Export.call_main(project_id)
         logger.debug(result)
@@ -702,7 +702,7 @@ class TaskResult(Resource):
             # Update the model path to Projects collection
             ProjectsModel.update_trained_model(result['Message'])
 
-        ProjectsModel.set_project_mode(mode="Done", model_path=result['Message'], project_id=None)
+        ProjectsModel.set_project_mode(mode="Done", project_id=result['project_id'])
         # Clear redis cache
         r.delete("all_projects")
         return {"Status": result['Status'], "Message": result['Message']}

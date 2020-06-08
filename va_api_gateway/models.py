@@ -157,13 +157,9 @@ class ProjectsModel:
         logger.debug("Project Updated , rows modified {}".format(result))
         return "Done"
 
-    def set_project_mode(self, mode, model_path, project_id):
+    def set_project_mode(self, mode, project_id):
 
-        if project_id is None:
-            project = model_path.split("/")[2]
-            query = {"_id": ObjectId("{}".format(project))}
-        else:
-            query = {"_id": ObjectId("{}".format(project_id))}
+        query = {"_id": ObjectId("{}".format(project_id))}
 
         if mode == "Training":
             update_field = {"$set": {"state": "Training"}}
