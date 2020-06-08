@@ -640,6 +640,7 @@ class ImportProject(Resource):
     def post(self):
         json_data = request.get_json(force=True)
         result = ImportProjectModel.import_project(json_data)
+        r.delete("all_projects")
         return result
 
 
@@ -690,7 +691,7 @@ class TaskResult(Resource):
 
     def get(self, task_id):
         result = trainer_app.AsyncResult(task_id).result
-        return {"Result": str(result)}
+        return {"Status": result['Status'], "Message": result['Message']}
 
 
 class LoadModel:
