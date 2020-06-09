@@ -20,9 +20,9 @@
       </button>
     </div>
     <div class="col-md-1 text-right">
-      <label class="upload-project">
+      <label class="upload-project" matTooltip="Import Project">
         <input type="file" (change)="importProject($event.target.files[0])" accept=".json,application/JSON" />
-        <mat-icon class="import-project">vertical_align_bottom</mat-icon>
+        <mat-icon class="import-project">archive</mat-icon>
       </label>
     </div>
   </div>
@@ -85,69 +85,47 @@
             <td mat-cell *matCellDef="let project">{{ project.created_by }}</td>
           </ng-container>
 
-          <ng-container matColumnDef="state">
-            <th mat-header-cell *matHeaderCellDef>State</th>
-            <td mat-cell *matCellDef="let project">{{ project.state }}</td>
-          </ng-container>
-
           <ng-container matColumnDef="source">
             <th mat-header-cell *matHeaderCellDef>Source</th>
             <td mat-cell *matCellDef="let project">{{ project.source }}</td>
           </ng-container>
 
+          <ng-container matColumnDef="state">
+            <th mat-header-cell *matHeaderCellDef>State</th>
+            <td mat-cell *matCellDef="let project">
+              <mat-spinner *ngIf="project.state==='Training'" class="train-project" [diameter]="30"></mat-spinner>
+            </td>
+          </ng-container>
+
           <ng-container matColumnDef="edit">
             <th mat-header-cell *matHeaderCellDef>Edit</th>
             <td mat-cell *matCellDef="let project">
-              <div
-                *ngIf="
-                  project.state === 'Published' || project.state === 'Archived'
+              <button class="project-icons" mat-icon-button
+                (click)="
+                  editProject(
+                    project._id.$oid,
+                    project.project_name,
+                    project.project_description
+                  )
                 "
+                [disabled]="project.state === 'Training'"
               >
-                <button mat-icon-button [disabled]="true">
-                  <mat-icon svgIcon="editDis"></mat-icon>
-                </button>
-              </div>
-              <div *ngIf="project.state === ''">
-                <button
-                  mat-icon-button
-                  (click)="
-                    editProject(
-                      project._id.$oid,
-                      project.project_name,
-                      project.project_description
-                    )
-                  "
-                >
-                  <mat-icon
-                    svgIcon="edit"
-                  ></mat-icon>
-                </button>
-              </div>
+                <mat-icon>edit</mat-icon>
+              </button>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="delete">
             <th mat-header-cell *matHeaderCellDef>Delete</th>
             <td mat-cell *matCellDef="let project">
-              <div
-                *ngIf="
-                  project.state === 'Published' || project.state === 'Archived'
-                "
+              <button
+                class="project-icons"
+                mat-icon-button
+                (click)="deleteProject(project._id.$oid)"
+                [disabled]="project.state === 'Training'"
               >
-                <button mat-icon-button [disabled]="true">
-                  <mat-icon svgIcon="deleteDis"></mat-icon>
-                </button>
-              </div>
-              <div *ngIf="project.state === ''">
-                <button
-                  mat-icon-button
-                  (click)="deleteProject(project._id.$oid)"
-                >
-                  <mat-icon
-                    svgIcon="delete"
-                  ></mat-icon>
-                </button>
-              </div>
+                <mat-icon>delete</mat-icon>
+              </button>
             </td>
           </ng-container>
 
@@ -155,12 +133,12 @@
             <th mat-header-cell *matHeaderCellDef>Copy</th>
             <td mat-cell *matCellDef="let project">
               <button
+                class="project-icons"
                 mat-icon-button
                 (click)="copyProject(project._id.$oid, project.project_name)"
+                [disabled]="project.state === 'Training'"
               >
-                <mat-icon
-                  svgIcon="copy"
-                ></mat-icon>
+                <mat-icon>file_copy</mat-icon>
               </button>
             </td>
           </ng-container>
@@ -168,7 +146,7 @@
           <ng-container matColumnDef="train">
             <th mat-header-cell *matHeaderCellDef>Train</th>
             <td mat-cell *matCellDef="let project">
-              <button mat-icon-button class="train-project" (click)="trainProject(project._id.$oid)">
+              <button mat-icon-button class="project-icons" [disabled]="project.state === 'Training'" (click)="trainProject(project._id.$oid)">
                 <mat-icon>model_training</mat-icon>
               </button>
             </td>
@@ -177,10 +155,8 @@
           <ng-container matColumnDef="try_now">
             <th mat-header-cell *matHeaderCellDef>Try Now</th>
             <td mat-cell *matCellDef="let project">
-              <button mat-icon-button (click)="tryNowProject(project)">
-                <mat-icon
-                  svgIcon="try-now"
-                ></mat-icon>
+              <button mat-icon-button class="project-icons" [disabled]="project.state === 'Training'" (click)="tryNowProject(project)">
+                <mat-icon>play_circle_outline</mat-icon>
               </button>
             </td>
           </ng-container>
@@ -188,8 +164,8 @@
           <ng-container matColumnDef="properties">
             <th mat-header-cell *matHeaderCellDef>Properties</th>
             <td mat-cell *matCellDef="let project">
-              <button mat-icon-button (click)="openProjectProperties(project._id.$oid, project.configuration)">
-                <mat-icon svgIcon="app-properties"></mat-icon>
+              <button mat-icon-button class="project-icons" [disabled]="project.state === 'Training'" (click)="openProjectProperties(project._id.$oid, project.configuration)">
+                <mat-icon>settings</mat-icon>
               </button>
             </td>
           </ng-container>
@@ -197,8 +173,8 @@
           <ng-container matColumnDef="export">
             <th mat-header-cell *matHeaderCellDef>Export</th>
             <td mat-cell *matCellDef="let project">
-              <button mat-icon-button (click)="exportProject(project.project_name)">
-                <mat-icon class="import-export">vertical_align_top</mat-icon>
+              <button mat-icon-button class="project-icons" [disabled]="project.state === 'Training'" (click)="exportProject(project.project_name)">
+                <mat-icon>unarchive</mat-icon>
               </button>
             </td>
           </ng-container>

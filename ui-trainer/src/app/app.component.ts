@@ -117,7 +117,7 @@ export class AppComponent {
   checkTokenValidity() {
     if (!this.authService.isTokenExpired()) {
       this.loggedIn = true;
-      this.router.navigate(['/applications'])
+      this.router.navigate(['/home/trainer'])
     } else {
       this.callParentApp();
     }

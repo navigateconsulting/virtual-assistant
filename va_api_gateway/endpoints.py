@@ -644,6 +644,7 @@ class ImportProject(Resource):
         return result
 
 
+# TODO Parallel trynow not working , need to fix
 # noinspection PyMethodMayBeStatic
 class TrainModel(Resource):
 
@@ -660,6 +661,11 @@ class TrainModel(Resource):
         if result != '':
             logger.debug("Validation failed for the project ")
             return {"status": "Error", "message": result}
+
+        # Set Project Status as "Training" so that all users can see model is under training
+        # Clear redis cache
+        r.delete("all_projects")
+        ProjectsModel.set_project_mode(mode="Training", project_id=project_id)
 
         result = Export.call_main(project_id)
         logger.debug(result)
@@ -691,26 +697,56 @@ class TaskResult(Resource):
 
     def get(self, task_id):
         result = trainer_app.AsyncResult(task_id).result
+
+        if result['Status'] == "Success":
+            # Update the model path to Projects collection
+            ProjectsModel.update_trained_model(result['Message'])
+
+        ProjectsModel.set_project_mode(mode="Done", project_id=result['project_id'])
+        # Clear redis cache
+        r.delete("all_projects")
         return {"Status": result['Status'], "Message": result['Message']}
 
 
+# noinspection PyMethodMayBeStatic
 class LoadModel:
 
     agent = ''
 
-    def load_model(self, model_path):
+    def load_model(self, model_path, session_id):
+
+        from shutil import copyfile
+
         endpoints_file = './database_files/try_now_endpoints.yml'
-        self.agent = create_agent(model_path, endpoints=endpoints_file)
+
+        logger.debug("Making Temporary Try now model Path ")
+
+        model_home_path = "/".join(model_path.split('/')[:-1]) + "/" + session_id
+        os.mkdir(model_home_path)
+        model_name = model_path.split('/')[-1]
+        try_now_model_path = model_home_path + "/" + model_name
+
+        copyfile(model_path, try_now_model_path)
+
+        self.agent = create_agent(try_now_model_path, endpoints=endpoints_file)
         return {"Status": "Success", "Message": "Agent Loaded"}
 
     def handle_text(self, text_line, session_id):
         result = asyncio.run(self.agent.handle_text(text_line, sender_id=session_id))
         return result
 
+    def delete_agent(self, model_path, session_id):
+
+        model_home_path = "/".join(model_path.split('/')[:-1]) + "/" + session_id
+        model_name = model_path.split('/')[-1]
+        try_now_model_path = model_home_path + "/" + model_name
+
+        # Clean up try now model copy
+        os.remove(try_now_model_path)
+        os.rmdir(model_home_path)
+
 
 LoadModel = LoadModel()
-
-# TODO Try now method should be moved to a seperate server running rasa ? for each instance of try now ?
 
 
 # noinspection PyMethodMayBeStatic
@@ -719,7 +755,8 @@ class TryNow(Resource):
     def get(self):
 
         model_path = request.args.getlist('model_path')[0]
-        return LoadModel.load_model(model_path)
+        session_id = request.args.getlist('session_id')[0]
+        return LoadModel.load_model(model_path, session_id)
 
     def post(self):
 
@@ -742,6 +779,12 @@ class TryNow(Resource):
                 response['tracker-store'] = result
                 print('response', response)
                 return response
+
+    def delete(self):
+        model_path = request.args.getlist('model_path')[0]
+        session_id = request.args.getlist('session_id')[0]
+
+        return LoadModel.delete_agent(model_path, session_id)
 
 
 # noinspection PyMethodMayBeStatic

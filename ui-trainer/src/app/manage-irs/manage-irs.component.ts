@@ -54,9 +54,9 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
     if (this.activeTabIndex === undefined) {
       this.activeTabIndex = '0';
     }
-    this.getIntents();
-    this.getResponses();
-    this.getStories();
+    this.forceIntentReload();
+    this.forceResponseReload();
+    this.forceStoryReload();
     this.intentsPaginator.pageIndex = +localStorage.getItem('intents_pageIndex');
     this.intentsPaginator.pageSize = +localStorage.getItem('intents_pageSize');
     this.responsesPaginator.pageIndex = +localStorage.getItem('responses_pageIndex');
