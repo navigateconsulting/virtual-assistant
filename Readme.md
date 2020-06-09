@@ -1,7 +1,6 @@
 <p align="center">
   <img src="/docs/assets/trainer.svg" width="200" height="200"/>
 </p>
-
 <div align="center" >
   <p><h2>Virtual Assistant</h2></p>
 </div>
@@ -37,6 +36,9 @@ Virtual Assistant is build using following open source components.
 - Mongodb - for storing training data and editing training data
 </div>
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/navigateconsulting/virtual-assistant)
+[![GitHub license](https://img.shields.io/github/license/navigateconsulting/virtual-assistant)](https://github.com/navigateconsulting/virtual-assistant/blob/master/LICENSE)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/navigateconsulting/virtual-assistant/Docker)
 ### Using Rasa  
 
 We use Rasa 1.3 as a ML framework to train and deploy virtual assistant.
