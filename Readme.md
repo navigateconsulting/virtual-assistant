@@ -2,7 +2,7 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/navigateconsulting/virtual-assistant)
 [![GitHub license](https://img.shields.io/github/license/navigateconsulting/virtual-assistant)](https://github.com/navigateconsulting/virtual-assistant/blob/master/LICENSE)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/navigateconsulting/virtual-assistant/Docker)
-
+![Docker](https://github.com/navigateconsulting/virtual-assistant/workflows/Docker/badge.svg?branch=master)
 <p align="center">
   <img src="/docs/assets/trainer.svg" width="200" height="200"/>
 </p>
