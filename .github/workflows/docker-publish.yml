@@ -53,16 +53,16 @@ jobs:
       - name: Build image
         # Build API Gateway
         run: | 
-          docker build ./va_api_gateway --file Dockerfile --tag $API_GATEWAY_IMAGE_NAME
+          docker build ./va_api_gateway --tag $API_GATEWAY_IMAGE_NAME
         
           # Build Ui Container 
-          docker build ./ui_trainer --file Dockerfile --tag $UI_TRAINER_IMAGE_NAME
+          docker build ./ui_trainer --tag $UI_TRAINER_IMAGE_NAME
         
           # Build Action server Image 
-          docker build ./action_server --file Dockerfile --tag $ACTION_SERVER_IMAGE_NAME
+          docker build ./action_server --tag $ACTION_SERVER_IMAGE_NAME
         
           # Build Custom Rasa image 
-          docker build ./rasa_custom --file Dockerfile --tag $CUSTOM_RASA_IMAGE_NAME
+          docker build ./rasa_custom --tag $CUSTOM_RASA_IMAGE_NAME
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
