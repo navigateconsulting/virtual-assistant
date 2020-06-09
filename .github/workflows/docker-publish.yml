@@ -1,0 +1,106 @@
+name: Docker
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+  # Run tests for any PRs.
+  pull_request:
+
+env:
+  # TODO: Change variable to your image's name.
+  API_GATEWAY_IMAGE_NAME: va_api_gateway
+  UI_TRAINER_IMAGE_NAME: ui_trainer 
+  ACTION_SERVER_IMAGE_NAME: action_server
+  CUSTOM_RASA_IMAGE_NAME: rasa
+
+jobs:
+  # Run tests.
+  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run tests
+        run: |
+          if [ -f docker-compose.test.yml ]; then
+            docker-compose --file docker-compose.test.yml build
+            docker-compose --file docker-compose.test.yml run sut
+          else
+            docker build ./va_api_gateway --file Dockerfile
+          fi
+
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+  push:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        # Build API Gateway
+        run: | 
+          docker build ./va_api_gateway --file Dockerfile --tag $API_GATEWAY_IMAGE_NAME
+        
+          # Build Ui Container 
+          docker build ./ui_trainer --file Dockerfile --tag $UI_TRAINER_IMAGE_NAME
+        
+          # Build Action server Image 
+          docker build ./action_server --file Dockerfile --tag $ACTION_SERVER_IMAGE_NAME
+        
+          # Build Custom Rasa image 
+          docker build ./rasa_custom --file Dockerfile --tag $CUSTOM_RASA_IMAGE_NAME
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          API_GATEWAY_IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$API_GATEWAY_IMAGE_NAME
+          UI_TRAINER_IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$UI_TRAINER_IMAGE_NAME
+          ACTION_SERVER_IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$ACTION_SERVER_IMAGE_NAME
+          CUSTOM_RASA_IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$CUSTOM_RASA_IMAGE_NAME
+          
+          # Change all uppercase to lowercase
+          API_GATEWAY_IMAGE_ID=$(echo $API_GATEWAY_IMAGE_ID | tr '[A-Z]' '[a-z]')
+          UI_TRAINER_IMAGE_ID=$(echo $UI_TRAINER_IMAGE_ID | tr '[A-Z]' '[a-z]')
+          ACTION_SERVER_IMAGE_ID=$(echo $ACTION_SERVER_IMAGE_ID | tr '[A-Z]' '[a-z]')
+          CUSTOM_RASA_IMAGE_ID=$(echo $CUSTOM_RASA_IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+
+          #echo IMAGE_ID=$API_GATEWAY_IMAGE_ID
+          #echo 
+          echo VERSION=$VERSION
+
+          docker tag $API_GATEWAY_IMAGE_NAME $API_GATEWAY_IMAGE_ID:$VERSION
+          docker push $API_GATEWAY_IMAGE_ID:$VERSION
+          
+          docker tag $UI_TRAINER_IMAGE_NAME $UI_TRAINER_IMAGE_ID:$VERSION
+          docker push $UI_TRAINER_IMAGE_ID:$VERSION
+          
+          docker tag $ACTION_SERVER_IMAGE_NAME $ACTION_SERVER_IMAGE_ID:$VERSION
+          docker push $ACTION_SERVER_IMAGE_ID:$VERSION
+          
+          docker tag $CUSTOM_RASA_IMAGE_NAME $CUSTOM_RASA_IMAGE_ID:$VERSION
+          docker push $CUSTOM_RASA_IMAGE_ID:$VERSION
