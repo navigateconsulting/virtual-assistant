@@ -1,34 +1,10 @@
-<div class="row header header-color">
-  <div class="col-md-10">
-    <div class="eva-logo-div">
-      <div class="logo-div" [routerLink]="'/home/trainer'">
-        <img
-          class="side_header_logo_img"
-          src="/assets/images/trainer-loader.svg"
-        />
-        <span class="header-text">Virtual&nbsp;Assistant</span>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-2">
-    <div class="row">
-      <div class="col-md-4 header-buttons">
-        <button mat-icon-button [routerLink]="'/applications'">
-          <mat-icon class="header-icons">apps</mat-icon>
-        </button>
-      </div>
-      <div class="col-md-4 header-buttons">
-        <a
-          href="https://navigateconsulting.github.io/virtual-assistant/"
-          target="_blank"
-          ><mat-icon class="header-icons">help_outline</mat-icon></a
-        >
-      </div>
-      <div class="col-md-4 header-buttons">
-        <button mat-icon-button (click)="closeWindow()">
-          <mat-icon class="header-icons">close</mat-icon>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+<mat-toolbar class="row header-color">
+  <mat-toolbar-row>
+    <mat-icon class="header-icon" svgIcon="trainer-loader" [routerLink]="'/home/trainer'"></mat-icon>
+    <span class="header-text" [routerLink]="'/home/trainer'">Virtual&nbsp;Assistant</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button [routerLink]="'/applications'">
+      <mat-icon class="header-icons">apps</mat-icon>
+    </button>
+  </mat-toolbar-row> 
+</mat-toolbar>

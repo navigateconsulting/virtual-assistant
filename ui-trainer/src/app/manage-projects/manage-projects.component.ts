@@ -24,7 +24,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
               public apiService: ApiService) {}
 
   // tslint:disable-next-line: max-line-length
-  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'padding1', 'project_description', 'padding2', 'created_by', 'state', 'source', 'edit', 'delete', 'copy', 'train', 'try_now', 'properties', 'export'];
+  projectsDisplayedColumns: string[] = ['icon', 'project_name', 'padding1', 'project_description', 'padding2', 'created_by', 'source', 'state', 'edit', 'delete', 'copy', 'train', 'try_now', 'properties', 'export'];
   projectsDataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -47,7 +47,6 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   }
 
   getProjects() {
-    // this.webSocketService.createProjectsRoom('root');
     this.apiService.requestProjects().subscribe(projects => {
       this.projects_json = projects;
       this.projectsDataSource = new MatTableDataSource(this.projects_json);
