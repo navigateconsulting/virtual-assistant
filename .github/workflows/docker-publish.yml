@@ -56,7 +56,7 @@ jobs:
           docker build ./va_api_gateway --tag $API_GATEWAY_IMAGE_NAME
         
           # Build Ui Container 
-          docker build ./ui_trainer --tag $UI_TRAINER_IMAGE_NAME
+          docker build ./ui-trainer --tag $UI_TRAINER_IMAGE_NAME
         
           # Build Action server Image 
           docker build ./action_server --tag $ACTION_SERVER_IMAGE_NAME
