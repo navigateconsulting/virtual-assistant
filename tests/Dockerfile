@@ -6,4 +6,4 @@ WORKDIR /app
 
 ADD test.sh /app/test.sh
 
-CMD ["bash", "test.sh"]
+CMD ["bash", "tests.sh"]
