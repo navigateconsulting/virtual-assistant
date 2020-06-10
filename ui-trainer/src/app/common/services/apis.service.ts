@@ -911,6 +911,15 @@ export class ApiService {
     );
   }
 
+  clearCache(cacheName: string) {
+    // tslint:disable-next-line: max-line-length
+    return this.http.get(this.apiURL + '/clear_cache/' + cacheName, this.httpOptions)
+    .pipe(
+      retry(1),
+      catchError(this.handleError)
+    );
+  }
+
   // Entities API End
 
   // Error handling

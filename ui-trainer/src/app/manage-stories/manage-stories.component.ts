@@ -126,6 +126,7 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
   getIntents() {
     this.apiService.requestIntents(this.projectObjectId, this.domainObjectId).subscribe(intents => {
       if (intents) {
+        console.log(intents);
         this.intents = intents;
         this.convertToIntentTextArray();
       }
