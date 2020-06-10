@@ -6,7 +6,7 @@
 <p align="center">
   <img src="/docs/assets/trainer.svg" width="200" height="200"/>
 </p>
-<div align="center" >
+<div align="center">
   <p><h2>Virtual Assistant</h2></p>
 </div>
 
