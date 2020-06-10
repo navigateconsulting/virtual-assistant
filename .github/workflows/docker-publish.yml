@@ -18,7 +18,8 @@ env:
   API_GATEWAY_IMAGE_NAME: va_api_gateway
   UI_TRAINER_IMAGE_NAME: ui_trainer 
   ACTION_SERVER_IMAGE_NAME: action_server
-  CUSTOM_RASA_IMAGE_NAME: rasa
+  CUSTOM_RASA_IMAGE_NAME: custom_rasa
+  TRAINER_WORKER_IMAGE_NAME: trainer_worker
 
 jobs:
   # Run tests.
@@ -64,6 +65,9 @@ jobs:
           # Build Custom Rasa image 
           docker build ./rasa_custom --tag $CUSTOM_RASA_IMAGE_NAME
 
+          # Build Trainer Worker Image
+          docker build ./trainer_worker --tag $TRAINER_WORKER_IMAGE_NAME
+
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
@@ -73,6 +77,7 @@ jobs:
           UI_TRAINER_IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$UI_TRAINER_IMAGE_NAME
           ACTION_SERVER_IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$ACTION_SERVER_IMAGE_NAME
           CUSTOM_RASA_IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$CUSTOM_RASA_IMAGE_NAME
+          TRAINER_WORKER_IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$TRAINER_WORKER_IMAGE_NAME
           
           # Change all uppercase to lowercase
           API_GATEWAY_IMAGE_ID=$(echo $API_GATEWAY_IMAGE_ID | tr '[A-Z]' '[a-z]')
@@ -104,3 +109,6 @@ jobs:
           
           docker tag $CUSTOM_RASA_IMAGE_NAME $CUSTOM_RASA_IMAGE_ID:$VERSION
           docker push $CUSTOM_RASA_IMAGE_ID:$VERSION
+
+          docker tag $TRAINER_WORKER_IMAGE_NAME $TRAINER_WORKER_IMAGE_ID:$VERSION
+          docker push $TRAINER_WORKER_IMAGE_ID:$VERSION

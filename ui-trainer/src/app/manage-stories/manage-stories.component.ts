@@ -502,10 +502,6 @@ export class ManageStoriesComponent implements OnInit, OnDestroy {
     }
   }
 
-  collapse_close(type: string, index: number) {
-    // collapseClose(type, index);
-  }
-
   forceReload() {
     this.apiService.forceStoryDetailsCacheReload('reset');
     this.apiService.forceActionsCacheReload('reset');

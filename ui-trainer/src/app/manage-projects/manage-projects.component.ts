@@ -10,6 +10,7 @@ import { SharedDataService } from '../common/services/shared-data.service';
 import { constant } from '../../environments/constants';
 import { AppPropComponent } from '../common/modals/app-prop/app-prop.component';
 import { ApiService } from '../common/services/apis.service';
+import { ShowTrainErrorComponent } from '../common/modals/show-train-error/show-train-error.component';
 
 @Component({
   selector: 'app-manage-projects',
@@ -134,10 +135,15 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   trainProject(projectObjectId: string) {
     this.apiService.requestModelTraining(projectObjectId).subscribe(response => {
-      console.log(response);
       if (response['status'] === 'Success' && response['message'] === 'PENDING') {
         this.notificationsService.showToast({status: 'Info', message: 'Model Is Getting Trained.'});
         this.checkModelTrainStatus(projectObjectId, response['task_id']);
+      } else if (response['status'] === 'Error') {
+        const dialogRef = this.dialog.open(ShowTrainErrorComponent, {
+          width: '700px',
+          data: {errorMessage: response['message']}
+        });
+        dialogRef.afterClosed().subscribe(response => {});
       }
     },
     err => console.error('Observer got an error: ' + err),
@@ -157,12 +163,15 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   getModelTrainResult(projectObjectId: string, taskId: string) {
     this.apiService.getModelTrainingResult(taskId).subscribe(response => {
-      console.log(response);
       if (response['Status'] === 'Success') {
         sessionStorage.setItem(projectObjectId, response['Message']);
         this.notificationsService.showToast({status: response['Status'], message: 'Model Training Complete.'});
       } else if (response['Status'] === 'Error') {
-        this.notificationsService.showToast({status: response['Status'], message: response['Message']});
+        const dialogRef = this.dialog.open(ShowTrainErrorComponent, {
+          width: '700px',
+          data: {errorMessage: response['Message']}
+        });
+        dialogRef.afterClosed().subscribe(response => {});
       }
       this.finishTraining();
     },
@@ -175,8 +184,12 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   }
 
   tryNowProject(projectStub: any) {
-    this.sharedDataService.setSharedData('projectObjectId', projectStub._id.$oid, constant.MODULE_COMMON);
-    this.selectedProject.emit({projectStub: projectStub, component: 'try-now'});
+    if (sessionStorage.getItem(projectStub._id.$oid) !== null) {
+      this.sharedDataService.setSharedData('projectObjectId', projectStub._id.$oid, constant.MODULE_COMMON);
+      this.selectedProject.emit({projectStub: projectStub, component: 'try-now'});
+    } else {
+      this.notificationsService.showToast({status: 'Error', message: 'Kindly Train The Model First.'});
+    }
   }
 
   openProjectProperties(projectObjectId: any, projectConfiguration: any) {

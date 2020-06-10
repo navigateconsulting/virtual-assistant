@@ -1,0 +1,17 @@
+<div>
+  <div class="row">
+    <div class="col-md-11">
+      <h1 mat-dialog-title>Error In Model Training</h1>
+    </div>
+    <div class="col-md-1">
+      <button mat-icon-button class="close-button" (click)="closeDialog()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <mat-dialog-content>
+    <div class="alert alert-danger" role="alert">
+      <span>{{data}}</span>
+    </div>
+  </mat-dialog-content>
+</div>
