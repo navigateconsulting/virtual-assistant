@@ -1162,6 +1162,10 @@ class ValidateData:
         project_record = json.loads(dumps(db.projects.find_one(query)))
 
         check_two_stage_fallback = False
+        fallback_core_action_name = False
+        fallback_nlu_action_name = False
+        deny_suggestion_intent_name = False
+
         for policy in project_record['configuration']['policies']:
             if policy['name'] == "TwoStageFallbackPolicy":
                 check_two_stage_fallback = True
