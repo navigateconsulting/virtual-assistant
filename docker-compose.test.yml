@@ -7,7 +7,7 @@ services:
       - va_api_gateway
       - redis
       - mongodb
-      - rasa
+      - custom_rasa
       - trainer_worker
       - ui_trainer
 
