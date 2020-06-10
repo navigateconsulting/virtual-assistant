@@ -1157,27 +1157,37 @@ class ValidateData:
         # checks for two stage fallback policy
         # Check for Negative Intent if its present.
 
-        cursor = db.intents.find({"project_id": project_id, "intent_name": "negative"})
-        result = list(cursor)
-        print("Count of negative intents in Project {}".format(len(result)))
+        # get project Properties.
+        query = {"_id": ObjectId("{}".format(project_id))}
+        project_record = json.loads(dumps(db.projects.find_one(query)))
 
-        if len(result) < 1:
-            ret_val = ret_val + "Intent 'negative' should be defined in the Project \n"
+        check_two_stage_fallback = False
+        for policy in project_record['configuration']['policies']:
+            if policy['name'] == "TwoStageFallbackPolicy":
+                check_two_stage_fallback = True
 
-        # check for utter_default
-        cursor = db.responses.find({"project_id": project_id, "response_name": "utter_default"})
-        result = list(cursor)
-        print("Count of Responses in Project {}".format(len(result)))
+        if check_two_stage_fallback:
+            cursor = db.intents.find({"project_id": project_id, "intent_name": "negative"})
+            result = list(cursor)
+            print("Count of negative intents in Project {}".format(len(result)))
 
-        if len(result) < 1:
-            ret_val = ret_val + "Response default should be defined in the Project \n"
+            if len(result) < 1:
+                ret_val = ret_val + "Intent 'negative' should be defined in the Project \n"
 
-        # check for utter_ask_rephrase
-        cursor = db.responses.find({"project_id": project_id, "response_name": "utter_ask_rephrase"})
-        result = list(cursor)
-        print("Count of Responses in Project {}".format(len(result)))
+            # check for utter_default
+            cursor = db.responses.find({"project_id": project_id, "response_name": "utter_default"})
+            result = list(cursor)
+            print("Count of Responses in Project {}".format(len(result)))
 
-        if len(result) < 1:
-            ret_val = ret_val + "Response ask_rephrase should be defined in the Project \n"
+            if len(result) < 1:
+                ret_val = ret_val + "Response default should be defined in the Project \n"
+
+            # check for utter_ask_rephrase
+            cursor = db.responses.find({"project_id": project_id, "response_name": "utter_ask_rephrase"})
+            result = list(cursor)
+            print("Count of Responses in Project {}".format(len(result)))
+
+            if len(result) < 1:
+                ret_val = ret_val + "Response ask_rephrase should be defined in the Project \n"
 
         return ret_val
