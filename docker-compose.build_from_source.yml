@@ -77,7 +77,7 @@ services:
       - --cors
       - "*"
     depends_on:
-      - action_server
+      - va_action_server
 
 volumes:
   mongodb:
