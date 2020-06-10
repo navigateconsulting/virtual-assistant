@@ -806,3 +806,11 @@ class PublishModel(Resource):
         return {"Status ": str(result.status_code), "Message": str(result.content)}
 
 
+# noinspection PyMethodMayBeStatic
+class ClearCache(Resource):
+
+    def get(self, cache_name):
+
+        logger.debug("Deleting cache"+str(cache_name))
+        r.delete(cache_name)
+        return "OK"
