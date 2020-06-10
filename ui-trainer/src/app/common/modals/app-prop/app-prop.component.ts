@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { load, safeLoad } from 'js-yaml';
+import { safeLoad } from 'js-yaml';
 import { stringify } from 'json2yaml';
 import { constant } from '../../../../environments/constants';
 

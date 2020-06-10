@@ -62,6 +62,7 @@ import { AppPropComponent } from './common/modals/app-prop/app-prop.component';
 
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './common/services/auth.service';
+import { ShowTrainErrorComponent } from './common/modals/show-train-error/show-train-error.component';
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { AuthService } from './common/services/auth.service';
     ConversationChatComponent,
     ApplicationsComponent,
     AppPropComponent,
+    ShowTrainErrorComponent,
   ],
   entryComponents: [
     AddEntityComponent,
@@ -141,7 +143,8 @@ import { AuthService } from './common/services/auth.service';
     AddActionComponent,
     EditActionComponent,
     DeleteActionComponent,
-    AppPropComponent
+    AppPropComponent,
+    ShowTrainErrorComponent
   ],
   imports: [
     BrowserModule,

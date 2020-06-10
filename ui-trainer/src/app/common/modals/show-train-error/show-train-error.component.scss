@@ -1,0 +1,19 @@
+@import "../../../../scss/styles";
+
+.dialog-full-width {
+  width: $dialog-input-width;
+  font-size: $dialog-input-font-size;
+  line-height: $dialog-input-line-height;
+  color: $text-color-1;
+}
+h1 {
+  color: #721c24;
+  font-size: $dialog-h1-font-size;
+  line-height: $dialog-h1-line-height;
+}
+.close-button {
+  color: #721c24;
+}
+.error {
+  white-space:pre;
+}
