@@ -33,7 +33,7 @@ redis
 
 ## Getting Stated 
 
-We use Github packages to publish docker container images.
+We use Docker hub to publish docker container images.
 
 ### Prerequisites
 
@@ -113,7 +113,7 @@ If you intent to extend the stack and make changes to the code base , follow bel
     docker-compose -f docker-compose.build_from_source.yml build
     docker-compose -f docker-compose.build_from_source.yml up  
 
-**Note:  docker-compose.yml file uses github packages to pull docker containers and does not build from source.
+**Note:  docker-compose.yml file uses docker hub to pull docker containers and does not build from source.
 
 ### Documentation
 
