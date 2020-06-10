@@ -1165,14 +1165,20 @@ class ValidateData:
         for policy in project_record['configuration']['policies']:
             if policy['name'] == "TwoStageFallbackPolicy":
                 check_two_stage_fallback = True
+                fallback_core_action_name = policy['fallback_core_action_name']
+                fallback_nlu_action_name = policy['fallback_nlu_action_name']
+                deny_suggestion_intent_name = policy['deny_suggestion_intent_name']
 
         if check_two_stage_fallback:
-            cursor = db.intents.find({"project_id": project_id, "intent_name": "negative"})
+
+            # Check for deny_suggestion_intent_name
+
+            cursor = db.intents.find({"project_id": project_id, "intent_name": deny_suggestion_intent_name})
             result = list(cursor)
             print("Count of negative intents in Project {}".format(len(result)))
 
             if len(result) < 1:
-                ret_val = ret_val + "Intent 'negative' should be defined in the Project \n"
+                ret_val = ret_val + "Intent "+deny_suggestion_intent_name+" should be defined in the Project \n"
 
             # check for utter_default
             cursor = db.responses.find({"project_id": project_id, "response_name": "utter_default"})
