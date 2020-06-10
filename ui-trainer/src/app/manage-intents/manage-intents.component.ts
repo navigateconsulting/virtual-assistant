@@ -44,6 +44,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   text_entities_backup: Array<object>;
   @Input() intentObjectId: string;
   @Input() projectObjectId: string;
+  @Input() domainObjectId: string;
 
   ngOnInit() {
     this.text_entities = new Array<object>();
@@ -54,7 +55,6 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   }
 
   getEntities() {
-    // this.entities_service.createEntitiesRoom();
     this.apiService.requestEntities(this.projectObjectId).subscribe(entities => {
       if (entities) {
         this.entities = entities;
@@ -71,7 +71,6 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   getIntentDetails() {
     this.apiService.requestIntentDetails(this.intentObjectId).subscribe(intent_details => {
       if (intent_details) {
-        console.log(intent_details);
         this.currentIntent = intent_details;
         this.text_entities = this.text_entities_backup = this.currentIntent.text_entities;
       }
@@ -311,5 +310,10 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.apiService.forceIntentDetailsCacheReload('finish');
     this.dialog.closeAll();
+    this.apiService.clearCache('intents_'+this.projectObjectId+"_"+this.domainObjectId).subscribe(result => {
+      console.log(result);
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 }

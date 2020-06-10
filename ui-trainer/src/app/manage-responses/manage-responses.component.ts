@@ -23,10 +23,9 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
   readonly = false;
   currentResponse: any;
 
-  private subscription: Subscription = new Subscription();
-
   @Input() responseObjectId: string;
   @Input() projectObjectId: string;
+  @Input() domainObjectId: string;
 
   @ViewChild('responseText') responseTextInput: MatInput;
 
@@ -180,6 +179,11 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.apiService.forceResponseDetailsCacheReload('finish');
+    this.apiService.clearCache('responses_'+this.projectObjectId+"_"+this.domainObjectId).subscribe(result => {
+      console.log(result);
+    },
+    err => console.error('Observer got an error: ' + err),
+    () => console.log('Observer got a complete notification'));
   }
 
 }
