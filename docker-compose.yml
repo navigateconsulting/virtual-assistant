@@ -3,7 +3,8 @@ services:
 
   va_api_gateway:
     init: true
-    image: docker.pkg.github.com/navigateconsulting/virtual-assistant/va_api_gateway:latest
+    #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/va_api_gateway:latest
+    image: navigateconsulting/va_api_gateway
     environment:
       - PORT_APP=3000
       - WORKERS=1
@@ -26,7 +27,8 @@ services:
       - '6379:6379'
 
   trainer_worker:
-    image: docker.pkg.github.com/navigateconsulting/virtual-assistant/trainer_worker:latest
+    #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/trainer_worker:latest
+    image: navigateconsulting/va_trainer_worker
     volumes:
       - rasa_projects:/rasa_projects
     depends_on:
@@ -49,7 +51,8 @@ services:
 
   ui_trainer:
     container_name: ui_trainer
-    image: docker.pkg.github.com/navigateconsulting/virtual-assistant/ui_trainer:latest
+    #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/ui_trainer:latest
+    image: navigateconsulting/va_ui_trainer
     ports:
       - "8080:80"
     depends_on:
@@ -57,13 +60,15 @@ services:
 
 
   action_server:
-    image: docker.pkg.github.com/navigateconsulting/virtual-assistant/action_server:latest
+    #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/action_server:latest
+    image: navigateconsulting/va_action_server
     container_name: action_server
     ports:
       - 5055:5055
 
   custom_rasa:
-    image: docker.pkg.github.com/navigateconsulting/virtual-assistant/custom_rasa:latest
+    #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/custom_rasa:latest
+    image: navigateconsulting/va_custom_rasa
     ports:
       - 5005:5005
     volumes:
