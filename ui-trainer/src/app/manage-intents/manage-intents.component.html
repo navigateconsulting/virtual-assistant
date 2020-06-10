@@ -57,7 +57,7 @@
               </div>
               <div class="col-md-1 text-right">
                 <button mat-icon-button (click)="removeIntentTextElement(text_entity.text, text_entity.entities)">
-                  <mat-icon svgIcon="delete"></mat-icon>
+                  <mat-icon class="intent-icons">delete</mat-icon>
                 </button>
               </div>
               <div class="col-md-1 text-right">
@@ -85,7 +85,7 @@
                     <td>{{entity.value}}</td>
                     <td>
                       <button mat-icon-button (mouseenter)="unhighlightTextEntity(i)" (mouseleave)="highlightTextEntity(entity.start,entity.end,i)" (click)="removeEntityElement(i, text_entity.text, text_entity.entities, j)">
-                        <mat-icon svgIcon="delete"></mat-icon>
+                        <mat-icon class="intent-icons">delete</mat-icon>
                       </button>
                     </td>
                   </tr>
