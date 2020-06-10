@@ -26,9 +26,13 @@
 We used below projects to build the application stack.
 
 rasa 
-angular 
+
+angular
+ 
 python flask
+
 mongodb
+
 redis
 
 ## Getting Stated 
