@@ -12,7 +12,7 @@ services:
       - REDIS_PORT=6379
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
-      - RASA_SERVER=http://custom_rasa:5005/model
+      - RASA_SERVER=http://va_custom_rasa:5005/model
     ports:
       - "3000:3000"
     volumes:
@@ -25,7 +25,7 @@ services:
     ports:
       - '6379:6379'
 
-  trainer_worker:
+  va_trainer_worker:
     build: './trainer_worker'
     volumes:
       - rasa_projects:/rasa_projects
@@ -47,8 +47,7 @@ services:
       - 27017:27017
     command: mongod  --logpath=/dev/null # --quiet
 
-  ui_trainer:
-    container_name: ui_trainer
+  va_ui_trainer:
     build: './ui-trainer'
     ports:
       - "8080:80"
@@ -56,13 +55,12 @@ services:
       - va_api_gateway
 
 
-  action_server:
+  va_action_server:
     build: './action_server'
-    container_name: action_server
     ports:
       - 5055:5055
 
-  custom_rasa:
+  va_custom_rasa:
     build: './rasa_custom'
     ports:
       - 5005:5005

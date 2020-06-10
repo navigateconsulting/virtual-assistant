@@ -13,7 +13,7 @@ services:
       - REDIS_PORT=6379
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
-      - RASA_SERVER=http://custom_rasa:5005/model
+      - RASA_SERVER=http://va_custom_rasa:5005/model
     ports:
       - "3000:3000"
     volumes:
@@ -26,7 +26,7 @@ services:
     ports:
       - '6379:6379'
 
-  trainer_worker:
+  va_trainer_worker:
     #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/trainer_worker:latest
     image: navigateconsulting/va_trainer_worker
     volumes:
@@ -49,8 +49,7 @@ services:
       - 27017:27017
     command: mongod  --logpath=/dev/null # --quiet
 
-  ui_trainer:
-    container_name: ui_trainer
+  va_ui_trainer:
     #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/ui_trainer:latest
     image: navigateconsulting/va_ui_trainer
     ports:
@@ -59,14 +58,13 @@ services:
       - va_api_gateway
 
 
-  action_server:
+  va_action_server:
     #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/action_server:latest
     image: navigateconsulting/va_action_server
-    container_name: action_server
     ports:
       - 5055:5055
 
-  custom_rasa:
+  va_custom_rasa:
     #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/custom_rasa:latest
     image: navigateconsulting/va_custom_rasa
     ports:
@@ -84,7 +82,7 @@ services:
       - --cors
       - "*"
     depends_on:
-      - action_server
+      - va_action_server
 
 volumes:
   mongodb:
