@@ -33,7 +33,7 @@ redis
 
 ## Getting Stated 
 
-We use Docker hub to publish docker container images.
+We use [Docker hub](https://hub.docker.com/u/navigateconsulting) to publish docker container images.
 
 ### Prerequisites
 
