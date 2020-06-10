@@ -12,7 +12,7 @@ services:
       - REDIS_PORT=6379
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
-      - RASA_SERVER=http://rasa:5005/model
+      - RASA_SERVER=http://custom_rasa:5005/model
     ports:
       - "3000:3000"
     volumes:
@@ -62,7 +62,7 @@ services:
     ports:
       - 5055:5055
 
-  rasa:
+  custom_rasa:
     build: './rasa_custom'
     ports:
       - 5005:5005
