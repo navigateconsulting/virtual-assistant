@@ -6,7 +6,7 @@
 <p align="center">
   <img src="/docs/assets/trainer.svg" width="200" height="200"/>
 </p>
-<div align="center" >
+<div align="center">
   <p><h2>Virtual Assistant</h2></p>
 </div>
 
@@ -26,14 +26,18 @@
 We used below projects to build the application stack.
 
 rasa 
-angular 
+
+angular
+ 
 python flask
+
 mongodb
+
 redis
 
 ## Getting Stated 
 
-We use Github packages to publish docker container images.
+We use [Docker hub](https://hub.docker.com/u/navigateconsulting) to publish docker container images.
 
 ### Prerequisites
 
@@ -113,7 +117,7 @@ If you intent to extend the stack and make changes to the code base , follow bel
     docker-compose -f docker-compose.build_from_source.yml build
     docker-compose -f docker-compose.build_from_source.yml up  
 
-**Note:  docker-compose.yml file uses github packages to pull docker containers and does not build from source.
+**Note:  docker-compose.yml file uses docker hub to pull docker containers and does not build from source.
 
 ### Documentation
 

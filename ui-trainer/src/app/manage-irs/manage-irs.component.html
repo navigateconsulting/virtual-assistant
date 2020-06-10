@@ -46,14 +46,14 @@
               <ng-container matColumnDef="edit">
                 <th mat-header-cell *matHeaderCellDef> Edit </th>
                 <td mat-cell *matCellDef="let intent" class="edit_remove">
-                  <mat-icon svgIcon="edit" (click)="editIntent(intent._id.$oid, intent.intent_name, intent.intent_description)"></mat-icon>
+                  <mat-icon class="irs-icons" (click)="editIntent(intent._id.$oid, intent.intent_name, intent.intent_description)">edit</mat-icon>
                 </td>
               </ng-container>
     
               <ng-container matColumnDef="delete">
                 <th mat-header-cell *matHeaderCellDef> Delete </th>
                 <td mat-cell *matCellDef="let intent" class="edit_remove">
-                  <mat-icon svgIcon="delete" (click)="deleteIntent(intent._id.$oid)">remove_circle</mat-icon>
+                  <mat-icon class="irs-icons" (click)="deleteIntent(intent._id.$oid)">delete</mat-icon>
                 </td>
               </ng-container>
             
@@ -115,14 +115,14 @@
               <ng-container matColumnDef="edit">
                 <th mat-header-cell *matHeaderCellDef> Edit </th>
                 <td mat-cell *matCellDef="let response" class="edit_remove">
-                  <mat-icon svgIcon="edit" (click)="editResponse(response._id.$oid, response.response_name, response.response_description)"></mat-icon>
+                  <mat-icon class="irs-icons" (click)="editResponse(response._id.$oid, response.response_name, response.response_description)">edit</mat-icon>
                 </td>
               </ng-container>
     
               <ng-container matColumnDef="delete">
                 <th mat-header-cell *matHeaderCellDef> Delete </th>
                 <td mat-cell *matCellDef="let response" class="edit_remove">
-                  <mat-icon svgIcon="delete" (click)="deleteResponse(response._id.$oid)"></mat-icon>
+                  <mat-icon class="irs-icons" (click)="deleteResponse(response._id.$oid)">delete</mat-icon>
                 </td>
               </ng-container>
             
@@ -182,14 +182,14 @@
               <ng-container matColumnDef="edit">
                 <th mat-header-cell *matHeaderCellDef> Edit </th>
                 <td mat-cell *matCellDef="let story" class="edit_remove">
-                  <mat-icon svgIcon="edit" (click)="editStory(story._id.$oid, story.story_name, story.story_description)"></mat-icon>
+                  <mat-icon class="irs-icons" (click)="editStory(story._id.$oid, story.story_name, story.story_description)">edit</mat-icon>
                 </td>
               </ng-container>
     
               <ng-container matColumnDef="delete">
                 <th mat-header-cell *matHeaderCellDef> Delete </th>
                 <td mat-cell *matCellDef="let story" class="edit_remove">
-                  <mat-icon svgIcon="delete" (click)="deleteStory(story._id.$oid)"></mat-icon>
+                  <mat-icon class="irs-icons" (click)="deleteStory(story._id.$oid)">delete</mat-icon>
                 </td>
               </ng-container>
             

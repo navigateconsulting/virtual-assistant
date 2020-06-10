@@ -1,5 +1,5 @@
 action_endpoint:
-  url: "http://action_server:5055/webhook"
+  url: "http://va_action_server:5055/webhook"
 tracker_store:
   store_type: mongod
   url: mongodb://mongodb:27017

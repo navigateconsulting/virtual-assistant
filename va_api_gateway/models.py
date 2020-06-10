@@ -1157,27 +1157,47 @@ class ValidateData:
         # checks for two stage fallback policy
         # Check for Negative Intent if its present.
 
-        cursor = db.intents.find({"project_id": project_id, "intent_name": "negative"})
-        result = list(cursor)
-        print("Count of negative intents in Project {}".format(len(result)))
+        # get project Properties.
+        query = {"_id": ObjectId("{}".format(project_id))}
+        project_record = json.loads(dumps(db.projects.find_one(query)))
 
-        if len(result) < 1:
-            ret_val = ret_val + "Intent 'negative' should be defined in the Project \n"
+        check_two_stage_fallback = False
+        fallback_core_action_name = False
+        fallback_nlu_action_name = False
+        deny_suggestion_intent_name = False
 
-        # check for utter_default
-        cursor = db.responses.find({"project_id": project_id, "response_name": "utter_default"})
-        result = list(cursor)
-        print("Count of Responses in Project {}".format(len(result)))
+        for policy in project_record['configuration']['policies']:
+            if policy['name'] == "TwoStageFallbackPolicy":
+                check_two_stage_fallback = True
+                fallback_core_action_name = policy['fallback_core_action_name']
+                fallback_nlu_action_name = policy['fallback_nlu_action_name']
+                deny_suggestion_intent_name = policy['deny_suggestion_intent_name']
 
-        if len(result) < 1:
-            ret_val = ret_val + "Response default should be defined in the Project \n"
+        if check_two_stage_fallback:
 
-        # check for utter_ask_rephrase
-        cursor = db.responses.find({"project_id": project_id, "response_name": "utter_ask_rephrase"})
-        result = list(cursor)
-        print("Count of Responses in Project {}".format(len(result)))
+            # Check for deny_suggestion_intent_name
 
-        if len(result) < 1:
-            ret_val = ret_val + "Response ask_rephrase should be defined in the Project \n"
+            cursor = db.intents.find({"project_id": project_id, "intent_name": deny_suggestion_intent_name})
+            result = list(cursor)
+            print("Count of negative intents in Project {}".format(len(result)))
+
+            if len(result) < 1:
+                ret_val = ret_val + "Intent "+deny_suggestion_intent_name+" should be defined in the Project \n"
+
+            # check for utter_default
+            cursor = db.responses.find({"project_id": project_id, "response_name": "utter_default"})
+            result = list(cursor)
+            print("Count of Responses in Project {}".format(len(result)))
+
+            if len(result) < 1:
+                ret_val = ret_val + "Response default should be defined in the Project \n"
+
+            # check for utter_ask_rephrase
+            cursor = db.responses.find({"project_id": project_id, "response_name": "utter_ask_rephrase"})
+            result = list(cursor)
+            print("Count of Responses in Project {}".format(len(result)))
+
+            if len(result) < 1:
+                ret_val = ret_val + "Response ask_rephrase should be defined in the Project \n"
 
         return ret_val

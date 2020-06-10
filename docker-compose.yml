@@ -3,7 +3,8 @@ services:
 
   va_api_gateway:
     init: true
-    image: docker.pkg.github.com/navigateconsulting/virtual-assistant/va_api_gateway:latest
+    #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/va_api_gateway:latest
+    image: navigateconsulting/va_api_gateway
     environment:
       - PORT_APP=3000
       - WORKERS=1
@@ -12,7 +13,7 @@ services:
       - REDIS_PORT=6379
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
-      - RASA_SERVER=http://custom_rasa:5005/model
+      - RASA_SERVER=http://va_custom_rasa:5005/model
     ports:
       - "3000:3000"
     volumes:
@@ -25,8 +26,9 @@ services:
     ports:
       - '6379:6379'
 
-  trainer_worker:
-    image: docker.pkg.github.com/navigateconsulting/virtual-assistant/trainer_worker:latest
+  va_trainer_worker:
+    #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/trainer_worker:latest
+    image: navigateconsulting/va_trainer_worker
     volumes:
       - rasa_projects:/rasa_projects
     depends_on:
@@ -47,23 +49,24 @@ services:
       - 27017:27017
     command: mongod  --logpath=/dev/null # --quiet
 
-  ui_trainer:
-    container_name: ui_trainer
-    image: docker.pkg.github.com/navigateconsulting/virtual-assistant/ui_trainer:latest
+  va_ui_trainer:
+    #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/ui_trainer:latest
+    image: navigateconsulting/va_ui_trainer
     ports:
       - "8080:80"
     depends_on:
       - va_api_gateway
 
 
-  action_server:
-    image: docker.pkg.github.com/navigateconsulting/virtual-assistant/action_server:latest
-    container_name: action_server
+  va_action_server:
+    #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/action_server:latest
+    image: navigateconsulting/va_action_server
     ports:
       - 5055:5055
 
-  custom_rasa:
-    image: docker.pkg.github.com/navigateconsulting/virtual-assistant/custom_rasa:latest
+  va_custom_rasa:
+    #image: docker.pkg.github.com/navigateconsulting/virtual-assistant/custom_rasa:latest
+    image: navigateconsulting/va_custom_rasa
     ports:
       - 5005:5005
     volumes:
@@ -79,7 +82,7 @@ services:
       - --cors
       - "*"
     depends_on:
-      - action_server
+      - va_action_server
 
 volumes:
   mongodb:

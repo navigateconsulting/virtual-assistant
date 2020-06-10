@@ -23,10 +23,10 @@
         <app-manage-irs [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId" (selectedIRS)="irsSelected($event)"></app-manage-irs>
       </div>
       <div *ngIf="setComponent === 'manage-intents'" class="full-height">
-        <app-manage-intents [projectObjectId]="projectObjectId" [intentObjectId]="irsObjectId"></app-manage-intents>
+        <app-manage-intents [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId" [intentObjectId]="irsObjectId"></app-manage-intents>
       </div>
       <div *ngIf="setComponent === 'manage-responses'" class="full-height">
-        <app-manage-responses [projectObjectId]="projectObjectId" [responseObjectId]="irsObjectId"></app-manage-responses>
+        <app-manage-responses [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId" [responseObjectId]="irsObjectId"></app-manage-responses>
       </div>
       <div *ngIf="setComponent === 'manage-stories'" class="full-height">
         <app-manage-stories [projectObjectId]="projectObjectId" [domainObjectId]="domainObjectId" [storyObjectId]="irsObjectId"></app-manage-stories>
