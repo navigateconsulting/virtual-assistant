@@ -25,7 +25,7 @@
 
           <ng-container matColumnDef="icon">
             <th mat-header-cell *matHeaderCellDef> </th>
-            <td mat-cell *matCellDef="let action"> <mat-icon>gavel</mat-icon> </td>
+            <td mat-cell *matCellDef="let action"> <mat-icon class="action-icons">gavel</mat-icon> </td>
           </ng-container>
         
           <ng-container matColumnDef="action_name">
@@ -41,32 +41,18 @@
           <ng-container matColumnDef="edit">
             <th mat-header-cell *matHeaderCellDef> Edit </th>
             <td mat-cell *matCellDef="let action" class="edit_remove">
-              <div *ngIf="action.status">
-                <button mat-icon-button [disabled]="action.status">
-                  <mat-icon svgIcon="editDis"></mat-icon>
-                </button>
-              </div>
-              <div *ngIf="!action.status">
-                <button mat-icon-button [disabled]="action.status" (click)="editAction(action._id.$oid, action.action_name, action.action_description)">
-                  <mat-icon svgIcon="edit"></mat-icon>
-                </button>
-              </div>
+              <button mat-icon-button class="action-icons" [disabled]="action.status" (click)="editAction(action._id.$oid, action.action_name, action.action_description)">
+                <mat-icon>edit</mat-icon>
+              </button>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="delete">
             <th mat-header-cell *matHeaderCellDef> Delete </th>
             <td mat-cell *matCellDef="let action" class="edit_remove">
-              <div *ngIf="action.status">
-                <button mat-icon-button [disabled]="action.status">
-                  <mat-icon svgIcon="deleteDis"></mat-icon>
-                </button>
-              </div>
-              <div *ngIf="!action.status">
-                <button mat-icon-button [disabled]="action.status" (click)="deleteAction(action._id.$oid)">
-                  <mat-icon svgIcon="delete"></mat-icon>
-                </button>
-              </div>
+              <button mat-icon-button class="action-icons" [disabled]="action.status" (click)="deleteAction(action._id.$oid)">
+                <mat-icon>delete</mat-icon>
+              </button>
             </td>
           </ng-container>
         
