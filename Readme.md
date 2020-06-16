@@ -53,7 +53,7 @@ If the project is to be deployed for production, please follow instructions for 
 
 Download the docker-compose.yml file with below command
 
-    wget https://github.com/navigateconsulting/virtual-assistant/blob/master/docker-compose.yml
+    wget https://raw.githubusercontent.com/navigateconsulting/virtual-assistant/master/docker-compose.yml
     
 And start the application with a simple docker compose up command.
 
