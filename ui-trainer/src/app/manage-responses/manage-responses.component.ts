@@ -29,6 +29,8 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
 
   @ViewChild('responseText') responseTextInput: MatInput;
 
+  filterResponseDetailText: string;
+
   constructor(public apiService: ApiService,
               public sharedDataService: SharedDataService,
               public notificationsService: NotificationsService) { }
@@ -58,6 +60,7 @@ export class ManageResponsesComponent implements OnInit, OnDestroy {
         console.log(response_details);
         this.currentResponse = response_details;
         this.text_entities = this.text_entities_backup = this.currentResponse.text_entities;
+        this.applyMapFilter(this.filterResponseDetailText);
       }
     },
     err => console.error('Observer got an error: ' + err),
