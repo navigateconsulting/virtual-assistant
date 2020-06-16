@@ -2,7 +2,7 @@
   <div class="row add-domain">
     <div class="col-md-11">
       <mat-form-field>
-        <input matInput (keyup)="applyDomainsFilter($event.target.value)" placeholder="Filter Domains">
+        <input matInput (keyup)="applyDomainsFilter($event.target.value)" [(ngModel)]="filterDomainsText" placeholder="Filter Domains">
       </mat-form-field>
     </div>
     <div class="col-md-1 text-right">

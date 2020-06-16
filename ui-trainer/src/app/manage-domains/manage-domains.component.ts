@@ -40,6 +40,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
   connection: any;
   domains_json: Array<object>;
   domains_json_backup: Array<object>;
+  filterDomainsText: string;
 
   @Input() projectObjectId: string;
 
@@ -56,6 +57,7 @@ export class ManageDomainsComponent implements OnInit, OnDestroy {
       if (domains) {
         console.log(domains);
         this.domains_json = this.domains_json_backup = domains;
+        this.applyDomainsFilter(this.filterDomainsText);
       }
     },
     err => console.error('Observer got an error: ' + err),
