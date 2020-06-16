@@ -155,7 +155,7 @@
           <ng-container matColumnDef="try_now">
             <th mat-header-cell *matHeaderCellDef>Try Now</th>
             <td mat-cell *matCellDef="let project">
-              <button mat-icon-button class="project-icons" [disabled]="project.state === 'Training'" (click)="tryNowProject(project)">
+              <button mat-icon-button class="project-icons" [disabled]="project.state === 'Training'||project.model_name===''" (click)="tryNowProject(project)">
                 <mat-icon>play_circle_outline</mat-icon>
               </button>
             </td>

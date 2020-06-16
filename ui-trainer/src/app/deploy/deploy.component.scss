@@ -23,13 +23,13 @@ table {
   width: 5%;
 }
 .mat-column-project_name {
-  width: 25%;
+  width: 15%;
 }
 .mat-column-source {
-  width: 25%;
+  width: 15%;
 }
 .mat-column-model_name {
-  width: 25%;
+  width: 45%;
 }
 .mat-column-state {
   width: 10%;
@@ -66,4 +66,7 @@ table {
     height: 86vh;
     overflow-y: auto;
   }
+}
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {   
+  stroke: #1C90D1;
 }

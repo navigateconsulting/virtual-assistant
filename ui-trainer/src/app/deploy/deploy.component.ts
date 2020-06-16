@@ -1,15 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
-
 import { NotificationsService } from '../common/services/notifications.service';
 import { OverlayService } from '../common/services/overlay.service';
 import { ModelErrorService } from '../common/services/model-error.service';
 import { SharedDataService } from '../common/services/shared-data.service';
-
 import { DeployModelComponent } from '../common/modals/deploy-model/deploy-model.component';
 import { ApiService } from '../common/services/apis.service';
+import { ShowTrainErrorComponent } from '../common/modals/show-train-error/show-train-error.component';
 
 @Component({
   selector: 'app-deploy',
@@ -42,7 +40,6 @@ export class DeployComponent implements OnInit, OnDestroy {
 
   getProjectsForDeploy() {
     this.apiService.requestProjects().subscribe(projects => {
-      console.log(projects);
       this.projectModels = projects;
       this.projectsModelDataSource = new MatTableDataSource(this.projectModels);
       this.projectsModelDataSource.paginator = this.paginator;
@@ -60,6 +57,12 @@ export class DeployComponent implements OnInit, OnDestroy {
       if (response['status'] === 'Success' && response['message'] === 'PENDING') {
         this.notificationsService.showToast({status: 'Info', message: 'Model Is Getting Trained.'});
         this.checkModelTrainStatus(projectObjectId, response['task_id']);
+      } else if (response['status'] === 'Error') {
+        const dialogRef = this.dialog.open(ShowTrainErrorComponent, {
+          width: '700px',
+          data: {errorMessage: response['message']}
+        });
+        dialogRef.afterClosed().subscribe(response => {});
       }
     },
     err => console.error('Observer got an error: ' + err),
@@ -67,6 +70,7 @@ export class DeployComponent implements OnInit, OnDestroy {
   }
 
   checkModelTrainStatus(projectObjectId: string, taskId: string) {
+    this.apiService.forceModelTrainingCacheReload('reset');
     this.apiService.checkModelTrainStatus(taskId).subscribe(response => {
       if (response['Status'] === 'SUCCESS') {
         this.getModelTrainResult(projectObjectId, taskId);
@@ -82,7 +86,11 @@ export class DeployComponent implements OnInit, OnDestroy {
         sessionStorage.setItem(projectObjectId, response['Message']);
         this.notificationsService.showToast({status: response['Status'], message: 'Model Training Complete.'});
       } else if (response['Status'] === 'Error') {
-        this.notificationsService.showToast({status: response['Status'], message: response['Message']});
+        const dialogRef = this.dialog.open(ShowTrainErrorComponent, {
+          width: '700px',
+          data: {errorMessage: response['Message']}
+        });
+        dialogRef.afterClosed().subscribe(response => {});
       }
       this.finishTraining();
     },
