@@ -36,7 +36,6 @@ export class ManageActionsComponent implements OnInit, OnDestroy {
 
   getActions() {
     this.apiService.requestActions().subscribe(actions => {
-      console.log(actions);
       if (actions) {
         this.actions_json = actions;
         this.actions_json.forEach((action, index) => {
