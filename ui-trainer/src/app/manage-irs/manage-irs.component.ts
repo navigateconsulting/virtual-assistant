@@ -45,6 +45,9 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
   stories_json: Array<object>;
   storiesDataSource: any;
   activeTabIndex: any;
+  filterIntentText: string;
+  filterResponseText: string;
+  filterStoryText: string;
 
   ngOnInit() {
     this.intents_json = new Array<object>();
@@ -71,6 +74,7 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
         this.intents_json = intents;
         this.intentsDataSource = new MatTableDataSource(intents);
         this.intentsDataSource.paginator = this.intentsPaginator;
+        this.applyIntentsFilter(this.filterIntentText);
       }
     },
     err => console.error('Observer got an error: ' + err),
@@ -83,6 +87,7 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
         this.responses_json = responses;
         this.responsesDataSource = new MatTableDataSource(responses);
         this.responsesDataSource.paginator = this.responsesPaginator;
+        this.applyResponsesFilter(this.filterResponseText);
       }
     },
     err => console.error('Observer got an error: ' + err),
@@ -95,6 +100,7 @@ export class ManageIrsComponent implements OnInit, OnDestroy {
         this.stories_json = stories;
         this.storiesDataSource = new MatTableDataSource(stories);
         this.storiesDataSource.paginator = this.storiesPaginator;
+        this.applyStoriesFilter(this.filterStoryText);
       }
     },
     err => console.error('Observer got an error: ' + err),

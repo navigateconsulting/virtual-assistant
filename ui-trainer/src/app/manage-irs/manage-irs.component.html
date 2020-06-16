@@ -4,7 +4,7 @@
       <div class="row add-irs">
         <div class="col-md-11">
           <mat-form-field>
-            <input matInput (keyup)="applyIntentsFilter($event.target.value)" placeholder="Filter Intents">
+            <input matInput (keyup)="applyIntentsFilter($event.target.value)" [(ngModel)]="filterIntentText" placeholder="Filter Intents">
           </mat-form-field>
         </div>
         <div class="col-md-1 text-right">
