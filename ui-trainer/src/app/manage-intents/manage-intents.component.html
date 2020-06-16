@@ -27,7 +27,7 @@
     <div class="col-md-6">
       <mat-form-field class="intent-text-filter" appearance="outline">
         <mat-label>Filter Intent Text</mat-label>
-        <input matInput (keyup)="applyMapFilter($event.target.value)">
+        <input matInput (keyup)="applyMapFilter($event.target.value)" [(ngModel)]="filterIntentDetailText">
       </mat-form-field>
     </div>
   </div>

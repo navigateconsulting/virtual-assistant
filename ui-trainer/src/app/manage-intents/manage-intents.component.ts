@@ -33,6 +33,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
   new_intent_text: string;
   show_invalid_entity_error = false;
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+  filterIntentDetailText: string;
 
   constructor(public dialog: MatDialog,
               public apiService: ApiService,
@@ -73,6 +74,7 @@ export class ManageIntentsComponent implements OnInit, OnDestroy {
       if (intent_details) {
         this.currentIntent = intent_details;
         this.text_entities = this.text_entities_backup = this.currentIntent.text_entities;
+        this.applyMapFilter(this.filterIntentDetailText);
       }
     },
     err => console.error('Observer got an error: ' + err),
