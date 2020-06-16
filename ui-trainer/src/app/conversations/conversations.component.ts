@@ -23,6 +23,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   conversationsDataSource: any;
   conversations_json: Array<object>;
   conversations_json_backup: Array<object>;
+  filterConversationText: string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -40,6 +41,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
         this.conversations_json = this.conversations_json_backup = conversations;
         this.conversationsDataSource = new MatTableDataSource(this.conversations_json);
         this.conversationsDataSource.paginator = this.paginator;
+        this.applyConversationsFilter(this.filterConversationText);
       }
     },
     err => console.error('Observer got an error: ' + err),
