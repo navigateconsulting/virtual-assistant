@@ -24,6 +24,7 @@ export class ManageActionsComponent implements OnInit, OnDestroy {
   actionsDisplayedColumns: string[] = ['icon', 'action_name', 'action_description', 'edit', 'delete'];
   actionsDataSource: any;
   actions_json: Array<object>;
+  filterActionText: string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -47,6 +48,7 @@ export class ManageActionsComponent implements OnInit, OnDestroy {
         });
         this.actionsDataSource = new MatTableDataSource(this.actions_json);
         this.actionsDataSource.paginator = this.paginator;
+        this.applyActionsFilter(this.filterActionText);
       }
     },
     err => console.error('Observer got an error: ' + err),

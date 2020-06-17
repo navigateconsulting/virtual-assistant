@@ -5,6 +5,7 @@
         <input
           matInput
           (keyup)="applyConversationsFilter($event.target.value)"
+          [(ngModel)]="filterConversationText"
           placeholder="Filter Conversations"
         />
       </mat-form-field>

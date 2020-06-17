@@ -32,6 +32,8 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
   @Input() projectObjectId: string;
   @ViewChild('entityName') entityNameInput: MatInput;
 
+  filterEntityText = '';
+
   constructor(public dialog: MatDialog,
               public apiService: ApiService,
               public notificationsService: NotificationsService) { }
@@ -47,6 +49,7 @@ export class ManageEntitiesComponent implements OnInit, OnDestroy {
     this.apiService.requestEntities(this.projectObjectId).subscribe(entities => {
       if (entities) {
         this.entities = this.entities_backup = entities;
+        this.applyEntitiesFilter(this.filterEntityText);
       }
     },
     err => console.error('Observer got an error: ' + err),

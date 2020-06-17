@@ -2,11 +2,9 @@
   <div class="row">
     <div class="col-md-11"></div>
     <div class="col-md-1 text-right end-try-now">
-      <mat-icon
-        matTooltip="Close Chat Window"
-        [routerLink]="'/home/conversations'"
-        svgIcon="delete"
-      ></mat-icon>
+      <button mat-icon-button class="project-icons">
+        <mat-icon matTooltip="Close Chat Window" [routerLink]="'/home/conversations'">exit_to_app</mat-icon>
+      </button>
     </div>
   </div>
   <div class="row try-now-frame">

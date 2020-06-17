@@ -2,7 +2,7 @@
   <div class="row add-action">
     <div class="col-md-11">
       <mat-form-field>
-        <input matInput (keyup)="applyActionsFilter($event.target.value)" placeholder="Filter Actions">
+        <input matInput (keyup)="applyActionsFilter($event.target.value)" [(ngModel)]="filterActionText" placeholder="Filter Actions">
       </mat-form-field>
     </div>
     <div class="col-md-1 text-right">
