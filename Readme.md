@@ -25,15 +25,18 @@
 
 We used below projects to build the application stack.
 
-rasa 
+[Rasa Open Source](https://github.com/RasaHQ/rasa) 
 
-angular
+
+The Application stack is built with below technologies 
+
+Angular - For front end development.
  
-python flask
+Python Flask - For API backend.
 
-mongodb
+mongodb - As a Database for storing Rasa projects.
 
-redis
+redis - As a caching layer between UI and Backend.
 
 ## Getting Stated 
 
