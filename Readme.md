@@ -7,7 +7,7 @@
   <img src="/docs/assets/trainer.svg" width="200" height="200"/>
 </p>
 <div align="center">
-  <p><h2>Virtual Assistant</h2></p>
+  <p><h2>Enterprise Virtual Assistant (EVA)</h2></p>
 </div>
 
 ## Table of Contents
