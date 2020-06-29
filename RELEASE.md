@@ -30,7 +30,8 @@ Bug fixes
 
 ## Major Features and Improvements
 
-* #207 changes to UI 
+* 207 <https://github.com/navigateconsulting/eva/pull/207> changes to UI 
+* 209 <https://github.com/navigateconsulting/eva/pull/209> Rasa version upgrade to 1.10.3
 
 ## Bug Fixes and Other Changes
 
