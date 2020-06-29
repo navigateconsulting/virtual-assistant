@@ -23,7 +23,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   conversationsDataSource: any;
   conversations_json: Array<object>;
   conversations_json_backup: Array<object>;
-  filterConversationText: string;
+  filterConversationText = '';
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -38,7 +38,8 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   getConversations() {
     this.apiService.requestConversations().subscribe(conversations => {
       if (conversations) {
-        this.conversations_json = this.conversations_json_backup = conversations;
+        this.conversations_json = conversations.slice();
+        this.conversations_json_backup = JSON.parse(JSON.stringify(this.conversations_json));
         this.conversationsDataSource = new MatTableDataSource(this.conversations_json);
         this.conversationsDataSource.paginator = this.paginator;
         this.applyConversationsFilter(this.filterConversationText);
@@ -72,7 +73,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
 
   openConversationChat(conversation_id: string) {
     // tslint:disable-next-line: max-line-length
-    this.sharedDataService.setSharedData('conversation_json', this.conversations_json.filter(conversations => conversations['sender_id'] === conversation_id), constant.MODULE_COMMON);
+    this.sharedDataService.setSharedData('conversation_json', this.conversations_json_backup.filter(conversations => conversations['sender_id'] === conversation_id), constant.MODULE_COMMON);
     this._router.navigate(['/home/conversations/' + conversation_id]);
   }
 
@@ -81,7 +82,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.apiService.forceConversationsCacheReload('finish');
+    this.apiService.forceConversationsCacheReload();
   }
 
 }

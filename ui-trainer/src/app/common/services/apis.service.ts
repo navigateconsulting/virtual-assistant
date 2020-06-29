@@ -143,16 +143,11 @@ export class ApiService {
     );
   }
 
-  forceConversationsCacheReload(type: string) {
-    if (type === 'reset') {
+  forceConversationsCacheReload() {
       // Calling next will complete the current cache instance
       this.reloadConversations$.next();
       // Setting the cache to null will create a new cache the
       this.conversationsCache$ = null;
-    } else if (type === 'finish') {
-       // Calling next will complete the current cache instance
-      this.reloadConversations$.next();
-    }
   }
   // Conversations API End
 
