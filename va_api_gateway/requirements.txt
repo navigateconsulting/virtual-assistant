@@ -8,4 +8,4 @@ flask-cors
 aiofiles
 pyyaml
 celery[redis]
-rasa==1.10.1
+rasa==1.10.3
