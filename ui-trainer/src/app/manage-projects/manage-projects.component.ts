@@ -37,6 +37,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   openIntentORStoryORResponseFile: string;
   propertyPanel: string;
   projects_json: Array<object>;
+  showSpinner: Array<boolean>;
 
   @Output() selectedProject = new EventEmitter<object>();
 
@@ -50,6 +51,11 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   getProjects() {
     this.apiService.requestProjects().subscribe(projects => {
       this.projects_json = projects;
+      this.showSpinner = new Array<boolean>();
+      for (let i = 0; i < this.projects_json.length; i ++) {
+        this.showSpinner.push(false);
+      }
+      console.log(this.showSpinner);
       this.projectsDataSource = new MatTableDataSource(this.projects_json);
       this.projectsDataSource.paginator = this.paginator;
     },
@@ -133,53 +139,56 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
     });
   }
 
-  trainProject(projectObjectId: string) {
+  trainProject(projectObjectId: string, index: number) {
+    console.log(index);
+    this.showSpinner[index] = true;
     this.apiService.requestModelTraining(projectObjectId).subscribe(response => {
       if (response['status'] === 'Success' && response['message'] === 'PENDING') {
         this.notificationsService.showToast({status: 'Info', message: 'Model Is Getting Trained.'});
-        this.checkModelTrainStatus(projectObjectId, response['task_id']);
+        this.checkModelTrainStatus(projectObjectId, response['task_id'], index);
       } else if (response['status'] === 'Error') {
         const dialogRef = this.dialog.open(ShowTrainErrorComponent, {
           width: '700px',
           data: {errorMessage: response['message']}
         });
-        dialogRef.afterClosed().subscribe(response => {});
+        dialogRef.afterClosed().subscribe(() => {});
       }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
   }
 
-  checkModelTrainStatus(projectObjectId: string, taskId: string) {
+  checkModelTrainStatus(projectObjectId: string, taskId: string, index: number) {
     this.apiService.forceModelTrainingCacheReload('reset');
     this.apiService.checkModelTrainStatus(taskId).subscribe(response => {
       if (response['Status'] === 'SUCCESS') {
-        this.getModelTrainResult(projectObjectId, taskId);
+        this.getModelTrainResult(projectObjectId, taskId, index);
       }
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
   }
 
-  getModelTrainResult(projectObjectId: string, taskId: string) {
+  getModelTrainResult(projectObjectId: string, taskId: string, index: number) {
     this.apiService.getModelTrainingResult(taskId).subscribe(response => {
       if (response['Status'] === 'Success') {
         sessionStorage.setItem(projectObjectId, response['Message']);
         this.notificationsService.showToast({status: response['Status'], message: 'Model Training Complete.'});
+        this.showSpinner[index] = false;
       } else if (response['Status'] === 'Error') {
         const dialogRef = this.dialog.open(ShowTrainErrorComponent, {
           width: '700px',
           data: {errorMessage: response['Message']}
         });
-        dialogRef.afterClosed().subscribe(response => {});
+        dialogRef.afterClosed().subscribe(() => {});
       }
-      this.finishTraining();
+      this.finishTraining(index);
     },
     err => console.error('Observer got an error: ' + err),
     () => console.log('Observer got a complete notification'));
   }
 
-  finishTraining() {
+  finishTraining(index: number) {
     this.apiService.forceModelTrainingCacheReload('finish');
   }
 
@@ -214,13 +223,13 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   importProject(file: File) {
     const fileReader = new FileReader();
-    fileReader.readAsText(file, "UTF-8");
+    fileReader.readAsText(file, 'UTF-8');
     fileReader.onload = () => {
       this.apiService.importProject(JSON.parse(fileReader.result.toString())).subscribe(result => {
         if (result) {
-          this.notificationsService.showToast(result); 
+          this.notificationsService.showToast(result);
           this.forceReload();
-        }   
+        }
       },
       err => console.error('Observer got an error: ' + err),
       () => console.log('Observer got a complete notification'));
@@ -232,10 +241,10 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
 
   exportProject(projectName: any) {
     this.apiService.exportProject(projectName).subscribe(result => {
-      var sJson = JSON.stringify(result);
-      var element = document.createElement('a');
-      element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
-      element.setAttribute('download', projectName + ".json");
+      let sJson = JSON.stringify(result);
+      let element = document.createElement('a');
+      element.setAttribute('href', 'data:text/json;charset=UTF-8,' + encodeURIComponent(sJson));
+      element.setAttribute('download', projectName + '.json');
       element.style.display = 'none';
       document.body.appendChild(element);
       element.click(); // simulate click
