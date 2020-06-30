@@ -38,7 +38,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   getConversations() {
     this.apiService.requestConversations().subscribe(conversations => {
       if (conversations) {
-        this.conversations_json = conversations.slice();
+        this.conversations_json = conversations.slice().reverse();
         this.conversations_json_backup = JSON.parse(JSON.stringify(this.conversations_json));
         this.conversationsDataSource = new MatTableDataSource(this.conversations_json);
         this.conversationsDataSource.paginator = this.paginator;
