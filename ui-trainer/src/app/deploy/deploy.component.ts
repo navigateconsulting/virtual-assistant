@@ -26,7 +26,7 @@ export class DeployComponent implements OnInit, OnDestroy {
               public sharedDataService: SharedDataService,
               public notificationsService: NotificationsService) {}
 
-  projectsModelDisplayedColumns: string[] = ['icon', 'project_name', 'source', 'model_name', 'state', 'train', 'deploy'];
+  projectsModelDisplayedColumns: string[] = ['icon', 'project_name', 'source', 'model_name', 'deploy'];
   projectsModelDataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -52,62 +52,12 @@ export class DeployComponent implements OnInit, OnDestroy {
     this.projectsModelDataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  trainModel(projectObjectId: string) {
-    this.apiService.requestModelTraining(projectObjectId).subscribe(response => {
-      if (response['status'] === 'Success' && response['message'] === 'PENDING') {
-        this.notificationsService.showToast({status: 'Info', message: 'Model Is Getting Trained.'});
-        this.checkModelTrainStatus(projectObjectId, response['task_id']);
-      } else if (response['status'] === 'Error') {
-        const dialogRef = this.dialog.open(ShowTrainErrorComponent, {
-          width: '700px',
-          data: {errorMessage: response['message']}
-        });
-        dialogRef.afterClosed().subscribe(response => {});
-      }
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
-  }
-
-  checkModelTrainStatus(projectObjectId: string, taskId: string) {
-    this.apiService.forceModelTrainingCacheReload('reset');
-    this.apiService.checkModelTrainStatus(taskId).subscribe(response => {
-      if (response['Status'] === 'SUCCESS') {
-        this.getModelTrainResult(projectObjectId, taskId);
-      }
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
-  }
-
-  getModelTrainResult(projectObjectId: string, taskId: string) {
-    this.apiService.getModelTrainingResult(taskId).subscribe(response => {
-      if (response['Status'] === 'Success') {
-        sessionStorage.setItem(projectObjectId, response['Message']);
-        this.notificationsService.showToast({status: response['Status'], message: 'Model Training Complete.'});
-      } else if (response['Status'] === 'Error') {
-        const dialogRef = this.dialog.open(ShowTrainErrorComponent, {
-          width: '700px',
-          data: {errorMessage: response['Message']}
-        });
-        dialogRef.afterClosed().subscribe(response => {});
-      }
-      this.finishTraining();
-    },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
-  }
-
-  deployModel(projectObjectId: string) {
-    if (!sessionStorage.getItem(projectObjectId)) {
-      this.notificationsService.showToast({status: 'Error', message: 'Model Has Not Been Trained For This Project'});
-      return;
-    }
+  deployModel(projectModelName: string) {
     const dialogRef = this.dialog.open(DeployModelComponent);
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
         this.overlayService.spin$.next(true);
-        this.apiService.deployTrainedModel(sessionStorage.getItem(projectObjectId)).subscribe(result => {
+        this.apiService.deployTrainedModel(projectModelName).subscribe(result => {
           this.overlayService.spin$.next(false);
           this.notificationsService.showToast({status: 'Success', message: 'Model Deployed Successfully'});
           this.apiService.forceProjectsCacheReload('reset');

@@ -92,14 +92,14 @@
 
           <ng-container matColumnDef="state">
             <th mat-header-cell *matHeaderCellDef>State</th>
-            <td mat-cell *matCellDef="let project">
-              <mat-spinner *ngIf="project.state==='Training'" class="train-project" [diameter]="30"></mat-spinner>
+            <td mat-cell *matCellDef="let project; let i = index;">
+              <mat-spinner *ngIf="showSpinner[i] || project.state==='Training'" class="train-project" [diameter]="30"></mat-spinner>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="edit">
             <th mat-header-cell *matHeaderCellDef>Edit</th>
-            <td mat-cell *matCellDef="let project">
+            <td mat-cell *matCellDef="let project; let i = index;">
               <button class="project-icons" mat-icon-button
                 (click)="
                   editProject(
@@ -108,7 +108,7 @@
                     project.project_description
                   )
                 "
-                [disabled]="project.state === 'Training'"
+                [disabled]="showSpinner[i] || project.state === 'Training'"
               >
                 <mat-icon>edit</mat-icon>
               </button>
@@ -117,12 +117,12 @@
 
           <ng-container matColumnDef="delete">
             <th mat-header-cell *matHeaderCellDef>Delete</th>
-            <td mat-cell *matCellDef="let project">
+            <td mat-cell *matCellDef="let project; let i = index;">
               <button
                 class="project-icons"
                 mat-icon-button
                 (click)="deleteProject(project._id.$oid)"
-                [disabled]="project.state === 'Training'"
+                [disabled]="showSpinner[i] || project.state === 'Training'"
               >
                 <mat-icon>delete</mat-icon>
               </button>
@@ -131,12 +131,12 @@
 
           <ng-container matColumnDef="copy">
             <th mat-header-cell *matHeaderCellDef>Copy</th>
-            <td mat-cell *matCellDef="let project">
+            <td mat-cell *matCellDef="let project; let i = index;">
               <button
                 class="project-icons"
                 mat-icon-button
                 (click)="copyProject(project._id.$oid, project.project_name)"
-                [disabled]="project.state === 'Training'"
+                [disabled]="showSpinner[i] || project.state === 'Training'"
               >
                 <mat-icon>file_copy</mat-icon>
               </button>
@@ -145,8 +145,8 @@
 
           <ng-container matColumnDef="train">
             <th mat-header-cell *matHeaderCellDef>Train</th>
-            <td mat-cell *matCellDef="let project">
-              <button mat-icon-button class="project-icons" [disabled]="project.state === 'Training'" (click)="trainProject(project._id.$oid)">
+            <td mat-cell *matCellDef="let project; let i = index;">
+              <button mat-icon-button class="project-icons" [disabled]="showSpinner[i] || project.state === 'Training'" (click)="trainProject(project._id.$oid, i)">
                 <mat-icon>model_training</mat-icon>
               </button>
             </td>
@@ -154,8 +154,8 @@
 
           <ng-container matColumnDef="try_now">
             <th mat-header-cell *matHeaderCellDef>Try Now</th>
-            <td mat-cell *matCellDef="let project">
-              <button mat-icon-button class="project-icons" [disabled]="project.state === 'Training'||project.model_name===''" (click)="tryNowProject(project)">
+            <td mat-cell *matCellDef="let project; let i = index;">
+              <button mat-icon-button class="project-icons" [disabled]="showSpinner[i] || project.state === 'Training'||project.model_name===''" (click)="tryNowProject(project)">
                 <mat-icon>play_circle_outline</mat-icon>
               </button>
             </td>
@@ -163,8 +163,8 @@
 
           <ng-container matColumnDef="properties">
             <th mat-header-cell *matHeaderCellDef>Properties</th>
-            <td mat-cell *matCellDef="let project">
-              <button mat-icon-button class="project-icons" [disabled]="project.state === 'Training'" (click)="openProjectProperties(project._id.$oid, project.configuration)">
+            <td mat-cell *matCellDef="let project; let i = index;">
+              <button mat-icon-button class="project-icons" [disabled]="showSpinner[i] || project.state === 'Training'" (click)="openProjectProperties(project._id.$oid, project.configuration)">
                 <mat-icon>settings</mat-icon>
               </button>
             </td>
@@ -172,8 +172,8 @@
 
           <ng-container matColumnDef="export">
             <th mat-header-cell *matHeaderCellDef>Export</th>
-            <td mat-cell *matCellDef="let project">
-              <button mat-icon-button class="project-icons" [disabled]="project.state === 'Training'" (click)="exportProject(project.project_name)">
+            <td mat-cell *matCellDef="let project; let i = index;">
+              <button mat-icon-button class="project-icons" [disabled]="showSpinner[i] || project.state === 'Training'" (click)="exportProject(project.project_name)">
                 <mat-icon>unarchive</mat-icon>
               </button>
             </td>

@@ -32,27 +32,11 @@
             <th mat-header-cell *matHeaderCellDef> Model Name </th>
             <td mat-cell *matCellDef="let project"> {{project.model_name}} </td>
           </ng-container>
-        
-          <ng-container matColumnDef="state">
-            <th mat-header-cell *matHeaderCellDef> State </th>
-            <td mat-cell *matCellDef="let project">
-              <mat-spinner *ngIf="project.state==='Training'" class="train-project" [diameter]="30"></mat-spinner>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="train">
-            <th mat-header-cell *matHeaderCellDef> Train </th>
-            <td mat-cell *matCellDef="let project" class="train">
-              <button mat-icon-button class="text-center project-icons" (click)="trainModel(project._id.$oid)">
-                <mat-icon>model_training</mat-icon>
-              </button>
-            </td>
-          </ng-container>
 
           <ng-container matColumnDef="deploy">
             <th mat-header-cell *matHeaderCellDef> Deploy </th>
             <td mat-cell *matCellDef="let project" class="deploy">
-              <button mat-icon-button class="text-center project-icons" [disabled]="project.state === 'Training'||project.model_name===''" (click)="deployModel(project._id.$oid)">
+              <button mat-icon-button class="text-center project-icons" [disabled]="project.state === 'Training'||project.model_name===''" (click)="deployModel(project.model_name)">
                 <mat-icon>cloud_done</mat-icon>
               </button>
             </td>
