@@ -30,10 +30,10 @@ Bug fixes
 
 ## Major Features and Improvements
 
-* [209] (https://github.com/navigateconsulting/eva/pull/209) Rasa version upgrade to 1.10.3
+* [209](https://github.com/navigateconsulting/eva/pull/209) Rasa version upgrade to 1.10.3
 
 ## Bug Fixes and Other Changes
 
-* [207] (https://github.com/navigateconsulting/eva/pull/207) changes to UI
-* [210] (https://github.com/navigateconsulting/eva/pull/210) Spinner issue on Manage Project Page has now been resolved, earlier there was a delay in showing the spinner. Conversations Chat was not displaying the slot values earlier, now the issue is fixed.
-* [211] (https://github.com/navigateconsulting/eva/pull/211) Displaying Conversations In Descending Order so that the latest conversation would be displayed first in the list.
+* [207](https://github.com/navigateconsulting/eva/pull/207) changes to UI
+* [210](https://github.com/navigateconsulting/eva/pull/210) Spinner issue on Manage Project Page has now been resolved, earlier there was a delay in showing the spinner. Conversations Chat was not displaying the slot values earlier, now the issue is fixed.
+* [211](https://github.com/navigateconsulting/eva/pull/211) Displaying Conversations In Descending Order so that the latest conversation would be displayed first in the list.
