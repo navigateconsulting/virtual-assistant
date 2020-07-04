@@ -35,7 +35,7 @@ We used below projects as chat bot framework.
 
 The Application stack is built with Python as backend and Angular as front end. 
 
-## Getting Stated 
+# Getting Stated 
 
 We use [Docker hub](https://hub.docker.com/u/navigateconsulting) to publish docker container images.
 
@@ -123,37 +123,21 @@ If you intent to extend the stack and make changes to the code base , follow bel
 
 Below are some short examples on how to use this application , detailed documentation on usage can be found [here](https://navigateconsulting.github.io/eva/docs/usage/) 
 
-1. Creating a Project  
-
-![Creating a Project](docs/assets/gifs/create-project.gif)
-
-2. Creating a Domain
-
-![Creating a Domain](docs/assets/gifs/create-domain.gif)
-
-3. Creating an Intent 
+1. Creating an Intent 
 
 ![Creating an Intent](docs/assets/gifs/create-intent.gif)
 
-4. Creating a Response 
+2. Creating a Response 
 
 ![Creating a Response](docs/assets/gifs/create-response.gif)
 
-5. Creating a Story
+3. Creating a Story
 
 ![Creating a Story](docs/assets/gifs/create-story.gif)
 
-6. Training a Project 
-
-![Training a Project](docs/assets/gifs/train-project.gif)
-
-7. Try your Project 
+4. Try your Project 
 
 ![Try your Project](docs/assets/gifs/try-now.gif)
-
-8. Deploy the Project 
-
-![Deploy the Project](docs/assets/gifs/deploy-project.gif)
 
 
 # Roadmap
