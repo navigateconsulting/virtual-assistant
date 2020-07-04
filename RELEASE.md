@@ -32,7 +32,7 @@ Bug fixes
 
 ## Bug Fixes and Other Changes
 
-* [] Updated documentation 
+* [213](https://github.com/navigateconsulting/eva/pull/213) Updated documentation 
 
 # Release 2.0.3
 
