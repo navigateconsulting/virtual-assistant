@@ -1,4 +1,4 @@
-# Release 2.0.3
+# Release X.X.X
 
 <INSERT SMALL BLURB ABOUT RELEASE FOCUS AREA AND POTENTIAL TOOLCHAIN CHANGES>
 
@@ -23,11 +23,21 @@
 * <NOTES SHOULD BE GROUPED PER AREA>
 
 
-
-# Release 2.0.3 (Up coming Release )
+# Release Candidate 
 
 Bug fixes
+    
+## Major Features and Improvements
 
+
+## Bug Fixes and Other Changes
+
+* [] Updated documentation 
+
+# Release 2.0.3
+
+Bug fixes
+    
 ## Major Features and Improvements
 
 * [209](https://github.com/navigateconsulting/eva/pull/209) Rasa version upgrade to 1.10.3

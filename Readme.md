@@ -10,49 +10,46 @@
   <p><h2>Enterprise Virtual Assistant (EVA)</h2></p>
 </div>
 
-## Table of Contents
+# Table of Contents
 
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-* [Usage](#usage)
+* [Documentation](#Documentation)
  
-## About The Project
+# About The Project
 
-### Built With
+An Easy to use application to build train and deploy chat bots. This project intends to be a one stop shop for all production grade chat bot needs  
 
-We used below projects to build the application stack.
+A snippet of how this application works ! 
 
-[Rasa Open Source](https://github.com/RasaHQ/rasa) 
+![Try Now screen Demo](docs/assets/gifs/try-now.gif) 
 
+## Built With
 
-The Application stack is built with below technologies 
+We used below projects as chat bot framework.
 
-Angular - For front end development.
- 
-Python Flask - For API backend.
+* [Rasa Open Source](https://github.com/RasaHQ/rasa) Version 1.10.3
 
-mongodb - As a Database for storing Rasa projects.
-
-redis - As a caching layer between UI and Backend.
+The Application stack is built with Python as backend and Angular as front end. 
 
 ## Getting Stated 
 
 We use [Docker hub](https://hub.docker.com/u/navigateconsulting) to publish docker container images.
 
-### Prerequisites
+## Prerequisites
 
    - Docker version 18.09 onwards. (not tested on previous versions)
    - Docker Compose version 1.24 onwards (not tested on previous versions)
    - Linux Distributions (Windows not supported as of now, tested on ubuntu)
 
-### Installation 
+## Installation 
 
 If the project is to be deployed for production, please follow instructions for production deployment in below section
 
-#### Quick Installation
+### Quick Installation
 
 Download the docker-compose.yml file with below command
 
@@ -64,7 +61,7 @@ And start the application with a simple docker compose up command.
 
 This will start the application user interface on port 8080. 
 
-#### Production Mode
+### Production Mode
 
 For production deployment, all the user interface containers are recommended to be on TLS. Refer docker-compose.tls_example.yml file 
 for how to configure and secure the deployment. Example contains a Letscert container which handles certificates and reissue on expiry.
@@ -111,7 +108,7 @@ and once the containers are up, start the application stack.
 
     docker-compose up -d
 
-#### For Development 
+### For Development 
 
 If you intent to extend the stack and make changes to the code base , follow below instructions to clone the repo and build containers from source
 
@@ -122,13 +119,58 @@ If you intent to extend the stack and make changes to the code base , follow bel
 
 **Note:  docker-compose.yml file uses docker hub to pull docker containers and does not build from source.
 
-### Documentation
+# Documentation
 
-You can find detailed documentation [here](https://navigateconsulting.github.io/virtual-assistant/)
+Below are some short examples on how to use this application , detailed documentation on usage can be found [here](https://navigateconsulting.github.io/eva/docs/usage/) 
 
-## Usage
-   Usage instructions : [click here](docs/usage/Readme.md)
+1. Creating a Project  
 
-## License
+![Creating a Project](docs/assets/gifs/create-project.gif)
+
+2. Creating a Domain
+
+![Creating a Domain](docs/assets/gifs/create-domain.gif)
+
+3. Creating an Intent 
+
+![Creating an Intent](docs/assets/gifs/create-intent.gif)
+
+4. Creating a Response 
+
+![Creating a Response](docs/assets/gifs/create-response.gif)
+
+5. Creating a Story
+
+![Creating a Story](docs/assets/gifs/create-story.gif)
+
+6. Training a Project 
+
+![Training a Project](docs/assets/gifs/train-project.gif)
+
+7. Try your Project 
+
+![Try your Project](docs/assets/gifs/try-now.gif)
+
+8. Deploy the Project 
+
+![Deploy the Project](docs/assets/gifs/deploy-project.gif)
+
+
+# Roadmap
+
+See the open issues for a list of proposed features (and known issues).
+
+# Contributing 
+
+Any contributions are Welcome ! To contribute, 
+
+1. Fork the Project
+2. Create your Feature Branch (git checkout -b feature/AmazingFeature)
+3. Commit your Changes (git commit -m 'Add some AmazingFeature')
+4. Push to the Branch (git push origin feature/AmazingFeature)
+5. Open a Pull Request
+
+
+# License
 
 [Apache 2.0](LICENSE)
