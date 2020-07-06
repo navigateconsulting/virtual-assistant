@@ -152,6 +152,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
           data: {errorMessage: response['message']}
         });
         dialogRef.afterClosed().subscribe(() => {});
+        this.showSpinner[index] = false;
       }
     },
     err => console.error('Observer got an error: ' + err),
@@ -174,7 +175,6 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
       if (response['Status'] === 'Success') {
         sessionStorage.setItem(projectObjectId, response['Message']);
         this.notificationsService.showToast({status: response['Status'], message: 'Model Training Complete.'});
-        this.showSpinner[index] = false;
       } else if (response['Status'] === 'Error') {
         const dialogRef = this.dialog.open(ShowTrainErrorComponent, {
           width: '700px',
@@ -189,6 +189,7 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
   }
 
   finishTraining(index: number) {
+    this.showSpinner[index] = false;
     this.apiService.forceModelTrainingCacheReload('finish');
   }
 
