@@ -32,7 +32,10 @@ Bug fixes
 
 ## Bug Fixes and Other Changes
 
-* [213](https://github.com/navigateconsulting/eva/pull/213) Updated documentation 
+* [213](https://github.com/navigateconsulting/eva/pull/213) Updated documentation
+* [214](https://github.com/navigateconsulting/eva/pull/214) Spinner was continously spinning in loop even after the training had completed and getting the completed status in the front end.
+* [215](https://github.com/navigateconsulting/eva/pull/215) npm dependancy in package.json file upgraded from 6.13.4 to 6.14.6
+* [216](https://github.com/navigateconsulting/eva/pull/216) loadash dependancy in package.json file upgraded from 4.17.15 to 4.17.19
 
 # Release 2.0.3
 
