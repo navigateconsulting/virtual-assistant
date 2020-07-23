@@ -244,7 +244,6 @@ class Export:
                                'action_default_fallback',
                                'action_deactivate_form',
                                'action_revert_fallback_events',
-                             --  'action_default_ask_affirmation',
                                'action_default_ask_rephrase',
                                'action_back']
 
