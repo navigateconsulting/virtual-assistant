@@ -67,7 +67,7 @@
           <div mat-card-avatar color="white" font-size="4" class="bot">{{userBotCardType}}</div>
           <mat-card-title>{{userBotCardText}}</mat-card-title>
           <mat-card-subtitle>
-            {{userBotCardTime | date : 'shortTime'}} <span *ngIf="userBotCardIntent!==''">|</span> {{userBotCardIntent}} <span *ngIf="userBotCardConfidence!==''">|</span> {{userBotCardConfidence}}
+            {{userBotCardTime | date : 'medium'}} <span *ngIf="userBotCardIntent!==''">|</span> {{userBotCardIntent}} <span *ngIf="userBotCardConfidence!==''">|</span> {{userBotCardConfidence}}
           </mat-card-subtitle>
         </mat-card-header>
       </mat-card>

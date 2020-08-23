@@ -14,9 +14,9 @@ import { ApiService } from '../common/services/apis.service';
 export class ConversationsComponent implements OnInit, OnDestroy {
 
   constructor(public apiService: ApiService,
-              public notificationsService: NotificationsService,
-              public sharedDataService: SharedDataService,
-              public _router: Router) { }
+    public notificationsService: NotificationsService,
+    public sharedDataService: SharedDataService,
+    public _router: Router) { }
 
   // tslint:disable-next-line: max-line-length
   conversationsDisplayedColumns: string[] = ['conversation_id', 'conversation_timestamp', 'icon'];
@@ -38,15 +38,18 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   getConversations() {
     this.apiService.requestConversations().subscribe(conversations => {
       if (conversations) {
-        this.conversations_json = conversations.slice().reverse();
+        this.conversations_json = conversations.sort(function (a, b) {
+          var x = a['latest_event_time']; var y = b['latest_event_time'];
+          return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+        });
         this.conversations_json_backup = JSON.parse(JSON.stringify(this.conversations_json));
         this.conversationsDataSource = new MatTableDataSource(this.conversations_json);
         this.conversationsDataSource.paginator = this.paginator;
         this.applyConversationsFilter(this.filterConversationText);
       }
     },
-    err => console.error('Observer got an error: ' + err),
-    () => console.log('Observer got a complete notification'));
+      err => console.error('Observer got an error: ' + err),
+      () => console.log('Observer got a complete notification'));
   }
 
   applyConversationsFilter(filterValue: string) {
@@ -55,11 +58,11 @@ export class ConversationsComponent implements OnInit, OnDestroy {
       const converted_ts = this.convertTimestamp(value['latest_event_time']);
       // tslint:disable-next-line: max-line-length
       if (value['sender_id'].includes(filterValue.trim()) ||
-          value['sender_id'].toLowerCase().includes(filterValue.trim()) ||
-          value['sender_id'].toUpperCase().includes(filterValue.trim()) ||
-          converted_ts.includes(filterValue.trim()) ||
-          converted_ts.includes(filterValue.trim()) ||
-          converted_ts.includes(filterValue.trim())) {
+        value['sender_id'].toLowerCase().includes(filterValue.trim()) ||
+        value['sender_id'].toUpperCase().includes(filterValue.trim()) ||
+        converted_ts.includes(filterValue.trim()) ||
+        converted_ts.includes(filterValue.trim()) ||
+        converted_ts.includes(filterValue.trim())) {
         return value;
       }
     });

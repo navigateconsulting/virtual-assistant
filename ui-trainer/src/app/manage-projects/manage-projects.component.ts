@@ -55,7 +55,6 @@ export class ManageProjectsComponent implements OnInit, OnDestroy {
       for (let i = 0; i < this.projects_json.length; i ++) {
         this.showSpinner.push(false);
       }
-      console.log(this.showSpinner);
       this.projectsDataSource = new MatTableDataSource(this.projects_json);
       this.projectsDataSource.paginator = this.paginator;
     },
