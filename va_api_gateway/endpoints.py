@@ -52,7 +52,8 @@ GLOBAL_EXPIRY = 60
 try:
     r = redis.Redis(host=os.environ['REDIS_URL'],
                     port=os.environ['REDIS_PORT'],
-                    charset="utf-8", decode_responses=True)
+                    charset="utf-8", decode_responses=True,
+                    password=os.environ['REDIS_PASS'])
     logger.info("Trying to connect to Redis Docker container ")
 except KeyError:
     logger.debug("Local run connecting to Redis  ")

@@ -11,6 +11,7 @@ services:
       - THREADS=50
       - REDIS_URL=redis
       - REDIS_PORT=6379
+      - REDIS_PASS=Y7T6r5re3t8j9yr
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
       - RASA_SERVER=http://va_custom_rasa:5005/model
@@ -23,6 +24,7 @@ services:
 
   redis:
     image: 'redis:4-alpine'
+    command: redis-server --requirepass Y7T6r5re3t8j9yr
     ports:
       - '6379:6379'
 
