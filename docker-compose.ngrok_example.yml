@@ -72,8 +72,6 @@ services:
       - run
       - --endpoints
       - config/endpoints.yml
-      - --credentials
-      - config/credentials.yml
       - --debug
       - --enable-api
       - --cors
