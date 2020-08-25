@@ -12,10 +12,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 try:
-    client = MongoClient(os.environ['MONGODB_HOST'],
-                         int(os.environ['MONGODB_PORT']),
-                         username=os.environ['MONGODB_USERNAME'],
-                         password=os.environ['MONGODB_PASS'])
+    client = MongoClient('mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ['MONGODB_PASS'] + '@' +
+                         str(os.environ['MONGODB_HOST']))
 except KeyError:
     client = MongoClient('localhost', 27017)
 
