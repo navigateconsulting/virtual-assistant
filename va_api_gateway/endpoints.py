@@ -596,20 +596,27 @@ class Entities(Resource):
 # noinspection PyMethodMayBeStatic
 class AllConversations(Resource):
 
-    def get(self):
+    def get(self, page_number, page_size):
 
-        # check if result can be served from cache
-        if r.exists("conversations"):
-            return json.loads(r.get("conversations"))
+        logging.debug('getting Data from DB')
 
-        else:
-            # Get results and update the cache with new values
-            logging.debug('getting Data from DB')
+        result = ConversationsModel.get_all_conversations(page_number, page_size)
+        r.set("conversations", json.dumps(result), ex=GLOBAL_EXPIRY)
 
-            result = ConversationsModel.get_all_conversations()
-            r.set("conversations", json.dumps(result), ex=GLOBAL_EXPIRY)
+        return result
 
-            return result
+        # # check if result can be served from cache
+        # if r.exists("conversations"):
+        #     return json.loads(r.get("conversations"))
+        #
+        # else:
+        #     # Get results and update the cache with new values
+        #     logging.debug('getting Data from DB')
+        #
+        #     result = ConversationsModel.get_all_conversations()
+        #     r.set("conversations", json.dumps(result), ex=GLOBAL_EXPIRY)
+        #
+        #     return result
 
 
 # noinspection PyMethodMayBeStatic
