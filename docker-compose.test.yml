@@ -53,8 +53,8 @@ services:
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
-      - MONGO_INITDB_ROOT_USERNAME="eva"
-      - MONGO_INITDB_ROOT_PASSWORD="evapass"
+      - MONGO_INITDB_ROOT_USERNAME=eva
+      - MONGO_INITDB_ROOT_PASSWORD=evapass
     volumes:
       - mongodb:/data/db
     ports:
