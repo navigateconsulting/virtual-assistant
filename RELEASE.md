@@ -35,8 +35,10 @@ Bug fixes
 * [213](https://github.com/navigateconsulting/eva/pull/213) Updated documentation
 * [214](https://github.com/navigateconsulting/eva/pull/214) Spinner was continously spinning in loop even after the training had completed and getting the completed status in the front end.
 * [215](https://github.com/navigateconsulting/eva/pull/215) npm dependancy in package.json file upgraded from 6.13.4 to 6.14.6
-* [216](https://github.com/navigateconsulting/eva/pull/216) loadash dependancy in package.json file upgraded from 4.17.15 to 4.17.19
+* [216](https://github.com/navigateconsulting/eva/pull/216) and [217](https://github.com/navigateconsulting/eva/pull/217) loadash dependancy in package.json file upgraded from 4.17.15 to 4.17.19
+* [218](https://github.com/navigateconsulting/eva/pull/218) and [219](https://github.com/navigateconsulting/eva/pull/219) changes in populating default actions for projects
 * [220](https://github.com/navigateconsulting/eva/pull/220) elliptic dependancy in package-lock.json upgraded from 6.5.2 to 6.5.3.
+* [221](https://github.com/navigateconsulting/eva/pull/221) removed Credentials yml file from rasa container, presence of this caused rasa to assume channels are used. 
 * [222](https://github.com/navigateconsulting/eva/pull/222) Sorted Conversations in descending order with respect to timestamp of comversation date and added Full Date on the right side panel in try now page 
 
 # Release 2.0.3
