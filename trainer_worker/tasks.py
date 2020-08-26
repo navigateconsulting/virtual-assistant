@@ -5,7 +5,9 @@ import rasa
 
 logger = get_task_logger(__name__)
 
-app = Celery('tasks', broker='redis://redis:6379/0', backend='redis://redis:6379/0')
+redis_url = 'redis://:' + os.environ['REDIS_PASS'] + '@redis:6379/0'
+
+app = Celery('tasks', broker=redis_url, backend=redis_url)
 
 
 @app.task()

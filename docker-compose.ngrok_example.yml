@@ -35,6 +35,8 @@ services:
     build: './trainer_worker'
     volumes:
       - rasa_projects:/rasa_projects
+    environment:
+      - REDIS_PASS=Y7T6r5re3t8j9yr
     depends_on:
       - redis
       - va_api_gateway

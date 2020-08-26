@@ -41,6 +41,8 @@ services:
 
   trainer_worker:
     build: './trainer_worker'
+    environment:
+      - REDIS_PASS=Y7T6r5re3t8j9yr
     volumes:
       - rasa_projects:/rasa_projects
     depends_on:
