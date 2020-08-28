@@ -633,6 +633,7 @@ class RefreshDb(Resource):
     def get(self):
 
         result = RefreshDbModel.refresh_db()
+        r.delete("all_projects")
         return result
 
 
