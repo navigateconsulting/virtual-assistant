@@ -61,8 +61,9 @@ except KeyError:
 
 
 # Connect to celery task Queue
+redis_url = 'redis://:' + os.environ['REDIS_PASS'] + '@redis:6379/0'
 
-trainer_app = Celery('simple_worker', broker='redis://redis:6379/0', backend='redis://redis:6379/0')
+trainer_app = Celery('simple_worker', broker=redis_url, backend=redis_url)
 
 
 # noinspection PyMethodMayBeStatic
@@ -676,10 +677,11 @@ class TrainModel(Resource):
         ProjectsModel.set_project_mode(mode="Training", project_id=project_id)
 
         result = Export.call_main(project_id)
-        logger.debug(result)
+        logger.debug("Project Export Completed Result - " + str(result))
 
         # Start Training for the model
 
+        logger.debug("Starting model training task")
         task_obj = trainer_app.send_task('tasks.train_model', kwargs={'project_id': project_id})
         logger.debug("Task ID "+str(task_obj.id))
 
