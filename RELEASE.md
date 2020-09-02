@@ -29,6 +29,11 @@ Bug fixes
     
 ## Major Features and Improvements
 
+* [223](https://github.com/navigateconsulting/eva/pull/223) Added authentication for mongo, and redis containers<br/>
+Lazy loading for conversations API and UI<br/>
+Changes In Routes (Separate for each component eg: Actions, Conversations, Projects, etc.)<br/>
+CSS Tweaks in Conversations Chat Components
+Added Entity Display feature respective to the intent selected in the chat
 
 ## Bug Fixes and Other Changes
 

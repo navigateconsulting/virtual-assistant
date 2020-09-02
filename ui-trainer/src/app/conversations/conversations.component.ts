@@ -48,10 +48,8 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     }
   }
   getConversations() {
-    console.log(+localStorage.getItem('conversations_pageIndex'), +localStorage.getItem('conversations_pageSize'));
     this.apiService.requestConversations(+localStorage.getItem('conversations_pageIndex'), +localStorage.getItem('conversations_pageSize')).subscribe(conversations => {
       if (conversations) {
-        console.log(conversations);
         this.conversations_json = conversations.sort(function (a, b) {
           var x = a['latest_event_time']; var y = b['latest_event_time'];
           return ((x > y) ? -1 : ((x < y) ? 1 : 0));
