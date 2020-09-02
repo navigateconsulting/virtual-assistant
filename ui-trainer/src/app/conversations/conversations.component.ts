@@ -28,15 +28,23 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
+    sessionStorage.setItem('currentPage', 'conversations');
     this.conversations_json = new Array<object>();
     this.conversations_json_backup = new Array<object>();
+    this.getConvoPaginationData();
     this.getConversations();
-    this.paginator.pageIndex = +localStorage.getItem('conversations_pageIndex');
-    this.paginator.pageSize = +localStorage.getItem('conversations_pageSize');
   }
-
+  getConvoPaginationData() {
+    if (+localStorage.getItem('conversations_pageIndex') !== 0 && +localStorage.getItem('conversations_pageSize') !== 0) {
+      this.paginator.pageIndex = +localStorage.getItem('conversations_pageIndex');
+      this.paginator.pageSize = +localStorage.getItem('conversations_pageSize');
+    } else {
+      localStorage.setItem('conversations_pageIndex', '1');
+      localStorage.setItem('conversations_pageSize', '10');
+    }
+  }
   getConversations() {
-    this.apiService.requestConversations().subscribe(conversations => {
+    this.apiService.requestConversations(+localStorage.getItem('conversations_pageIndex'), +localStorage.getItem('conversations_pageSize')).subscribe(conversations => {
       if (conversations) {
         this.conversations_json = conversations.sort(function (a, b) {
           var x = a['latest_event_time']; var y = b['latest_event_time'];
@@ -72,6 +80,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   getConversationsPaginatorData(event: any) {
     localStorage.setItem('conversations_pageIndex', event.pageIndex);
     localStorage.setItem('conversations_pageSize', event.pageSize);
+    this.getConversations();
   }
 
   openConversationChat(conversation_id: string) {
@@ -85,6 +94,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    sessionStorage.removeItem('currentPage');
     this.apiService.forceConversationsCacheReload();
   }
 

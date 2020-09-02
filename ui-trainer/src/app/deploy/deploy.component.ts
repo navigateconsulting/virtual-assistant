@@ -32,6 +32,7 @@ export class DeployComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
+    sessionStorage.setItem('currentPage', 'deploy');
     this.getProjectsForDeploy();
     this.paginator.pageIndex = +localStorage.getItem('deploy_pageIndex');
     this.paginator.pageSize = +localStorage.getItem('deploy_pageSize');
@@ -79,6 +80,7 @@ export class DeployComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    sessionStorage.removeItem('currentPage');
     this.overlayService.spin$.next(false);
     this.dialog.closeAll();
   }

@@ -29,6 +29,7 @@ export class ManageActionsComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
+    sessionStorage.setItem('currentPage', 'actions');
     this.actions_json = new Array<object>();
     this.getActions();
     this.paginator.pageIndex = +localStorage.getItem('actions_pageIndex');
@@ -125,6 +126,7 @@ export class ManageActionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    sessionStorage.removeItem('currentPage');
     this.apiService.forceActionsCacheReload('finish');
     this.dialog.closeAll();
   }
