@@ -79,7 +79,7 @@
           </div>
           <mat-card-title>{{ userBotCardText }}</mat-card-title>
           <mat-card-subtitle>
-            {{ userBotCardTime | date: "shortTime" }}
+            {{ userBotCardTime | date: "medium" }}
             <span *ngIf="userBotCardIntent !== ''">|</span>
             {{ userBotCardIntent }}
             <span *ngIf="userBotCardConfidence !== ''">|</span>
