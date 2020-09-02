@@ -7,8 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
+  appParamExists: boolean;
+
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (sessionStorage.getItem('appParamExists') === 'Y') {
+      this.appParamExists = true;
+    } else {
+      this.appParamExists = false;
+    }
+  }
 
 }

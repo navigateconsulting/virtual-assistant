@@ -26,6 +26,7 @@ export class ManageTrainerComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
+    sessionStorage.setItem('currentPage', 'trainer');
     this.breadcrumb_arr = new Array<Breadcrumb>();
     this.breadcrumb_arr.push({breadcrumb_name: 'Projects', breadcrumb_stub: {}, breadcrumb_type: 'root'});
     this.setComponent = 'manage-projects';
@@ -106,6 +107,10 @@ export class ManageTrainerComponent implements OnInit {
     } else if (breadCrumbObject.breadcrumb_type === 'story') {
       this.irsSelected({irs_object: breadCrumbObject.breadcrumb_stub, type: 'story'});
     }
+  }
+
+  ngOnDestroy(): void {
+    sessionStorage.removeItem('currentPage');
   }
 
 }

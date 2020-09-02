@@ -4,6 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthService } from './common/services/auth.service';
 import { environment } from '../environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ export class AppComponent {
 
   constructor(private matIconRegistry: MatIconRegistry,
               private domSanitizer: DomSanitizer,
+              private route: ActivatedRoute,
               private router: Router, public authService: AuthService) {
     this.matIconRegistry.addSvgIcon(
       'project',
@@ -117,7 +119,13 @@ export class AppComponent {
   checkTokenValidity() {
     if (!this.authService.isTokenExpired()) {
       this.loggedIn = true;
-      this.router.navigate(['/home/trainer'])
+      if (localStorage.getItem('jwt_token') === 'no_token' && window.location.href.split('/').pop() !== 'applications' && window.location.href.split('/').pop() !== 'home' && window.location.href.split('/').pop() !== '') {
+        sessionStorage.setItem('appParamExists', 'Y');
+        this.router.navigate(['applications', { app : window.location.href.split('/').pop() }]);
+      } else {
+        sessionStorage.setItem('appParamExists', 'N');
+        this.router.navigate(['applications']);
+      }
     } else {
       this.callParentApp();
     }
