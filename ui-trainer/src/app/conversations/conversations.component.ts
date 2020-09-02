@@ -24,6 +24,8 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   conversations_json: Array<object>;
   conversations_json_backup: Array<object>;
   filterConversationText = '';
+  pageIndex = 0
+  pageSize = 0;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -36,16 +38,20 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   }
   getConvoPaginationData() {
     if (+localStorage.getItem('conversations_pageIndex') !== 0 && +localStorage.getItem('conversations_pageSize') !== 0) {
-      this.paginator.pageIndex = +localStorage.getItem('conversations_pageIndex');
-      this.paginator.pageSize = +localStorage.getItem('conversations_pageSize');
+      this.pageIndex = +localStorage.getItem('conversations_pageIndex');
+      this.pageSize = +localStorage.getItem('conversations_pageSize');
     } else {
+      this.pageIndex = 1;
+      this.pageSize = 10;
       localStorage.setItem('conversations_pageIndex', '1');
       localStorage.setItem('conversations_pageSize', '10');
     }
   }
   getConversations() {
+    console.log(+localStorage.getItem('conversations_pageIndex'), +localStorage.getItem('conversations_pageSize'));
     this.apiService.requestConversations(+localStorage.getItem('conversations_pageIndex'), +localStorage.getItem('conversations_pageSize')).subscribe(conversations => {
       if (conversations) {
+        console.log(conversations);
         this.conversations_json = conversations.sort(function (a, b) {
           var x = a['latest_event_time']; var y = b['latest_event_time'];
           return ((x > y) ? -1 : ((x < y) ? 1 : 0));
@@ -93,9 +99,27 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     return new Date(time_stamp * 1000).toLocaleString();
   }
 
+  updatePageSize(event: any) {
+    localStorage.setItem('conversations_pageSize', event.value);
+    this.apiService.forceConversationsCacheReload('reset');
+    this.getConversations();
+  }
+
+  updatePageIndex(type: string) {
+    if (type === '+') {
+      this.pageIndex += 1;
+      localStorage.setItem('conversations_pageIndex', '' + this.pageIndex);
+    } else if (type === '-' && this.pageIndex > 1) {
+      this.pageIndex -= 1;
+      localStorage.setItem('conversations_pageIndex', '' + this.pageIndex);
+    }
+    this.apiService.forceConversationsCacheReload('reset');
+    this.getConversations();
+  }
+
   ngOnDestroy(): void {
     sessionStorage.removeItem('currentPage');
-    this.apiService.forceConversationsCacheReload();
+    this.apiService.forceConversationsCacheReload('finish');
   }
 
 }
