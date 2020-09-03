@@ -24,19 +24,31 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   conversations_json: Array<object>;
   conversations_json_backup: Array<object>;
   filterConversationText = '';
+  pageIndex = 0
+  pageSize = 0;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
+    sessionStorage.setItem('currentPage', 'conversations');
     this.conversations_json = new Array<object>();
     this.conversations_json_backup = new Array<object>();
+    this.getConvoPaginationData();
     this.getConversations();
-    this.paginator.pageIndex = +localStorage.getItem('conversations_pageIndex');
-    this.paginator.pageSize = +localStorage.getItem('conversations_pageSize');
   }
-
+  getConvoPaginationData() {
+    if (+localStorage.getItem('conversations_pageIndex') !== 0 && +localStorage.getItem('conversations_pageSize') !== 0) {
+      this.pageIndex = +localStorage.getItem('conversations_pageIndex');
+      this.pageSize = +localStorage.getItem('conversations_pageSize');
+    } else {
+      this.pageIndex = 1;
+      this.pageSize = 10;
+      localStorage.setItem('conversations_pageIndex', '1');
+      localStorage.setItem('conversations_pageSize', '10');
+    }
+  }
   getConversations() {
-    this.apiService.requestConversations().subscribe(conversations => {
+    this.apiService.requestConversations(+localStorage.getItem('conversations_pageIndex'), +localStorage.getItem('conversations_pageSize')).subscribe(conversations => {
       if (conversations) {
         this.conversations_json = conversations.sort(function (a, b) {
           var x = a['latest_event_time']; var y = b['latest_event_time'];
@@ -72,6 +84,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   getConversationsPaginatorData(event: any) {
     localStorage.setItem('conversations_pageIndex', event.pageIndex);
     localStorage.setItem('conversations_pageSize', event.pageSize);
+    this.getConversations();
   }
 
   openConversationChat(conversation_id: string) {
@@ -84,8 +97,27 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     return new Date(time_stamp * 1000).toLocaleString();
   }
 
+  updatePageSize(event: any) {
+    localStorage.setItem('conversations_pageSize', event.value);
+    this.apiService.forceConversationsCacheReload('reset');
+    this.getConversations();
+  }
+
+  updatePageIndex(type: string) {
+    if (type === '+') {
+      this.pageIndex += 1;
+      localStorage.setItem('conversations_pageIndex', '' + this.pageIndex);
+    } else if (type === '-' && this.pageIndex > 1) {
+      this.pageIndex -= 1;
+      localStorage.setItem('conversations_pageIndex', '' + this.pageIndex);
+    }
+    this.apiService.forceConversationsCacheReload('reset');
+    this.getConversations();
+  }
+
   ngOnDestroy(): void {
-    this.apiService.forceConversationsCacheReload();
+    sessionStorage.removeItem('currentPage');
+    this.apiService.forceConversationsCacheReload('finish');
   }
 
 }

@@ -23,9 +23,11 @@ export class ConversationChatComponent implements OnInit {
   predictions: any;
   userBotCardType: string;
   userBotCardText: string;
-  private userBotCardTime;
+  userBotCardTime;
   userBotCardIntent: string;
   userBotCardConfidence: string;
+  showAllIntentEntities = true;
+  showIntentEntitiesData: [];
 
   constructor(public sharedDataService: SharedDataService,
               public _router: Router,
@@ -74,6 +76,12 @@ export class ConversationChatComponent implements OnInit {
       this.userBotCardTime = new Date(Math.floor(this.chats[chat_row_index]['timestamp']) * 1000);
       this.userBotCardIntent = this.chats[chat_row_index]['parse_data']['intent']['name'];
       this.userBotCardConfidence = this.chats[chat_row_index]['parse_data']['intent']['confidence'];
+      if (this.chats[chat_row_index]['parse_data']['entities'].length >= 1) {
+        this.showIntentEntitiesData = this.chats[chat_row_index]['parse_data']['entities']
+      } else {
+        this.showIntentEntitiesData = [];
+      }
+      this.showAllIntentEntities = false;
       // tslint:disable-next-line: max-line-length
       this.predictions = { text: this.chats[chat_row_index]['parse_data']['text'], intent_ranking: this.chats[chat_row_index]['parse_data']['intent_ranking'] };
       this.showUserBotCardDetails = true;

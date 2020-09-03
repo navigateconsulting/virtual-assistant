@@ -32,7 +32,7 @@ api.add_resource(CustomActionsAPI, '/custom_actions', endpoint='custom_actions')
 api.add_resource(Projects, '/projects', endpoint='projects')
 api.add_resource(CopyProject, '/copy_project', endpoint='copy_project')
 api.add_resource(Domains, '/domains/<project_id>', endpoint="domains")
-api.add_resource(AllConversations, '/all_conversations', endpoint='all_conversations')
+api.add_resource(AllConversations, '/all_conversations/<page_number>/<page_size>', endpoint='all_conversations')
 api.add_resource(Conversations, '/conversation/<conversation_id>', endpoint='conversation')
 api.add_resource(RefreshDb, '/refresh_db', endpoint='refresh_db')
 

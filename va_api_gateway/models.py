@@ -12,7 +12,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 try:
-    client = MongoClient(os.environ['MONGODB_HOST'], int(os.environ['MONGODB_PORT']))
+    client = MongoClient('mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ['MONGODB_PASS'] + '@' +
+                         str(os.environ['MONGODB_HOST']))
 except KeyError:
     client = MongoClient('localhost', 27017)
 
@@ -871,8 +872,9 @@ class ConversationsModel:
     def __init__(self):
         pass
 
-    def get_all_conversations(self):
-        cursor = db.conversations.find()
+    def get_all_conversations(self, page_num, page_size):
+        skips = int(page_size) * (int(page_num) - 1)
+        cursor = db.conversations.find().sort('latest_event_time', -1).skip(skips).limit(int(page_size))
         return json.loads(dumps(list(cursor)))
 
     def get_conversations(self, sender_id):

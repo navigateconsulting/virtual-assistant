@@ -31,7 +31,7 @@ A snippet of how this application works !
 
 We used below projects as chat bot framework.
 
-* [Rasa Open Source](https://github.com/RasaHQ/rasa) Version 1.10.3
+* [Rasa Open Source](https://github.com/RasaHQ/rasa) Version 1.10.11
 
 The Application stack is built with Python as backend and Angular as front end. 
 

@@ -4,6 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthService } from './common/services/auth.service';
 import { environment } from '../environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +17,9 @@ export class AppComponent {
   loggedIn = false;
 
   constructor(private matIconRegistry: MatIconRegistry,
-              private domSanitizer: DomSanitizer,
-              private router: Router, public authService: AuthService) {
+    private domSanitizer: DomSanitizer,
+    private route: ActivatedRoute,
+    private router: Router, public authService: AuthService) {
     this.matIconRegistry.addSvgIcon(
       'project',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/project.svg')
@@ -117,15 +119,25 @@ export class AppComponent {
   checkTokenValidity() {
     if (!this.authService.isTokenExpired()) {
       this.loggedIn = true;
-      this.router.navigate(['/home/trainer'])
+      if (localStorage.getItem('jwt_token') === 'no_token' && window.location.href.split('/').pop() !== 'applications' && window.location.href.split('/').pop() !== 'home' && window.location.href.split('/').pop() !== '') {
+        if (window.location.href.split('/').slice(-2)[0] !== 'home' && window.location.href.split('/').slice(-2)[0] !== 'conversations' && window.location.href.split('/').slice(-2)[0] !== 'trainer') {
+          sessionStorage.setItem('appParamExists', 'Y');
+          this.router.navigate(['applications', { app: window.location.href.split('/').pop() }]);
+        } else {
+          sessionStorage.setItem('appParamExists', 'N');
+        }
+      } else {
+        sessionStorage.setItem('appParamExists', 'N');
+        this.router.navigate(['applications']);
+      }
     } else {
       this.callParentApp();
     }
   }
 
-  callParentApp () {
+  callParentApp() {
     localStorage.clear();
-    let url = environment.PARENT_APP_URL;   
+    let url = environment.PARENT_APP_URL;
     window.open(url, '_self');
   }
 }

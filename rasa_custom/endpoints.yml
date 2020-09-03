@@ -4,5 +4,7 @@ tracker_store:
   store_type: mongod
   url: mongodb://mongodb:27017
   db: eva_platform
+  username: eva
+  password: evapass
   auth_source: admin
   collection: conversations

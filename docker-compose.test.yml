@@ -20,8 +20,11 @@ services:
       - THREADS=50
       - REDIS_URL=redis
       - REDIS_PORT=6379
+      - REDIS_PASS=Y7T6r5re3t8j9yr
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
+      - MONGODB_USERNAME=eva
+      - MONGODB_PASS=evapass
       - RASA_SERVER=http://custom_rasa:5005/model
     ports:
       - "3000:3000"
@@ -31,12 +34,15 @@ services:
       - redis
 
   redis:
-    image: 'redis:4-alpine'
+    image: redis:latest
+    command: redis-server --requirepass Y7T6r5re3t8j9yr
     ports:
       - '6379:6379'
 
   trainer_worker:
     build: './trainer_worker'
+    environment:
+      - REDIS_PASS=Y7T6r5re3t8j9yr
     volumes:
       - rasa_projects:/rasa_projects
     depends_on:
@@ -49,8 +55,8 @@ services:
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
-      - MONGODB_USER="eva"
-      - MONGODB_PASS="evapass"
+      - MONGO_INITDB_ROOT_USERNAME=eva
+      - MONGO_INITDB_ROOT_PASSWORD=evapass
     volumes:
       - mongodb:/data/db
     ports:
@@ -82,8 +88,6 @@ services:
       - run
       - --endpoints
       - config/endpoints.yml
-      - --credentials
-      - config/credentials.yml
       - --debug
       - --enable-api
       - --cors

@@ -79,7 +79,7 @@
           </div>
           <mat-card-title>{{ userBotCardText }}</mat-card-title>
           <mat-card-subtitle>
-            {{ userBotCardTime | date: "shortTime" }}
+            {{ userBotCardTime | date: "medium" }}
             <span *ngIf="userBotCardIntent !== ''">|</span>
             {{ userBotCardIntent }}
             <span *ngIf="userBotCardConfidence !== ''">|</span>
@@ -161,7 +161,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <br />
-          <table *ngIf="conversation_json" class="table table-striped">
+          <table *ngIf="conversation_json && showAllIntentEntities" class="table table-striped">
             <thead>
               <tr>
                 <th scope="col">Key</th>
@@ -173,6 +173,20 @@
                 <th scope="row">{{ item.key }}</th>
                 <td *ngIf="item.value">{{ item.value }}</td>
                 <td *ngIf="!item.value">None</td>
+              </tr>
+            </tbody>
+          </table>
+          <table *ngIf="!showAllIntentEntities && showIntentEntitiesData.length" class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Key</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entity of showIntentEntitiesData">
+                <th scope="row">{{ entity.entity }}</th>
+                <td>{{ entity.value }}</td>
               </tr>
             </tbody>
           </table>

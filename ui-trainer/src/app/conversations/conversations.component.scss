@@ -6,7 +6,7 @@
   height: auto;
 }
 .conversations-table-container {
-  height: 80vh;
+  height: 72vh;
   padding: 0.5%;
   overflow-y: auto;
 }
@@ -45,21 +45,24 @@ table {
 .project-icons {
   color: #1C90D1;
 }
+.page-item {
+  cursor: pointer;
+}
 @media screen and (min-width: 1367px) and (max-width: 1620px) {
   .conversations-table-container {
-    height: 82vh;
+    height: 74vh;
     overflow-y: auto;
   }
 }
 @media screen and (min-width: 1621px) and (max-width: 1729px) {
   .conversations-table-container {
-    height: 84vh;
+    height: 76vh;
     overflow-y: auto;
   }
 }
 @media screen and (min-width: 1730px) {
   .conversations-table-container {
-    height: 86vh;
+    height: 78vh;
     overflow-y: auto;
   }
 }

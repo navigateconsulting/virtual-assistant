@@ -52,7 +52,8 @@ GLOBAL_EXPIRY = 60
 try:
     r = redis.Redis(host=os.environ['REDIS_URL'],
                     port=os.environ['REDIS_PORT'],
-                    charset="utf-8", decode_responses=True)
+                    charset="utf-8", decode_responses=True,
+                    password=os.environ['REDIS_PASS'])
     logger.info("Trying to connect to Redis Docker container ")
 except KeyError:
     logger.debug("Local run connecting to Redis  ")
@@ -60,8 +61,9 @@ except KeyError:
 
 
 # Connect to celery task Queue
+redis_url = 'redis://:' + os.environ['REDIS_PASS'] + '@redis:6379/0'
 
-trainer_app = Celery('simple_worker', broker='redis://redis:6379/0', backend='redis://redis:6379/0')
+trainer_app = Celery('simple_worker', broker=redis_url, backend=redis_url)
 
 
 # noinspection PyMethodMayBeStatic
@@ -595,20 +597,27 @@ class Entities(Resource):
 # noinspection PyMethodMayBeStatic
 class AllConversations(Resource):
 
-    def get(self):
+    def get(self, page_number, page_size):
 
-        # check if result can be served from cache
-        if r.exists("conversations"):
-            return json.loads(r.get("conversations"))
+        logging.debug('getting Data from DB')
 
-        else:
-            # Get results and update the cache with new values
-            logging.debug('getting Data from DB')
+        result = ConversationsModel.get_all_conversations(page_number, page_size)
+        r.set("conversations", json.dumps(result), ex=GLOBAL_EXPIRY)
 
-            result = ConversationsModel.get_all_conversations()
-            r.set("conversations", json.dumps(result), ex=GLOBAL_EXPIRY)
+        return result
 
-            return result
+        # # check if result can be served from cache
+        # if r.exists("conversations"):
+        #     return json.loads(r.get("conversations"))
+        #
+        # else:
+        #     # Get results and update the cache with new values
+        #     logging.debug('getting Data from DB')
+        #
+        #     result = ConversationsModel.get_all_conversations()
+        #     r.set("conversations", json.dumps(result), ex=GLOBAL_EXPIRY)
+        #
+        #     return result
 
 
 # noinspection PyMethodMayBeStatic
@@ -624,6 +633,7 @@ class RefreshDb(Resource):
     def get(self):
 
         result = RefreshDbModel.refresh_db()
+        r.delete("all_projects")
         return result
 
 
@@ -668,10 +678,11 @@ class TrainModel(Resource):
         ProjectsModel.set_project_mode(mode="Training", project_id=project_id)
 
         result = Export.call_main(project_id)
-        logger.debug(result)
+        logger.debug("Project Export Completed Result - " + str(result))
 
         # Start Training for the model
 
+        logger.debug("Starting model training task")
         task_obj = trainer_app.send_task('tasks.train_model', kwargs={'project_id': project_id})
         logger.debug("Task ID "+str(task_obj.id))
 

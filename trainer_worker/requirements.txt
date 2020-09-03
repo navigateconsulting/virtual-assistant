@@ -1,2 +1,2 @@
 celery[redis]
-rasa[convert]==1.10.3
+rasa[convert]==1.10.11

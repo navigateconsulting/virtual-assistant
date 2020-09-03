@@ -113,13 +113,13 @@ export class ApiService {
   private conversationsCache$: Observable<any>;
   private reloadConversations$ = new Subject<void>();
 
-  requestConversations(): Observable<any> {
+  requestConversations(pageIndex: number, pageSize: number): Observable<any> {
     if (!this.conversationsCache$) {
       // Set up timer that ticks every X milliseconds
       const timer$ = timer(0, REFRESH_INTERVAL);
       // For each tick make an http request to fetch new data
       this.conversationsCache$ = timer$.pipe(
-        switchMap(_ => this.requestGetConversations()),
+        switchMap(_ => this.requestGetConversations(pageIndex, pageSize)),
         takeUntil(this.reloadConversations$),
         shareReplay(CACHE_SIZE)
       );
@@ -127,8 +127,8 @@ export class ApiService {
     return this.conversationsCache$;
   }
 
-  requestGetConversations() {
-    return this.http.get(this.apiURL + '/all_conversations', this.httpOptions)
+  requestGetConversations(pageIndex: number, pageSize: number) {
+    return this.http.get(this.apiURL + '/all_conversations/' + pageIndex + '/' + pageSize, this.httpOptions)
     .pipe(
       retry(1),
       catchError(this.handleError)
@@ -143,11 +143,16 @@ export class ApiService {
     );
   }
 
-  forceConversationsCacheReload() {
+  forceConversationsCacheReload(type: string) {
+    if (type === 'reset') {
       // Calling next will complete the current cache instance
       this.reloadConversations$.next();
       // Setting the cache to null will create a new cache the
       this.conversationsCache$ = null;
+    } else if (type === 'finish') {
+      // Calling next will complete the current cache instance
+      this.reloadConversations$.next();
+    }
   }
   // Conversations API End
 
