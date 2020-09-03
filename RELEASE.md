@@ -23,7 +23,7 @@
 * <NOTES SHOULD BE GROUPED PER AREA>
 
 
-# Release Candidate 
+# Release 2.1.0 
 
 Bug fixes
     
