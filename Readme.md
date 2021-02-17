@@ -20,6 +20,8 @@
 * [Documentation](#Documentation)
  
 # About The Project
+Get License HWF Platform to support Chatbot and AutoML capabilities. Developed from scratch based our experience with implementing for our customers.
+https://www.hwf.ai
 
 An Easy to use application to build train and deploy chat bots. This project intends to be a one stop shop for all production grade chat bot needs  
 
