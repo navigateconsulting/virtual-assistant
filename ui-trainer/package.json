@@ -29,7 +29,7 @@
     "js-yaml": "^3.13.1",
     "json2yaml": "^1.1.0",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "lodash.mergewith": "^4.6.2",
     "ng6-toastr-notifications": "^1.0.4",
     "npm": "^6.14.6",
