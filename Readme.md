@@ -9,7 +9,9 @@
 <div align="center">
   <p><h2>Enterprise Virtual Assistant (EVA)</h2></p>
   
-  <p><h2> HWF | Chatbot </h2></p>
+  <p><h2> HWF Platform | Chatbot (Enterprise AI Platform )</h2></p>
+   <p><h2> Multi-Assistant | Multi-Channel | Three Layer Security for Assistant | SQL and Python Integration with Backend Application </h2></p>
+  <p><h2> Visit https://www.hwf.ai </h2></p>
   
 </div>
 
